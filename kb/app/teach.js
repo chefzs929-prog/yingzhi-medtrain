@@ -9,6 +9,13 @@ const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 async function api(path) {
+  /* 静态托管：/api/* 映射到预生成 JSON（kb/scripts/export_teach_static.py） */
+  const mapped = window.YZStatic && path.startsWith('/api/') ? window.YZStatic.path(path) : null;
+  if (mapped) {
+    const r = await fetch(mapped);
+    if (!r.ok) throw new Error(mapped + ' ' + r.status);
+    return JSON.parse(window.YZStatic.fixImages(await r.text()));
+  }
   const r = await fetch(path);
   if (!r.ok) throw new Error(path + ' ' + r.status);
   return r.json();

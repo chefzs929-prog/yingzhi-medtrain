@@ -156,6 +156,11 @@ ul,ol{margin:0;padding:0}
 }
 .nav .ni{color:var(--faint);display:grid;place-items:center}
 .nav button.on .ni{color:var(--accent)}
+.nav a.nav-a{
+  display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border-radius:9px;
+  color:var(--ink-2);font-size:13.5px;text-decoration:none;transition:.14s;
+}
+.nav a.nav-a:hover{background:#fff;color:var(--ink)}
 .nav .badge{margin-left:auto;font-size:10.5px;background:var(--accent-soft);color:var(--accent);padding:1px 7px;border-radius:20px;font-weight:600}
 .rail-foot{
   margin-top:auto;padding:12px;border-radius:12px;border:1px dashed var(--line);

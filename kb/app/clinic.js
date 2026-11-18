@@ -8,6 +8,13 @@ const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 async function api(path, opt) {
+  /* 静态托管：/api/* 映射到预生成 JSON（kb/scripts/export_teach_static.py） */
+  const mapped = window.YZStatic && path.startsWith('/api/') ? window.YZStatic.path(path) : null;
+  if (mapped) {
+    const r = await fetch(mapped, opt);
+    if (!r.ok) throw new Error(mapped + ' ' + r.status);
+    return JSON.parse(window.YZStatic.fixImages(await r.text()));
+  }
   const r = await fetch(path, opt);
   if (!r.ok) throw new Error(path + ' ' + r.status);
   return r.json();
@@ -161,10 +168,12 @@ window.addEventListener('mouseup', async (e) => {
   if (bbox[2] < 0.01 || bbox[3] < 0.01) return;
   $('#bboxMeta').textContent = bbox.map((v) => v.toFixed(3)).join(' , ');
   try {
-    const res = await api('/api/locate', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image_id: S.current.id, bbox }),
-    });
+    const res = window.YZLocate
+      ? window.YZLocate.locate(S.detail.regions, bbox)
+      : await api('/api/locate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image_id: S.current.id, bbox }),
+      });
     handleLocate(res);
   } catch (err) { toast('定位请求失败'); }
 });
