@@ -22,6 +22,9 @@
     result: null,
     selftest: null,
     guideId: "",
+    pickerOpen: false,
+    pickerQuery: "",
+    pickerOpenGroups: {},
   };
 
   /* ---------- 词表 ---------- */
@@ -458,12 +461,63 @@
     };
   }
 
+  /* 只选分区、未输入征象时的回答：复述该分区的库内定位描述 + 文献段落，
+     状态固定为 partial，并在正文里写明「不做征象判断」。 */
+  function regionOnlyAnswer(st) {
+    const c = pickCase(st);
+    if (!c) return refuse("no-region", "影像侧缺少可定位的分区", "未选择病例，也没有可用的分区标注。");
+    const region = regionsOf(c.id).find((r) => r.id === st.regionId);
+    if (!region) return refuse("no-region", "无法确定影像区域", "所选分区不在当前病例的标注里，请重新点选。");
+    const claim = claimsOf(c.id).filter((x) => x.region_id === region.id && !isBrokenClaim(x))[0];
+    if (!claim) {
+      return refuse("no-claim", "该分区没有可引用的库内结论",
+        `「${c.title}」的「${region.name}」在库内没有通过校验的分区结论。`,
+        ["可换一个已标注分区，或补充征象/报告后再生成。"]);
+    }
+    const docs = (claim.cites || []).filter((x) => x.kind === "doc" && x.anchor);
+    const a = docs.length ? docs[0].anchor : null;
+    if (!a) {
+      return refuse("no-doc", "文献侧没有可引用的段落",
+        `「${region.name}」有分区结论，但文献侧没有可回查的段落。`,
+        ["可补充征象或分类信息后再生成。"]);
+    }
+    const doc = {
+      kind: a.doc_kind || "sign", id: a.doc_id || "", title: a.doc_title || "征象词条",
+      version: a.version || "", locator: a.locator || "", excerpt: a.excerpt || "",
+      url: a.url || "", hash: a.excerpt_sha256 || "", conditions: [], action: "", degraded: true,
+    };
+    const answer = [
+      `在「${c.title}」的「${region.name}」内，库内定位描述为：${claim.text}`,
+      `文献侧（征象词条）${doc.title} · ${doc.locator}：${doc.excerpt}`,
+      "本条只做分区定位与文献段落对照：未提供征象或报告，因此不做征象判断。",
+    ].join("\n");
+    return {
+      status: "partial", reason: "region-only", title: "分区定位 · 未提供征象",
+      detail: "你只点选了一个分区，没有输入征象；下面只复述该分区的库内定位与文献段落，不做征象判断。",
+      signals: [], region, claim,
+      spatial: {
+        region_id: region.id, region_name: region.name, name: region.name, bbox: region.coords,
+        atlas_id: region.atlas_id || "", atlas_label: region.atlas_id || "",
+        image_side: region.image_side, patient_side: region.patient_side,
+        annotator: region.annotator || "human", note: region.note || "", kind: "region", link_id: "",
+      },
+      doc, alt: [], broken: [], coverage: {
+        image: true, region: true, claim: true, doc: true, guideline: false, verify: true,
+      },
+      missing: [], notes: ["未提供征象或报告：本条只复述分区定位与文献段落，不做征象判断。"],
+      answer, case: c, sig: null,
+      trace: ["输入 " + c.id, "分区 " + region.name, "结论 " + claim.id, "征象词条 " + (doc.id || doc.title)],
+    };
+  }
+
   function run(state) {
     const st = Object.assign({}, AS, state || {});
     const text = `${st.report || ""} ${st.question || ""}`.trim();
     const tf = flat(text);
 
     if (!text) {
+      // 只点了分区、没写文字：给分区定位 + 文献段落，而不是一句「没有输入」。
+      if (st.regionId) return regionOnlyAnswer(st);
       return refuse("no-signal", "没有可判定的输入", "问题与报告都是空的。请至少输入一个问题，或粘贴一段报告/指南文字。");
     }
 
@@ -477,10 +531,16 @@
 
     const signals = detectSignals(text);
     if (!signals.length) {
+      const c0 = pickCase(st);
+      const names = uniq(claimsOf(c0.id).flatMap((x) => x.sign_ids || []))
+        .map((id) => (signById(id) || {}).name).filter(Boolean).slice(0, 8);
       return refuse(
         "no-signal", "未指向库内可对照的征象",
         "输入里没有命中知识库的 60 条征象词条（含别名）。按规则不猜测、不生成没有依据的回答。",
-        ["可换用库内词条，例如：磨玻璃影 / 实变 / 胸腔积液 / 毛玻璃结节", "也可以直接在左侧点选一个分区，再问该分区的表现。"]
+        [
+          names.length ? `「${c0.title}」可对照的征象：${names.join("、")}` : "可换用库内词条，例如：磨玻璃影 / 实变 / 胸腔积液 / 毛玻璃结节",
+          "或直接点选一个分区，查看该分区的定位与文献段落。",
+        ]
       );
     }
 
@@ -634,15 +694,62 @@
 
   const STATUS_LABEL = { answer: "可答", partial: "部分可答", refuse: "拒答" };
 
-  function caseOptions() {
+  function caseLabel() {
+    if (AS.upload) return "已上传影像（不参与引用）";
+    if (AS.caseId === "auto") {
+      const c = currentCase();
+      return c ? `自动匹配 · ${c.id} · ${c.title}` : "自动匹配（按报告/问题）";
+    }
+    const c = caseById(AS.caseId);
+    return c ? `${c.id} · ${c.title}` : "选择病例";
+  }
+
+  /* 病例选择器：200 例按部位分组，分组可折叠 + 关键词过滤，
+     避免原生 select 一次铺开上百项。 */
+  function caseListHTML() {
+    const q = norm(AS.pickerQuery || "");
     const groups = {};
     for (const c of DB.cases) (groups[c.body_part] = groups[c.body_part] || []).push(c);
-    const auto = `<option value="auto" ${AS.caseId === "auto" && !AS.upload ? "selected" : ""}>自动匹配（按报告/问题）</option>`;
-    return auto + Object.keys(groups).sort().map((bp) =>
-      `<optgroup label="${h(bp)}">${groups[bp].map((c) =>
-        `<option value="${c.id}" ${AS.caseId === c.id && !AS.upload ? "selected" : ""}>${h(c.id)} · ${h(c.title)}</option>`
-      ).join("")}</optgroup>`
-    ).join("");
+    const cur = AS.upload ? null : currentCase();
+    // 自动匹配时不预设展开组，先让用户看部位目录；手动选中病例才展开所在组。
+    const curGroup = (cur && AS.caseId !== "auto") ? cur.body_part : "";
+    const autoOn = AS.caseId === "auto" && !AS.upload;
+    let html = "";
+    if (!q || flat("自动匹配按报告问题").includes(flat(q)) || "auto".includes(q)) {
+      html += `<button type="button" class="apk-item apk-auto ${autoOn ? "on" : ""}" data-ask="pick-case" data-id="auto">
+        <b>自动匹配</b><span>按报告 / 问题挑选最接近的病例</span></button>`;
+    }
+    // 病例多的部位排前面：胸部 80+ 例，展开后紧贴选择框，不用先滚过十几个组头。
+    for (const bp of Object.keys(groups).sort((a, b) => groups[b].length - groups[a].length)) {
+      const list = groups[bp].filter((c) => !q || norm(`${c.id} ${c.title} ${bp}`).includes(q));
+      if (!list.length) continue;
+      // 默认只展开当前病例所在组；自动匹配时全部折叠，先看部位目录。
+      const defaultOpen = !!curGroup && bp === curGroup;
+      const open = q ? true : (AS.pickerOpenGroups[bp] !== undefined ? AS.pickerOpenGroups[bp] : defaultOpen);
+      html += `<div class="apk-group ${open ? "open" : ""}">
+        <button type="button" class="apk-gh" data-ask="picker-group" data-group="${h(bp)}">
+          <span class="apk-arrow">${open ? "▾" : "▸"}</span><b>${h(bp)}</b><em>${list.length}</em>
+        </button>
+        ${open ? `<div class="apk-gb">${list.map((c) => `
+          <button type="button" class="apk-item ${cur && cur.id === c.id ? "on" : ""}" data-ask="pick-case" data-id="${c.id}">
+            <b>${h(c.id)}</b><span>${h(c.title)}</span>
+            ${String(c.corpus || "").startsWith("expanded") ? `<i class="apk-tag">待核验</i>` : ""}
+          </button>`).join("")}</div>` : ""}
+      </div>`;
+    }
+    return html || `<div class="apk-empty">没有匹配的病例</div>`;
+  }
+
+  function casePickerHTML() {
+    return `<div class="ask-picker">
+      <button type="button" class="ask-sel ask-picker-btn" data-ask="picker-toggle" aria-expanded="${AS.pickerOpen ? "true" : "false"}">
+        <span class="apk-label">${h(caseLabel())}</span><span class="apk-caret">${AS.pickerOpen ? "▴" : "▾"}</span>
+      </button>
+      ${AS.pickerOpen ? `<div class="ask-picker-pop">
+        <input id="askCaseSearch" class="ask-picker-search" type="search" placeholder="搜索病例号 / 部位 / 名称" value="${h(AS.pickerQuery || "")}" autocomplete="off">
+        <div class="ask-picker-list" id="askCaseList">${caseListHTML()}</div>
+      </div>` : ""}
+    </div>`;
   }
 
   function guideOptions() {
@@ -682,6 +789,51 @@
     },
   ];
 
+  /* 覆盖层必须贴合图片实际渲染区域：object-fit: contain 会在元素内留黑边，
+     若覆盖层仍按整个舞台定位，框就会整体偏移。这里按图片纵横比算出内容框。 */
+  function fitAskMedia() {
+    document.querySelectorAll(".ask-stage").forEach((stage) => {
+      const img = stage.querySelector('img[data-fit="1"]');
+      const media = stage.querySelector(".ask-media");
+      if (!img || !media || !img.naturalWidth || !img.naturalHeight) return;
+      const availW = stage.clientWidth;
+      if (!availW) return;
+      const maxH = 440;
+      const ratio = img.naturalHeight / img.naturalWidth;
+      let w = availW;
+      let hh = availW * ratio;
+      if (hh > maxH) { hh = maxH; w = maxH / ratio; }
+      media.style.width = Math.round(w) + "px";
+      media.style.height = Math.round(hh) + "px";
+    });
+  }
+
+  /* 点击命中：换算成图片归一化坐标，取包含该点且面积最小的分区。
+     不依赖 DOM 重叠顺序，因此整图级「周边带」不会吞掉内部小区域的点击。 */
+  function hitRegion(stage, clientX, clientY) {
+    const c = currentCase();
+    if (!c) return null;
+    const media = stage.querySelector(".ask-media");
+    const img = stage.querySelector('img[data-fit="1"]');
+    const box = (media && media.getBoundingClientRect().height)
+      ? media.getBoundingClientRect()
+      : (img ? img.getBoundingClientRect() : null);
+    if (!box || !box.width || !box.height) return null;
+    const x = (clientX - box.left) / box.width;
+    const y = (clientY - box.top) / box.height;
+    if (x < 0 || y < 0 || x > 1 || y > 1) return null;
+    const hits = regionsOf(c.id).filter((r) => {
+      const [rx, ry, rw, rh] = r.coords || [0, 0, 0, 0];
+      return x >= rx && x <= rx + rw && y >= ry && y <= ry + rh;
+    });
+    if (!hits.length) return null;
+    return hits.sort((a, b) => {
+      const aa = a.coords || [0, 0, 0, 0];
+      const bb = b.coords || [0, 0, 0, 0];
+      return aa[2] * aa[3] - bb[2] * bb[3];
+    })[0];
+  }
+
   function stageHTML() {
     const c = currentCase();
     if (AS.upload) {
@@ -696,18 +848,24 @@
     }
     if (!c) return `<div class="ask-stage empty">未选择病例</div>`;
     const rs = regionsOf(c.id);
-    const boxes = AS.showBoxes ? rs.map((r, i) => {
+    const area = (r) => { const a = r.coords || [0, 0, 0, 0]; return a[2] * a[3]; };
+    /* 大范围容器（如「周边带」）先渲染、沉在底层；小区域后渲染、浮在上层，
+       避免整图级区域拦截所有点击。点击命中另由几何判定兜底。 */
+    const ordered = rs.map((r, i) => ({ r, i })).sort((a, b) => area(b.r) - area(a.r));
+    const boxes = AS.showBoxes ? ordered.map(({ r, i }) => {
       const [x, y, w, hh] = r.coords || [0, 0, 0, 0];
       const on = AS.regionId === r.id || (AS.result && AS.result.region && AS.result.region.id === r.id);
-      return `<button class="ask-box ${on ? "on" : ""}" data-ask="region" data-id="${r.id}"
+      return `<button class="ask-box ${on ? "on" : ""}" data-region-id="${r.id}"
         style="left:${x * 100}%;top:${y * 100}%;width:${w * 100}%;height:${hh * 100}%"
         title="${h(r.name)} · ${h(r.id)}">
         <span class="ab-n">${i + 1}</span><span class="ab-t">${h(r.name)}</span>
       </button>`;
     }).join("") : "";
-    return `<div class="ask-stage">
-      <img src="${h(c.image)}" alt="${h(c.title)}">
-      <div class="ask-boxes">${boxes}</div>
+    return `<div class="ask-stage" data-ask="stage-hit">
+      <div class="ask-media">
+        <img src="${h(c.image)}" alt="${h(c.title)}" data-fit="1">
+        <div class="ask-boxes">${boxes}</div>
+      </div>
       <div class="ask-stage-tag">${h(c.modality.join("/"))} · ${h(c.body_part)} · ${h(c.license || "")}</div>
     </div>`;
   }
@@ -875,8 +1033,8 @@
         <section class="ask-pane ask-in">
           <div class="ap-h"><span class="ap-no">01</span><b>输入</b><span class="ap-sub">影像 + 报告/指南</span></div>
 
-          <label class="ask-lb" for="askCase">影像来源</label>
-          <select id="askCase" class="ask-sel" ${AS.upload ? "disabled" : ""}>${caseOptions()}</select>
+          <label class="ask-lb">影像来源</label>
+          ${casePickerHTML()}
           <div class="ask-row">
             <label class="btn ghost sm" for="askFile">${icon("image", 13)} 上传影像</label>
             <input id="askFile" type="file" accept="image/*" hidden>
@@ -1086,18 +1244,61 @@
 
   /* ---------- 事件 ---------- */
 
-  document.addEventListener("click", (e) => {
+  document.addEventListener("click", async (e) => {
     const el = e.target.closest("[data-ask]");
-    if (!el) return;
+    if (!el) {
+      // 点在选择器外面：收起面板
+      if (AS.pickerOpen && !e.target.closest(".ask-picker")) {
+        AS.pickerOpen = false;
+        YZ.render();
+      }
+      return;
+    }
     const act = el.dataset.ask;
     switch (act) {
       case "run": syncFields(); AS.result = run(AS); YZ.render(); scrollAnswer(); break;
       case "preset": applyPreset(el.dataset.key); break;
-      case "region":
-        AS.regionId = el.dataset.id;
+      case "stage-hit": {
+        const stage = el.closest(".ask-stage");
+        if (!stage) break;
+        const reg = hitRegion(stage, e.clientX, e.clientY);
+        if (!reg) { toast("该位置不在已标注分区内"); break; }
+        AS.regionId = reg.id;
         AS.result = run(AS);
         YZ.render();
         break;
+      }
+      case "picker-toggle":
+        AS.pickerOpen = !AS.pickerOpen;
+        YZ.render();
+        if (AS.pickerOpen) {
+          requestAnimationFrame(() => {
+            const list = YZ.$("#askCaseList");
+            const group = list && list.querySelector(".apk-group.open");
+            if (list && group) list.scrollTop = Math.max(0, group.offsetTop - list.offsetTop - 4);
+          });
+        }
+        break;
+      case "picker-group": {
+        const bp = el.dataset.group;
+        const cur = AS.caseId !== "auto" ? currentCase() : null;
+        const defaultOpen = !!(cur && cur.body_part === bp);
+        const open = AS.pickerOpenGroups[bp] !== undefined ? AS.pickerOpenGroups[bp] : defaultOpen;
+        AS.pickerOpenGroups[bp] = !open;
+        YZ.render();
+        break;
+      }
+      case "pick-case": {
+        AS.caseId = el.dataset.id;
+        AS.regionId = null;
+        AS.upload = null;
+        AS.pickerOpen = false;
+        AS.pickerQuery = "";
+        if (AS.caseId !== "auto") await YZ.ensureCase(AS.caseId);
+        AS.result = run(AS);
+        YZ.render();
+        break;
+      }
       case "toggle-boxes": AS.showBoxes = !AS.showBoxes; YZ.render(); break;
       case "clear-upload":
         AS.upload = null; AS.caseId = "auto"; AS.regionId = null; AS.result = null; YZ.render(); break;
@@ -1108,7 +1309,11 @@
         YZ.render();
         break;
       }
-      case "selftest": runSelftest(); break;
+      case "selftest":
+        // 自检会跨病例跑，先把分片全部载入，避免未加载时误判成「无结论」。
+        await YZ.loadAllParts();
+        runSelftest();
+        break;
       case "copy-answer": copyAnswer(); break;
       case "focus-spatial": {
         const box = YZ.$(".ask-box.on");
@@ -1129,6 +1334,11 @@
       AS.report = e.target.value;
       const c = YZ.$(".ask-count");
       if (c) c.textContent = `${AS.report.length} 字`;
+    }
+    if (e.target.id === "askCaseSearch") {
+      AS.pickerQuery = e.target.value;
+      const list = YZ.$("#askCaseList");
+      if (list) list.innerHTML = caseListHTML();  // 只换列表，保住输入焦点
     }
   });
 
@@ -1181,6 +1391,19 @@
     }
   });
 
+  /* 每次渲染后重新贴合图片内容框；图片异步加载完成时再校正一次。 */
+  const baseRender = YZ.render;
+  YZ.render = function () {
+    baseRender.apply(YZ, arguments);
+    if (typeof requestAnimationFrame === "function") requestAnimationFrame(fitAskMedia);
+    else fitAskMedia();
+  };
+  document.addEventListener("load", (e) => {
+    if (e.target && e.target.matches && e.target.matches('img[data-fit="1"]')) fitAskMedia();
+  }, true);
+  window.addEventListener("resize", fitAskMedia);
+
   YZ.askView = askView;
+  YZ.fitAskMedia = fitAskMedia;
   YZ.ASK = { AS, run, detectSignals, pickDoc };
 })(window.YZ = window.YZ || {});

@@ -36,6 +36,8 @@ REGION_MAP = {
     "肌骨": "REG-MSK", "脊柱": "REG-MSK", "手": "REG-MSK", "足": "REG-MSK",
     "膝关节": "REG-MSK", "膝": "REG-MSK", "肘": "REG-MSK", "腕": "REG-MSK",
     "肩": "REG-MSK", "骨盆": "REG-MSK", "四肢": "REG-MSK",
+    # 脊柱各段原先落到 REG-CHEST，导致颈椎/腰椎病例被归到胸部
+    "颈椎": "REG-MSK", "胸椎": "REG-MSK", "腰椎": "REG-MSK", "骶尾": "REG-MSK",
 }
 REGION_NAME = {
     "REG-CHEST": "胸部", "REG-HEAD-NECK": "头颈部", "REG-BREAST": "乳腺",
@@ -91,9 +93,11 @@ def main():
 
     signs = load_jsonl("signs")
     guidelines = load_jsonl("guidelines")
-    cases = load_jsonl("cases")
-    regions = load_jsonl("regions")
-    claims = load_jsonl("claims")
+    cases = [c for c in load_jsonl("cases") if str(c.get("status", "active")) != "inactive"]
+    # 停用病例（非影像素材）不进入前端，也不保留其分区/结论，避免错配数据继续被检索。
+    active_ids = {c["id"] for c in cases}
+    regions = [r for r in load_jsonl("regions") if r.get("image_id") in active_ids]
+    claims = [c for c in load_jsonl("claims") if c.get("image_id") in active_ids]
     groups = load_jsonl("groups")
     standards = load_jsonl("standards")
     links = load_jsonl("sign_links")

@@ -71,6 +71,54 @@
 .ask-sel:focus,.ask-input:focus,.ask-ta:focus{
   border-color:var(--brand);background:#fff;box-shadow:0 0 0 3px var(--brand-soft);
 }
+/* ---------- 病例选择器（可折叠分组） ---------- */
+.ask-picker{position:relative;width:calc(100% - 32px);margin:0 16px}
+.ask-picker-btn{
+  width:100%;margin:0;display:flex;align-items:center;gap:8px;text-align:left;
+  cursor:pointer;color:var(--ink);
+}
+.apk-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.apk-caret{color:var(--faint);font-size:10px;flex:none}
+.ask-picker-pop{
+  position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;
+  background:var(--surface);border:1px solid var(--line);border-radius:11px;
+  box-shadow:0 14px 34px rgba(12,42,52,.16);overflow:hidden;
+}
+.ask-picker-search{
+  display:block;width:calc(100% - 20px);margin:9px 10px 4px;height:32px;
+  border:1px solid var(--line);border-radius:8px;background:var(--surface-2);
+  padding:0 9px;font-size:12px;outline:none;
+}
+.ask-picker-search:focus{border-color:var(--brand);background:#fff;box-shadow:0 0 0 3px var(--brand-soft)}
+.ask-picker-list{max-height:320px;overflow:auto;padding:4px 6px 8px}
+.apk-group{border-radius:8px}
+.apk-gh{
+  width:100%;display:flex;align-items:center;gap:7px;padding:7px 8px;
+  background:none;border:0;cursor:pointer;font-size:11.5px;color:var(--ink-2);
+  border-radius:7px;text-align:left;
+}
+.apk-gh:hover{background:var(--surface-2)}
+.apk-gh b{font-weight:600}
+.apk-gh em{margin-left:auto;font:400 10px var(--mono);color:var(--faint);font-style:normal}
+.apk-arrow{width:10px;color:var(--faint);font-size:9px;flex:none}
+.apk-gb{padding:2px 0 4px 15px}
+.apk-item{
+  width:100%;display:flex;align-items:baseline;gap:7px;padding:6px 8px;
+  background:none;border:0;border-radius:7px;cursor:pointer;text-align:left;
+  font-size:11.5px;color:var(--ink-2);
+}
+.apk-item:hover{background:var(--surface-2)}
+.apk-item b{font:500 10.5px var(--mono);color:var(--faint);flex:none}
+.apk-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
+.apk-item.on{background:var(--brand-soft);color:var(--brand)}
+.apk-item.on b{color:var(--brand)}
+.apk-tag{
+  margin-left:auto;flex:none;font:400 9px var(--mono);font-style:normal;
+  color:#9a6b1f;background:#fdf3dd;border:1px solid #f0dcae;border-radius:4px;padding:0 4px;
+}
+.apk-auto{margin:2px 0 4px;flex-direction:column;align-items:flex-start;gap:1px;border:1px dashed var(--line);}
+.apk-auto span{font-size:10px;color:var(--faint)}
+.apk-empty{padding:14px 10px;text-align:center;font-size:11.5px;color:var(--faint)}
 .ask-row{display:flex;align-items:center;gap:8px;padding:8px 16px 0;flex-wrap:wrap}
 .ask-row .btn{font-size:11.5px}
 .ask-count{margin-left:auto;font-size:10.5px;color:var(--faint);font-variant-numeric:tabular-nums}
@@ -98,9 +146,15 @@
 .ask-view{padding-bottom:14px}
 .ask-stage{
   position:relative;margin:14px 16px 0;border-radius:11px;overflow:hidden;
-  background:#0a171d;display:grid;place-items:center;min-height:260px;
+  background:#0a171d;display:flex;align-items:center;justify-content:center;min-height:180px;
 }
-.ask-stage img{
+/* 图片内容框：由脚本按纵横比设定宽高，覆盖层与框坐标共用同一坐标系。 */
+.ask-media{position:relative;margin:0 auto;max-width:100%;flex:none;}
+.ask-media img{
+  width:100%;height:100%;object-fit:fill;display:block;
+  filter:contrast(1.02);
+}
+.ask-stage>img{
   width:100%;max-height:440px;object-fit:contain;display:block;
   filter:contrast(1.02);
 }
