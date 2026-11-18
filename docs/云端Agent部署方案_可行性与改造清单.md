@@ -141,6 +141,49 @@ def answer(query, ctx, stream_cb):
 `main.py` 的改动很小：把 `ensure_gateway()` / `gateway.ask()` 换成 `llm.answer()`，
 SSE 事件（`trace` / `delta` / `citation` / `done`）格式完全不变，前端零改动。
 
+### P1.1 · 双模型路由（已实现）
+
+有图走视觉、无图走文本，一个 `if` 决定，不引入额外编排框架。
+
+| 请求 | 模型 | 说明 |
+| --- | --- | --- |
+| 带 `image`（data URL） | `qwen3-vl-plus` | 支持 grounding，可返回 bbox 交给 `locate.js` 匹配已有分区 |
+| 纯文本 | `deepseek-chat` | 医学问答扎实、成本低 |
+
+选择 Qwen-VL 而不是 GPT-4o 的唯一理由是 **bbox**：只有能输出坐标，模型的描述才能被约束到 981 个已有分区上；否则只能「看图说话」，落不到证据。
+
+环境变量（OpenAI 兼容，纯标准库实现，无 SDK 依赖）：
+
+```
+YZ_LLM_VISION_BASE / YZ_LLM_VISION_KEY / YZ_LLM_VISION_MODEL
+YZ_LLM_TEXT_BASE   / YZ_LLM_TEXT_KEY   / YZ_LLM_TEXT_MODEL
+YZ_LLM_TIMEOUT     # 默认 60
+```
+
+实现文件：
+
+| 文件 | 职责 |
+| --- | --- |
+| `yingzhi/serve/llm.py` | `Router` 选模型、`Retriever` 轻量检索、`Answerer` 组装与校验 |
+| `yingzhi/serve/test_llm_route.py` | 9 项离线测试（不联网、不耗 token） |
+| `yingzhi/serve/main.py` | `ensure_llm()`；`/api/ask` 新增分支；`/api/health` 暴露 `llm_route` |
+
+三条保护：
+
+1. **未配置 key 整体禁用**，自动回落原有 gateway / fallback，不影响现有演示。
+2. **引用校验**：模型输出中的 `SIGN-` / `CLM-` id 必须存在于 `kb/data`，否则计入 `dropped_ids` 且不进 `cites`。
+3. **调用失败降级**：任何网络或解析错误都走 `fallback_answer`，并向前端发 `reset`，不会静默返回半截答案。
+
+已验证（本地、无 key 与假 key 两种配置）：
+
+```
+llm_route: {'vision': 'qwen3-vl-plus', 'text': 'deepseek-chat'}
+trace: {"stage":"kb_retrieve","skill":"llm_route","detail":{"route":"text","model":"deepseek-chat","signs":1,"claims":8}}
+上游不可达 -> trace: agent_generate/fallback -> reset -> 本地兜底回答
+```
+
+前端传图方式（尚未接入 UI）：`POST /api/ask` 增加 `"image": "data:image/jpeg;base64,..."` 即可，后端自动切到视觉模型。
+
 ### P2 · 打包与部署（0.5 天）
 
 Dockerfile（无 pip 依赖，镜像约 120 MB）：
