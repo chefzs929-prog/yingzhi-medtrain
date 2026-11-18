@@ -454,6 +454,21 @@ def build_trace(run_id, request, result, degraded, reason):
             {"stage": "agent_generate", "skill": result.get("model"),
              "status": "completed", "ms": result.get("generate_ms", 0)},
         ]
+        # 直连模型没有工具调用，tools 为空，上面那套判定只会得出「全未运行」。
+        # 必须用模型层自己报告的检索命中与耗时覆盖，否则 trace 与事实相反。
+        td = result.get("trace_detail") or {}
+        if td:
+            kb_hits = int(td.get("hits") or 0)
+            spans = [
+                {"stage": "kb_retrieve", "skill": "llm_retriever",
+                 "status": "completed", "ms": td.get("retrieve_ms", 0),
+                 "hits": kb_hits, "hit": kb_hits > 0,
+                 "command": "in-memory: signs / concepts / claims"},
+                {"stage": "skill_invoke", "skill": None, "status": "skipped", "ms": 0},
+                {"stage": "workflow", "skill": None, "status": "skipped", "ms": 0},
+                {"stage": "agent_generate", "skill": td.get("model") or result.get("model"),
+                 "status": "completed", "ms": td.get("generate_ms", 0)},
+            ]
     cited, unverified = audit_citations((result or {}).get("text"))
     if degraded:
         grounding, marker_ok = "degraded", False
@@ -465,7 +480,7 @@ def build_trace(run_id, request, result, degraded, reason):
         "request": request,
         "spans": spans,
         "summary": {
-            "first_token_ms": (result or {}).get("first_token_ms", 0),
+            "first_token_ms": (result or {}).get("first_token_ms"),
             "total_ms": (result or {}).get("total_ms", 0),
             "delta_chars": (result or {}).get("delta_chars", 0),
             "model": (result or {}).get("model"),
@@ -665,6 +680,10 @@ class Handler(BaseHTTPRequestHandler):
                 result = llm_ans.ask(query, self.sse_send, image=body.get("image"))
                 text = result.get("text") or ""
                 cites = result.get("cites") or []
+                # 直连模型是一次性返回，没有「首字」时间，留空而不是填 0 假装有
+                result["total_ms"] = result.get("ms")
+                result["delta_chars"] = len(text)
+                result["first_token_ms"] = None
                 self.sse_send("delta", {"text": text})
             elif gateway is not None:
                 # 每次提问新建会话：复用同一 session 会让上下文无限累积，

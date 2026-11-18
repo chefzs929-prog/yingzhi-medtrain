@@ -223,11 +223,16 @@ class Answerer:
             raise RuntimeError("no model configured")
 
         ctx = self.retriever.search(query)
-        emit("trace", {"stage": "kb_retrieve", "skill": "llm_route",
-                       "status": "ok", "ms": int((time.time() - t0) * 1000),
-                       "detail": {"route": "vision" if has_image else "text",
-                                  "model": cfg.model,
-                                  "signs": len(ctx["signs"]),
+        retrieve_ms = int((time.time() - t0) * 1000)
+        hits = len(ctx["signs"]) + len(ctx["claims"])
+        route = "vision" if has_image else "text"
+        # trace 必须与事实一致：这里真实命中了几个词条、几条结论，就报几个。
+        emit("trace", {"stage": "kb_retrieve", "skill": "llm_retriever",
+                       "status": "completed", "ms": retrieve_ms,
+                       "hits": hits, "hit": hits > 0,
+                       "route": route, "model": cfg.model,
+                       "detail": {"signs": len(ctx["signs"]),
+                                  "concepts": len(ctx["concepts"]),
                                   "claims": len(ctx["claims"])}})
 
         user_text = "检索结果：\n%s\n\n用户问题：%s" % (self._context_text(ctx), query)
@@ -245,16 +250,27 @@ class Answerer:
             {"role": "user", "content": content},
         ]
         text = self.client.chat(cfg, messages)
+        generate_ms = int((time.time() - t0) * 1000) - retrieve_ms
 
         dropped = [i for i in ID_RE.findall(text) if i not in self.valid_ids]
         cites = self._cites(ctx, text)
         return {
             "text": text,
             "cites": cites,
-            "route": "vision" if has_image else "text",
+            "route": route,
             "model": cfg.model,
             "dropped_ids": dropped,
             "ms": int((time.time() - t0) * 1000),
+            # 给 main.py 的 build_trace 用：没有工具调用，命中数只能由检索层自己报
+            "trace_detail": {
+                "hits": hits,
+                "signs": len(ctx["signs"]),
+                "claims": len(ctx["claims"]),
+                "concepts": len(ctx["concepts"]),
+                "retrieve_ms": retrieve_ms,
+                "generate_ms": max(generate_ms, 0),
+                "model": cfg.model,
+            },
         }
 
     def _cites(self, ctx, text):

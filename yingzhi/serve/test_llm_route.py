@@ -98,6 +98,23 @@ class AnswerTest(unittest.TestCase):
         res = ans.ask("磨玻璃影", lambda *a: None)
         self.assertIn("CLM-999", res["dropped_ids"])
 
+    def test_trace_detail_reports_real_hits(self):
+        """trace 必须报真实命中数：曾出现「检索命中 9 条，trace 记 0 条」的假记录。"""
+        client = FakeClient("结论：X\n依据：SIGN-001。\n缺失：无。\n边界：教学用。")
+        ans = llm.Answerer(
+            llm.Router(cfg("vision", "v"), cfg("text", "t")),
+            self.retriever, client)
+        events = []
+        res = ans.ask("磨玻璃影", lambda k, p: events.append((k, p)))
+        td = res["trace_detail"]
+        self.assertGreater(td["hits"], 0)
+        self.assertEqual(td["hits"], td["signs"] + td["claims"])
+        spans = [p for k, p in events if k == "trace"]
+        self.assertTrue(spans, "必须发 trace 事件")
+        self.assertEqual(spans[0]["stage"], "kb_retrieve")
+        self.assertEqual(spans[0]["hits"], td["hits"])
+        self.assertTrue(spans[0]["hit"])
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
