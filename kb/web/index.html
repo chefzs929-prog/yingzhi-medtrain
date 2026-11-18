@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>影像征象知识库 · 教学对照</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="mark">KB</div>
+    <div>
+      <h1>影像征象知识库</h1>
+      <p>公开资料 · 征象对照 · 相似病例关联</p>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button data-view="search" class="active">征象检索</button>
+    <button data-view="links">图文对照</button>
+    <button data-view="dual">双线判断</button>
+    <button data-view="images">图像对照</button>
+    <button data-view="about">来源与边界</button>
+  </nav>
+</header>
+
+<div class="notice" role="note">
+  <strong>使用边界</strong>
+  本知识库仅用于教学与研究，只提供影像征象的描述性解释、公开文献出处与公开影像对照，
+  <u>不构成诊断意见，不对任何个体影像给出临床结论</u>。就医请咨询具备资质的医师。
+</div>
+
+<main>
+  <!-- 征象检索 -->
+  <section id="view-search">
+    <form class="searchbox" id="searchForm" autocomplete="off">
+      <input id="q" name="q" placeholder="输入征象、部位或描述，例如：磨玻璃影 / 甲状腺低回声结节 / 双管征 / 乳腺毛刺">
+      <button type="submit">检索</button>
+    </form>
+
+    <div class="chips" id="chips">
+      <span>试试：</span>
+      <button data-q="磨玻璃影">磨玻璃影</button>
+      <button data-q="甲状腺低回声结节">甲状腺低回声结节</button>
+      <button data-q="双管征">双管征</button>
+      <button data-q="乳腺毛刺状肿块">乳腺毛刺</button>
+      <button data-q="快进快出强化">快进快出</button>
+      <button data-q="胸腔积液">胸腔积液</button>
+    </div>
+
+    <div class="filters">
+      <label>模态
+        <select id="modality">
+          <option value="">全部</option>
+          <option>CT</option><option>MR</option><option>US</option>
+          <option>CR</option><option>MG</option>
+        </select>
+      </label>
+      <label>部位
+        <select id="part">
+          <option value="">全部</option>
+          <option>肺</option><option>胸</option><option>乳腺</option><option>甲状腺</option>
+          <option>肝</option><option>胆</option><option>胰</option><option>肾</option>
+          <option>脑</option><option>膝</option><option>腹</option>
+        </select>
+      </label>
+      <span class="meta" id="meta"></span>
+    </div>
+
+    <div id="confidence" class="confidence" hidden></div>
+
+    <div class="grid">
+      <div class="col-main">
+        <h2 class="sec-title">征象解释 <small>描述性定义，不含诊断结论</small></h2>
+        <div id="signs" class="cards"></div>
+        <div id="empty" class="empty" hidden>
+          <h3>库内暂无足够依据</h3>
+          <p>未检索到与该描述直接对应的征象或公开影像。可尝试更具体的影像学术语，
+             或查看<a href="#" data-view-link="about">来源与边界</a>。</p>
+        </div>
+      </div>
+      <aside class="col-side">
+        <div id="standards"></div>
+        <div id="related"></div>
+      </aside>
+    </div>
+
+    <section id="casesWrap" hidden>
+      <h2 class="sec-title">公开影像对照 <small>点击查看来源与许可</small></h2>
+      <div id="cases" class="images"></div>
+    </section>
+  </section>
+
+  <!-- 图文对照 -->
+  <section id="view-links" hidden>
+    <div class="panel intro links-intro">
+      <div class="links-intro-head">
+        <h2>征象文字 ↔ 影像位置</h2>
+        <span class="tag">v1 · 人工标注</span>
+      </div>
+      <p>
+        左侧是征象词条的文字表述，右侧是同一句话在公开影像上的位置。
+        点击带下划线的文字，图上对应的框会高亮；点击图上的编号框，文字也会回到对应句子。
+      </p>
+      <p class="muted small">
+        框是人工标注的教学区域，不是模型识别，也不是病灶分割；只用于文字与影像对照，
+        不构成诊断意见，不对个体影像给出临床结论。
+      </p>
+      <div class="links-gate" id="linksGate"></div>
+    </div>
+
+    <div class="links-picker">
+      <span class="tax-label">已关联征象</span>
+      <div class="chips" id="linksPicker"></div>
+    </div>
+
+    <div class="links-layout">
+      <div class="panel links-text">
+        <div class="links-text-head">
+          <div>
+            <h2 id="linksSignName">—</h2>
+            <span class="en" id="linksSignEn"></span>
+          </div>
+          <div class="tags" id="linksSignTags"></div>
+        </div>
+
+        <div class="label">文字表述 <small>带下划线处已关联影像</small></div>
+        <p class="appearance" id="linksAppearance"></p>
+
+        <div class="links-legend" id="linksLegend"></div>
+        <div class="links-list" id="linksList"></div>
+        <p class="muted small" id="linksNote"></p>
+      </div>
+
+      <div class="panel links-viewer">
+        <div class="viewer-head">
+          <div>
+            <h3 id="linksImageTitle">—</h3>
+            <p class="muted small" id="linksImageMeta"></p>
+          </div>
+          <span class="tag" id="linksImageBasis"></span>
+        </div>
+
+        <div class="link-stage" id="linkStage">
+          <div class="link-frame" id="linkFrame">
+            <img id="linkImg" alt="">
+            <div class="link-overlay" id="linkOverlay"></div>
+          </div>
+        </div>
+
+        <div class="links-thumbs" id="linksThumbs"></div>
+        <p class="links-caption" id="linksCaption"></p>
+        <div class="links-reading" id="linksReading"></div>
+        <div class="links-image-foot">
+          <a id="linksSource" target="_blank" rel="noopener">查看来源页</a>
+          <span id="linksCredit"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 双线判断 -->
+  <section id="view-dual" hidden>
+    <div class="panel intro">
+      <h2>双线判断</h2>
+      <p class="muted">
+        影像线回答「库内有哪些对应征象与公开影像」，指南线回答「公开条款在什么条件下给出什么方向」。
+        系统只判断两条证据线是否对齐，并明确列出缺失条件；<strong>不给出诊断或治疗建议</strong>。
+      </p>
+    </div>
+
+    <form class="searchbox" id="dualForm" autocomplete="off">
+      <input id="dq" placeholder="输入影像描述与关键条件，例如：甲状腺结节 TR4 1.6cm">
+      <button type="submit">双线判断</button>
+    </form>
+
+    <div class="chips" id="dualChips">
+      <span>试试：</span>
+      <button data-q="甲状腺结节 TR4 1.6cm">甲状腺 TR4 1.6cm</button>
+      <button data-q="肺实性结节 7mm">肺实性结节 7mm</button>
+      <button data-q="肾囊肿 Bosniak IIF">肾囊肿 Bosniak IIF</button>
+      <button data-q="乳腺肿块 BI-RADS 4 伴毛刺">乳腺 BI-RADS 4</button>
+      <button data-q="胆囊息肉 8mm">胆囊息肉 8mm</button>
+      <button data-q="甲状腺低回声结节">甲状腺低回声结节</button>
+    </div>
+
+    <div class="filters">
+      <label>模态
+        <select id="dualModality">
+          <option value="">全部</option>
+          <option>CT</option><option>MR</option><option>US</option>
+          <option>CR</option><option>MG</option>
+        </select>
+      </label>
+      <label>部位
+        <select id="dualPart">
+          <option value="">全部</option>
+          <option>甲状腺</option><option>肺</option><option>乳腺</option><option>肝</option>
+          <option>肾</option><option>胆囊</option><option>胰</option><option>卵巢</option><option>前列腺</option>
+        </select>
+      </label>
+      <span class="meta" id="dualMeta"></span>
+    </div>
+
+    <div id="dualAlign" class="align" hidden></div>
+
+    <div class="dual-grid">
+      <div class="panel">
+        <h2>影像线 <small>征象解释与公开影像</small></h2>
+        <div id="dualImaging" class="stack"></div>
+      </div>
+      <div class="panel">
+        <h2>指南线 <small>条款、适用条件与方向</small></h2>
+        <div id="dualGuide" class="stack"></div>
+      </div>
+    </div>
+
+    <section id="dualCasesWrap" hidden>
+      <h2 class="sec-title">关联公开影像 <small>仅作对照</small></h2>
+      <div id="dualCases" class="images"></div>
+    </section>
+  </section>
+
+  <!-- 图像对照 -->
+  <section id="view-images" hidden>
+    <div class="panel">
+      <h2>图像对照</h2>
+      <p class="muted">
+        按部位与模态浏览公开教学影像，或选择本地图像与公开影像并排对照。
+        本地图像只在你的浏览器内显示，不上传、不分析、不做自动判读。
+      </p>
+      <div class="tax">
+        <div class="tax-row">
+          <span class="tax-label">一级 · 部位</span>
+          <div class="chips" id="regionTabs"></div>
+        </div>
+        <div class="tax-row">
+          <span class="tax-label">二级 · 病症</span>
+          <div class="chips" id="condChips"></div>
+        </div>
+      </div>
+      <div class="filters">
+        <label>模态
+          <select id="imgModality">
+            <option value="">全部</option>
+            <option>CT</option><option>MR</option><option>US</option>
+            <option>CR</option><option>MG</option>
+          </select>
+        </label>
+        <span class="meta" id="imgMeta"></span>
+      </div>
+    </div>
+
+    <div class="compare">
+      <div class="panel">
+        <h3>你的图像（本地预览）</h3>
+        <input type="file" id="localFile" accept="image/*">
+        <div class="viewer" id="localViewer"><span>未选择图像</span></div>
+        <p class="muted small">仅用于并排观察，系统不会读取图像内容，也不会给出任何判断。</p>
+      </div>
+      <div class="panel">
+        <h3>公开参考影像</h3>
+        <div class="viewer" id="refViewer"><span>从下方选择一张公开影像</span></div>
+        <p class="muted small" id="refMeta"></p>
+      </div>
+    </div>
+
+    <h2 class="sec-title">公开影像库 <small>按部位 → 病症两级归类，均已核验无患者标识</small></h2>
+    <div id="gallery" class="images"></div>
+
+    <div class="panel online" id="onlinePanel">
+      <div class="online-head">
+        <h3>在线检索相似图像 / 病例</h3>
+        <span class="tag">接口预留 · 只读</span>
+      </div>
+      <p class="muted small">
+        调用公开来源检索候选，只返回链接与元数据：不下载、不入库、不解析图像内容。
+        许可不在白名单或命中隐私标记的候选会被标注，需人工核验后走 <code>add_cases.py</code> 流程。
+      </p>
+      <div class="filters">
+        <input id="simQ" placeholder="检索词，如 ground-glass opacity / thyroid nodule">
+        <select id="simProvider">
+          <option value="all">全部来源</option>
+          <option value="commons">Wikimedia Commons</option>
+          <option value="openi">Open-i 影像库</option>
+          <option value="pubmed">PubMed 病例文献</option>
+          <option value="tcia">TCIA（待配置）</option>
+        </select>
+        <button id="simBtn" class="btn">搜索</button>
+        <span class="meta" id="simMeta"></span>
+      </div>
+      <div id="simProviders" class="sim-providers"></div>
+      <div id="simResults" class="sim-results"></div>
+    </div>
+  </section>
+
+  <!-- 来源与边界 -->
+  <section id="view-about" hidden>
+    <div class="panel">
+      <h2>这份知识库是什么</h2>
+      <p>
+        一个面向影像教学的知识库：把常见影像征象整理成可检索的描述性条目，
+        并为每条条目关联公开标准入口与公开许可的教学影像。检索结果只回答
+        「这个征象在影像上长什么样、通常还伴随什么、容易和什么混淆、出处在哪里」。
+      </p>
+      <p>
+        它<strong>不回答</strong>「我这张片子是什么病」「要不要手术」「该用什么药」。
+        这类问题会被明确拒答，并引导至具备资质的医师。
+      </p>
+    </div>
+    <div class="panel">
+      <h2>数据构成</h2>
+      <div class="stats" id="aboutStats"></div>
+    </div>
+    <div class="panel">
+      <h2>隐私与版权</h2>
+      <ul class="rules">
+        <li><strong>不使用真实患者数据。</strong>图像仅来自 Wikimedia Commons 的公开许可素材，逐张人工核验，不含姓名、ID、检查日期等可识别信息。</li>
+        <li><strong>只引用、不转载。</strong>标准与指南仅提供来源级链接与自写摘要，不复制受版权保护的全文、评分表与阈值。</li>
+        <li><strong>许可白名单。</strong>仅接受 CC0、CC BY、CC BY-SA 与公有领域素材；排除 NC、ND 与人物照片。</li>
+        <li><strong>署名可追溯。</strong>每张图的作者、许可与来源页见 <code>licenses/ATTRIBUTION.md</code>，界面内亦可查看。</li>
+        <li><strong>可撤回。</strong>权利人提出异议时，删除对应文件并从索引移除。</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2>已知限制</h2>
+      <ul class="rules">
+        <li>征象条目为教学摘要，措辞经过保守化处理，不能替代教材与标准原文。</li>
+        <li>公开影像的标签来自来源页描述，未经放射科医师逐例复核，仅作对照参考。</li>
+        <li>检索为关键词与同义词匹配，不做图像内容识别，因此不提供「上传即判读」。</li>
+        <li>库内条目有限，未覆盖的征象会明确提示「暂无依据」，不猜测。</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>
+    <span id="footStats"></span>
+    <span class="dot">·</span>
+    <a href="#" data-view-link="about">来源与边界</a>
+    <span class="dot">·</span>
+    <span>非诊断用途</span>
+  </div>
+</footer>
+
+<dialog id="lightbox">
+  <button class="close" id="closeLb" aria-label="关闭">×</button>
+  <img id="lbImg" alt="">
+  <div class="lb-meta">
+    <h3 id="lbTitle"></h3>
+    <p id="lbDesc"></p>
+    <div class="lb-links" id="lbLinks"></div>
+    <p id="lbCredit"></p>
+    <a id="lbLink" target="_blank" rel="noopener">查看来源页</a>
+  </div>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>征象文字 ↔ 影像位置 · v1 离线演示</title>
+<style>__CSS__</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="mark">KB</div>
+    <div>
+      <h1>征象文字 ↔ 影像位置</h1>
+      <p>离线演示 · 人工标注 · 非诊断用途</p>
+    </div>
+  </div>
+  <span class="tag">v1 · 2026-11-15</span>
+</header>
+
+<div class="notice" role="note">
+  <strong>使用边界</strong>
+  本页只做征象文字与公开影像的对照，框是人工标注的教学区域，不是模型识别，也不是病灶分割。
+  <u>不构成诊断意见，不对任何个体影像给出临床结论</u>。
+</div>
+
+<main>
+  <div class="panel intro links-intro">
+    <div class="links-intro-head">
+      <h2>一句话，落在图上哪一块</h2>
+      <span class="tag">双向定位</span>
+    </div>
+    <p>
+      左侧是征象词条的文字表述，右侧是同一句话在公开影像上的位置。
+      点击带下划线的文字，图上对应的框会高亮；点击图上的编号框，文字也会回到对应句子。
+    </p>
+    <p class="muted small">
+      每条关联都同时具备文字锚点与图像锚点；缺少任一侧就不会进入本页。
+      侧别由规则显式声明，例如 PA 胸片“图像左侧 = 患者右侧”，不靠方位默推。
+    </p>
+    <div class="links-gate" id="linksGate"></div>
+  </div>
+
+  <div class="links-picker">
+    <span class="tax-label">已关联征象</span>
+    <div class="chips" id="linksPicker"></div>
+  </div>
+
+  <div class="links-layout">
+    <div class="panel links-text">
+      <div class="links-text-head">
+        <div>
+          <h2 id="linksSignName">—</h2>
+          <span class="en" id="linksSignEn"></span>
+        </div>
+        <div class="tags" id="linksSignTags"></div>
+      </div>
+
+      <div class="label">文字表述 <small>带下划线处已关联影像</small></div>
+      <p class="appearance" id="linksAppearance"></p>
+
+      <div class="links-legend" id="linksLegend"></div>
+      <div class="links-list" id="linksList"></div>
+      <p class="muted small" id="linksNote"></p>
+    </div>
+
+    <div class="panel links-viewer">
+      <div class="viewer-head">
+        <div>
+          <h3 id="linksImageTitle">—</h3>
+          <p class="muted small" id="linksImageMeta"></p>
+        </div>
+        <span class="tag" id="linksImageBasis"></span>
+      </div>
+
+      <div class="link-stage" id="linkStage">
+        <div class="link-frame" id="linkFrame">
+          <img id="linkImg" alt="">
+          <div class="link-overlay" id="linkOverlay"></div>
+        </div>
+      </div>
+
+      <div class="links-thumbs" id="linksThumbs"></div>
+      <p class="links-caption" id="linksCaption"></p>
+      <div class="links-reading" id="linksReading"></div>
+      <div class="links-image-foot">
+        <a id="linksSource" target="_blank" rel="noopener">查看来源页</a>
+        <span id="linksCredit"></span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>征象文字 ↔ 影像位置 v1</span>
+  <span class="dot">·</span>
+  <span>人工标注 · 非模型识别</span>
+  <span class="dot">·</span>
+  <span>非诊断用途</span>
+</footer>
+
+<script>window.__DATA__ = __KB_DATA__; window.__IMG__ = __KB_IMG__;</script>
+<script>__JS__</script>
+</body>
+</html>

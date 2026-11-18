@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>影像证据工作台 · 临床</title>
+<link rel="stylesheet" href="/clinic.css">
+</head>
+<body>
+
+<header class="bar">
+  <div class="logo">
+    <span class="m">◫</span>
+    <div>
+      <b>影像证据工作台</b>
+      <i>REGION · CITATION · AUDIT</i>
+    </div>
+  </div>
+
+  <div class="search">
+    <span>⌕</span>
+    <input id="q" type="search" placeholder="病例编号 / 部位 / 模态 / 体位" autocomplete="off">
+  </div>
+
+  <div class="seg" id="levelSeg">
+    <button data-l="" class="on">全部</button>
+    <button data-l="B">B 已复核</button>
+    <button data-l="C">C 待复核</button>
+  </div>
+
+  <div class="gate" id="gate">
+    <span><i class="d dual"></i>双引用 <b id="gDual">0</b></span>
+    <span><i class="d single"></i>单引用 <b id="gSingle">0</b></span>
+    <span><i class="d broken"></i>拦截 <b id="gBroken">0</b></span>
+  </div>
+
+  <nav class="switch">
+    <a href="/teach">教学</a>
+    <a class="on" href="/clinic">临床</a>
+  </nav>
+</header>
+
+<div class="shell">
+  <aside class="list">
+    <div class="list-head">
+      <span>病例队列</span>
+      <b id="listCount">0</b>
+    </div>
+    <div class="table-head">
+      <span>编号</span><span>部位</span><span>分区</span><span>双引</span><span>等级</span>
+    </div>
+    <div class="rows" id="rows"><div class="empty">加载中…</div></div>
+    <div class="list-foot">
+      <span>共 <b id="total">0</b> 例</span>
+      <span>可定位 <b id="locatable">0</b></span>
+    </div>
+  </aside>
+
+  <main class="work">
+    <div class="work-head">
+      <div>
+        <h1 id="title">未选择病例</h1>
+        <div class="sub" id="sub">—</div>
+      </div>
+      <div class="head-right">
+        <span class="pill" id="posePill">—</span>
+        <span class="pill" id="atlasPill">—</span>
+      </div>
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="frame" id="frame">
+        <img id="img" alt="影像" draggable="false">
+        <div class="overlay" id="overlay"></div>
+        <div class="selbox" id="selbox"></div>
+      </div>
+      <div class="stage-empty" id="stageEmpty">
+        <b>选择病例后拖框定位</b>
+        <span>拖拽画框 → 命中解剖分区 → 右侧给出空间锚点与文献锚点</span>
+      </div>
+      <div class="zoom" id="zoomBadge">100%</div>
+      <div class="toast" id="toast"></div>
+    </div>
+
+    <div class="tools">
+      <div class="tg">
+        <button id="zoomOut">−</button>
+        <button id="zoomReset" class="wide">100%</button>
+        <button id="zoomIn">+</button>
+        <button id="fit">适应</button>
+      </div>
+      <div class="sep"></div>
+      <div class="tg">
+        <button id="regionToggle" class="on"><i></i>分区</button>
+        <button id="clear">清除</button>
+      </div>
+      <div class="sep"></div>
+      <span class="hint" id="hint">拖框定位 · Shift+拖动平移 · 滚轮缩放</span>
+      <span class="spacer"></span>
+      <span class="mono" id="bboxMeta">—</span>
+    </div>
+
+    <div class="work-foot">
+      <span id="srcLine">—</span>
+      <span class="spacer"></span>
+      <span id="licLine">—</span>
+    </div>
+  </main>
+
+  <aside class="panel">
+    <div class="tabs">
+      <button data-t="locate" class="on">定位</button>
+      <button data-t="evidence">证据 <i id="evCount">0</i></button>
+      <button data-t="audit">审计</button>
+    </div>
+    <div class="tab-body" id="tabBody"></div>
+  </aside>
+</div>
+
+<script src="/clinic.js"></script>
+</body>
+</html>

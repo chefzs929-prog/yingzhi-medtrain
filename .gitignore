@@ -1,0 +1,29 @@
+# 系统与工具
+.DS_Store
+.deepworks/
+.opencode/
+.opencode-router/
+opencode.jsonc
+opencode.jsonc.last-good
+uploads/
+versions/
+homepage/
+yingzhi/
+duo-workspace/
+__pycache__/
+*.pyc
+
+# 演示/赛制原始文件（体积大，与代码无关）
+*.pptx
+*.docx
+
+# 站点构建产物：发布在 gh-pages 分支，不重复进 main
+outputs/medtrain/
+
+# 候选影像池与中间产物（已消费，保留在本地）
+kb/_candidates/
+kb/_candidates2/
+kb/data/v3/images/
+
+# 探针临时截图
+outputs/precision-eval/_work/*.png

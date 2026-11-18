@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>影像征象知识库 · 教学对照</title>
+<style>
+:root {
+  --ink: #14213d;
+  --ink-2: #3d4b66;
+  --muted: #6b7a94;
+  --line: #e2e8f2;
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --brand: #0f4c81;
+  --brand-2: #1a6fb0;
+  --accent: #b8860b;
+  --warn-bg: #fff8e6;
+  --warn-line: #f0c36d;
+  --ok: #2f7d5d;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(20, 33, 61, .04), 0 8px 24px rgba(20, 33, 61, .06);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--brand); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---------- top bar ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 14px 32px;
+  background: rgba(255, 255, 255, .92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+
+.mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(140deg, var(--brand), var(--brand-2));
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  display: grid;
+  place-items: center;
+}
+
+.brand h1 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: .2px; }
+.brand p { margin: 0; font-size: 12px; color: var(--muted); letter-spacing: .3px; }
+
+.tabs { display: flex; gap: 4px; }
+
+.tabs button {
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.tabs button:hover { background: #eef3fa; }
+.tabs button.active { color: var(--brand); background: #e8f1fa; font-weight: 600; }
+
+/* ---------- notice ---------- */
+.notice {
+  margin: 18px 32px 0;
+  padding: 12px 16px;
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-line);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  font-size: 13px;
+  color: #6b5312;
+}
+.notice strong { margin-right: 8px; color: #8a6a10; }
+
+/* ---------- layout ---------- */
+main { max-width: 1180px; margin: 0 auto; padding: 24px 32px 64px; }
+section[hidden] { display: none; }
+
+.searchbox {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.searchbox input {
+  flex: 1;
+  padding: 15px 18px;
+  font-size: 15px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.searchbox input:focus {
+  border-color: var(--brand-2);
+  box-shadow: 0 0 0 4px rgba(26, 111, 176, .12);
+}
+
+.searchbox button {
+  padding: 0 26px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--brand);
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background .15s;
+}
+.searchbox button:hover { background: #0d416e; }
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.chips button {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink-2);
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.chips button:hover { border-color: var(--brand-2); color: var(--brand); }
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 16px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.filters label { display: flex; align-items: center; gap: 8px; }
+.filters select {
+  padding: 6px 10px;
+  font-size: 13px;
+  color: var(--ink);
+  background: #f8fafd;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  outline: none;
+}
+.meta { margin-left: auto; color: var(--muted); font-size: 12px; }
+
+.confidence {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  background: #eef6f1;
+  border: 1px solid #cfe6da;
+  color: #24614a;
+}
+.confidence.low { background: #fff4f2; border-color: #f2c9c0; color: #8a3a28; }
+.confidence.medium { background: var(--warn-bg); border-color: var(--warn-line); color: #6b5312; }
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.sec-title {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: .4px;
+  color: var(--ink-2);
+  text-transform: none;
+}
+.sec-title small { margin-left: 8px; font-weight: 400; color: var(--muted); letter-spacing: 0; }
+
+/* ---------- cards ---------- */
+.cards { display: flex; flex-direction: column; gap: 14px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+
+.card-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; }
+.card-head h3 { margin: 0; font-size: 17px; font-weight: 650; }
+.card-head .en { font-size: 12px; color: var(--muted); letter-spacing: .3px; }
+.card-head .score { margin-left: auto; font-size: 11px; color: #9aa8bd; font-variant-numeric: tabular-nums; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #eef3fa;
+  color: #2c5d8f;
+  border: 1px solid #dbe7f4;
+}
+.tag.mod { background: #eef7f2; color: #2f6b52; border-color: #d3e9dd; }
+
+.card p { margin: 10px 0 0; color: var(--ink-2); }
+.card .label { font-size: 12px; font-weight: 600; color: var(--muted); margin: 14px 0 6px; }
+
+.pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: #f6f8fc;
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+}
+
+.caution {
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: #fbfaf5;
+  border-left: 3px solid #d9c48a;
+  border-radius: 6px;
+  font-size: 12.5px;
+  color: #6a5a2a;
+}
+.caution b { display: block; margin-bottom: 2px; color: #8a6a10; }
+
+.sources { margin-top: 14px; font-size: 12px; color: var(--muted); }
+.sources a { margin-right: 12px; white-space: nowrap; }
+.sources .src-note { display: block; margin-top: 4px; color: #93a0b5; }
+
+/* ---------- side panels ---------- */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+.panel h2 { margin: 0 0 8px; font-size: 15px; font-weight: 650; }
+.panel h3 { margin: 0 0 8px; font-size: 14px; font-weight: 650; }
+.panel p { margin: 8px 0; color: var(--ink-2); }
+.muted { color: var(--muted); font-size: 13px; }
+.small { font-size: 12px; }
+
+.std + .std { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.std h4 { margin: 0; font-size: 14px; font-weight: 650; }
+.std .pub { font-size: 11.5px; color: var(--muted); }
+.std ul { margin: 8px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 12.5px; }
+.std li { margin: 2px 0; }
+
+.rel-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.rel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #fbfcfe;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.rel:hover { border-color: var(--brand-2); color: var(--brand); }
+.rel small { color: var(--muted); font-size: 11px; }
+
+/* ---------- images ---------- */
+.images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.img-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s, border-color .15s;
+}
+.img-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: #cfdcec; }
+
+.img-card .thumb {
+  aspect-ratio: 4 / 3;
+  background: #0d1117;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.img-card img { width: 100%; height: 100%; object-fit: contain; }
+.img-card .cap { padding: 10px 12px; }
+.img-card .cap b { display: block; font-size: 13px; font-weight: 600; color: var(--ink); }
+.img-card .cap span { font-size: 11.5px; color: var(--muted); }
+
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.viewer {
+  margin-top: 10px;
+  aspect-ratio: 4 / 3;
+  background: #0d1117;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #6b7a94;
+  font-size: 12px;
+  overflow: hidden;
+}
+.viewer img { width: 100%; height: 100%; object-fit: contain; }
+input[type="file"] { font-size: 12px; color: var(--muted); max-width: 100%; }
+
+
+/* ---------- image groups ---------- */
+.group {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px 14px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.group-head { margin-bottom: 14px; }
+.group-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; }
+.group-title h3 { margin: 0; font-size: 15.5px; font-weight: 650; }
+.group-title .meta { font-size: 11.5px; color: var(--muted); }
+.group-head p { margin: 6px 0 0; font-size: 13px; color: var(--ink-2); }
+.group-head p.small { font-size: 11.5px; color: var(--muted); }
+.group .images { margin-bottom: 10px; }
+.group-caution {
+  margin: 0;
+  padding: 8px 12px;
+  border-left: 3px solid #d9c48a;
+  background: #fbfaf5;
+  border-radius: 6px;
+  font-size: 11.5px;
+  color: #6a5a2a;
+}
+
+/* ---------- misc ---------- */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; }
+.stat { background: #f8fafd; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.stat b { display: block; font-size: 22px; font-weight: 650; color: var(--brand); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 12px; color: var(--muted); }
+
+.rules { margin: 6px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 13px; }
+.rules li { margin: 6px 0; }
+
+.empty {
+  background: #fff;
+  border: 1px dashed #cfd9e8;
+  border-radius: var(--radius);
+  padding: 28px;
+  text-align: center;
+}
+.empty h3 { margin: 0 0 6px; font-size: 15px; }
+.empty p { margin: 0; color: var(--muted); font-size: 13px; }
+
+footer {
+  border-top: 1px solid var(--line);
+  padding: 18px 32px 28px;
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  justify-content: center;
+}
+footer .dot { margin: 0 8px; color: #c3cddd; }
+
+/* ---------- lightbox ---------- */
+dialog {
+  position: relative;
+  border: 0;
+  padding: 0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 24px 80px rgba(10, 20, 40, .35);
+  max-width: min(920px, 92vw);
+  width: 100%;
+}
+dialog::backdrop { background: rgba(10, 18, 32, .62); }
+dialog img { width: 100%; max-height: 62vh; object-fit: contain; background: #0d1117; display: block; border-radius: 16px 16px 0 0; }
+.lb-meta { padding: 16px 20px 20px; }
+.lb-meta h3 { margin: 0 0 6px; font-size: 15px; }
+.lb-meta p { margin: 4px 0; font-size: 12.5px; color: var(--muted); }
+dialog .close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(255, 255, 255, .92);
+  font-size: 20px;
+  line-height: 1;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+
+/* ---------- dual line ---------- */
+.panel.intro p { margin: 4px 0 0; }
+
+.align {
+  border: 1px solid var(--line);
+  border-left: 4px solid #9aa8bd;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+.align.aligned { border-left-color: var(--ok); background: #f6fbf8; }
+.align.partial { border-left-color: var(--accent); background: #fffbf0; }
+.align.insufficient { border-left-color: #b9533f; background: #fff7f5; }
+.align p { margin: 10px 0 0; color: var(--ink-2); font-size: 13.5px; }
+.align-head { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.badge {
+  font-size: 12px;
+  font-weight: 650;
+  padding: 3px 10px;
+  border-radius: 999px;
+  color: #fff;
+  background: #8a97ab;
+}
+.badge.aligned { background: var(--ok); }
+.badge.partial { background: #b8860b; }
+.badge.insufficient { background: #b9533f; }
+.cov { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.align-action {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  font-size: 13px;
+}
+.align-action b { margin-right: 8px; color: var(--ink); }
+.align-action span { color: var(--brand); font-weight: 600; }
+.align-action small { display: block; margin-top: 4px; color: var(--muted); font-size: 11.5px; }
+
+.cond-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.cond {
+  font-size: 11.5px;
+  padding: 3px 9px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: #f8fafd;
+  color: var(--ink-2);
+}
+.cond.ok { background: #eef7f2; border-color: #cfe6da; color: #24614a; }
+.cond.miss { background: #fff8e6; border-color: #f0c36d; color: #7a5c10; }
+.cond.pre { background: #f4f6fa; color: #7b879b; }
+
+.dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.mini { padding: 12px 0; border-bottom: 1px dashed var(--line); }
+.mini:last-child { border-bottom: 0; padding-bottom: 0; }
+.mini p { margin: 8px 0; font-size: 13px; color: var(--ink-2); }
+
+.gl {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #fcfdff;
+}
+.gl.best { border-color: #b9d4ea; background: #f7fbff; }
+.gl-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.gl-head b { font-size: 12.5px; color: var(--brand); font-weight: 650; }
+.gl-head .pub { font-size: 11.5px; color: var(--muted); }
+.gl p { margin: 8px 0 0; font-size: 13px; color: var(--ink-2); }
+.gl-action {
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+}
+.gl-action span { color: var(--brand); font-weight: 600; }
+.gl .sources { margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .topbar { flex-direction: column; align-items: flex-start; gap: 10px; padding: 12px 18px; }
+  main { padding: 18px 18px 48px; }
+  .notice { margin: 14px 18px 0; }
+  .grid, .compare, .dual-grid { grid-template-columns: 1fr; }
+  .searchbox { flex-direction: column; }
+  .searchbox button { padding: 12px; }
+  .meta { margin-left: 0; }
+}
+
+/* ---------- taxonomy（一级部位 / 二级病症） ---------- */
+.tax { display: grid; gap: 10px; margin: 12px 0 6px; }
+.tax-row { display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap; }
+.tax-label { font-size: 12px; color: var(--muted); min-width: 82px; padding-top: 7px; letter-spacing: .3px; }
+.tax .chips { flex: 1; margin: 0; }
+.chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: #fff; color: var(--ink-2); border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer; }
+.chip em { font-style: normal; font-size: 11px; color: var(--muted); background: var(--bg); border-radius: 999px; padding: 1px 6px; }
+.chip:hover { border-color: var(--brand-2); color: var(--brand); }
+.chip.on { background: var(--brand); border-color: var(--brand); color: #fff; }
+.chip.on em { background: rgba(255, 255, 255, .2); color: #fff; }
+.chip.empty { opacity: .55; border-style: dashed; }
+.reg-tag { display: inline-block; font-size: 11px; color: var(--brand); background: #e8f1fa; border-radius: 6px; padding: 2px 7px; margin-right: 6px; vertical-align: middle; }
+
+/* ---------- 在线相似检索 ---------- */
+.online { margin-top: 18px; }
+.online-head { display: flex; align-items: center; gap: 10px; }
+.online-head h3 { margin: 0; }
+.online code { background: var(--bg); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+.sim-providers { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.prov { font-size: 11px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; color: var(--muted); }
+.prov.ok { color: var(--ok); border-color: #bfe3d3; background: #f2fbf7; }
+.prov.rate_limited, .prov.error, .prov.unreachable { color: #a2452f; border-color: #f0c9bd; background: #fdf4f1; }
+.sim-results { display: grid; gap: 10px; margin-top: 6px; }
+.sim-card { display: grid; grid-template-columns: 96px 1fr; gap: 12px; border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: #fff; }
+.sim-card.blocked { opacity: .6; background: #fafafa; }
+.sim-card img { width: 96px; height: 76px; object-fit: cover; border-radius: 6px; background: var(--bg); }
+.sim-noimg { width: 96px; height: 76px; display: grid; place-items: center; font-size: 11px; color: var(--muted); background: var(--bg); border-radius: 6px; }
+.sim-body b { font-size: 13px; }
+.sim-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0; }
+.tag { font-size: 10px; border-radius: 4px; padding: 1px 6px; background: var(--bg); color: var(--ink-2); }
+.tag.ok { background: #f2fbf7; color: var(--ok); }
+.tag.bad { background: #fdf4f1; color: #a2452f; }
+.sim-actions { display: flex; gap: 10px; align-items: center; font-size: 12px; }
+.btn { background: var(--brand); color: #fff; border: 1px solid var(--brand); border-radius: 8px; padding: 7px 14px; font-size: 13px; cursor: pointer; }
+.btn.ghost { background: #fff; color: var(--brand); border: 1px solid var(--line); padding: 4px 10px; font-size: 12px; }
+.btn.ghost:disabled { color: var(--muted); cursor: not-allowed; }
+
+/* ---------- 征象文字 ↔ 影像位置（v1） ---------- */
+.links-intro { margin-bottom: 16px; }
+.links-intro-head { display: flex; align-items: center; gap: 10px; }
+.links-intro-head h2 { margin: 0; }
+.links-intro-head .tag { background: #eef7f2; color: #2f6b52; border-color: #d3e9dd; }
+.links-gate { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.gate-item {
+  display: inline-flex; align-items: baseline; gap: 6px;
+  padding: 5px 10px; border-radius: 8px;
+  background: #f8fafd; border: 1px solid var(--line);
+  font-size: 12px; color: var(--ink-2);
+}
+.gate-item b { font-size: 15px; color: var(--brand); font-variant-numeric: tabular-nums; }
+.gate-item.ok { background: #f2fbf7; border-color: #cfe6da; color: #24614a; }
+.gate-item.ok b { color: var(--ok); }
+
+.links-picker {
+  display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.links-picker .chips { flex: 1; margin: 0; }
+.links-picker .chip.on { box-shadow: 0 2px 8px rgba(15, 76, 129, .18); }
+
+.links-layout {
+  display: grid;
+  grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+  gap: 18px;
+  align-items: start;
+}
+.links-text, .links-viewer { margin-bottom: 0; }
+.links-text-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--line);
+}
+.links-text-head h2 { margin: 0; font-size: 20px; }
+.links-text-head .en { font-size: 12px; color: var(--muted); letter-spacing: .3px; }
+.links-text-head .tags { margin-top: 0; justify-content: flex-end; }
+
+.appearance {
+  margin: 10px 0 4px;
+  font-size: 16px;
+  line-height: 2;
+  color: var(--ink);
+}
+.text-link {
+  display: inline;
+  margin: 0;
+  padding: 1px 2px;
+  border: 0;
+  border-bottom: 2px solid #9cc3e2;
+  background: linear-gradient(transparent 62%, #e8f2fb 62%);
+  color: var(--ink);
+  font: inherit;
+  line-height: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.text-link:hover { background: linear-gradient(transparent 55%, #d8eaf9 55%); border-bottom-color: var(--brand-2); }
+.text-link.active {
+  background: #fff4d6;
+  border-bottom-color: #b8860b;
+  box-shadow: inset 0 -1px 0 #f0c36d;
+}
+.text-link .link-num {
+  display: inline-grid; place-items: center;
+  width: 16px; height: 16px; margin-left: 3px;
+  border-radius: 50%; background: var(--brand); color: #fff;
+  font-size: 9px; line-height: 1; vertical-align: 1px;
+  font-variant-numeric: tabular-nums;
+}
+
+.links-legend {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin: 14px 0 4px; padding: 10px 12px;
+  background: #f8fafd; border: 1px solid var(--line); border-radius: 10px;
+  font-size: 12px; color: var(--muted);
+}
+.links-legend b { color: var(--ink-2); font-weight: 600; }
+
+.links-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.link-row {
+  border: 1px solid var(--line);
+  border-left: 3px solid #c9d8e8;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fcfdff;
+  cursor: pointer;
+  transition: border-color .15s, background .15s, box-shadow .15s;
+}
+.link-row:hover { border-color: #b9d4ea; background: #f7fbff; }
+.link-row.active { border-left-color: var(--brand); background: #f4f9ff; box-shadow: 0 0 0 1px #d5e7f6; }
+.link-row-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.link-row-head .num {
+  display: inline-grid; place-items: center;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #e8f1fa; color: var(--brand);
+  font-size: 11px; font-weight: 650; font-variant-numeric: tabular-nums;
+}
+.link-row-head b { font-size: 13px; }
+.link-row-head .meta { margin-left: auto; font-size: 11px; color: var(--muted); }
+.link-row .quote { margin: 6px 0 0; font-size: 12.5px; color: var(--brand); }
+.link-row .region-line { margin: 6px 0 0; font-size: 11.5px; color: var(--muted); }
+.link-row .caption { margin: 6px 0 0; font-size: 12.5px; color: var(--ink-2); }
+.link-row .reading { margin: 6px 0 0; font-size: 12px; color: var(--muted); }
+
+.viewer-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 12px; margin-bottom: 10px;
+}
+.viewer-head h3 { margin: 0; font-size: 15px; }
+.viewer-head .tag { white-space: nowrap; }
+.link-stage {
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: 260px; padding: 8px;
+  background: #0d1117; border-radius: 10px; overflow: hidden;
+}
+.link-frame { position: relative; display: inline-block; max-width: 100%; line-height: 0; }
+.link-frame img { display: block; max-width: 100%; max-height: 68vh; width: auto; height: auto; }
+.link-overlay { position: absolute; inset: 0; }
+.link-box {
+  position: absolute;
+  border: 2px solid rgba(255, 214, 102, .92);
+  background: rgba(255, 214, 102, .13);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, box-shadow .15s;
+}
+.link-box:hover { background: rgba(255, 214, 102, .26); }
+.link-box.active {
+  border-color: #ff5d5d;
+  background: rgba(255, 93, 93, .16);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .55), 0 0 0 4px rgba(255, 93, 93, .35);
+  z-index: 2;
+}
+.link-box .box-label {
+  position: absolute; left: -2px; top: -22px;
+  max-width: 220px; padding: 1px 6px;
+  border-radius: 4px 4px 4px 0;
+  background: rgba(13, 17, 23, .82); color: #fff;
+  font-size: 10px; line-height: 18px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.link-box.active .box-label { background: #ff5d5d; }
+.link-box.side-left .box-label, .link-box.side-right .box-label { top: auto; bottom: -22px; border-radius: 0 4px 4px 4px; }
+
+.links-thumbs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.thumb-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 8px 4px 4px;
+  border: 1px solid var(--line); border-radius: 8px;
+  background: #fff; color: var(--ink-2);
+  font-size: 11px; cursor: pointer;
+}
+.thumb-btn img { width: 42px; height: 32px; object-fit: cover; border-radius: 5px; background: #0d1117; }
+.thumb-btn:hover { border-color: var(--brand-2); }
+.thumb-btn.active { border-color: var(--brand); background: #f4f9ff; color: var(--brand); box-shadow: 0 0 0 1px #d5e7f6; }
+
+.links-caption { margin: 12px 0 0; font-size: 13px; color: var(--ink-2); }
+.links-reading {
+  margin-top: 8px; padding: 10px 12px;
+  border-left: 3px solid #d9c48a; border-radius: 6px;
+  background: #fbfaf5; font-size: 12.5px; color: #6a5a2a;
+}
+.links-reading b { color: #8a6a10; }
+.links-image-foot {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  margin-top: 12px; font-size: 11.5px; color: var(--muted);
+}
+.links-image-foot a { white-space: nowrap; }
+
+.lb-links { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 4px; }
+.lb-links:empty { display: none; }
+.lb-links button {
+  border: 1px solid #dbe7f4; background: #eef3fa; color: #2c5d8f;
+  border-radius: 999px; padding: 3px 10px; font-size: 11.5px; cursor: pointer;
+}
+.lb-links button:hover { border-color: var(--brand-2); color: var(--brand); }
+
+@media (max-width: 900px) {
+  .links-layout { grid-template-columns: 1fr; }
+  .links-text-head { flex-direction: column; }
+  .links-text-head .tags { justify-content: flex-start; }
+  .link-frame img { max-height: 56vh; }
+}
+
+/* ---------- 图文对照入口 ---------- */
+.card-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.link-hint { font-size: 11.5px; color: var(--muted); }
+.img-card .cap .link-badge {
+  display: inline-block; margin-left: 6px; padding: 0 6px;
+  border: 1px solid #dbe7f4; border-radius: 999px;
+  background: #eef3fa; color: #2c5d8f;
+  font-size: 10px; font-weight: 500; vertical-align: 1px;
+}
+.link-box.label-below .box-label { top: auto; bottom: -22px; border-radius: 0 4px 4px 4px; }
+
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="mark">KB</div>
+    <div>
+      <h1>影像征象知识库</h1>
+      <p>公开资料 · 征象对照 · 相似病例关联</p>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button data-view="search" class="active">征象检索</button>
+    <button data-view="links">图文对照</button>
+    <button data-view="dual">双线判断</button>
+    <button data-view="images">图像对照</button>
+    <button data-view="about">来源与边界</button>
+  </nav>
+</header>
+
+<div class="notice" role="note">
+  <strong>使用边界</strong>
+  本知识库仅用于教学与研究，只提供影像征象的描述性解释、公开文献出处与公开影像对照，
+  <u>不构成诊断意见，不对任何个体影像给出临床结论</u>。就医请咨询具备资质的医师。
+</div>
+
+<main>
+  <!-- 征象检索 -->
+  <section id="view-search">
+    <form class="searchbox" id="searchForm" autocomplete="off">
+      <input id="q" name="q" placeholder="输入征象、部位或描述，例如：磨玻璃影 / 甲状腺低回声结节 / 双管征 / 乳腺毛刺">
+      <button type="submit">检索</button>
+    </form>
+
+    <div class="chips" id="chips">
+      <span>试试：</span>
+      <button data-q="磨玻璃影">磨玻璃影</button>
+      <button data-q="甲状腺低回声结节">甲状腺低回声结节</button>
+      <button data-q="双管征">双管征</button>
+      <button data-q="乳腺毛刺状肿块">乳腺毛刺</button>
+      <button data-q="快进快出强化">快进快出</button>
+      <button data-q="胸腔积液">胸腔积液</button>
+    </div>
+
+    <div class="filters">
+      <label>模态
+        <select id="modality">
+          <option value="">全部</option>
+          <option>CT</option><option>MR</option><option>US</option>
+          <option>CR</option><option>MG</option>
+        </select>
+      </label>
+      <label>部位
+        <select id="part">
+          <option value="">全部</option>
+          <option>肺</option><option>胸</option><option>乳腺</option><option>甲状腺</option>
+          <option>肝</option><option>胆</option><option>胰</option><option>肾</option>
+          <option>脑</option><option>膝</option><option>腹</option>
+        </select>
+      </label>
+      <span class="meta" id="meta"></span>
+    </div>
+
+    <div id="confidence" class="confidence" hidden></div>
+
+    <div class="grid">
+      <div class="col-main">
+        <h2 class="sec-title">征象解释 <small>描述性定义，不含诊断结论</small></h2>
+        <div id="signs" class="cards"></div>
+        <div id="empty" class="empty" hidden>
+          <h3>库内暂无足够依据</h3>
+          <p>未检索到与该描述直接对应的征象或公开影像。可尝试更具体的影像学术语，
+             或查看<a href="#" data-view-link="about">来源与边界</a>。</p>
+        </div>
+      </div>
+      <aside class="col-side">
+        <div id="standards"></div>
+        <div id="related"></div>
+      </aside>
+    </div>
+
+    <section id="casesWrap" hidden>
+      <h2 class="sec-title">公开影像对照 <small>点击查看来源与许可</small></h2>
+      <div id="cases" class="images"></div>
+    </section>
+  </section>
+
+  <!-- 图文对照 -->
+  <section id="view-links" hidden>
+    <div class="panel intro links-intro">
+      <div class="links-intro-head">
+        <h2>征象文字 ↔ 影像位置</h2>
+        <span class="tag">v1 · 人工标注</span>
+      </div>
+      <p>
+        左侧是征象词条的文字表述，右侧是同一句话在公开影像上的位置。
+        点击带下划线的文字，图上对应的框会高亮；点击图上的编号框，文字也会回到对应句子。
+      </p>
+      <p class="muted small">
+        框是人工标注的教学区域，不是模型识别，也不是病灶分割；只用于文字与影像对照，
+        不构成诊断意见，不对个体影像给出临床结论。
+      </p>
+      <div class="links-gate" id="linksGate"></div>
+    </div>
+
+    <div class="links-picker">
+      <span class="tax-label">已关联征象</span>
+      <div class="chips" id="linksPicker"></div>
+    </div>
+
+    <div class="links-layout">
+      <div class="panel links-text">
+        <div class="links-text-head">
+          <div>
+            <h2 id="linksSignName">—</h2>
+            <span class="en" id="linksSignEn"></span>
+          </div>
+          <div class="tags" id="linksSignTags"></div>
+        </div>
+
+        <div class="label">文字表述 <small>带下划线处已关联影像</small></div>
+        <p class="appearance" id="linksAppearance"></p>
+
+        <div class="links-legend" id="linksLegend"></div>
+        <div class="links-list" id="linksList"></div>
+        <p class="muted small" id="linksNote"></p>
+      </div>
+
+      <div class="panel links-viewer">
+        <div class="viewer-head">
+          <div>
+            <h3 id="linksImageTitle">—</h3>
+            <p class="muted small" id="linksImageMeta"></p>
+          </div>
+          <span class="tag" id="linksImageBasis"></span>
+        </div>
+
+        <div class="link-stage" id="linkStage">
+          <div class="link-frame" id="linkFrame">
+            <img id="linkImg" alt="">
+            <div class="link-overlay" id="linkOverlay"></div>
+          </div>
+        </div>
+
+        <div class="links-thumbs" id="linksThumbs"></div>
+        <p class="links-caption" id="linksCaption"></p>
+        <div class="links-reading" id="linksReading"></div>
+        <div class="links-image-foot">
+          <a id="linksSource" target="_blank" rel="noopener">查看来源页</a>
+          <span id="linksCredit"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 双线判断 -->
+  <section id="view-dual" hidden>
+    <div class="panel intro">
+      <h2>双线判断</h2>
+      <p class="muted">
+        影像线回答「库内有哪些对应征象与公开影像」，指南线回答「公开条款在什么条件下给出什么方向」。
+        系统只判断两条证据线是否对齐，并明确列出缺失条件；<strong>不给出诊断或治疗建议</strong>。
+      </p>
+    </div>
+
+    <form class="searchbox" id="dualForm" autocomplete="off">
+      <input id="dq" placeholder="输入影像描述与关键条件，例如：甲状腺结节 TR4 1.6cm">
+      <button type="submit">双线判断</button>
+    </form>
+
+    <div class="chips" id="dualChips">
+      <span>试试：</span>
+      <button data-q="甲状腺结节 TR4 1.6cm">甲状腺 TR4 1.6cm</button>
+      <button data-q="肺实性结节 7mm">肺实性结节 7mm</button>
+      <button data-q="肾囊肿 Bosniak IIF">肾囊肿 Bosniak IIF</button>
+      <button data-q="乳腺肿块 BI-RADS 4 伴毛刺">乳腺 BI-RADS 4</button>
+      <button data-q="胆囊息肉 8mm">胆囊息肉 8mm</button>
+      <button data-q="甲状腺低回声结节">甲状腺低回声结节</button>
+    </div>
+
+    <div class="filters">
+      <label>模态
+        <select id="dualModality">
+          <option value="">全部</option>
+          <option>CT</option><option>MR</option><option>US</option>
+          <option>CR</option><option>MG</option>
+        </select>
+      </label>
+      <label>部位
+        <select id="dualPart">
+          <option value="">全部</option>
+          <option>甲状腺</option><option>肺</option><option>乳腺</option><option>肝</option>
+          <option>肾</option><option>胆囊</option><option>胰</option><option>卵巢</option><option>前列腺</option>
+        </select>
+      </label>
+      <span class="meta" id="dualMeta"></span>
+    </div>
+
+    <div id="dualAlign" class="align" hidden></div>
+
+    <div class="dual-grid">
+      <div class="panel">
+        <h2>影像线 <small>征象解释与公开影像</small></h2>
+        <div id="dualImaging" class="stack"></div>
+      </div>
+      <div class="panel">
+        <h2>指南线 <small>条款、适用条件与方向</small></h2>
+        <div id="dualGuide" class="stack"></div>
+      </div>
+    </div>
+
+    <section id="dualCasesWrap" hidden>
+      <h2 class="sec-title">关联公开影像 <small>仅作对照</small></h2>
+      <div id="dualCases" class="images"></div>
+    </section>
+  </section>
+
+  <!-- 图像对照 -->
+  <section id="view-images" hidden>
+    <div class="panel">
+      <h2>图像对照</h2>
+      <p class="muted">
+        按部位与模态浏览公开教学影像，或选择本地图像与公开影像并排对照。
+        本地图像只在你的浏览器内显示，不上传、不分析、不做自动判读。
+      </p>
+      <div class="tax">
+        <div class="tax-row">
+          <span class="tax-label">一级 · 部位</span>
+          <div class="chips" id="regionTabs"></div>
+        </div>
+        <div class="tax-row">
+          <span class="tax-label">二级 · 病症</span>
+          <div class="chips" id="condChips"></div>
+        </div>
+      </div>
+      <div class="filters">
+        <label>模态
+          <select id="imgModality">
+            <option value="">全部</option>
+            <option>CT</option><option>MR</option><option>US</option>
+            <option>CR</option><option>MG</option>
+          </select>
+        </label>
+        <span class="meta" id="imgMeta"></span>
+      </div>
+    </div>
+
+    <div class="compare">
+      <div class="panel">
+        <h3>你的图像（本地预览）</h3>
+        <input type="file" id="localFile" accept="image/*">
+        <div class="viewer" id="localViewer"><span>未选择图像</span></div>
+        <p class="muted small">仅用于并排观察，系统不会读取图像内容，也不会给出任何判断。</p>
+      </div>
+      <div class="panel">
+        <h3>公开参考影像</h3>
+        <div class="viewer" id="refViewer"><span>从下方选择一张公开影像</span></div>
+        <p class="muted small" id="refMeta"></p>
+      </div>
+    </div>
+
+    <h2 class="sec-title">公开影像库 <small>按部位 → 病症两级归类，均已核验无患者标识</small></h2>
+    <div id="gallery" class="images"></div>
+
+    <div class="panel online" id="onlinePanel">
+      <div class="online-head">
+        <h3>在线检索相似图像 / 病例</h3>
+        <span class="tag">接口预留 · 只读</span>
+      </div>
+      <p class="muted small">
+        调用公开来源检索候选，只返回链接与元数据：不下载、不入库、不解析图像内容。
+        许可不在白名单或命中隐私标记的候选会被标注，需人工核验后走 <code>add_cases.py</code> 流程。
+      </p>
+      <div class="filters">
+        <input id="simQ" placeholder="检索词，如 ground-glass opacity / thyroid nodule">
+        <select id="simProvider">
+          <option value="all">全部来源</option>
+          <option value="commons">Wikimedia Commons</option>
+          <option value="openi">Open-i 影像库</option>
+          <option value="pubmed">PubMed 病例文献</option>
+          <option value="tcia">TCIA（待配置）</option>
+        </select>
+        <button id="simBtn" class="btn">搜索</button>
+        <span class="meta" id="simMeta"></span>
+      </div>
+      <div id="simProviders" class="sim-providers"></div>
+      <div id="simResults" class="sim-results"></div>
+    </div>
+  </section>
+
+  <!-- 来源与边界 -->
+  <section id="view-about" hidden>
+    <div class="panel">
+      <h2>这份知识库是什么</h2>
+      <p>
+        一个面向影像教学的知识库：把常见影像征象整理成可检索的描述性条目，
+        并为每条条目关联公开标准入口与公开许可的教学影像。检索结果只回答
+        「这个征象在影像上长什么样、通常还伴随什么、容易和什么混淆、出处在哪里」。
+      </p>
+      <p>
+        它<strong>不回答</strong>「我这张片子是什么病」「要不要手术」「该用什么药」。
+        这类问题会被明确拒答，并引导至具备资质的医师。
+      </p>
+    </div>
+    <div class="panel">
+      <h2>数据构成</h2>
+      <div class="stats" id="aboutStats"></div>
+    </div>
+    <div class="panel">
+      <h2>隐私与版权</h2>
+      <ul class="rules">
+        <li><strong>不使用真实患者数据。</strong>图像仅来自 Wikimedia Commons 的公开许可素材，逐张人工核验，不含姓名、ID、检查日期等可识别信息。</li>
+        <li><strong>只引用、不转载。</strong>标准与指南仅提供来源级链接与自写摘要，不复制受版权保护的全文、评分表与阈值。</li>
+        <li><strong>许可白名单。</strong>仅接受 CC0、CC BY、CC BY-SA 与公有领域素材；排除 NC、ND 与人物照片。</li>
+        <li><strong>署名可追溯。</strong>每张图的作者、许可与来源页见 <code>licenses/ATTRIBUTION.md</code>，界面内亦可查看。</li>
+        <li><strong>可撤回。</strong>权利人提出异议时，删除对应文件并从索引移除。</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2>已知限制</h2>
+      <ul class="rules">
+        <li>征象条目为教学摘要，措辞经过保守化处理，不能替代教材与标准原文。</li>
+        <li>公开影像的标签来自来源页描述，未经放射科医师逐例复核，仅作对照参考。</li>
+        <li>检索为关键词与同义词匹配，不做图像内容识别，因此不提供「上传即判读」。</li>
+        <li>库内条目有限，未覆盖的征象会明确提示「暂无依据」，不猜测。</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>
+    <span id="footStats"></span>
+    <span class="dot">·</span>
+    <a href="#" data-view-link="about">来源与边界</a>
+    <span class="dot">·</span>
+    <span>非诊断用途</span>
+  </div>
+</footer>
+
+<dialog id="lightbox">
+  <button class="close" id="closeLb" aria-label="关闭">×</button>
+  <img id="lbImg" alt="">
+  <div class="lb-meta">
+    <h3 id="lbTitle"></h3>
+    <p id="lbDesc"></p>
+    <div class="lb-links" id="lbLinks"></div>
+    <p id="lbCredit"></p>
+    <a id="lbLink" target="_blank" rel="noopener">查看来源页</a>
+  </div>
+</dialog>
+
+<script>window.__KB__={"docs": [{"id": "SIGN-001", "name": "磨玻璃影", "en": "ground-glass opacity", "aliases": ["GGO", "磨玻璃密度影", "磨玻璃结节"], "modality": ["CT"], "body_part": "肺", "appearance": "肺野密度轻度增高，但其内血管与支气管边缘仍可辨认；不掩盖其内血管与支气管轮廓。", "may_see_in": ["炎症性渗出", "局灶性纤维化", "肿瘤性病变", "肺水肿或出血"], "pitfalls": ["需与部分实性结节中的实性成分区分", "层厚与窗宽会影响显示，薄层更可靠"], "sources": [{"id": "SRC-FLEISCHNER", "title": "Fleischner Society 胸部影像术语表（2018）", "publisher": "Radiology / RSNA", "url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "版权归 RSNA，仅链接引用，不转载。", "access": "subscription", "verified": "403-需订阅", "note": "胸部 CT 术语（磨玻璃影、实变、网状影等）的权威定义来源。"}, {"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}], "tags": ["密度", "肺", "CT"], "type": "sign"}, {"id": "SIGN-002", "name": "实变", "en": "consolidation", "aliases": ["肺实变", "大片状高密度影"], "modality": ["CT", "CR"], "body_part": "肺", "appearance": "肺实质密度均匀增高，掩盖其内血管走行，常可见空气支气管征。", "may_see_in": ["感染性病变", "肺水肿", "出血", "梗死", "肿瘤性病变"], "pitfalls": ["与胸腔积液区别在于是否可见空气支气管征", "需结合病程与实验室检查"], "sources": [{"id": "SRC-FLEISCHNER", "title": "Fleischner Society 胸部影像术语表（2018）", "publisher": "Radiology / RSNA", "url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "版权归 RSNA，仅链接引用，不转载。", "access": "subscription", "verified": "403-需订阅", "note": "胸部 CT 术语（磨玻璃影、实变、网状影等）的权威定义来源。"}, {"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}], "tags": ["密度", "肺"], "type": "sign"}, {"id": "SIGN-003", "name": "结节", "en": "nodule", "aliases": ["肺结节", "小结节"], "modality": ["CT", "CR"], "body_part": "肺", "appearance": "类圆形、边界相对清楚的局灶性密度增高影，通常以最大径界值区分结节与肿块。", "may_see_in": ["炎性肉芽肿", "良性增生", "早期肿瘤性病变", "血管性病变"], "pitfalls": ["大小测量受层厚与重建影响", "需比较既往影像判断生长"], "sources": [{"id": "SRC-FLEISCHNER", "title": "Fleischner Society 胸部影像术语表（2018）", "publisher": "Radiology / RSNA", "url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "版权归 RSNA，仅链接引用，不转载。", "access": "subscription", "verified": "403-需订阅", "note": "胸部 CT 术语（磨玻璃影、实变、网状影等）的权威定义来源。"}, {"id": "SRC-ACR", "title": "ACR Reporting and Data Systems（TI-RADS / BI-RADS / LI-RADS / Lung-RADS / PI-RADS / O-RADS / CAD-RADS）", "publisher": "American College of Radiology", "url": "https://www.acr.org/", "license_note": "标准文本版权归 ACR，仅链接引用，不转载全文。", "access": "public", "verified": "200", "note": "各分类系统的具体版本与条目以 ACR 官方发布为准；本站只做要点摘要。"}], "tags": ["形态", "肺"], "type": "sign"}, {"id": "SIGN-004", "name": "肿块", "en": "mass", "aliases": ["占位性病变", "团块影"], "modality": ["CT", "MR", "CR"], "body_part": "肺", "appearance": "体积较大的局灶性占位，常伴形态不规则、分叶或边缘毛糙等表现。", "may_see_in": ["肿瘤性病变", "炎性假瘤", "结核球", "先天性病变"], "pitfalls": ["大小界值各系统定义不同，引用时需注明来源", "不能仅凭形态判断性质"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["形态", "占位"], "type": "sign"}, {"id": "SIGN-005", "name": "空洞", "en": "cavity", "aliases": ["空洞性病变", "厚壁空洞", "薄壁空洞"], "modality": ["CT", "CR"], "body_part": "肺", "appearance": "病灶内出现含气的透亮区，周围有壁；按壁厚可分为厚壁与薄壁。", "may_see_in": ["感染性病变", "肿瘤性病变", "血管炎", "先天性疾病"], "pitfalls": ["壁厚测量需在同一窗宽下进行", "空洞内液平提示不同方向，需结合临床"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-FLEISCHNER", "title": "Fleischner Society 胸部影像术语表（2018）", "publisher": "Radiology / RSNA", "url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "版权归 RSNA，仅链接引用，不转载。", "access": "subscription", "verified": "403-需订阅", "note": "胸部 CT 术语（磨玻璃影、实变、网状影等）的权威定义来源。"}], "tags": ["形态", "肺"], "type": "sign"}, {"id": "SIGN-006", "name": "钙化", "en": "calcification", "aliases": ["钙化灶", "点状钙化", "粗大钙化"], "modality": ["CT", "CR", "US", "MG"], "body_part": "全身", "appearance": "密度接近骨皮质的斑点、条状或环状影；形态可为点状、层状、爆米花样或环形。", "may_see_in": ["陈旧性病变", "良性结节", "血管壁钙化", "部分肿瘤性病变"], "pitfalls": ["不同部位的钙化形态意义不同，不可跨部位套用", "超声上强回声伴声影需与气体区分"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-ACR", "title": "ACR Reporting and Data Systems（TI-RADS / BI-RADS / LI-RADS / Lung-RADS / PI-RADS / O-RADS / CAD-RADS）", "publisher": "American College of Radiology", "url": "https://www.acr.org/", "license_note": "标准文本版权归 ACR，仅链接引用，不转载全文。", "access": "public", "verified": "200", "note": "各分类系统的具体版本与条目以 ACR 官方发布为准；本站只做要点摘要。"}], "tags": ["密度", "钙化"], "type": "sign"}, {"id": "SIGN-007", "name": "胸腔积液", "en": "pleural effusion", "aliases": ["胸水", "胸腔积液影"], "modality": ["CT", "CR", "US"], "body_part": "胸膜", "appearance": "胸膜腔内液体聚集，立位胸片表现为肋膈角变钝或下肺野均匀致密影，CT 上呈新月形低密度区。", "may_see_in": ["心功能不全", "感染", "肿瘤性病变", "低蛋白状态", "创伤"], "pitfalls": ["少量积液在仰卧位 CT 上易被忽略", "需与胸膜增厚区别"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["液体", "胸膜"], "type": "sign"}, {"id": "SIGN-008", "name": "气胸", "en": "pneumothorax", "aliases": ["胸腔积气"], "modality": ["CR", "CT"], "body_part": "胸膜", "appearance": "胸膜腔内出现气体，可见脏层胸膜线，其外肺纹理消失。", "may_see_in": ["自发性气胸", "创伤", "医源性操作后"], "pitfalls": ["张力性气胸需结合纵隔移位判断，属急症范畴", "仰卧位少量气胸易漏诊"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["气体", "胸膜"], "type": "sign"}, {"id": "SIGN-009", "name": "纵隔增宽", "en": "mediastinal widening", "aliases": ["纵隔影增宽"], "modality": ["CR", "CT"], "body_part": "纵隔", "appearance": "正位胸片上纵隔轮廓超过常规宽度，CT 可进一步区分血管、淋巴结或脂肪成分。", "may_see_in": ["血管性病变", "淋巴结增大", "脂肪沉积", "囊性病变"], "pitfalls": ["体位与投照条件会造成假性增宽", "需结合 CT 判断具体成分"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["轮廓", "纵隔"], "type": "sign"}, {"id": "SIGN-010", "name": "心影增大", "en": "cardiomegaly", "aliases": ["心脏增大", "心胸比增大"], "modality": ["CR", "CT"], "body_part": "心脏", "appearance": "正位胸片上心胸比增大，或 CT 上心腔径线超出参考范围。", "may_see_in": ["心腔扩大", "心包积液", "心肌病变"], "pitfalls": ["投照距离与体位影响心胸比", "不能区分具体心腔，需结合超声或 CT"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-WIKI", "title": "Wikipedia 医学影像条目", "publisher": "Wikimedia Foundation", "url": "https://en.wikipedia.org/wiki/Ground-glass_opacity", "license_note": "CC BY-SA 4.0，仅链接引用。", "access": "public", "verified": "200", "note": "仅作通俗背景，不作为标准依据。"}], "tags": ["轮廓", "心脏"], "type": "sign"}, {"id": "SIGN-011", "name": "网状影", "en": "reticular pattern", "aliases": ["网格影", "网样改变"], "modality": ["CT"], "body_part": "肺", "appearance": "肺内细线状影交织成网，常提示间质增厚；可伴蜂窝影或牵拉性支气管扩张。", "may_see_in": ["间质性病变", "纤维化", "间质性水肿"], "pitfalls": ["与正常肺纹理增多需区分", "需结合分布（外周/基底段）判断"], "sources": [{"id": "SRC-FLEISCHNER", "title": "Fleischner Society 胸部影像术语表（2018）", "publisher": "Radiology / RSNA", "url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "版权归 RSNA，仅链接引用，不转载。", "access": "subscription", "verified": "403-需订阅", "note": "胸部 CT 术语（磨玻璃影、实变、网状影等）的权威定义来源。"}, {"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}], "tags": ["间质", "肺"], "type": "sign"}, {"id": "SIGN-012", "name": "蜂窝影", "en": "honeycombing", "aliases": ["蜂窝状改变", "蜂窝肺"], "modality": ["CT"], "body_part": "肺", "appearance": "成簇的厚壁囊状透亮影，直径数毫米至厘米，多位于胸膜下与基底段，常与网状影并存。", "may_see_in": ["纤维化性间质性病变"], "pitfalls": ["需与牵拉性支气管扩张区别", "单层厚层图像易误判，需薄层"], "sources": [{"id": "SRC-FLEISCHNER", "title": "Fleischner Society 胸部影像术语表（2018）", "publisher": "Radiology / RSNA", "url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "版权归 RSNA，仅链接引用，不转载。", "access": "subscription", "verified": "403-需订阅", "note": "胸部 CT 术语（磨玻璃影、实变、网状影等）的权威定义来源。"}, {"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}], "tags": ["间质", "囊性"], "type": "sign"}, {"id": "SIGN-013", "name": "支气管扩张", "en": "bronchiectasis", "aliases": ["支扩", "支气管扩张症"], "modality": ["CT"], "body_part": "肺", "appearance": "支气管管腔不可逆性扩大，可呈柱状、囊状或静脉曲张状，常伴管壁增厚。", "may_see_in": ["慢性气道感染", "纤维化牵拉", "先天性疾病"], "pitfalls": ["需与可逆性支气管扩张区别", "需观察同一支气管与伴行血管的比例"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-FLEISCHNER", "title": "Fleischner Society 胸部影像术语表（2018）", "publisher": "Radiology / RSNA", "url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "版权归 RSNA，仅链接引用，不转载。", "access": "subscription", "verified": "403-需订阅", "note": "胸部 CT 术语（磨玻璃影、实变、网状影等）的权威定义来源。"}], "tags": ["气道", "肺"], "type": "sign"}, {"id": "SIGN-014", "name": "空气支气管征", "en": "air bronchogram", "aliases": ["支气管充气征"], "modality": ["CT", "CR"], "body_part": "肺", "appearance": "实变区内可见含气的支气管影，呈管状或分支状低密度。", "may_see_in": ["肺实质渗出性病变", "肺水肿", "部分肿瘤性病变"], "pitfalls": ["需与支气管扩张区分", "不是病因诊断依据"], "sources": [{"id": "SRC-FLEISCHNER", "title": "Fleischner Society 胸部影像术语表（2018）", "publisher": "Radiology / RSNA", "url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "版权归 RSNA，仅链接引用，不转载。", "access": "subscription", "verified": "403-需订阅", "note": "胸部 CT 术语（磨玻璃影、实变、网状影等）的权威定义来源。"}, {"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}], "tags": ["气道", "实变"], "type": "sign"}, {"id": "SIGN-015", "name": "晕征", "en": "halo sign", "aliases": ["晕轮征"], "modality": ["CT"], "body_part": "肺", "appearance": "结节或肿块周围环绕一圈磨玻璃样密度影。", "may_see_in": ["感染性病变", "出血性病变", "肿瘤性病变", "炎性病变"], "pitfalls": ["特异性有限，不能单独据此判断病因", "需结合免疫状态与病程"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-FLEISCHNER", "title": "Fleischner Society 胸部影像术语表（2018）", "publisher": "Radiology / RSNA", "url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "版权归 RSNA，仅链接引用，不转载。", "access": "subscription", "verified": "403-需订阅", "note": "胸部 CT 术语（磨玻璃影、实变、网状影等）的权威定义来源。"}], "tags": ["结节", "肺"], "type": "sign"}, {"id": "SIGN-016", "name": "反晕征", "en": "reversed halo sign", "aliases": ["环礁征", "反晕轮征"], "modality": ["CT"], "body_part": "肺", "appearance": "中心磨玻璃影周围环绕一圈新月形或环形实变影。", "may_see_in": ["机化性肺炎", "感染性病变", "炎性病变"], "pitfalls": ["与晕征的密度分布相反，描述时易混淆", "需结合临床与随访"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-FLEISCHNER", "title": "Fleischner Society 胸部影像术语表（2018）", "publisher": "Radiology / RSNA", "url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "版权归 RSNA，仅链接引用，不转载。", "access": "subscription", "verified": "403-需订阅", "note": "胸部 CT 术语（磨玻璃影、实变、网状影等）的权威定义来源。"}], "tags": ["结节", "肺"], "type": "sign"}, {"id": "SIGN-017", "name": "树芽征", "en": "tree-in-bud", "aliases": ["树芽样改变"], "modality": ["CT"], "body_part": "肺", "appearance": "细支气管扩张伴管腔内充填，形成分支状结构末端连着小结节，形似树芽。", "may_see_in": ["小气道感染", "支气管播散性病变", "先天性气道病变"], "pitfalls": ["需与血管断面区别", "薄层重建显示更清晰"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-FLEISCHNER", "title": "Fleischner Society 胸部影像术语表（2018）", "publisher": "Radiology / RSNA", "url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "版权归 RSNA，仅链接引用，不转载。", "access": "subscription", "verified": "403-需订阅", "note": "胸部 CT 术语（磨玻璃影、实变、网状影等）的权威定义来源。"}], "tags": ["气道", "肺"], "type": "sign"}, {"id": "SIGN-018", "name": "铺路石征", "en": "crazy-paving pattern", "aliases": ["碎石路征"], "modality": ["CT"], "body_part": "肺", "appearance": "磨玻璃影背景上叠加增厚的网格状小叶间隔与小叶内线。", "may_see_in": ["肺泡蛋白沉积", "感染性病变", "出血性病变", "肿瘤性病变"], "pitfalls": ["与单纯磨玻璃影区别在于网格叠加", "分布与病程有助鉴别"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-FLEISCHNER", "title": "Fleischner Society 胸部影像术语表（2018）", "publisher": "Radiology / RSNA", "url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "版权归 RSNA，仅链接引用，不转载。", "access": "subscription", "verified": "403-需订阅", "note": "胸部 CT 术语（磨玻璃影、实变、网状影等）的权威定义来源。"}], "tags": ["间质", "肺"], "type": "sign"}, {"id": "SIGN-019", "name": "肺不张", "en": "atelectasis", "aliases": ["肺萎陷", "不张"], "modality": ["CT", "CR"], "body_part": "肺", "appearance": "肺组织含气量减少、体积缩小、密度增高，可伴叶间裂移位与纵隔牵拉。", "may_see_in": ["支气管阻塞", "压迫性因素", "通气不足"], "pitfalls": ["需与实变区分，体积缩小是关键", "阻塞性不张需进一步查因"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["体积", "肺"], "type": "sign"}, {"id": "SIGN-020", "name": "胸膜增厚", "en": "pleural thickening", "aliases": ["胸膜肥厚", "局限性胸膜增厚"], "modality": ["CT", "CR"], "body_part": "胸膜", "appearance": "胸膜线状或带状增厚，可局限或弥漫，伴或不伴钙化。", "may_see_in": ["既往炎症后改变", "石棉相关病变", "肿瘤性病变"], "pitfalls": ["与少量胸腔积液区别在于形态与密度", "弥漫增厚需评估范围"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["胸膜", "形态"], "type": "sign"}, {"id": "SIGN-021", "name": "低密度灶", "en": "hypoattenuating lesion", "aliases": ["低密度影", "低密度病变"], "modality": ["CT"], "body_part": "腹部", "appearance": "CT 上密度低于周围实质的局灶区域，可呈囊性、实性或混合性。", "may_see_in": ["囊性病变", "脂肪性病变", "坏死性病变", "部分实性肿瘤"], "pitfalls": ["需测平扫与增强各期 CT 值", "囊性与实性处理方向不同"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["密度", "腹部"], "type": "sign"}, {"id": "SIGN-022", "name": "环形强化", "en": "rim enhancement", "aliases": ["环状强化", "边缘强化"], "modality": ["CT", "MR"], "body_part": "腹部", "appearance": "病灶周边呈环状强化，中心不强化或强化程度低，可伴壁厚薄不均。", "may_see_in": ["脓肿", "坏死性肿瘤", "转移性病变", "部分良性病变"], "pitfalls": ["环壁厚度与内缘光滑度有助鉴别", "需结合多期增强"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["强化", "腹部"], "type": "sign"}, {"id": "SIGN-023", "name": "快进快出", "en": "arterial hyperenhancement with washout", "aliases": ["快进快出强化", "动脉期高强化伴廓清"], "modality": ["CT", "MR"], "body_part": "肝脏", "appearance": "动脉期病灶明显强化，门脉期或延迟期强化程度低于周围肝实质。", "may_see_in": ["肝细胞来源肿瘤性病变", "部分富血供病变", "动静脉分流"], "pitfalls": ["需严格按多期时相判读", "单期扫描无法判断廓清"], "sources": [{"id": "SRC-ACR", "title": "ACR Reporting and Data Systems（TI-RADS / BI-RADS / LI-RADS / Lung-RADS / PI-RADS / O-RADS / CAD-RADS）", "publisher": "American College of Radiology", "url": "https://www.acr.org/", "license_note": "标准文本版权归 ACR，仅链接引用，不转载全文。", "access": "public", "verified": "200", "note": "各分类系统的具体版本与条目以 ACR 官方发布为准；本站只做要点摘要。"}, {"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}], "tags": ["强化", "肝脏"], "type": "sign"}, {"id": "SIGN-024", "name": "双管征", "en": "double duct sign", "aliases": ["双管征象"], "modality": ["CT", "MR"], "body_part": "胰胆", "appearance": "胆总管与主胰管同时扩张，两者在胰头区域汇聚。", "may_see_in": ["胰头区占位性病变", "壶腹部病变", "炎性狭窄"], "pitfalls": ["需测量两管径线并与年龄对照", "不能仅凭此征判断性质"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["管道", "胰胆"], "type": "sign"}, {"id": "SIGN-025", "name": "胆管扩张", "en": "biliary dilatation", "aliases": ["肝内胆管扩张", "胆总管扩张"], "modality": ["CT", "MR", "US"], "body_part": "胆道", "appearance": "肝内胆管呈树枝状增宽，或胆总管内径超出参考上限。", "may_see_in": ["梗阻性病变", "结石", "炎性狭窄", "术后改变"], "pitfalls": ["需区分肝内与肝外扩张", "MRCP 对显示更完整"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["管道", "胆道"], "type": "sign"}, {"id": "SIGN-026", "name": "腹腔积液", "en": "ascites", "aliases": ["腹水", "腹腔游离液体"], "modality": ["CT", "US", "MR"], "body_part": "腹腔", "appearance": "腹腔内液体聚集，CT 上呈低密度区，超声上呈无回声区，可随体位改变分布。", "may_see_in": ["肝硬化相关改变", "心功能不全", "肿瘤性病变", "感染性病变"], "pitfalls": ["少量积液需与生理性液体区别", "需结合密度判断是否合并出血"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["液体", "腹腔"], "type": "sign"}, {"id": "SIGN-027", "name": "脂肪间隙模糊", "en": "fat stranding", "aliases": ["周围脂肪间隙模糊", "条索影"], "modality": ["CT"], "body_part": "腹部", "appearance": "器官周围脂肪内出现条索状或片状密度增高，提示局部炎症或浸润。", "may_see_in": ["炎性病变", "感染性病变", "肿瘤性浸润", "术后改变"], "pitfalls": ["程度判断主观，需结合临床", "不能单独定位病因"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["炎症", "腹部"], "type": "sign"}, {"id": "SIGN-028", "name": "淋巴结增大", "en": "lymphadenopathy", "aliases": ["淋巴结肿大", "增大淋巴结"], "modality": ["CT", "MR", "US"], "body_part": "全身", "appearance": "淋巴结短径超出所在区域参考上限，可呈圆形、融合或伴坏死。", "may_see_in": ["感染性病变", "炎性病变", "肿瘤性病变"], "pitfalls": ["各区域界值不同，需注明标准", "形态与强化方式比单纯大小更有信息"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["淋巴结", "形态"], "type": "sign"}, {"id": "SIGN-029", "name": "靶征", "en": "target sign", "aliases": ["同心圆征"], "modality": ["CT", "US", "MR"], "body_part": "腹部", "appearance": "病灶呈同心圆样分层，中心与周边密度或信号不同。", "may_see_in": ["肠套叠", "炎性病变", "部分肿瘤性病变"], "pitfalls": ["不同部位靶征含义不同", "需结合部位与临床"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["形态", "腹部"], "type": "sign"}, {"id": "SIGN-030", "name": "假肾征", "en": "pseudokidney sign", "aliases": ["假肾形"], "modality": ["US", "CT"], "body_part": "肠道", "appearance": "肠壁增厚形成周边低回声、中心强回声的结构，形似肾脏切面。", "may_see_in": ["肠壁增厚性病变", "炎性病变", "肿瘤性病变"], "pitfalls": ["超声易受肠气干扰", "需与真正肾脏结构区分"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["形态", "肠道"], "type": "sign"}, {"id": "SIGN-031", "name": "胆囊壁增厚", "en": "gallbladder wall thickening", "aliases": ["胆囊壁厚"], "modality": ["US", "CT"], "body_part": "胆囊", "appearance": "胆囊壁厚度超出参考值，可伴壁内血流增多或壁分层。", "may_see_in": ["炎性病变", "心功能不全", "低蛋白状态", "肿瘤性病变"], "pitfalls": ["需在空腹状态下测量", "局限增厚与弥漫增厚意义不同"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["壁厚", "胆囊"], "type": "sign"}, {"id": "SIGN-032", "name": "胰腺钙化", "en": "pancreatic calcification", "aliases": ["胰管结石", "胰腺钙化灶"], "modality": ["CT"], "body_part": "胰腺", "appearance": "胰腺实质或胰管内点状、条状高密度影。", "may_see_in": ["慢性炎性病变", "胰管结石", "部分肿瘤性病变"], "pitfalls": ["需与血管壁钙化区分", "分布沿胰管走行更有提示性"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["钙化", "胰腺"], "type": "sign"}, {"id": "SIGN-033", "name": "肾积水", "en": "hydronephrosis", "aliases": ["肾盂积水", "肾盂扩张"], "modality": ["US", "CT", "MR"], "body_part": "肾脏", "appearance": "肾盂肾盏扩张，呈无回声或低密度分支状结构，严重时肾实质变薄。", "may_see_in": ["梗阻性病变", "结石", "狭窄", "生理性扩张"], "pitfalls": ["需与肾囊肿区分", "生理性扩张可见于大量饮水或膀胱充盈"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["管道", "肾脏"], "type": "sign"}, {"id": "SIGN-034", "name": "肝内胆管结石", "en": "intrahepatic bile duct stone", "aliases": ["肝内结石", "肝管结石"], "modality": ["CT", "MR", "US"], "body_part": "肝脏", "appearance": "肝内胆管走行区点状或条状高密度影，常伴远端胆管扩张。", "may_see_in": ["胆道结石", "反复胆道感染", "胆道术后改变"], "pitfalls": ["CT 上等密度结石易漏诊", "需与肝实质钙化区分"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["结石", "胆道"], "type": "sign"}, {"id": "SIGN-035", "name": "T1 高信号", "en": "T1 hyperintensity", "aliases": ["T1WI 高信号"], "modality": ["MR"], "body_part": "全身", "appearance": "T1 加权像上信号高于周围组织，常见于脂肪、出血、蛋白性液体或部分顺磁性物质。", "may_see_in": ["脂肪组织", "出血", "蛋白性囊液", "黑色素性病变"], "pitfalls": ["需结合脂肪抑制序列判断是否为脂肪", "不同场强信号可比性有限"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["信号", "MR"], "type": "sign"}, {"id": "SIGN-036", "name": "T2 高信号", "en": "T2 hyperintensity", "aliases": ["T2WI 高信号"], "modality": ["MR"], "body_part": "全身", "appearance": "T2 加权像上信号高于周围组织，常见于液体、水肿、炎症或部分病变。", "may_see_in": ["液体", "水肿", "炎性病变", "部分肿瘤性病变"], "pitfalls": ["非特异性，需结合部位与形态", "脂肪抑制序列有助区分"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["信号", "MR"], "type": "sign"}, {"id": "SIGN-037", "name": "弥散受限", "en": "restricted diffusion", "aliases": ["DWI 高信号", "ADC 低信号"], "modality": ["MR"], "body_part": "全身", "appearance": "DWI 上呈高信号且 ADC 图对应区域呈低信号，提示水分子扩散受限。", "may_see_in": ["急性缺血", "高细胞密度病变", "脓肿", "部分炎性病变"], "pitfalls": ["仅 DWI 高信号不足以判断，必须结合 ADC", "T2 透射效应会造成假阳性"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["信号", "DWI"], "type": "sign"}, {"id": "SIGN-038", "name": "脑膜强化", "en": "meningeal enhancement", "aliases": ["硬脑膜强化", "软脑膜强化"], "modality": ["MR"], "body_part": "脑", "appearance": "增强后脑膜线状或结节状强化，可沿脑沟、脑回或硬脑膜分布。", "may_see_in": ["感染性病变", "炎性病变", "肿瘤性病变", "术后改变"], "pitfalls": ["需与正常硬脑膜轻度强化区别", "软脑膜与硬脑膜分布意义不同"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["强化", "脑"], "type": "sign"}, {"id": "SIGN-039", "name": "脑回样强化", "en": "gyral enhancement", "aliases": ["皮层强化"], "modality": ["MR", "CT"], "body_part": "脑", "appearance": "增强后沿脑回皮层分布的条状或波浪状强化。", "may_see_in": ["亚急性期缺血", "炎性病变", "感染性病变", "后部可逆性脑病"], "pitfalls": ["与脑膜强化分布不同，需区分", "需结合 DWI 与临床时间线"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["强化", "脑"], "type": "sign"}, {"id": "SIGN-040", "name": "占位效应", "en": "mass effect", "aliases": ["占位效应", "推移效应"], "modality": ["CT", "MR"], "body_part": "脑", "appearance": "病变引起邻近结构受压、移位或变形，可伴脑沟变浅、脑室受压。", "may_see_in": ["肿瘤性病变", "出血", "水肿", "脓肿"], "pitfalls": ["程度需与中线移位等指标一起描述", "急症评估需结合意识状态"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["占位", "脑"], "type": "sign"}, {"id": "SIGN-041", "name": "水肿带", "en": "edema", "aliases": ["瘤周水肿", "血管源性水肿"], "modality": ["CT", "MR"], "body_part": "脑", "appearance": "病变周围片状低密度（CT）或 T2 高信号（MR）区，边界不清，多累及白质。", "may_see_in": ["肿瘤性病变", "炎性病变", "缺血", "出血后改变"], "pitfalls": ["水肿范围与病变性质不直接对应", "需与脱髓鞘病变区分"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["水肿", "脑"], "type": "sign"}, {"id": "SIGN-042", "name": "流空效应", "en": "flow void", "aliases": ["血管流空", "流空影"], "modality": ["MR"], "body_part": "脑", "appearance": "快速流动的血液在自旋回波序列上呈无信号区，表现为管状或点状低信号。", "may_see_in": ["正常血管", "动静脉畸形", "动脉瘤"], "pitfalls": ["血流缓慢时流空可不明显", "需与钙化或气体低信号区分"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["血管", "MR"], "type": "sign"}, {"id": "SIGN-043", "name": "脑室扩大", "en": "ventriculomegaly", "aliases": ["脑室扩张", "脑积水"], "modality": ["CT", "MR"], "body_part": "脑", "appearance": "侧脑室或第三、第四脑室径线增大，可伴脑室周围间质水肿。", "may_see_in": ["脑脊液循环障碍", "脑萎缩", "先天性疾病"], "pitfalls": ["需区分梗阻性与交通性", "与脑萎缩所致扩大表现不同"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["脑室", "脑"], "type": "sign"}, {"id": "SIGN-044", "name": "中线移位", "en": "midline shift", "aliases": ["中线结构移位"], "modality": ["CT", "MR"], "body_part": "脑", "appearance": "透明隔、第三脑室等中线结构向对侧偏移。", "may_see_in": ["占位性病变", "大面积梗死", "出血", "水肿"], "pitfalls": ["需测量偏移距离", "属急症评估指标之一"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["占位", "脑"], "type": "sign"}, {"id": "SIGN-045", "name": "CT 高密度出血", "en": "hyperdense hemorrhage", "aliases": ["急性出血", "高密度灶"], "modality": ["CT"], "body_part": "脑", "appearance": "平扫 CT 上呈边界较清的高密度区，密度随出血时间变化。", "may_see_in": ["脑实质出血", "蛛网膜下腔出血", "硬膜下或硬膜外出血"], "pitfalls": ["等密度期出血可漏诊，需结合 MR", "需与钙化区分，结合部位与形态"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["出血", "脑"], "type": "sign"}, {"id": "SIGN-046", "name": "腔隙灶", "en": "lacune", "aliases": ["腔隙性脑梗死", "小软化灶"], "modality": ["CT", "MR"], "body_part": "脑", "appearance": "深部脑组织内小灶性低密度（CT）或 T1 低、T2 高信号（MR），边界较清。", "may_see_in": ["小血管病变", "陈旧性缺血", "血管周围间隙扩大"], "pitfalls": ["需与血管周围间隙扩大区分", "数量与分布需整体描述"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["缺血", "脑"], "type": "sign"}, {"id": "SIGN-047", "name": "半月板信号增高", "en": "meniscal signal", "aliases": ["半月板内高信号", "半月板损伤信号"], "modality": ["MR"], "body_part": "膝关节", "appearance": "半月板内出现 T2/PD 高信号，按是否达关节面分级描述。", "may_see_in": ["退变性改变", "撕裂", "术后改变"], "pitfalls": ["未达关节面的高信号不等同撕裂", "需多序列多层面确认"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["信号", "膝关节"], "type": "sign"}, {"id": "SIGN-048", "name": "骨髓水肿", "en": "bone marrow edema", "aliases": ["骨髓水肿样信号", "BMEP"], "modality": ["MR"], "body_part": "骨", "appearance": "压脂 T2 或 STIR 序列上骨髓内片状高信号，T1 上呈低信号。", "may_see_in": ["创伤", "应力性改变", "炎性病变", "感染", "肿瘤性病变"], "pitfalls": ["非特异性，需结合部位与病史", "需与正常红骨髓分布区分"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["信号", "骨"], "type": "sign"}, {"id": "SIGN-049", "name": "骨质破坏", "en": "bone destruction", "aliases": ["骨破坏", "溶骨性改变"], "modality": ["CT", "CR", "MR"], "body_part": "骨", "appearance": "骨皮质或骨松质连续性中断、密度减低，可呈溶骨性、膨胀性或虫蚀样。", "may_see_in": ["肿瘤性病变", "感染性病变", "炎性病变", "代谢性骨病"], "pitfalls": ["早期破坏在平片上可能不明显", "需结合软组织窗观察"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["骨质", "骨"], "type": "sign"}, {"id": "SIGN-050", "name": "骨膜反应", "en": "periosteal reaction", "aliases": ["骨膜增生", "骨膜新骨形成"], "modality": ["CR", "CT", "MR"], "body_part": "骨", "appearance": "沿骨皮质表面的新骨形成，可呈线状、层状、针状或 Codman 三角样。", "may_see_in": ["感染性病变", "肿瘤性病变", "创伤后修复", "炎性病变"], "pitfalls": ["形态比厚度更有提示意义", "需与正常肌腱附着区分"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["骨膜", "骨"], "type": "sign"}, {"id": "SIGN-051", "name": "硬化边", "en": "sclerotic margin", "aliases": ["硬化缘", "骨硬化环"], "modality": ["CR", "CT", "MR"], "body_part": "骨", "appearance": "病灶周围环形或半环形高密度带，边界清晰。", "may_see_in": ["良性骨病变", "慢性感染", "愈合期病变"], "pitfalls": ["硬化边完整提示生长缓慢，但不能排除其他性质", "需结合病灶内部基质"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["骨质", "骨"], "type": "sign"}, {"id": "SIGN-052", "name": "关节积液", "en": "joint effusion", "aliases": ["关节腔积液"], "modality": ["MR", "US", "CR"], "body_part": "关节", "appearance": "关节腔内液体增多，MR 上 T2 高信号，超声上无回声区，可伴滑膜增厚。", "may_see_in": ["创伤", "炎性关节病变", "感染", "退变"], "pitfalls": ["少量积液可为生理性", "需结合滑膜与软骨表现"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["液体", "关节"], "type": "sign"}, {"id": "SIGN-053", "name": "韧带信号增高", "en": "ligament signal change", "aliases": ["韧带损伤信号", "韧带水肿"], "modality": ["MR"], "body_part": "关节", "appearance": "韧带内出现 T2/PD 高信号，可伴纤维连续性中断或增粗。", "may_see_in": ["扭伤", "部分撕裂", "完全撕裂", "退变"], "pitfalls": ["魔角效应可造成假性高信号", "需多序列确认连续性"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["信号", "韧带"], "type": "sign"}, {"id": "SIGN-054", "name": "病理性骨折", "en": "pathologic fracture", "aliases": ["病理骨折"], "modality": ["CR", "CT", "MR"], "body_part": "骨", "appearance": "在原有骨病变基础上发生的骨折，常伴骨质破坏或异常骨密度。", "may_see_in": ["肿瘤性病变", "感染性病变", "代谢性骨病", "放疗后改变"], "pitfalls": ["需与外伤性骨折区分", "需评估原发病变范围"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["骨折", "骨"], "type": "sign"}, {"id": "SIGN-055", "name": "毛刺征", "en": "spiculated margin", "aliases": ["毛刺状边缘", "星芒状边缘"], "modality": ["MG", "CT", "US"], "body_part": "乳腺", "appearance": "病灶边缘呈放射状细线影，向周围组织延伸。", "may_see_in": ["肿瘤性病变", "硬化性腺病", "术后瘢痕"], "pitfalls": ["瘢痕也可出现类似表现，需结合病史与既往片", "需与结构扭曲一起描述"], "sources": [{"id": "SRC-ACR", "title": "ACR Reporting and Data Systems（TI-RADS / BI-RADS / LI-RADS / Lung-RADS / PI-RADS / O-RADS / CAD-RADS）", "publisher": "American College of Radiology", "url": "https://www.acr.org/", "license_note": "标准文本版权归 ACR，仅链接引用，不转载全文。", "access": "public", "verified": "200", "note": "各分类系统的具体版本与条目以 ACR 官方发布为准；本站只做要点摘要。"}, {"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}], "tags": ["边缘", "乳腺"], "type": "sign"}, {"id": "SIGN-056", "name": "微钙化", "en": "microcalcification", "aliases": ["细小钙化", "簇状微钙化"], "modality": ["MG", "US"], "body_part": "乳腺", "appearance": "钼靶上细小的钙化点，按形态（点状、无定形、粗糙不均、细线分支）与分布（散在、簇状、线样、段样）描述。", "may_see_in": ["良性退变", "导管内病变", "肿瘤性病变"], "pitfalls": ["形态与分布需同时描述", "超声对微钙化敏感性有限，钼靶为主"], "sources": [{"id": "SRC-ACR", "title": "ACR Reporting and Data Systems（TI-RADS / BI-RADS / LI-RADS / Lung-RADS / PI-RADS / O-RADS / CAD-RADS）", "publisher": "American College of Radiology", "url": "https://www.acr.org/", "license_note": "标准文本版权归 ACR，仅链接引用，不转载全文。", "access": "public", "verified": "200", "note": "各分类系统的具体版本与条目以 ACR 官方发布为准；本站只做要点摘要。"}, {"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}], "tags": ["钙化", "乳腺"], "type": "sign"}, {"id": "SIGN-057", "name": "纵横比大于 1", "en": "taller-than-wide", "aliases": ["纵横比>1", "立位生长"], "modality": ["US"], "body_part": "甲状腺", "appearance": "超声横切面上病灶前后径大于横径，提示沿组织平面垂直生长。", "may_see_in": ["部分甲状腺结节", "其他部位结节性病变"], "pitfalls": ["测量切面需标准", "不同器官的界值定义不同"], "sources": [{"id": "SRC-ACR", "title": "ACR Reporting and Data Systems（TI-RADS / BI-RADS / LI-RADS / Lung-RADS / PI-RADS / O-RADS / CAD-RADS）", "publisher": "American College of Radiology", "url": "https://www.acr.org/", "license_note": "标准文本版权归 ACR，仅链接引用，不转载全文。", "access": "public", "verified": "200", "note": "各分类系统的具体版本与条目以 ACR 官方发布为准；本站只做要点摘要。"}, {"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}], "tags": ["形态", "甲状腺"], "type": "sign"}, {"id": "SIGN-058", "name": "低回声结节", "en": "hypoechoic nodule", "aliases": ["低回声灶", "实性低回声"], "modality": ["US"], "body_part": "甲状腺", "appearance": "超声上回声低于周围腺体组织的结节，可伴边界、形态、钙化等特征。", "may_see_in": ["结节性甲状腺病变", "炎性病变", "肿瘤性病变"], "pitfalls": ["回声高低需与邻近正常腺体比较", "需结合多项超声特征综合描述"], "sources": [{"id": "SRC-ACR", "title": "ACR Reporting and Data Systems（TI-RADS / BI-RADS / LI-RADS / Lung-RADS / PI-RADS / O-RADS / CAD-RADS）", "publisher": "American College of Radiology", "url": "https://www.acr.org/", "license_note": "标准文本版权归 ACR，仅链接引用，不转载全文。", "access": "public", "verified": "200", "note": "各分类系统的具体版本与条目以 ACR 官方发布为准；本站只做要点摘要。"}, {"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}], "tags": ["回声", "甲状腺"], "type": "sign"}, {"id": "SIGN-059", "name": "无回声区", "en": "anechoic area", "aliases": ["无回声", "液性暗区"], "modality": ["US"], "body_part": "全身", "appearance": "超声上内部无回声的暗区，后方常伴回声增强，提示液体成分。", "may_see_in": ["囊肿", "积液", "血管腔", "脓肿液化区"], "pitfalls": ["复杂囊肿内可有回声", "需与实性极低回声病变区分"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["回声", "液体"], "type": "sign"}, {"id": "SIGN-060", "name": "后方声影", "en": "posterior acoustic shadowing", "aliases": ["声影", "后方衰减"], "modality": ["US"], "body_part": "全身", "appearance": "强反射或强衰减结构后方出现的无回声带，常见于钙化、结石或气体。", "may_see_in": ["结石", "钙化", "气体", "骨皮质"], "pitfalls": ["需与后方回声增强相反表现区分", "声影宽度与物体大小不完全对应"], "sources": [{"id": "SRC-RADIO", "title": "Radiopaedia 影像学参考条目", "publisher": "Radiopaedia.org", "url": "https://radiopaedia.org/", "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。", "access": "public", "verified": "200", "note": "适合作为征象定义与鉴别方向的二次参考。"}, {"id": "SRC-STATPEARLS", "title": "StatPearls（NCBI Bookshelf）", "publisher": "National Center for Biotechnology Information", "url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "CC BY 4.0，可引用并注明出处。", "access": "public", "verified": "200", "note": "用于影像征象与检查方法的背景说明。"}], "tags": ["超声", "伪像"], "type": "sign"}, {"id": "STD-TIRADS", "name": "ACR TI-RADS", "full_name": "甲状腺影像报告与数据系统", "publisher": "American College of Radiology", "region": "国际", "purpose": "统一甲状腺结节的超声描述语言与分类报告结构。", "dimensions": ["成分（囊性/实性）", "回声（高/等/低/极低/无回声）", "形态（纵横比）", "边缘（光滑/模糊/分叶/不规则/甲状腺外侵犯）", "强回声灶（钙化类型）"], "report_form": "按上述维度评分后归入 TR1—TR5 类别", "official_url": "https://www.acr.org/", "license_note": "标准文本版权归 ACR，本库只做维度摘要，不复制评分表与阈值。", "note": "具体评分点、阈值与处理建议以 ACR 官方当前版本为准；本库不对个体结节分类。", "body_part": "甲状腺", "type": "standard", "url": "https://www.acr.org/"}, {"id": "STD-BIRADS", "name": "ACR BI-RADS", "full_name": "乳腺影像报告与数据系统", "publisher": "American College of Radiology", "region": "国际", "purpose": "统一乳腺钼靶、超声与 MRI 的描述术语与分类报告。", "dimensions": ["肿块形态", "边缘（清晰/遮蔽/微小分叶/模糊/毛刺）", "密度或回声", "钙化形态与分布", "结构扭曲", "伴随征象"], "report_form": "最终评估归入 0—6 类", "official_url": "https://www.acr.org/", "license_note": "标准文本版权归 ACR，本库只做维度摘要。", "note": "分类含义与处理路径以 ACR 官方版本为准；本库不输出个体分类。", "body_part": "乳腺", "type": "standard", "url": "https://www.acr.org/"}, {"id": "STD-LIRADS", "name": "ACR LI-RADS", "full_name": "肝脏影像报告与数据系统", "publisher": "American College of Radiology", "region": "国际", "purpose": "面向肝硬化等高风险人群的肝细胞癌影像诊断分类。", "dimensions": ["动脉期强化", "廓清（门脉期/延迟期）", "强化包膜", "阈值增长", "辅助征象"], "report_form": "归入 LR-1—LR-5、LR-M、LR-TIV 等类别", "official_url": "https://www.acr.org/", "license_note": "标准文本版权归 ACR，本库只做维度摘要。", "note": "适用人群与判读条件严格，本库不用于个体判读。", "body_part": "肝", "type": "standard", "url": "https://www.acr.org/"}, {"id": "STD-LUNGRADS", "name": "ACR Lung-RADS", "full_name": "肺部影像报告与数据系统", "publisher": "American College of Radiology", "region": "国际", "purpose": "规范肺癌筛查中肺结节的描述、分类与随访管理。", "dimensions": ["结节类型（实性/部分实性/磨玻璃）", "大小", "生长变化", "是否伴可疑征象"], "report_form": "归入 0—4X 类别并给出随访管理方向", "official_url": "https://www.acr.org/", "license_note": "标准文本版权归 ACR，本库只做维度摘要。", "note": "仅适用于特定筛查人群，本库不替代筛查流程。", "body_part": "肺", "type": "standard", "url": "https://www.acr.org/"}, {"id": "STD-PIRADS", "name": "PI-RADS", "full_name": "前列腺影像报告与数据系统", "publisher": "European Society of Urogenital Radiology / ACR", "region": "国际", "purpose": "标准化前列腺多参数 MRI 的采集、描述与分类。", "dimensions": ["T2WI 表现", "DWI/ADC 表现", "DCE 表现", "病灶位置与大小"], "report_form": "按主要序列评分归入 1—5 类", "official_url": "https://www.acr.org/", "license_note": "标准文本版权归发布方，本库只做维度摘要。", "note": "依赖规范的多参数扫描方案，本库不用于个体评分。", "body_part": "前列腺", "type": "standard", "url": "https://www.acr.org/"}, {"id": "STD-ORADS", "name": "O-RADS", "full_name": "卵巢-附件影像报告与数据系统", "publisher": "American College of Radiology", "region": "国际", "purpose": "统一卵巢与附件病变的超声和 MRI 描述与风险分类。", "dimensions": ["病变类型（囊性/实性/混合）", "大小", "壁与分隔特征", "实性成分", "血流"], "report_form": "归入 0—5 类并给出管理方向", "official_url": "https://www.acr.org/", "license_note": "标准文本版权归 ACR，本库只做维度摘要。", "note": "绝经状态影响判读，本库不输出个体分类。", "body_part": "卵巢", "type": "standard", "url": "https://www.acr.org/"}, {"id": "STD-BOSNIAK", "name": "Bosniak 分类", "full_name": "肾囊性病变 Bosniak 分类", "publisher": "国际泌尿影像学界（多版本更新）", "region": "国际", "purpose": "按囊壁、分隔、钙化与强化特征对肾囊性病变分层描述。", "dimensions": ["囊壁厚度", "分隔数量与厚度", "钙化", "实性成分", "强化程度"], "report_form": "归入 I—IV 类（含 IIF）", "official_url": "https://www.acr.org/", "license_note": "分类体系为公开学术内容，本库只做维度摘要。", "note": "版本间界值有调整，引用时须注明版本；本库不用于个体分类。", "body_part": "肾", "type": "standard", "url": "https://www.acr.org/"}, {"id": "STD-FLEISCHNER", "name": "Fleischner Society 偶发肺结节随访建议", "full_name": "Fleischner Society 肺结节管理指南", "publisher": "Fleischner Society / RSNA", "region": "国际", "purpose": "为偶然发现的肺结节提供随访策略参考。", "dimensions": ["结节类型（实性/亚实性）", "大小", "数量", "患者风险因素"], "report_form": "按结节类型与大小给出随访方式与间隔建议", "official_url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "版权归 RSNA，本库只做维度摘要与链接。", "note": "适用于特定人群与场景，本库不替代临床决策。", "body_part": "肺", "type": "standard", "url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718"}, {"id": "STD-GB-POLYP", "name": "胆囊息肉管理共识", "full_name": "胆囊息肉样病变随访与处理共识", "publisher": "公开共识与综述（多来源）", "region": "国际", "purpose": "统一胆囊息肉的大小分层、随访间隔与外科评估时机。", "dimensions": ["最大径", "数量", "生长速度", "是否伴结石", "危险因素"], "report_form": "按大小分层给出随访或外科评估方向", "official_url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "共识摘要自撰，具体条目以原文为准。", "note": "不同学会版本存在差异，引用时须注明来源与版本；本库不用于个体决策。", "body_part": "胆囊", "type": "standard", "url": "https://www.ncbi.nlm.nih.gov/books/"}, {"id": "STD-PC", "name": "胰腺囊性病变管理共识", "full_name": "胰腺囊性病变随访与处理共识", "publisher": "公开共识与综述（多来源）", "region": "国际", "purpose": "按囊性病变大小、主胰管与高危征象分层随访。", "dimensions": ["最大径", "主胰管直径", "实性成分", "壁结节", "生长速度"], "report_form": "按风险分层给出随访或多学科评估方向", "official_url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "共识摘要自撰，具体条目以原文为准。", "note": "高危征象定义与随访间隔存在版本差异；本库不用于个体决策。", "body_part": "胰", "type": "standard", "url": "https://www.ncbi.nlm.nih.gov/books/"}, {"id": "GL-TIRADS-01", "standard_id": "STD-TIRADS", "standard_name": "ACR TI-RADS", "body_part": "甲状腺", "modality": ["US"], "category": "TR1—TR2", "section": "随访与处理", "statement": "TR1—TR2 类结节通常无需穿刺，按临床常规随访。", "conditions": ["已完成 TI-RADS 分类", "分类为 TR1 或 TR2"], "action": "常规随访", "rec_level": "", "evidence_level": "", "version_year": 2017, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，条款与阈值以 ACR 官方版本为准。", "status": "active", "keywords": ["TI-RADS", "TR1", "TR2", "良性", "随访"], "type": "guideline"}, {"id": "GL-TIRADS-02", "standard_id": "STD-TIRADS", "standard_name": "ACR TI-RADS", "body_part": "甲状腺", "modality": ["US"], "category": "TR3", "section": "穿刺与随访", "statement": "TR3 类结节最大径达到约 2.5 cm 时可考虑穿刺；未达阈值者以随访为主。", "conditions": ["已完成 TI-RADS 分类", "分类为 TR3", "最大径 ≥ 2.5 cm"], "action": "考虑穿刺或随访", "rec_level": "", "evidence_level": "", "version_year": 2017, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，阈值以官方版本为准。", "status": "active", "keywords": ["TI-RADS", "TR3", "2.5cm", "穿刺", "随访"], "type": "guideline"}, {"id": "GL-TIRADS-03", "standard_id": "STD-TIRADS", "standard_name": "ACR TI-RADS", "body_part": "甲状腺", "modality": ["US"], "category": "TR4", "section": "穿刺与随访", "statement": "TR4 类结节最大径达到约 1.5 cm 时可考虑穿刺；1.0—1.5 cm 以随访为主。", "conditions": ["已完成 TI-RADS 分类", "分类为 TR4", "最大径 ≥ 1.5 cm"], "action": "考虑穿刺或随访", "rec_level": "", "evidence_level": "", "version_year": 2017, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，阈值以官方版本为准。", "status": "active", "keywords": ["TI-RADS", "TR4", "4a", "4b", "4c", "1.5cm", "穿刺"], "type": "guideline"}, {"id": "GL-TIRADS-04", "standard_id": "STD-TIRADS", "standard_name": "ACR TI-RADS", "body_part": "甲状腺", "modality": ["US"], "category": "TR5", "section": "穿刺与随访", "statement": "TR5 类结节最大径达到约 1.0 cm 时可考虑穿刺；0.5—1.0 cm 可结合临床随访。", "conditions": ["已完成 TI-RADS 分类", "分类为 TR5", "最大径 ≥ 1.0 cm"], "action": "考虑穿刺", "rec_level": "", "evidence_level": "", "version_year": 2017, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，阈值以官方版本为准。", "status": "active", "keywords": ["TI-RADS", "TR5", "1.0cm", "穿刺"], "type": "guideline"}, {"id": "GL-TIRADS-05", "standard_id": "STD-TIRADS", "standard_name": "ACR TI-RADS", "body_part": "甲状腺", "modality": ["US"], "category": "通用", "section": "生长定义", "statement": "随访中体积增大 ≥ 20%，或至少两个径线各增加 ≥ 2 mm，可视为结节生长。", "conditions": ["有可比较的既往超声", "测量方法一致"], "action": "按生长定义复核", "rec_level": "", "evidence_level": "", "version_year": 2017, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，定义以官方版本为准。", "status": "active", "keywords": ["TI-RADS", "生长", "体积", "径线", "随访"], "type": "guideline"}, {"id": "GL-TIRADS-06", "standard_id": "STD-TIRADS", "standard_name": "ACR TI-RADS", "body_part": "甲状腺", "modality": ["US"], "category": "通用", "section": "描述要素", "statement": "报告应记录成分、回声、形态、边缘与强回声灶五个维度，再给出分类。", "conditions": ["完成超声检查", "具备五个维度的描述"], "action": "补全描述要素", "rec_level": "", "evidence_level": "", "version_year": 2017, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，条目以官方版本为准。", "status": "active", "keywords": ["TI-RADS", "成分", "回声", "形态", "边缘", "钙化"], "type": "guideline"}, {"id": "GL-LUNGRADS-01", "standard_id": "STD-LUNGRADS", "standard_name": "ACR Lung-RADS", "body_part": "肺", "modality": ["CT"], "category": "类别 1", "section": "筛查随访", "statement": "未见肺结节或仅见良性表现者，按年度低剂量 CT 继续筛查。", "conditions": ["属于筛查人群", "本次未见结节"], "action": "年度筛查", "rec_level": "", "evidence_level": "", "version_year": 2019, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，类别定义以官方版本为准。", "status": "active", "keywords": ["Lung-RADS", "类别1", "年度筛查", "低剂量CT"], "type": "guideline"}, {"id": "GL-LUNGRADS-02", "standard_id": "STD-LUNGRADS", "standard_name": "ACR Lung-RADS", "body_part": "肺", "modality": ["CT"], "category": "类别 2", "section": "筛查随访", "statement": "实性结节 < 6 mm 或部分实性结节总径 < 6 mm，按年度筛查随访。", "conditions": ["属于筛查人群", "结节 < 6 mm"], "action": "年度筛查", "rec_level": "", "evidence_level": "", "version_year": 2019, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，阈值以官方版本为准。", "status": "active", "keywords": ["Lung-RADS", "类别2", "6mm", "年度筛查"], "type": "guideline"}, {"id": "GL-LUNGRADS-03", "standard_id": "STD-LUNGRADS", "standard_name": "ACR Lung-RADS", "body_part": "肺", "modality": ["CT"], "category": "类别 3", "section": "筛查随访", "statement": "实性结节 ≥ 6 mm 且 < 8 mm，建议约 6 个月复查低剂量 CT。", "conditions": ["属于筛查人群", "实性结节 6—8 mm"], "action": "6 个月复查", "rec_level": "", "evidence_level": "", "version_year": 2019, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，阈值以官方版本为准。", "status": "active", "keywords": ["Lung-RADS", "类别3", "6mm", "8mm", "6个月"], "type": "guideline"}, {"id": "GL-LUNGRADS-04", "standard_id": "STD-LUNGRADS", "standard_name": "ACR Lung-RADS", "body_part": "肺", "modality": ["CT"], "category": "类别 4A", "section": "筛查随访", "statement": "实性结节 ≥ 8 mm 且 < 15 mm，建议约 3 个月复查，或结合临床进一步评估。", "conditions": ["属于筛查人群", "实性结节 8—15 mm"], "action": "3 个月复查或进一步评估", "rec_level": "", "evidence_level": "", "version_year": 2019, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，阈值以官方版本为准。", "status": "active", "keywords": ["Lung-RADS", "类别4A", "8mm", "15mm", "3个月"], "type": "guideline"}, {"id": "GL-LUNGRADS-05", "standard_id": "STD-LUNGRADS", "standard_name": "ACR Lung-RADS", "body_part": "肺", "modality": ["CT"], "category": "类别 4B / 4X", "section": "进一步评估", "statement": "具备可疑征象或明显生长者，进入进一步评估路径，由专科结合影像与临床决定后续方式。", "conditions": ["属于筛查人群", "存在可疑征象或生长"], "action": "进一步评估", "rec_level": "", "evidence_level": "", "version_year": 2019, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，路径以官方版本为准。", "status": "active", "keywords": ["Lung-RADS", "类别4B", "4X", "生长", "进一步评估"], "type": "guideline"}, {"id": "GL-LUNGRADS-06", "standard_id": "STD-LUNGRADS", "standard_name": "ACR Lung-RADS", "body_part": "肺", "modality": ["CT"], "category": "通用", "section": "比较原则", "statement": "判读时应与既往检查比较，结节大小变化与类别调整需记录依据。", "conditions": ["存在既往影像", "测量条件可比"], "action": "对比既往", "rec_level": "", "evidence_level": "", "version_year": 2019, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，原则以官方版本为准。", "status": "active", "keywords": ["Lung-RADS", "既往", "比较", "生长"], "type": "guideline"}, {"id": "GL-FLEISCHNER-01", "standard_id": "STD-FLEISCHNER", "standard_name": "Fleischner 偶发肺结节建议", "body_part": "肺", "modality": ["CT"], "category": "单发实性 < 6 mm", "section": "随访", "statement": "低风险人群单发实性结节 < 6 mm，通常无需常规随访。", "conditions": ["偶然发现", "单发实性结节", "< 6 mm", "低风险人群"], "action": "无需常规随访", "rec_level": "", "evidence_level": "", "version_year": 2017, "source_url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "摘要自撰，建议以原文为准。", "status": "active", "keywords": ["Fleischner", "实性", "6mm", "低风险"], "type": "guideline"}, {"id": "GL-FLEISCHNER-02", "standard_id": "STD-FLEISCHNER", "standard_name": "Fleischner 偶发肺结节建议", "body_part": "肺", "modality": ["CT"], "category": "单发实性 6—8 mm", "section": "随访", "statement": "单发实性结节 6—8 mm，建议 6—12 个月复查，可考虑 18—24 个月再复查。", "conditions": ["偶然发现", "单发实性结节", "6—8 mm"], "action": "6—12 个月复查", "rec_level": "", "evidence_level": "", "version_year": 2017, "source_url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "摘要自撰，建议以原文为准。", "status": "active", "keywords": ["Fleischner", "实性", "6mm", "8mm", "复查"], "type": "guideline"}, {"id": "GL-FLEISCHNER-03", "standard_id": "STD-FLEISCHNER", "standard_name": "Fleischner 偶发肺结节建议", "body_part": "肺", "modality": ["CT"], "category": "单发实性 > 8 mm", "section": "随访", "statement": "单发实性结节 > 8 mm，可考虑约 3 个月复查、PET/CT 或组织学评估，由专科综合决定。", "conditions": ["偶然发现", "单发实性结节", "> 8 mm"], "action": "进一步评估", "rec_level": "", "evidence_level": "", "version_year": 2017, "source_url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "摘要自撰，建议以原文为准。", "status": "active", "keywords": ["Fleischner", "实性", "8mm", "PET", "活检"], "type": "guideline"}, {"id": "GL-FLEISCHNER-04", "standard_id": "STD-FLEISCHNER", "standard_name": "Fleischner 偶发肺结节建议", "body_part": "肺", "modality": ["CT"], "category": "单发磨玻璃 < 6 mm", "section": "随访", "statement": "单发磨玻璃结节 < 6 mm，通常无需常规随访。", "conditions": ["偶然发现", "单发磨玻璃结节", "< 6 mm"], "action": "无需常规随访", "rec_level": "", "evidence_level": "", "version_year": 2017, "source_url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "摘要自撰，建议以原文为准。", "status": "active", "keywords": ["Fleischner", "磨玻璃", "6mm"], "type": "guideline"}, {"id": "GL-FLEISCHNER-05", "standard_id": "STD-FLEISCHNER", "standard_name": "Fleischner 偶发肺结节建议", "body_part": "肺", "modality": ["CT"], "category": "单发磨玻璃 ≥ 6 mm", "section": "随访", "statement": "单发磨玻璃结节 ≥ 6 mm，建议 6—12 个月复查，稳定后可延长随访间隔。", "conditions": ["偶然发现", "单发磨玻璃结节", "≥ 6 mm"], "action": "6—12 个月复查", "rec_level": "", "evidence_level": "", "version_year": 2017, "source_url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "摘要自撰，建议以原文为准。", "status": "active", "keywords": ["Fleischner", "磨玻璃", "6mm", "复查"], "type": "guideline"}, {"id": "GL-FLEISCHNER-06", "standard_id": "STD-FLEISCHNER", "standard_name": "Fleischner 偶发肺结节建议", "body_part": "肺", "modality": ["CT"], "category": "部分实性 ≥ 6 mm", "section": "随访", "statement": "部分实性结节 ≥ 6 mm，建议 3—6 个月复查；实性成分增大时进入进一步评估。", "conditions": ["偶然发现", "部分实性结节", "≥ 6 mm"], "action": "3—6 个月复查", "rec_level": "", "evidence_level": "", "version_year": 2017, "source_url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718", "license_note": "摘要自撰，建议以原文为准。", "status": "active", "keywords": ["Fleischner", "部分实性", "实性成分", "复查"], "type": "guideline"}, {"id": "GL-BIRADS-01", "standard_id": "STD-BIRADS", "standard_name": "ACR BI-RADS", "body_part": "乳腺", "modality": ["MG", "US", "MR"], "category": "0 类", "section": "补充评估", "statement": "评估不完整，需要补充影像或与既往片比较后再给出最终分类。", "conditions": ["已完成初始影像", "信息不足以分类"], "action": "补充影像", "rec_level": "", "evidence_level": "", "version_year": 2013, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，类别定义以官方版本为准。", "status": "active", "keywords": ["BI-RADS", "0类", "补充", "比较"], "type": "guideline"}, {"id": "GL-BIRADS-02", "standard_id": "STD-BIRADS", "standard_name": "ACR BI-RADS", "body_part": "乳腺", "modality": ["MG", "US", "MR"], "category": "1—2 类", "section": "常规筛查", "statement": "阴性或良性发现，按年龄与风险进入常规筛查流程。", "conditions": ["已完成分类", "分类为 1 或 2"], "action": "常规筛查", "rec_level": "", "evidence_level": "", "version_year": 2013, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，类别定义以官方版本为准。", "status": "active", "keywords": ["BI-RADS", "1类", "2类", "筛查"], "type": "guideline"}, {"id": "GL-BIRADS-03", "standard_id": "STD-BIRADS", "standard_name": "ACR BI-RADS", "body_part": "乳腺", "modality": ["MG", "US", "MR"], "category": "3 类", "section": "短期随访", "statement": "可能良性，建议短期随访，通常约 6 个月，并评估稳定性。", "conditions": ["已完成分类", "分类为 3"], "action": "6 个月随访", "rec_level": "", "evidence_level": "", "version_year": 2013, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，类别定义以官方版本为准。", "status": "active", "keywords": ["BI-RADS", "3类", "6个月", "随访"], "type": "guideline"}, {"id": "GL-BIRADS-04", "standard_id": "STD-BIRADS", "standard_name": "ACR BI-RADS", "body_part": "乳腺", "modality": ["MG", "US", "MR"], "category": "4 类", "section": "组织学评估", "statement": "可疑恶性，考虑组织学评估，具体方式由专科结合影像与临床决定。", "conditions": ["已完成分类", "分类为 4"], "action": "考虑活检", "rec_level": "", "evidence_level": "", "version_year": 2013, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，类别定义以官方版本为准。", "status": "active", "keywords": ["BI-RADS", "4类", "活检"], "type": "guideline"}, {"id": "GL-BIRADS-05", "standard_id": "STD-BIRADS", "standard_name": "ACR BI-RADS", "body_part": "乳腺", "modality": ["MG", "US", "MR"], "category": "5 类", "section": "组织学评估", "statement": "高度提示恶性，应进行组织学评估并进入相应处理路径。", "conditions": ["已完成分类", "分类为 5"], "action": "活检并进入处理路径", "rec_level": "", "evidence_level": "", "version_year": 2013, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，类别定义以官方版本为准。", "status": "active", "keywords": ["BI-RADS", "5类", "活检"], "type": "guideline"}, {"id": "GL-BIRADS-06", "standard_id": "STD-BIRADS", "standard_name": "ACR BI-RADS", "body_part": "乳腺", "modality": ["MG", "US", "MR"], "category": "6 类", "section": "已知恶性", "statement": "已获组织学证实的恶性病变，用于治疗前评估与随访，不用于筛查。", "conditions": ["已有组织学结果", "分类为 6"], "action": "治疗前评估", "rec_level": "", "evidence_level": "", "version_year": 2013, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，类别定义以官方版本为准。", "status": "active", "keywords": ["BI-RADS", "6类", "已知恶性"], "type": "guideline"}, {"id": "GL-LIRADS-01", "standard_id": "STD-LIRADS", "standard_name": "ACR LI-RADS", "body_part": "肝", "modality": ["CT", "MR"], "category": "LR-1 / LR-2", "section": "监测", "statement": "肯定良性或很可能良性，按既定监测方案继续随访。", "conditions": ["属于高危人群", "分类为 LR-1 或 LR-2"], "action": "继续监测", "rec_level": "", "evidence_level": "", "version_year": 2018, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，类别定义以官方版本为准。", "status": "active", "keywords": ["LI-RADS", "LR-1", "LR-2", "监测"], "type": "guideline"}, {"id": "GL-LIRADS-02", "standard_id": "STD-LIRADS", "standard_name": "ACR LI-RADS", "body_part": "肝", "modality": ["CT", "MR"], "category": "LR-3", "section": "复查", "statement": "恶性可能性中等，建议缩短间隔复查，通常约 3—6 个月。", "conditions": ["属于高危人群", "分类为 LR-3"], "action": "3—6 个月复查", "rec_level": "", "evidence_level": "", "version_year": 2018, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，类别定义以官方版本为准。", "status": "active", "keywords": ["LI-RADS", "LR-3", "复查"], "type": "guideline"}, {"id": "GL-LIRADS-03", "standard_id": "STD-LIRADS", "standard_name": "ACR LI-RADS", "body_part": "肝", "modality": ["CT", "MR"], "category": "LR-4", "section": "多学科评估", "statement": "很可能为恶性，建议多学科讨论，可考虑活检或按影像随访策略处理。", "conditions": ["属于高危人群", "分类为 LR-4"], "action": "多学科讨论", "rec_level": "", "evidence_level": "", "version_year": 2018, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，类别定义以官方版本为准。", "status": "active", "keywords": ["LI-RADS", "LR-4", "多学科", "活检"], "type": "guideline"}, {"id": "GL-LIRADS-04", "standard_id": "STD-LIRADS", "standard_name": "ACR LI-RADS", "body_part": "肝", "modality": ["CT", "MR"], "category": "LR-5", "section": "处理路径", "statement": "肯定为肝细胞癌的影像诊断类别，进入相应处理路径，由专科评估。", "conditions": ["属于高危人群", "分类为 LR-5"], "action": "进入处理路径", "rec_level": "", "evidence_level": "", "version_year": 2018, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，类别定义以官方版本为准。", "status": "active", "keywords": ["LI-RADS", "LR-5", "肝细胞癌", "处理"], "type": "guideline"}, {"id": "GL-BOSNIAK-01", "standard_id": "STD-BOSNIAK", "standard_name": "Bosniak 分类", "body_part": "肾", "modality": ["CT", "MR"], "category": "I 类", "section": "随访", "statement": "单纯性囊肿，通常无需随访。", "conditions": ["囊性病变", "分类为 I"], "action": "无需随访", "rec_level": "", "evidence_level": "", "version_year": 2019, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，分类以原文为准。", "status": "active", "keywords": ["Bosniak", "I类", "单纯囊肿"], "type": "guideline"}, {"id": "GL-BOSNIAK-02", "standard_id": "STD-BOSNIAK", "standard_name": "Bosniak 分类", "body_part": "肾", "modality": ["CT", "MR"], "category": "II 类", "section": "随访", "statement": "良性表现囊肿，通常无需随访。", "conditions": ["囊性病变", "分类为 II"], "action": "无需随访", "rec_level": "", "evidence_level": "", "version_year": 2019, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，分类以原文为准。", "status": "active", "keywords": ["Bosniak", "II类", "良性"], "type": "guideline"}, {"id": "GL-BOSNIAK-03", "standard_id": "STD-BOSNIAK", "standard_name": "Bosniak 分类", "body_part": "肾", "modality": ["CT", "MR"], "category": "IIF 类", "section": "随访", "statement": "可能良性，建议约 6 个月复查，稳定后可延长间隔。", "conditions": ["囊性病变", "分类为 IIF"], "action": "6 个月复查", "rec_level": "", "evidence_level": "", "version_year": 2019, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，分类以原文为准。", "status": "active", "keywords": ["Bosniak", "IIF", "6个月", "复查"], "type": "guideline"}, {"id": "GL-BOSNIAK-04", "standard_id": "STD-BOSNIAK", "standard_name": "Bosniak 分类", "body_part": "肾", "modality": ["CT", "MR"], "category": "III 类", "section": "手术评估", "statement": "性质不确定，考虑手术评估，具体由泌尿专科结合整体情况决定。", "conditions": ["囊性病变", "分类为 III"], "action": "考虑手术评估", "rec_level": "", "evidence_level": "", "version_year": 2019, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，分类以原文为准。", "status": "active", "keywords": ["Bosniak", "III类", "手术"], "type": "guideline"}, {"id": "GL-BOSNIAK-05", "standard_id": "STD-BOSNIAK", "standard_name": "Bosniak 分类", "body_part": "肾", "modality": ["CT", "MR"], "category": "IV 类", "section": "手术评估", "statement": "明显恶性表现，进入手术评估路径。", "conditions": ["囊性病变", "分类为 IV"], "action": "手术评估", "rec_level": "", "evidence_level": "", "version_year": 2019, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，分类以原文为准。", "status": "active", "keywords": ["Bosniak", "IV类", "恶性", "手术"], "type": "guideline"}, {"id": "GL-PIRADS-01", "standard_id": "STD-PIRADS", "standard_name": "PI-RADS", "body_part": "前列腺", "modality": ["MR"], "category": "1—2 类", "section": "临床路径", "statement": "极低或低风险，按临床与 PSA 结果常规管理。", "conditions": ["完成多参数 MRI", "分类为 1 或 2"], "action": "常规管理", "rec_level": "", "evidence_level": "", "version_year": 2019, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，分类以官方版本为准。", "status": "active", "keywords": ["PI-RADS", "1类", "2类", "PSA"], "type": "guideline"}, {"id": "GL-PIRADS-02", "standard_id": "STD-PIRADS", "standard_name": "PI-RADS", "body_part": "前列腺", "modality": ["MR"], "category": "3 类", "section": "临床路径", "statement": "风险不确定，是否活检需结合 PSA、临床与既往结果综合决定。", "conditions": ["完成多参数 MRI", "分类为 3"], "action": "结合临床决定", "rec_level": "", "evidence_level": "", "version_year": 2019, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，分类以官方版本为准。", "status": "active", "keywords": ["PI-RADS", "3类", "活检", "PSA"], "type": "guideline"}, {"id": "GL-PIRADS-03", "standard_id": "STD-PIRADS", "standard_name": "PI-RADS", "body_part": "前列腺", "modality": ["MR"], "category": "4—5 类", "section": "临床路径", "statement": "高风险，考虑靶向活检，由泌尿专科安排。", "conditions": ["完成多参数 MRI", "分类为 4 或 5"], "action": "考虑靶向活检", "rec_level": "", "evidence_level": "", "version_year": 2019, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，分类以官方版本为准。", "status": "active", "keywords": ["PI-RADS", "4类", "5类", "靶向活检"], "type": "guideline"}, {"id": "GL-ORADS-01", "standard_id": "STD-ORADS", "standard_name": "O-RADS", "body_part": "卵巢", "modality": ["US", "MR"], "category": "0 类", "section": "补充评估", "statement": "评估不完整，需要补充检查后再分类。", "conditions": ["已完成初始超声", "信息不足"], "action": "补充评估", "rec_level": "", "evidence_level": "", "version_year": 2022, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，分类以官方版本为准。", "status": "active", "keywords": ["O-RADS", "0类", "补充"], "type": "guideline"}, {"id": "GL-ORADS-02", "standard_id": "STD-ORADS", "standard_name": "O-RADS", "body_part": "卵巢", "modality": ["US", "MR"], "category": "1—2 类", "section": "常规", "statement": "生理性或良性表现，按常规妇科随访。", "conditions": ["已完成分类", "分类为 1 或 2"], "action": "常规随访", "rec_level": "", "evidence_level": "", "version_year": 2022, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，分类以官方版本为准。", "status": "active", "keywords": ["O-RADS", "1类", "2类", "生理性"], "type": "guideline"}, {"id": "GL-ORADS-03", "standard_id": "STD-ORADS", "standard_name": "O-RADS", "body_part": "卵巢", "modality": ["US", "MR"], "category": "3 类", "section": "随访", "statement": "低风险，可考虑短期随访或补充 MRI，由妇科结合临床决定。", "conditions": ["已完成分类", "分类为 3"], "action": "随访或补充 MRI", "rec_level": "", "evidence_level": "", "version_year": 2022, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，分类以官方版本为准。", "status": "active", "keywords": ["O-RADS", "3类", "随访", "MRI"], "type": "guideline"}, {"id": "GL-ORADS-04", "standard_id": "STD-ORADS", "standard_name": "O-RADS", "body_part": "卵巢", "modality": ["US", "MR"], "category": "4 类", "section": "专科评估", "statement": "中高风险，建议妇科评估，必要时补充 MRI 或转诊。", "conditions": ["已完成分类", "分类为 4"], "action": "妇科评估", "rec_level": "", "evidence_level": "", "version_year": 2022, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，分类以官方版本为准。", "status": "active", "keywords": ["O-RADS", "4类", "妇科", "MRI"], "type": "guideline"}, {"id": "GL-ORADS-05", "standard_id": "STD-ORADS", "standard_name": "O-RADS", "body_part": "卵巢", "modality": ["US", "MR"], "category": "5 类", "section": "专科评估", "statement": "高风险，建议妇科肿瘤专科评估。", "conditions": ["已完成分类", "分类为 5"], "action": "妇科肿瘤评估", "rec_level": "", "evidence_level": "", "version_year": 2022, "source_url": "https://www.acr.org/", "license_note": "摘要自撰，分类以官方版本为准。", "status": "active", "keywords": ["O-RADS", "5类", "妇科肿瘤"], "type": "guideline"}, {"id": "GL-GB-01", "standard_id": "STD-GB-POLYP", "standard_name": "胆囊息肉管理共识", "body_part": "胆囊", "modality": ["US"], "category": "< 6 mm", "section": "随访", "statement": "无其他危险因素的 < 6 mm 胆囊息肉，可考虑定期超声随访。", "conditions": ["胆囊息肉", "最大径 < 6 mm", "无危险因素"], "action": "定期随访", "rec_level": "", "evidence_level": "", "version_year": 2022, "source_url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "共识摘要自撰，以原文为准。", "status": "active", "keywords": ["胆囊息肉", "6mm", "随访", "超声"], "type": "guideline"}, {"id": "GL-GB-02", "standard_id": "STD-GB-POLYP", "standard_name": "胆囊息肉管理共识", "body_part": "胆囊", "modality": ["US"], "category": "6—9 mm", "section": "随访", "statement": "6—9 mm 息肉，建议缩短间隔随访，并评估生长速度与危险因素。", "conditions": ["胆囊息肉", "6—9 mm"], "action": "3—6 个月随访", "rec_level": "", "evidence_level": "", "version_year": 2022, "source_url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "共识摘要自撰，以原文为准。", "status": "active", "keywords": ["胆囊息肉", "6mm", "9mm", "随访"], "type": "guideline"}, {"id": "GL-GB-03", "standard_id": "STD-GB-POLYP", "standard_name": "胆囊息肉管理共识", "body_part": "胆囊", "modality": ["US"], "category": "≥ 10 mm", "section": "手术评估", "statement": "≥ 10 mm 或伴危险因素者，考虑外科评估。", "conditions": ["胆囊息肉", "≥ 10 mm"], "action": "外科评估", "rec_level": "", "evidence_level": "", "version_year": 2022, "source_url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "共识摘要自撰，以原文为准。", "status": "active", "keywords": ["胆囊息肉", "10mm", "外科"], "type": "guideline"}, {"id": "GL-PC-01", "standard_id": "STD-PC", "standard_name": "胰腺囊性病变管理共识", "body_part": "胰", "modality": ["CT", "MR"], "category": "< 1 cm", "section": "随访", "statement": "小于 1 cm 的囊性病变，可结合风险分层定期随访。", "conditions": ["胰腺囊性病变", "< 1 cm"], "action": "定期随访", "rec_level": "", "evidence_level": "", "version_year": 2022, "source_url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "共识摘要自撰，以原文为准。", "status": "active", "keywords": ["胰腺", "囊性", "1cm", "随访"], "type": "guideline"}, {"id": "GL-PC-02", "standard_id": "STD-PC", "standard_name": "胰腺囊性病变管理共识", "body_part": "胰", "modality": ["CT", "MR"], "category": "1—3 cm", "section": "随访", "statement": "1—3 cm 病变按形态与主胰管情况分层，随访间隔由专科确定。", "conditions": ["胰腺囊性病变", "1—3 cm", "评估主胰管"], "action": "分层随访", "rec_level": "", "evidence_level": "", "version_year": 2022, "source_url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "共识摘要自撰，以原文为准。", "status": "active", "keywords": ["胰腺", "囊性", "主胰管", "随访"], "type": "guideline"}, {"id": "GL-PC-03", "standard_id": "STD-PC", "standard_name": "胰腺囊性病变管理共识", "body_part": "胰", "modality": ["CT", "MR"], "category": "≥ 3 cm 或高危征象", "section": "多学科评估", "statement": "≥ 3 cm 或伴主胰管扩张、实性成分等高危征象者，建议多学科评估。", "conditions": ["胰腺囊性病变", "≥ 3 cm 或高危征象"], "action": "多学科评估", "rec_level": "", "evidence_level": "", "version_year": 2022, "source_url": "https://www.ncbi.nlm.nih.gov/books/", "license_note": "共识摘要自撰，以原文为准。", "status": "active", "keywords": ["胰腺", "囊性", "3cm", "主胰管扩张", "实性成分", "多学科"], "type": "guideline"}, {"id": "CASE-001", "title": "正常后前位胸片", "modality": ["CR"], "body_part": "胸部", "image": "deepworks-kb-import/images/case-001.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File:Normal_posteroanterior_(PA)_chest_radiograph_(X-ray).jpg", "license": "CC0", "artist": "Mikael Häggström", "description_public": "来源公开说明为正常后前位胸片。", "sign_tags": [], "teaching_note": "正常解剖对照：肺野、肺门、心影、膈面与肋膈角。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-NORMAL-CHEST", "type": "case"}, {"id": "CASE-002", "title": "正常侧位胸片", "modality": ["CR"], "body_part": "胸部", "image": "deepworks-kb-import/images/case-002.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File:Normal_lateral_chest_radiograph_(X-ray).jpg", "license": "CC0", "artist": "Mikael Häggström", "description_public": "来源公开说明为正常侧位胸片。", "sign_tags": [], "teaching_note": "与正位片配对，用于理解胸骨后间隙、心后间隙与膈肌形态。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-NORMAL-CHEST", "type": "case"}, {"id": "CASE-003", "title": "胸片解剖标注（欠吸气、轻度旋转）", "modality": ["CR"], "body_part": "胸部", "image": "deepworks-kb-import/images/case-003.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File:Normal_chest_radiograph_which_is_under-inspired_and_is_rotated.jpg", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "description_public": "来源公开说明为欠吸气且轻度旋转的胸片，图中标注了棘突、锁骨内侧端、主动脉结与右侧第 5 前肋。", "sign_tags": [], "teaching_note": "用于讲解体位与吸气程度对胸片判读的影响；标注为原图自带。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-NORMAL-CHEST", "type": "case"}, {"id": "CASE-004", "title": "纵隔结构示意图（叠加于胸片）", "modality": ["CR"], "body_part": "胸部", "image": "deepworks-kb-import/images/case-004.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File:Mediastinal_structures_on_chest_X-ray.jpg", "license": "CC BY-SA 3.0", "artist": "Mikael Häggström", "description_public": "来源公开说明为胸片上的纵隔结构示意。", "sign_tags": [], "teaching_note": "解剖示意而非原始病例影像，用于讲解纵隔轮廓组成。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-NORMAL-CHEST", "type": "case"}, {"id": "CASE-005", "title": "双肺气腔影伴肺不张（含中心静脉导管）", "modality": ["CR"], "body_part": "胸部", "image": "deepworks-kb-import/images/case-005.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File:Chest_X-ray_showing_neurofibromatosis_with_bilateral_pneumonia.jpg", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "description_public": "来源公开说明为双肺气腔影伴肺不张，并可见右锁骨下静脉导管尖端；原图左上角已做遮挡处理。", "sign_tags": ["SIGN-002", "SIGN-019"], "teaching_note": "用于观察气腔影分布与肺不张征象；标签来自来源公开描述，未经放射科医师复核。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-LUNG-CONSOLIDATION", "type": "case"}, {"id": "CASE-006", "title": "大叶性肺炎（箭头标注）", "modality": ["CR"], "body_part": "胸部", "image": "deepworks-kb-import/images/case-006.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File:X-ray_of_lobar_pneumonia.jpg", "license": "CC0", "artist": "Mikael Häggström", "description_public": "来源公开说明为大叶性肺炎，图中红色箭头指向病变区域。", "sign_tags": ["SIGN-002"], "teaching_note": "用于观察实变区域与空气支气管征的对照；箭头为原图标注。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-LUNG-CONSOLIDATION", "type": "case"}, {"id": "CASE-007", "title": "下肺野气腔影（正位）", "modality": ["CR"], "body_part": "胸部", "image": "deepworks-kb-import/images/case-007.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File:Chest_X-ray_in_influenza_and_Haemophilus_influenzae.jpg", "license": "CC0", "artist": "Mikael Häggström", "description_public": "来源公开说明为下肺野气腔影，病原学信息见来源页。", "sign_tags": ["SIGN-002"], "teaching_note": "用于对照正侧位的气腔影分布；不展示病原学结论。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-LUNG-CONSOLIDATION", "type": "case"}, {"id": "CASE-008", "title": "下肺野气腔影（侧位）", "modality": ["CR"], "body_part": "胸部", "image": "deepworks-kb-import/images/case-008.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File:Chest_X-ray_in_influenza_and_Haemophilus_influenzae,_lateral.jpg", "license": "CC0", "artist": "Mikael Häggström", "description_public": "来源公开说明为同一检查的侧位片。", "sign_tags": ["SIGN-002"], "teaching_note": "与正位片配对，用于理解侧位片上病变的定位。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-LUNG-CONSOLIDATION", "type": "case"}, {"id": "CASE-009", "title": "胸腹交界层面 CT（软组织窗）", "modality": ["CT"], "body_part": "胸部", "image": "deepworks-kb-import/images/case-009.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File:CT_Scan_Thorax_Liver.jpg", "license": "CC BY-SA 4.0", "artist": "Ptrump16", "description_public": "来源公开说明为胸部 CT，窗宽窗位按肝窗设置。", "sign_tags": [], "teaching_note": "用于讲解不同窗宽窗位对同一层面的显示差异。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-CHEST-CT", "type": "case"}, {"id": "CASE-010", "title": "胸部 CT 定位像与轴位对照", "modality": ["CT"], "body_part": "胸部", "image": "deepworks-kb-import/images/case-010.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File:Axial_plane_CT_scan_of_the_thorax_illustrative_image.jpg", "license": "CC BY-SA 4.0", "artist": "Ptrump16", "description_public": "来源公开说明为胸部 CT，右侧轴位对应左侧定位像的第 33 层，属示意拼图。", "sign_tags": [], "teaching_note": "用于讲解轴位层面与定位像的对应关系。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-CHEST-CT", "type": "case"}, {"id": "CASE-011", "title": "甲状腺结节超声", "modality": ["US"], "body_part": "甲状腺", "image": "deepworks-kb-import/images/case-011.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File:Thyroid_ultrasound_110322134324_1347140.jpg", "license": "CC BY-SA 3.0", "artist": "Nevit Dilmen", "description_public": "来源公开说明为甲状腺结节超声图像。", "sign_tags": ["SIGN-058"], "teaching_note": "用于观察低回声结节的边界与内部回声；图中设备参数文字为原图自带。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-THYROID", "type": "case"}, {"id": "CASE-012", "title": "乳腺局部加压位钼靶", "modality": ["MG"], "body_part": "乳腺", "image": "deepworks-kb-import/images/case-012.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File:Spot_compression_view_mammography_to_spread_out_breast_tissues_and_rule_out_suspicious_lesion_in_an_area.jpg", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "description_public": "来源公开说明为局部加压位，用于展开重叠腺体以排除可疑病灶，该图未见明确病灶。", "sign_tags": [], "teaching_note": "用于讲解局部加压位的用途与正常腺体表现；标注为原图自带。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-BREAST", "type": "case"}, {"id": "CASE-013", "title": "乳腺 MLO 位血管钙化", "modality": ["MG"], "body_part": "乳腺", "image": "deepworks-kb-import/images/case-013.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File:Mammography_MLO_view_showing_vascular_calculation_of_the_breast.jpg", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "description_public": "来源公开说明为乳腺 MLO 位，可见血管钙化。", "sign_tags": ["SIGN-006"], "teaching_note": "用于区分血管钙化与腺体钙化的形态差异；标注为原图自带。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-BREAST", "type": "case"}, {"id": "CASE-014", "title": "正常头颅 CT 三视图", "modality": ["CT"], "body_part": "头颅", "image": "deepworks-kb-import/images/case-014.png", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File:CT_of_a_normal_brain_(thumbnail).png", "license": "CC0", "artist": "Mikael Häggström", "description_public": "来源公开说明为平扫头颅 CT，矢状、冠状与轴位三个平面，层厚 4 mm。", "sign_tags": [], "teaching_note": "正常解剖对照：脑室、中线、脑沟与颅骨。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-NORMAL-HEAD", "type": "case"}, {"id": "CASE-015", "title": "右中上肺野气腔影（正位）", "modality": ["CR"], "body_part": "肺", "image": "deepworks-kb-import/images/case-015.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3AChest_radiograph_in_influensa_and_H_influenzae%2C_posteroanterior.jpg", "license": "CC0", "artist": "Mikael Häggström, M.D. Author info - Reusing images- Conflicts of interest:  None\nMikael Häggström, M.D.Consent note: Wr", "description_public": "来源公开说明为肺炎相关正位胸片，可见斑片状密度增高。", "sign_tags": ["SIGN-002"], "teaching_note": "对照气腔影的分布与肺野透亮度变化。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-LUNG-CONSOLIDATION", "type": "case"}, {"id": "CASE-017", "title": "双侧下肺野模糊伴肋膈角变钝", "modality": ["CR"], "body_part": "胸膜", "image": "deepworks-kb-import/images/case-017.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3AMedical_X-Ray_imaging_AGL02_nevit.jpg", "license": "CC BY-SA 3.0", "artist": "Nevit Dilmen (talk)", "description_public": "来源公开说明为胸腔积液相关胸片，双侧下肺野密度增高。", "sign_tags": ["SIGN-007"], "teaching_note": "对照少量积液与下肺野模糊的边界。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-PLEURAL", "type": "case"}, {"id": "CASE-018", "title": "侧位胸片：后肋膈角变钝（箭头）", "modality": ["CR"], "body_part": "胸膜", "image": "deepworks-kb-import/images/case-018.png", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3ALargePleuralEffusionLatPlain.png", "license": "CC BY-SA 4.0", "artist": "James Heilman, MD", "description_public": "来源公开说明为大量胸腔积液侧位片，箭头为原图标注。", "sign_tags": ["SIGN-007"], "teaching_note": "对照侧位片上液体的分布与肋膈角形态。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-PLEURAL", "type": "case"}, {"id": "CASE-019", "title": "气胸多图对照（含床旁片）", "modality": ["CR"], "body_part": "胸膜", "image": "deepworks-kb-import/images/case-019.png", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3AChest_X-ray_of_pneumothorax.png", "license": "CC BY 4.0", "artist": "Alex Bonilla, Alexander J. Blair, Suliman M. Alamro, Rebecca A. Ward, Michael B. Feldman, Richard A. Dutko, Theodora K. ", "description_public": "来源公开说明为气胸系列影像，含体位标记与体外导线。", "sign_tags": ["SIGN-008"], "teaching_note": "对照立位与床旁片上的胸膜线与肺压缩表现。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-PLEURAL", "type": "case"}, {"id": "CASE-020", "title": "气胸伴磨玻璃影（胸片与 CT）", "modality": ["CT"], "body_part": "肺", "image": "deepworks-kb-import/images/case-020.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3AX-ray_and_CT_of_ground_glass_opacities_and_pneumothorax_in_pneumocystis_pneumonia.jpg", "license": "CC BY 4.0", "artist": "Carolyn M. Allen, Hamdan H. AL-Jahdali, Klaus L. Irion, Sarah Al Ghanem, Alaa Gouda, and Ali Nawaz Khan", "description_public": "来源公开说明为气胸与磨玻璃影的胸片及 CT 对照图。", "sign_tags": ["SIGN-001", "SIGN-008"], "teaching_note": "对照胸片与 CT 上气胸与磨玻璃影的显示差异。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-LUNG-GGO", "type": "case"}, {"id": "CASE-021", "title": "双肺囊性改变与支气管血管束增厚", "modality": ["CT"], "body_part": "肺", "image": "deepworks-kb-import/images/case-021.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3ACT_of_lymphocytic_interstitial_pneumonia.jpg", "license": "CC BY 4.0", "artist": "Article authors: Daniel Simões Oliveira, José de Arimatéia Araújo Filho, Antonio Fernando Lins Paiva, Eduardo Seigo Ikar", "description_public": "来源公开说明为淋巴细胞性间质性肺炎的 CT 图像。", "sign_tags": ["SIGN-011", "SIGN-012"], "teaching_note": "对照囊性间质改变与支气管血管束增厚。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-LUNG-GGO", "type": "case"}, {"id": "CASE-022", "title": "低剂量 CT 钙化结节（圆圈标注）", "modality": ["CT"], "body_part": "肺", "image": "deepworks-kb-import/images/case-022.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3ACT-Low-Dose-1.25-Lung-Calcified-Nodule.jpg", "license": "CC BY-SA 4.0", "artist": "Ptrump16", "description_public": "来源公开说明为低剂量 CT 上的钙化结节，圆圈为原图标注。", "sign_tags": ["SIGN-003", "SIGN-006"], "teaching_note": "对照钙化结节的密度、边缘与显示条件。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-LUNG-NODULE", "type": "case"}, {"id": "CASE-016", "title": "双肺弥漫粟粒样结节", "modality": ["CR"], "body_part": "肺", "image": "deepworks-kb-import/images/case-016.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3AChest_radiograph_of_miliary_tuberculosis_1.jpg", "license": "CC BY 4.0", "artist": "Benjamín Herreros, Isabel Plaza, Rebeca García, Marta Chichón, Carmen Guerrero and Emilio Pintor", "description_public": "来源公开说明为粟粒性结核胸片，双肺弥漫细小结节。", "sign_tags": ["SIGN-003"], "teaching_note": "观察弥漫性小结节的分布、密度与大小一致性。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-LUNG-NODULE", "type": "case"}, {"id": "CASE-023", "title": "甲状腺囊肿与钙化结节（标注）", "modality": ["US"], "body_part": "甲状腺", "image": "deepworks-kb-import/images/case-023.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3AUltrasound_of_thyroid_showing_right_lower_pole_cyst_and_a_calcified_nodule.jpg", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "description_public": "来源公开说明为甲状腺右叶下极囊肿伴钙化结节，标注为原图自带。", "sign_tags": ["SIGN-058", "SIGN-006"], "teaching_note": "对照囊性成分、钙化与后方声影。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-THYROID", "type": "case"}, {"id": "CASE-024", "title": "甲状腺超声：结节与囊性区", "modality": ["US"], "body_part": "甲状腺", "image": "deepworks-kb-import/images/case-024.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3AThyroid_ultrasound_110321165224_1654220.jpg", "license": "CC BY-SA 3.0", "artist": "Nevit Dilmen (talk)", "description_public": "来源公开说明为甲状腺超声图像。", "sign_tags": ["SIGN-058", "SIGN-059"], "teaching_note": "对照实性低回声区与囊性无回声区。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-THYROID", "type": "case"}, {"id": "CASE-025", "title": "乳腺 MLO 位血管钙化（标注）", "modality": ["MG"], "body_part": "乳腺", "image": "deepworks-kb-import/images/case-025.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3AMammography_MLO_view_showing_vascular_calcification_of_the_breast.jpg", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "description_public": "来源公开说明为乳腺 MLO 位，标注血管钙化与点状钙化。", "sign_tags": ["SIGN-006"], "teaching_note": "对照血管钙化与腺体钙化的形态差异。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-BREAST", "type": "case"}, {"id": "CASE-026", "title": "乳腺 MLO 位等密度肿块伴钙化", "modality": ["MG"], "body_part": "乳腺", "image": "deepworks-kb-import/images/case-026.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3ALow_intensity_mass_on_mammography_MLO_view.jpg", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "description_public": "来源公开说明为与腺体等密度的肿块，伴钙化。", "sign_tags": ["SIGN-055", "SIGN-056"], "teaching_note": "对照等密度肿块的边界与伴发钙化。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-BREAST", "type": "case"}, {"id": "CASE-027", "title": "乳腺 MLO 位高密度肿块", "modality": ["MG"], "body_part": "乳腺", "image": "deepworks-kb-import/images/case-027.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3AHigh_density_mass_in_the_left_breast.jpg", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "description_public": "来源公开说明为左乳高密度肿块。", "sign_tags": ["SIGN-004"], "teaching_note": "对照高密度肿块的形态与边缘。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-BREAST", "type": "case"}, {"id": "CASE-028", "title": "乳腺超声：低回声肿块伴后方声影", "modality": ["US"], "body_part": "乳腺", "image": "deepworks-kb-import/images/case-028.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3ABreast_cancer_ultrasound_1509101324.jpg", "license": "CC BY-SA 3.0", "artist": "Nevit Dilmen (talk)", "description_public": "来源公开说明为乳腺超声图像。", "sign_tags": ["SIGN-058", "SIGN-060"], "teaching_note": "对照低回声肿块与后方声影。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-BREAST", "type": "case"}, {"id": "CASE-029", "title": "头颅 CT 冠状位：出血（标注）", "modality": ["CT"], "body_part": "头颅", "image": "deepworks-kb-import/images/case-029.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3ACT_coronal_scan_of_the_head_showing_posterior_interhemispheric_bleed_and_left_tentorial_bleed.jpg", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "description_public": "来源公开说明为颅内出血，标注出血部位与脑室，原图已遮挡部分区域。", "sign_tags": ["SIGN-045"], "teaching_note": "对照脑实质、脑室与出血的密度差异。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-HEAD", "type": "case"}, {"id": "CASE-030", "title": "FLAIR：左侧颞顶叶高信号", "modality": ["MR"], "body_part": "头颅", "image": "deepworks-kb-import/images/case-030.png", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3AFLAIR_MRI_of_cerebral_infarction.png", "license": "CC BY 4.0", "artist": "edit\nShazia Mirza and Sankalp Gokhale\n\nSee also source article for additional image creators.", "description_public": "来源公开说明为脑梗死的 FLAIR 图像。", "sign_tags": ["SIGN-036"], "teaching_note": "对照梗死区域的水肿信号与范围。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-HEAD", "type": "case"}, {"id": "CASE-031", "title": "脑 MRI：颅神经与囊性改变（标注）", "modality": ["MR"], "body_part": "头颅", "image": "deepworks-kb-import/images/case-031.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3AT2_weighted_axial_section_of_MRI_brain_showing_cystic_encephalomyelitic_changes_of_right_cerebellum.jpg", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "description_public": "来源公开说明为脑 MRI，标注颅神经与囊性改变，原图已遮挡部分区域。", "sign_tags": ["SIGN-012"], "teaching_note": "对照颅神经走行与脑干周围囊性改变。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-HEAD", "type": "case"}, {"id": "CASE-032", "title": "肝脏多发低密度灶", "modality": ["CT"], "body_part": "肝", "image": "deepworks-kb-import/images/case-032.jpg", "source_id": "SRC-COMMONS", "source_page": "https://commons.wikimedia.org/wiki/File%3AMultipleLiverMets2008.jpg", "license": "CC BY-SA 3.0", "artist": "James Heilman, MD", "description_public": "来源公开说明为肝多发转移的 CT 图像。", "sign_tags": ["SIGN-021"], "teaching_note": "对照肝内多发低密度灶的分布与边界。", "privacy_check": "human_verified_no_identifier", "verified_at": "2026-11-15", "status": "active", "group_id": "GRP-ABDOMEN", "type": "case"}], "groups": [{"id": "GRP-LUNG-CONSOLIDATION", "name": "肺部实变与气腔影", "region_id": "REG-CHEST", "sign_ids": ["SIGN-002", "SIGN-014", "SIGN-019"], "modality": ["CR", "CT"], "body_part": "肺", "description": "以肺野密度增高、实变或气腔影为共同表现的公开影像，用于对照病变分布与空气支气管征。", "criteria": "归类依据：来源公开描述含 pneumonia / consolidation / air-space opacity / atelectasis 等关键词，或图中自带标注。", "caution": "同一组内病因不同，仅按影像表现归类，不代表同一疾病。", "search_query": "lung consolidation pneumonia"}, {"id": "GRP-LUNG-GGO", "name": "磨玻璃影与间质改变", "region_id": "REG-CHEST", "sign_ids": ["SIGN-001", "SIGN-011", "SIGN-018"], "modality": ["CT"], "body_part": "肺", "description": "以磨玻璃密度、网格影或铺路石样改变为共同表现的公开 CT 影像。", "criteria": "归类依据：来源公开描述含 ground-glass / reticular / crazy-paving 等关键词。", "caution": "磨玻璃影可见于多种情况，本组只作表现对照。", "search_query": "ground-glass opacity CT lung"}, {"id": "GRP-LUNG-NODULE", "name": "肺结节与肿块", "region_id": "REG-CHEST", "sign_ids": ["SIGN-003", "SIGN-004", "SIGN-005"], "modality": ["CT", "CR"], "body_part": "肺", "description": "以局灶性结节、肿块或空洞为共同表现的公开影像，用于观察大小、边缘与内部结构。", "criteria": "归类依据：来源公开描述含 nodule / mass / cavity 等关键词。", "caution": "形态不能单独决定性质，本组不提供良恶性判断。", "search_query": "pulmonary nodule CT"}, {"id": "GRP-PLEURAL", "name": "胸腔积液与气胸", "region_id": "REG-CHEST", "sign_ids": ["SIGN-007", "SIGN-008"], "modality": ["CR", "CT", "US"], "body_part": "胸膜", "description": "胸膜腔液体或气体聚集的公开影像，用于对照肋膈角、胸膜线与肺压缩表现。", "criteria": "归类依据：来源公开描述含 pleural effusion / pneumothorax 等关键词。", "caution": "少量积液与气胸在特定体位下可能不明显。", "search_query": "pleural effusion pneumothorax"}, {"id": "GRP-CHEST-CT", "name": "胸部 CT 窗位与层面", "region_id": "REG-CHEST", "sign_ids": ["SIGN-001", "SIGN-002"], "modality": ["CT"], "body_part": "胸部", "description": "展示胸部 CT 不同窗宽窗位与层面定位关系的公开影像，用于理解显示条件对判读的影响。", "criteria": "归类依据：来源公开说明为胸部 CT 的不同窗位或定位像。", "caution": "本组用于显示条件对照，不代表病变。", "body_part_alias": "胸部", "search_query": "chest CT axial window"}, {"id": "GRP-THYROID", "name": "甲状腺结节", "region_id": "REG-HEAD-NECK", "sign_ids": ["SIGN-058", "SIGN-057", "SIGN-006"], "modality": ["US"], "body_part": "甲状腺", "description": "甲状腺结节的公开超声影像，用于对照回声、边界、形态与钙化表现。", "criteria": "归类依据：来源公开描述含 thyroid nodule 等关键词。", "caution": "超声特征需综合描述，本组不输出 TI-RADS 分类。", "search_query": "thyroid nodule ultrasound"}, {"id": "GRP-BREAST", "name": "乳腺钙化与肿块", "region_id": "REG-BREAST", "sign_ids": ["SIGN-055", "SIGN-056", "SIGN-006"], "modality": ["MG", "US"], "body_part": "乳腺", "description": "乳腺钼靶与超声的公开影像，用于对照钙化形态、边缘与结构扭曲。", "criteria": "归类依据：来源公开描述含 calcification / mass / mammography 等关键词。", "caution": "钙化形态与分布需同时描述，本组不输出 BI-RADS 分类。", "search_query": "breast mammography calcification mass"}, {"id": "GRP-HEAD", "name": "头颅出血、梗死与占位", "region_id": "REG-HEAD-NECK", "sign_ids": ["SIGN-045", "SIGN-046", "SIGN-040", "SIGN-041"], "modality": ["CT", "MR"], "body_part": "头颅", "description": "头颅 CT 与 MR 的公开影像，用于对照高密度出血、低密度灶、占位效应与水肿带。", "criteria": "归类依据：来源公开描述含 hemorrhage / infarct / mass / edema 等关键词。", "caution": "平扫与增强、发病时间都会影响表现，本组只作对照。", "search_query": "brain CT hemorrhage infarct"}, {"id": "GRP-ABDOMEN", "name": "腹部实质脏器", "region_id": "REG-ABDOMEN", "sign_ids": ["SIGN-021", "SIGN-022", "SIGN-033", "SIGN-034"], "modality": ["CT", "US"], "body_part": "腹部", "description": "肝、肾、胆囊等腹部脏器的公开影像，用于对照低密度灶、环形强化、囊性与结石表现。", "criteria": "归类依据：来源公开描述含 liver / kidney / gallbladder / cyst / stone 等关键词。", "caution": "多期增强与单期图像表现不同，本组不判断病变性质。", "search_query": "liver CT hypodense lesion"}, {"id": "GRP-MSJ", "name": "肌骨与脊柱", "region_id": "REG-MSK", "sign_ids": ["SIGN-047", "SIGN-048", "SIGN-050", "SIGN-054"], "modality": ["MR", "CR", "CT"], "body_part": "骨", "description": "膝关节、脊柱与骨折的公开影像，用于对照半月板信号、骨髓水肿、骨膜反应与骨折线。", "criteria": "归类依据：来源公开描述含 meniscus / spine / fracture / bone marrow 等关键词。", "caution": "信号改变非特异，需结合序列与临床。", "search_query": "knee MRI meniscus tear"}, {"id": "GRP-NORMAL-CHEST", "name": "正常胸部与解剖", "region_id": "REG-CHEST", "sign_ids": [], "modality": ["CR"], "body_part": "胸部", "description": "正常胸片、胸片解剖标注与纵隔结构示意，用于建立胸部基线印象。", "criteria": "归类依据：来源公开说明为正常胸片、解剖标注或结构示意图。", "caution": "正常对照不用于排除病变。", "search_query": "normal chest radiograph"}, {"id": "GRP-NORMAL-HEAD", "name": "正常头颅", "region_id": "REG-HEAD-NECK", "sign_ids": [], "modality": ["CT"], "body_part": "头颅", "description": "正常头颅 CT 三视图，用于建立颅内基线印象与左右侧对照。", "criteria": "归类依据：来源公开说明为正常头颅 CT。", "caution": "正常对照不用于排除病变。", "search_query": "normal brain CT"}], "taxonomy": {"version": "2026-11-15", "note": "一级为解剖部位，二级为病症/征象族（对应影像组）。每个影像组只归属一个部位，避免跨部位重复计数。", "regions": [{"id": "REG-CHEST", "name": "胸部", "en": "Chest", "order": 1, "note": "肺、胸膜、纵隔与胸壁；含正常胸部与成像条件对照。", "groups": ["GRP-LUNG-CONSOLIDATION", "GRP-LUNG-GGO", "GRP-LUNG-NODULE", "GRP-PLEURAL", "GRP-CHEST-CT", "GRP-NORMAL-CHEST"]}, {"id": "REG-HEAD-NECK", "name": "头颈部", "en": "Head and Neck", "order": 2, "note": "颅脑与颈部脏器；含正常头颅对照。", "groups": ["GRP-HEAD", "GRP-THYROID", "GRP-NORMAL-HEAD"]}, {"id": "REG-BREAST", "name": "乳腺", "en": "Breast", "order": 3, "note": "乳腺钼靶与超声。", "groups": ["GRP-BREAST"]}, {"id": "REG-ABDOMEN", "name": "腹部", "en": "Abdomen", "order": 4, "note": "肝、胆、胰、脾、肾等实质脏器。", "groups": ["GRP-ABDOMEN"]}, {"id": "REG-MSK", "name": "肌骨与脊柱", "en": "Musculoskeletal and Spine", "order": 5, "note": "骨、关节与脊柱；公开影像待补，分类与接口已就位。", "groups": ["GRP-MSJ"]}]}, "stats": {"signs": 60, "standards": 10, "cases": 32, "guidelines": 47, "sources": 11, "built_at": "2026-11-15", "regions": 5, "conditions": 12}};</script>
+<script>
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => Array.from(document.querySelectorAll(s));
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const ALL = window.__KB__.docs;
+const SIGNS = ALL.filter((d) => d.type === "sign");
+const STDS = ALL.filter((d) => d.type === "standard");
+const CASES = ALL.filter((d) => d.type === "case");
+const GUIDES = ALL.filter((d) => d.type === "guideline");
+const GROUPS = window.__KB__.groups || [];
+const STATS = window.__KB__.stats;
+const state = { q: "", modality: "", part: "", region: "", cond: "" };
+
+const PART_HINTS = { "肺": "肺", "胸部": "胸", "胸膜": "胸膜", "纵隔": "纵隔", "心脏": "心脏", "乳腺": "乳腺", "甲状腺": "甲状腺", "肝": "肝", "胆": "胆", "胰": "胰", "肾": "肾", "脑": "脑", "头颅": "脑", "膝": "膝", "关节": "关节", "腹": "腹", "肠": "肠", "骨": "骨" };
+const MOD_HINTS = { "ct": "CT", "mr": "MR", "磁共振": "MR", "核磁": "MR", "超声": "US", "b超": "US", "钼靶": "MG", "x线": "CR", "x光": "CR", "胸片": "CR", "dr": "CR" };
+const FAMILY = { "肺": ["肺", "胸"], "胸部": ["肺", "胸"], "胸膜": ["胸膜", "胸"], "脑": ["脑", "头颅"], "头颅": ["脑", "头颅"], "膝": ["膝", "关节"], "关节": ["膝", "关节"], "腹": ["腹", "肠", "肝", "胆", "胰", "肾"], "肝": ["肝", "腹"], "胆": ["胆", "腹"], "胰": ["胰", "腹"], "肾": ["肾", "腹"], "肠": ["肠", "腹"] };
+const same = (a, b) => !!a && !!b && (FAMILY[a] || [a]).some((x) => (FAMILY[b] || [b]).includes(x));
+const grams = (s) => { const t = String(s).toLowerCase().replace(/[^\u4e00-\u9fffa-z0-9]/g, ""); const o = []; for (let i = 0; i < t.length - 1; i++) o.push(t.slice(i, i + 2)); return o; };
+const textOf = (d) => [d.name, d.en, (d.aliases || []).join(" "), d.body_part, (d.modality || []).join(" "), (d.tags || []).join(" "), d.appearance, (d.may_see_in || []).join(" "), d.title, d.description_public, d.teaching_note, d.purpose, (d.dimensions || []).join(" ")].filter(Boolean).join(" ");
+
+function scoreDoc(d, q, qg) {
+  const ql = q.toLowerCase();
+  let s = 0;
+  if (d.type === "sign") {
+    if (ql.includes(d.name.toLowerCase())) s += 24;
+    if (d.en && ql.includes(d.en.toLowerCase())) s += 10;
+    (d.aliases || []).forEach((a) => { if (ql.includes(a.toLowerCase())) s += 8; });
+    if (d.body_part && ql.includes(d.body_part)) s += 5;
+    (d.tags || []).forEach((t) => { if (ql.includes(t)) s += 2; });
+  } else if (d.type === "standard") {
+    if (ql.includes(d.name.toLowerCase())) s += 10;
+    if (ql.includes((d.full_name || "").toLowerCase())) s += 6;
+    if (d.body_part && ql.includes(d.body_part)) s += 4;
+  } else if (d.type === "guideline") {
+    if (d.standard_name && ql.includes(d.standard_name.toLowerCase())) s += 6;
+    if (d.category && ql.includes(d.category.toLowerCase())) s += 8;
+    (d.keywords || []).forEach((k) => { if (ql.includes(String(k).toLowerCase())) s += 3; });
+  } else {
+    if (ql.includes(d.title.toLowerCase())) s += 8;
+    if (d.body_part && ql.includes(d.body_part)) s += 4;
+  }
+  const tg = new Set(grams(textOf(d)));
+  qg.forEach((g) => { if (tg.has(g)) s += 0.7; });
+  const parts = Object.keys(PART_HINTS).filter((k) => ql.includes(k)).map((k) => PART_HINTS[k]);
+  if (parts.length && parts.some((p) => (d.body_part || "").includes(p))) s *= 1.5;
+  const mods = Object.keys(MOD_HINTS).filter((k) => ql.includes(k)).map((k) => MOD_HINTS[k]);
+  if (mods.length && (d.modality || []).some((m) => mods.includes(m))) s *= 1.3;
+  return s;
+}
+
+function rank(q) {
+  const qg = grams(q);
+  let signs = [], stds = [], cases = [];
+  if (!q) return { signs, stds, cases };
+  const wp = Object.keys(PART_HINTS).filter((k) => q.toLowerCase().includes(k)).map((k) => PART_HINTS[k]);
+  signs = SIGNS.map((d) => [scoreDoc(d, q, qg), d]).filter(([s]) => s > 2)
+    .filter(([, d]) => !state.modality || (d.modality || []).includes(state.modality))
+    .filter(([, d]) => !state.part || (d.body_part || "").includes(state.part))
+    .filter(([, d]) => !wp.length || wp.some((p) => (d.body_part || "").includes(p)) || (d.body_part || "") === "全身")
+    .sort((a, b) => b[0] - a[0]).slice(0, 6);
+  const top = signs[0];
+  stds = STDS.map((d) => [scoreDoc(d, q, qg) + (top && same(d.body_part, top[1].body_part) ? 6 : 0), d])
+    .filter(([s, d]) => top && same(d.body_part, top[1].body_part))
+    .sort((a, b) => b[0] - a[0]).slice(0, 2);
+  if (top) {
+    const t = top[1];
+    cases = CASES.filter((c) => (c.sign_tags || []).includes(t.id) ||
+      (same(c.body_part, t.body_part) && (c.modality || []).some((m) => (t.modality || []).includes(m)))).slice(0, 6);
+    if (!cases.length) {
+      cases = CASES.filter((c) => same(c.body_part, t.body_part) && (c.modality || []).some((m) => (t.modality || []).includes(m))).slice(0, 6);
+    }
+  }
+  return { signs, stds, cases };
+}
+
+function search() {
+  const q = (state.q || "").trim();
+  const { signs, stds, cases } = rank(q);
+  const n = signs.length + stds.length + cases.length;
+  $("#meta").textContent = q ? `命中 ${n} 项 · 离线演示` : "输入关键词开始检索";
+  $("#signs").innerHTML = signs.map(([s, d]) => signCard(d)).join("");
+  $("#empty").hidden = n > 0;
+  const conf = $("#confidence");
+  if (!q || !n) { conf.hidden = true; }
+  else {
+    const top = signs.length ? signs[0][0] : 0;
+    const level = top >= 24 ? "high" : top >= 12 ? "medium" : "low";
+    conf.hidden = false;
+    conf.className = "confidence " + level;
+    conf.textContent = level === "high" ? "已匹配到直接相关的征象条目。以下为描述性解释与公开出处，不构成诊断意见。"
+      : level === "medium" ? "匹配度一般：以下为相近条目，请核对定义与适用部位后再参考。"
+      : "未找到直接对应条目：以下仅为字面相近内容，请勿据此推断，建议改用标准影像学术语。";
+  }
+  $("#standards").innerHTML = stds.length ? `<div class="panel"><h2>相关公开标准</h2>${stds.map(([, d]) => stdCard(d)).join("")}</div>` : "";
+  const rel = signs.length ? related(signs[0][1]) : [];
+  $("#related").innerHTML = rel.length ? `<div class="panel"><h2>相关征象</h2><div class="rel-list">${rel.map((x) => `<button class="rel" data-q="${esc(x.name)}">${esc(x.name)}<small>${esc((x.modality || []).join("/"))}</small></button>`).join("")}</div></div>` : "";
+  $$("#related .rel").forEach((b) => b.addEventListener("click", () => { $("#q").value = b.dataset.q; state.q = b.dataset.q; search(); }));
+  $("#casesWrap").hidden = !cases.length;
+  $("#cases").innerHTML = cases.map((c) => imgCard(c)).join("");
+}
+
+function related(me) {
+  const mt = new Set(me.tags || []);
+  return SIGNS.filter((d) => d.id !== me.id).map((d) => {
+    let s = 0; (d.tags || []).forEach((t) => { if (mt.has(t)) s += 2; });
+    if (d.body_part === me.body_part) s += 1;
+    if ((d.modality || []).some((m) => (me.modality || []).includes(m))) s += 0.5;
+    return [s, d];
+  }).filter(([s]) => s > 0).sort((a, b) => b[0] - a[0]).slice(0, 4).map(([, d]) => d);
+}
+
+function signCard(s) {
+  const mods = (s.modality || []).map((m) => `<span class="tag mod">${esc(m)}</span>`).join("");
+  const src = (s.sources || []).map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title || x.id)}</a>`).join("");
+  const note = (s.sources || []).map((x) => x.license_note).filter(Boolean).slice(0, 1).map(esc).join("");
+  const lk = ((window.__DATA__ && window.__DATA__.signs) || []).find((x) => x.id === s.id);
+  return `<article class="card"><div class="card-head"><h3>${esc(s.name)}</h3><span class="en">${esc(s.en)}</span></div>
+    <div class="tags">${mods}${s.body_part ? `<span class="tag">${esc(s.body_part)}</span>` : ""}</div>
+    <p>${esc(s.appearance)}</p><div class="label">影像上可见于</div>
+    <div class="pills">${(s.may_see_in || []).map((x) => `<span class="pill">${esc(x)}</span>`).join("")}</div>
+    ${(s.pitfalls || []).length ? `<div class="caution"><b>易混淆 / 判读注意</b>${s.pitfalls.map(esc).join("；")}</div>` : ""}
+    <div class="sources">来源：${src || "—"}${note ? `<span class="src-note">${note}</span>` : ""}</div>
+    ${lk ? `<div class="card-actions"><button type="button" class="btn ghost" data-link-sign="${esc(s.id)}">图文对照 · ${lk.links.length} 处</button></div>` : ""}</article>`;
+}
+
+function stdCard(x) {
+  return `<div class="std"><h4>${esc(x.name)}</h4><div class="pub">${esc(x.publisher)} · ${esc(x.body_part || "")}</div>
+    <p class="muted small">${esc(x.purpose)}</p>
+    <ul>${(x.dimensions || []).slice(0, 4).map((d) => `<li>${esc(d)}</li>`).join("")}</ul>
+    <div class="sources"><a href="${esc(x.url)}" target="_blank" rel="noopener">标准入口</a><span class="src-note">${esc(x.license_note || "仅链接引用")}</span></div></div>`;
+}
+
+function imgCard(c) {
+  const lc = ((window.__DATA__ && Object.values(window.__DATA__.links)) || []).filter((x) => x.image.id === c.id).length;
+  return `<div class="img-card" data-id="${esc(c.id)}"><div class="thumb"><img loading="lazy" src="${esc(c.image)}" alt="${esc(c.title)}"></div>
+    <div class="cap"><b>${esc(c.title)}${lc ? `<span class="link-badge">图文 ${lc}</span>` : ""}</b><span>${esc((c.modality || []).join("/"))} · ${esc(c.body_part)} · ${esc(c.license)}</span></div></div>`;
+}
+
+function openCase(c) {
+  $("#lbImg").src = c.image; $("#lbImg").alt = c.title;
+  $("#lbTitle").textContent = c.title;
+  $("#lbDesc").textContent = [c.description_public, c.teaching_note].filter(Boolean).join(" ");
+  const lks = window.__DATA__ ? [...new Set(Object.values(window.__DATA__.links).filter((x) => x.image.id === c.id).map((x) => x.sign_id))] : [];
+  $("#lbLinks").innerHTML = lks.map((id) => { const s = window.__DATA__.signs.find((x) => x.id === id); return s ? `<button type="button" data-link-sign="${esc(s.id)}">${esc(s.name)}</button>` : ""; }).join("");
+  $("#lbCredit").textContent = `许可：${c.license} · 作者：${c.artist} · 已核验无患者标识`;
+  $("#lbLink").href = c.source_page;
+  $("#lightbox").showModal();
+}
+
+document.addEventListener("click", (e) => {
+  const linkBtn = e.target.closest("[data-link-sign]");
+  if (linkBtn) {
+    e.preventDefault();
+    e.stopPropagation();
+    showView("links");
+    const chip = document.querySelector(`#linksPicker [data-sign="${linkBtn.dataset.linkSign}"]`);
+    if (chip) chip.click();
+    return;
+  }
+  const card = e.target.closest(".img-card");
+  if (!card) return;
+  const c = CASES.find((x) => x.id === card.dataset.id);
+  if (c) openCase(c);
+});
+$("#closeLb").addEventListener("click", () => $("#lightbox").close());
+$("#lightbox").addEventListener("click", (e) => { if (e.target === $("#lightbox")) $("#lightbox").close(); });
+
+function showView(name) {
+  ["search", "links", "dual", "images", "about"].forEach((v) => { $("#view-" + v).hidden = v !== name; });
+  $$("#tabs button").forEach((b) => b.classList.toggle("active", b.dataset.view === name));
+  if (name === "images") renderGallery();
+  if (name === "about") renderStats();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+$$("#tabs button").forEach((b) => b.addEventListener("click", () => showView(b.dataset.view)));
+$$("[data-view-link]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); showView(a.dataset.viewLink); }));
+
+$("#searchForm").addEventListener("submit", (e) => { e.preventDefault(); state.q = $("#q").value; search(); });
+$("#chips").addEventListener("click", (e) => { const b = e.target.closest("button[data-q]"); if (!b) return; $("#q").value = b.dataset.q; state.q = b.dataset.q; search(); });
+["#modality", "#part"].forEach((sel) => $(sel).addEventListener("change", () => { state.modality = $("#modality").value; state.part = $("#part").value; if (state.q) search(); }));
+
+
+/* ---------------- dual line ---------------- */
+const DFLOW = /已完成|完成超声|完成多参数|完成初始|具备五个维度|属于筛查人群|属于高危人群|有可比较|测量方法一致|评估主胰管|信息不足|偶然发现/;
+const DSTD = [["STD-TIRADS", ["ti-rads", "tirads", "甲状腺"]], ["STD-BIRADS", ["bi-rads", "birads", "乳腺"]],
+  ["STD-LIRADS", ["li-rads", "lirads", "肝"]], ["STD-BOSNIAK", ["bosniak", "肾"]],
+  ["STD-PIRADS", ["pi-rads", "pirads", "前列腺"]], ["STD-ORADS", ["o-rads", "orads", "卵巢"]],
+  ["STD-LUNGRADS", ["lung-rads", "lungrads", "筛查"]], ["STD-FLEISCHNER", ["fleischner"]]];
+
+function dMM(v, u) { return (u === "cm" || u === "厘米") ? v * 10 : v; }
+function dNums(t) {
+  const out = []; let m;
+  let re = /(\d+(?:\.\d+)?)\s*(?:—|－|-|~|至)\s*(\d+(?:\.\d+)?)\s*(mm|cm|毫米|厘米)/g;
+  while ((m = re.exec(t))) out.push({ k: "range", lo: dMM(+m[1], m[3]), hi: dMM(+m[2], m[3]) });
+  re = /(≥|<=|≤|<|>)\s*(\d+(?:\.\d+)?)\s*(mm|cm|毫米|厘米)/g;
+  while ((m = re.exec(t))) out.push({ k: "op", op: m[1], v: dMM(+m[2], m[3]) });
+  re = /(\d+(?:\.\d+)?)\s*(mm|cm|毫米|厘米)/g;
+  while ((m = re.exec(t))) out.push({ k: "val", v: dMM(+m[1], m[2]) });
+  return out;
+}
+function dCore(t) {
+  const out = new Set(); let m;
+  let re = /TR\s*([1-5])/gi; while ((m = re.exec(t))) out.add(m[1]);
+  re = /BI-?RADS\s*([0-6])/gi; while ((m = re.exec(t))) out.add(m[1]);
+  re = /LR-?\s*([1-5])/gi; while ((m = re.exec(t))) out.add(m[1]);
+  re = /Bosniak\s*(IIF|I{1,3}|IV)/gi; while ((m = re.exec(t))) out.add(m[1].toUpperCase());
+  re = /PI-?RADS\s*([1-5])/gi; while ((m = re.exec(t))) out.add(m[1]);
+  re = /O-?RADS\s*([0-5])/gi; while ((m = re.exec(t))) out.add(m[1]);
+  re = /(IIF|IV|III|II|I)\s*类/g; while ((m = re.exec(t))) out.add(m[1].toUpperCase());
+  re = /([0-6])\s*类/g; while ((m = re.exec(t))) out.add(m[1]);
+  re = /类别\s*([1-4])X?/g; while ((m = re.exec(t))) out.add(m[1]);
+  return out;
+}
+function dStd(q) {
+  const ql = q.toLowerCase();
+  for (const [sid, keys] of DSTD) if (keys.some((k) => ql.includes(k))) return sid;
+  return null;
+}
+function dSyn(t) { return t.replace(/囊肿/g, "囊性").replace(/囊性病变/g, "囊性"); }
+function dB(t) { const x = dSyn(String(t).toLowerCase()).replace(/[^\u4e00-\u9fffa-z0-9]/g, ""); const o = new Set(); for (let i = 0; i < x.length - 1; i++) o.add(x.slice(i, i + 2)); return o; }
+function dCond(cond, q, qc, qn, g, qs) {
+  if (cond.includes("部分实性") && !q.includes("部分")) return false;
+  if (cond.includes("磨玻璃") && !q.includes("磨玻璃")) return false;
+  if (cond.includes("单发") && q.includes("多发")) return false;
+  if (cond.includes("分类") && g) {
+    const gc = dCore(g.category), q2 = dCore(q);
+    const sameStd = !qs || qs === g.standard_id;
+    if (gc.size && q2.size && sameStd && [...gc].some((x) => q2.has(x))) return true;
+    if (gc.size && !q2.size) return false;
+  }
+  const cn = dNums(cond);
+  if (cn.length) {
+    if (!qn.length) return false;
+    for (const c of cn) {
+      if (c.k === "range") {
+        if (qn.some((n) => n.k === "val" && n.v >= c.lo && n.v <= c.hi)) return true;
+        if (qn.some((n) => n.k === "op" && n.v >= c.lo && n.v <= c.hi)) return true;
+      } else if (c.k === "op") {
+        for (const n of qn) {
+          const v = n.k === "val" ? n.v : (n.k === "op" ? n.v : null);
+          if (v == null) continue;
+          if (c.op === "≥" && v >= c.v) return true;
+          if ((c.op === "≤" || c.op === "<=") && v <= c.v) return true;
+          if (c.op === "<" && v < c.v) return true;
+          if (c.op === ">" && v > c.v) return true;
+        }
+      }
+    }
+    return false;
+  }
+  const cg = dB(cond), qg = dB(q);
+  if (!cg.size) return false;
+  const inter = [...cg].filter((x) => qg.has(x)).length;
+  if (inter / cg.size >= 0.6) return true;
+  if (cond.length <= 4 && inter > 0) return true;
+  return false;
+}
+function assessLocal(q) {
+  const r = rank(q);
+  let signs = r.signs.map((x) => x[1]);
+  const top = signs[0];
+  if (top) {
+    const samep = signs.filter((x) => same(x.body_part, top.body_part));
+    signs = (samep.length ? samep : signs).slice(0, 3);
+  }
+  const qc = dCore(q), qn = dNums(q), qs = dStd(q);
+  const pool = GUIDES.filter((g) => !top || same(g.body_part, top.body_part));
+  const cands = pool.map((g) => {
+    const conds = (g.conditions || []).filter((c) => !DFLOW.test(c));
+    const matched = conds.filter((c) => dCond(c, q, qc, qn, g, qs));
+    const missing = conds.filter((c) => !matched.includes(c));
+    return { g, matched, missing, cov: conds.length ? matched.length / conds.length : 0, sc: scoreDoc(g, q, grams(q)) };
+  }).sort((a, b) => (b.cov - a.cov) || (b.sc - a.sc));
+
+  let best = cands.find((x) => x.cov > 0) || null;
+  if (!best && cands.length) {
+    const withCat = cands.filter((x) => dCore(x.g.category).size);
+    best = (withCat.length ? withCat : cands)[0];
+    const miss = [];
+    if (dCore(best.g.category).size && !dCore(q).size) miss.push("分类等级（" + best.g.standard_name + "）");
+    if ((best.g.conditions || []).some((c) => dNums(c).length) && !qn.length) miss.push("病灶尺寸");
+    best.missing = miss.length ? miss : ["条款适用条件"];
+    best.matched = [];
+    best.cov = 0;
+  }
+
+  let level, note;
+  if (!signs.length && !cands.length) { level = "insufficient"; note = "影像线与指南线都未命中，库内没有可对照的证据。"; }
+  else if (!signs.length) { level = "insufficient"; note = "影像线未命中征象条目，无法与指南条款建立对应关系。"; best = null; }
+  else if (!cands.length) { level = "insufficient"; note = "指南线未命中同部位条款，暂不做对应判断。"; best = null; }
+  else if (best.cov >= 1) { level = "aligned"; note = "影像线已覆盖该条款的全部适用条件，两线在描述维度上对应。条款的处理方向仅为原文摘录，不构成对你的建议。"; }
+  else if (best.cov > 0) { level = "partial"; note = "指南线缺少关键条件，尚不能定位到具体条款。需补充：" + best.missing.join("、") + "。"; }
+  else { level = "partial"; note = "影像线已命中征象，但指南线缺少定位条件。需补充：" + best.missing.join("、") + "。"; }
+
+  const order = best ? [best.g, ...cands.filter((x) => x !== best).map((x) => x.g)] : [];
+  return {
+    query: q,
+    imaging: { signs, cases: r.cases, confidence: "high" },
+    guidelines: order.slice(0, 6),
+    alignment: {
+      level, coverage: best ? Math.round(best.cov * 100) / 100 : 0,
+      best_id: best ? best.g.id : null, matched: best ? best.matched : [], missing: best ? best.missing : [],
+      note, action: best ? best.g.action : "",
+      action_source: "处理方向摘自公开条款摘要，仅供对照，不是本工具给出的建议。",
+      divergent: [],
+    },
+    disclaimer: "双线判断表示库内影像证据与指南条款的对齐情况，不构成诊断意见，也不替代临床决策。",
+  };
+}
+
+function glCard(g, a) {
+  const isBest = g.id === a.best_id;
+  const conds = (g.conditions || []).map((c) => {
+    let cls = "pre";
+    if (isBest) { if ((a.matched || []).includes(c)) cls = "ok"; else if ((a.missing || []).includes(c)) cls = "miss"; }
+    return `<span class="cond ${cls}">${esc(c)}</span>`;
+  }).join("");
+  return `<div class="gl ${isBest ? "best" : ""}">
+    <div class="gl-head"><b>${esc(g.id)}</b><span class="tag">${esc(g.category)}</span><span class="pub">${esc(g.standard_name)} · ${esc(g.version_year)}</span></div>
+    <p>${esc(g.statement)}</p><div class="cond-row">${conds}</div>
+    <div class="gl-action">条款方向：<span>${esc(g.action)}</span></div>
+    <div class="sources"><a href="${esc(g.source_url)}" target="_blank" rel="noopener">标准入口</a><span class="src-note">${esc(g.license_note)}</span></div>
+  </div>`;
+}
+
+function renderDual(d) {
+  const a = d.alignment;
+  const box = $("#dualAlign");
+  box.hidden = false;
+  box.className = "align " + a.level;
+  const label = { aligned: "两线对齐", partial: "条件不足", insufficient: "无法对照" }[a.level] || a.level;
+  box.innerHTML = `<div class="align-head"><span class="badge ${a.level}">${label}</span>
+    <span class="cov">条件覆盖 ${Math.round((a.coverage || 0) * 100)}%</span>
+    ${a.best_id ? `<span class="cov">对应条款 ${esc(a.best_id)}</span>` : ""}</div>
+    <p>${esc(a.note)}</p>
+    ${a.action ? `<div class="align-action"><b>条款方向</b><span>${esc(a.action)}</span><small>${esc(a.action_source)}</small></div>` : ""}
+    <div class="cond-row">${(a.matched || []).map((c) => `<span class="cond ok">已覆盖 · ${esc(c)}</span>`).join("")}${(a.missing || []).map((c) => `<span class="cond miss">待补充 · ${esc(c)}</span>`).join("")}</div>
+    <p class="muted small">${esc(d.disclaimer)}</p>`;
+  $("#dualImaging").innerHTML = d.imaging.signs.length ? d.imaging.signs.map((s) => `<div class="mini">
+    <div class="card-head"><h3>${esc(s.name)}</h3><span class="en">${esc(s.en)}</span></div><p>${esc(s.appearance)}</p>
+    <div class="pills">${(s.may_see_in || []).slice(0, 4).map((x) => `<span class="pill">${esc(x)}</span>`).join("")}</div>
+    <div class="sources">来源：${(s.sources || []).map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title || x.id)}</a>`).join("")}</div></div>`).join("")
+    : `<p class="muted">影像线未命中征象条目。</p>`;
+  $("#dualGuide").innerHTML = d.guidelines.length ? d.guidelines.map((g) => glCard(g, a)).join("") : `<p class="muted">指南线未命中同部位条款。</p>`;
+  $("#dualCasesWrap").hidden = !d.imaging.cases.length;
+  $("#dualCases").innerHTML = d.imaging.cases.map(imgCard).join("");
+  $("#dualMeta").textContent = `影像 ${d.imaging.signs.length} 条 · 条款 ${d.guidelines.length} 条 · 离线演示`;
+}
+
+$("#dualForm").addEventListener("submit", (e) => { e.preventDefault(); const q = $("#dq").value.trim(); if (q) renderDual(assessLocal(q)); });
+$("#dualChips").addEventListener("click", (e) => { const b = e.target.closest("button[data-q]"); if (!b) return; $("#dq").value = b.dataset.q; renderDual(assessLocal(b.dataset.q)); });
+
+const TAX = window.__KB__.taxonomy || { regions: [] };
+const REG_ORDER = {};
+TAX.regions.forEach((r, i) => { REG_ORDER[r.id] = i; });
+const ALL_CONDS = () => TAX.regions.reduce((a, r) => a.concat(r.conditions || []), []);
+
+function renderTabs() {
+  $("#regionTabs").innerHTML = [{ id: "", name: "全部部位", count: CASES.length }].concat(TAX.regions)
+    .map((r) => `<button class="chip${state.region === r.id ? " on" : ""}" data-region="${esc(r.id)}">${esc(r.name)}<em>${r.count}</em></button>`).join("");
+  const cur = TAX.regions.find((r) => r.id === state.region);
+  const conds = cur ? (cur.conditions || []) : ALL_CONDS();
+  $("#condChips").innerHTML = `<button class="chip${state.cond === "" ? " on" : ""}" data-cond="">全部病症</button>` +
+    conds.map((c) => `<button class="chip${state.cond === c.id ? " on" : ""}${c.has_images ? "" : " empty"}" data-cond="${esc(c.id)}">${esc(c.name)}<em>${c.count}</em></button>`).join("");
+}
+
+function renderGallery() {
+  renderTabs();
+  const m = $("#imgModality").value;
+  const list = GROUPS.map((g) => ({
+    ...g,
+    items: CASES.filter((c) => c.group_id === g.id && (!m || (c.modality || []).includes(m))),
+  }))
+    .filter((g) => g.items.length)
+    .filter((g) => !state.region || g.region_id === state.region)
+    .filter((g) => !state.cond || g.id === state.cond)
+    .sort((a, b) => (REG_ORDER[a.region_id] ?? 9) - (REG_ORDER[b.region_id] ?? 9) || b.items.length - a.items.length);
+  const total = list.reduce((n, g) => n + g.items.length, 0);
+  const rn = state.region ? ((TAX.regions.find((r) => r.id === state.region) || {}).name || "") : "";
+  $("#imgMeta").textContent = `${rn ? rn + " · " : ""}${list.length} 个病症分类 · ${total} 张公开影像`;
+  $("#gallery").innerHTML = list.map((g) => `<section class="group">
+    <div class="group-head">
+      <div class="group-title"><span class="reg-tag">${esc(g.region_name || "")}</span><h3>${esc(g.name)}</h3><span class="meta">${g.items.length} 张 · ${(g.modality || []).join("/")} · ${esc(g.body_part)}</span></div>
+      <p>${esc(g.description)}</p><p class="small muted">${esc(g.criteria)}</p>
+    </div>
+    <div class="images">${g.items.map(imgCard).join("")}</div>
+    <p class="group-caution">${esc(g.caution)}</p>
+  </section>`).join("") || `<p class="muted">该筛选条件下暂无已核验影像。</p>`;
+}
+$("#imgModality").addEventListener("change", renderGallery);
+$("#regionTabs").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-region]"); if (!b) return;
+  state.region = b.dataset.region; state.cond = "";
+  renderTabs(); renderGallery();
+});
+$("#condChips").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-cond]"); if (!b) return;
+  state.cond = b.dataset.cond;
+  renderTabs(); renderGallery();
+  const c = ALL_CONDS().find((x) => x.id === state.cond);
+  if (c && c.search_query) $("#simQ").value = c.search_query;
+});
+$("#simBtn").addEventListener("click", () => {
+  $("#simMeta").textContent = "离线单文件不联网：用 python3 kb/scripts/serve.py --port 4180 打开服务版即可调用该接口";
+  $("#simProviders").innerHTML = "";
+  $("#simResults").innerHTML = "";
+});
+["#imgModality", "#imgPart"].forEach((sel) => $(sel).addEventListener("change", renderGallery));
+$("#gallery").addEventListener("click", (e) => {
+  const card = e.target.closest(".img-card"); if (!card) return;
+  const c = CASES.find((x) => x.id === card.dataset.id); if (!c) return;
+  $("#refViewer").innerHTML = `<img src="${esc(c.image)}" alt="${esc(c.title)}">`;
+  $("#refMeta").textContent = `${c.title} · ${c.license} · ${c.artist}`;
+});
+$("#localFile").addEventListener("change", (e) => {
+  const f = e.target.files && e.target.files[0]; if (!f) return;
+  $("#localViewer").innerHTML = `<img src="${URL.createObjectURL(f)}" alt="本地图像预览">`;
+});
+
+function renderStats() {
+  const items = [["征象条目", STATS.signs], ["公开标准", STATS.standards], ["部位 / 病症", `${STATS.regions} / ${STATS.conditions}`], ["指南条款", STATS.guidelines], ["公开影像", STATS.cases]];
+  $("#aboutStats").innerHTML = items.map(([k, v]) => `<div class="stat"><b>${v}</b><span>${k}</span></div>`).join("");
+}
+$("#footStats").textContent = `${STATS.signs} 条征象 · ${STATS.guidelines} 条指南条款 · ${STATS.cases} 张公开影像`;
+renderStats();
+$("#q").value = "磨玻璃影"; state.q = "磨玻璃影"; search();
+
+</script>
+<script>window.__DATA__={"signs": [{"id": "SIGN-002", "name": "实变", "en": "consolidation", "modality": ["CT", "CR"], "body_part": "肺", "appearance": "肺实质密度均匀增高，掩盖其内血管走行，常可见空气支气管征。", "segments": [{"start": 0, "end": 18, "text": "肺实质密度均匀增高，掩盖其内血管走行", "link_ids": ["SL-001", "SL-002", "SL-003"]}, {"start": 18, "end": 29, "text": "，常可见空气支气管征。", "link_ids": []}], "links": ["SL-001", "SL-002", "SL-003"], "image_ids": ["CASE-006", "CASE-015", "CASE-005"], "stats": {"links": 3, "images": 3, "regions": 3, "quotes": 1, "basis": {"source_label": 2, "source_description": 1}, "missing_image": 0, "missing_text": 0}}, {"id": "SIGN-007", "name": "胸腔积液", "en": "pleural effusion", "modality": ["CT", "CR", "US"], "body_part": "胸膜", "appearance": "胸膜腔内液体聚集，立位胸片表现为肋膈角变钝或下肺野均匀致密影，CT 上呈新月形低密度区。", "segments": [{"start": 0, "end": 9, "text": "胸膜腔内液体聚集，", "link_ids": []}, {"start": 9, "end": 30, "text": "立位胸片表现为肋膈角变钝或下肺野均匀致密影", "link_ids": ["SL-007", "SL-008"]}, {"start": 30, "end": 44, "text": "，CT 上呈新月形低密度区。", "link_ids": []}], "links": ["SL-007", "SL-008"], "image_ids": ["CASE-017", "CASE-018"], "stats": {"links": 2, "images": 2, "regions": 3, "quotes": 1, "basis": {"source_description": 1, "source_label": 1}, "missing_image": 0, "missing_text": 0}}, {"id": "SIGN-058", "name": "低回声结节", "en": "hypoechoic nodule", "modality": ["US"], "body_part": "甲状腺", "appearance": "超声上回声低于周围腺体组织的结节，可伴边界、形态、钙化等特征。", "segments": [{"start": 0, "end": 16, "text": "超声上回声低于周围腺体组织的结节", "link_ids": ["SL-009"]}, {"start": 16, "end": 31, "text": "，可伴边界、形态、钙化等特征。", "link_ids": []}], "links": ["SL-009"], "image_ids": ["CASE-011"], "stats": {"links": 1, "images": 1, "regions": 1, "quotes": 1, "basis": {"source_description": 1}, "missing_image": 0, "missing_text": 0}}, {"id": "SIGN-008", "name": "气胸", "en": "pneumothorax", "modality": ["CR", "CT"], "body_part": "胸膜", "appearance": "胸膜腔内出现气体，可见脏层胸膜线，其外肺纹理消失。", "segments": [{"start": 0, "end": 9, "text": "胸膜腔内出现气体，", "link_ids": []}, {"start": 9, "end": 24, "text": "可见脏层胸膜线，其外肺纹理消失", "link_ids": ["SL-006"]}, {"start": 24, "end": 25, "text": "。", "link_ids": []}], "links": ["SL-006"], "image_ids": ["CASE-020"], "stats": {"links": 1, "images": 1, "regions": 1, "quotes": 1, "basis": {"source_description": 1}, "missing_image": 0, "missing_text": 0}}, {"id": "SIGN-001", "name": "磨玻璃影", "en": "ground-glass opacity", "modality": ["CT"], "body_part": "肺", "appearance": "肺野密度轻度增高，但其内血管与支气管边缘仍可辨认；不掩盖其内血管与支气管轮廓。", "segments": [{"start": 0, "end": 24, "text": "肺野密度轻度增高，但其内血管与支气管边缘仍可辨认", "link_ids": ["SL-005"]}, {"start": 24, "end": 39, "text": "；不掩盖其内血管与支气管轮廓。", "link_ids": []}], "links": ["SL-005"], "image_ids": ["CASE-020"], "stats": {"links": 1, "images": 1, "regions": 1, "quotes": 1, "basis": {"source_description": 1}, "missing_image": 0, "missing_text": 0}}, {"id": "SIGN-011", "name": "网状影", "en": "reticular pattern", "modality": ["CT"], "body_part": "肺", "appearance": "肺内细线状影交织成网，常提示间质增厚；可伴蜂窝影或牵拉性支气管扩张。", "segments": [{"start": 0, "end": 10, "text": "肺内细线状影交织成网", "link_ids": ["SL-012"]}, {"start": 10, "end": 34, "text": "，常提示间质增厚；可伴蜂窝影或牵拉性支气管扩张。", "link_ids": []}], "links": ["SL-012"], "image_ids": ["CASE-021"], "stats": {"links": 1, "images": 1, "regions": 1, "quotes": 1, "basis": {"source_label": 1}, "missing_image": 0, "missing_text": 0}}, {"id": "SIGN-019", "name": "肺不张", "en": "atelectasis", "modality": ["CT", "CR"], "body_part": "肺", "appearance": "肺组织含气量减少、体积缩小、密度增高，可伴叶间裂移位与纵隔牵拉。", "segments": [{"start": 0, "end": 18, "text": "肺组织含气量减少、体积缩小、密度增高", "link_ids": ["SL-004"]}, {"start": 18, "end": 32, "text": "，可伴叶间裂移位与纵隔牵拉。", "link_ids": []}], "links": ["SL-004"], "image_ids": ["CASE-005"], "stats": {"links": 1, "images": 1, "regions": 1, "quotes": 1, "basis": {"source_label": 1}, "missing_image": 0, "missing_text": 0}}, {"id": "SIGN-012", "name": "蜂窝影", "en": "honeycombing", "modality": ["CT"], "body_part": "肺", "appearance": "成簇的厚壁囊状透亮影，直径数毫米至厘米，多位于胸膜下与基底段，常与网状影并存。", "segments": [{"start": 0, "end": 10, "text": "成簇的厚壁囊状透亮影", "link_ids": ["SL-011"]}, {"start": 10, "end": 39, "text": "，直径数毫米至厘米，多位于胸膜下与基底段，常与网状影并存。", "link_ids": []}], "links": ["SL-011"], "image_ids": ["CASE-021"], "stats": {"links": 1, "images": 1, "regions": 1, "quotes": 1, "basis": {"source_label": 1}, "missing_image": 0, "missing_text": 0}}, {"id": "SIGN-006", "name": "钙化", "en": "calcification", "modality": ["CT", "CR", "US", "MG"], "body_part": "全身", "appearance": "密度接近骨皮质的斑点、条状或环状影；形态可为点状、层状、爆米花样或环形。", "segments": [{"start": 0, "end": 17, "text": "密度接近骨皮质的斑点、条状或环状影", "link_ids": ["SL-010"]}, {"start": 17, "end": 36, "text": "；形态可为点状、层状、爆米花样或环形。", "link_ids": []}], "links": ["SL-010"], "image_ids": ["CASE-013"], "stats": {"links": 1, "images": 1, "regions": 2, "quotes": 1, "basis": {"source_label": 1}, "missing_image": 0, "missing_text": 0}}], "links": {"SL-001": {"id": "SL-001", "n": 1, "sign_id": "SIGN-002", "sign_name": "实变", "quote": "肺实质密度均匀增高，掩盖其内血管走行", "caption": "红色箭头所指的右肺中下野片状致密影，覆盖该区血管纹理。", "reading": "该区密度均匀增高、血管边缘不易分辨，与“掩盖其内血管走行”对应；空气支气管征需结合原始图像与来源说明判断。", "regions": [{"bbox": [0.09, 0.37, 0.34, 0.37], "label": "右肺中下野", "image_side": "left", "patient_side": "right", "laterality_rule": "pa_chest: image_left = patient_right", "atlas_level": "global", "note": "图像左侧为患者右侧；框为教学示意，不是病灶分割。"}], "basis": "source_label", "review": "single_review", "annotated_at": "2026-11-15", "image": {"id": "CASE-006", "title": "大叶性肺炎（箭头标注）", "modality": ["CR"], "body_part": "胸部", "license": "CC0", "artist": "Mikael Häggström", "source_page": "https://commons.wikimedia.org/wiki/File:X-ray_of_lobar_pneumonia.jpg", "image": "images/case-006.jpg"}}, "SL-002": {"id": "SL-002", "n": 2, "sign_id": "SIGN-002", "sign_name": "实变", "quote": "肺实质密度均匀增高，掩盖其内血管走行", "caption": "右肺中上野斑片状密度增高，肺野透亮度下降。", "reading": "斑片状密度增高覆盖该区血管纹理，可作为“密度均匀增高”的对照；不据此判断病因。", "regions": [{"bbox": [0.12, 0.1, 0.29, 0.36], "label": "右肺中上野", "image_side": "left", "patient_side": "right", "laterality_rule": "pa_chest: image_left = patient_right", "atlas_level": "global", "note": "图像左侧为患者右侧；框为教学示意，不是病灶分割。"}], "basis": "source_description", "review": "single_review", "annotated_at": "2026-11-15", "image": {"id": "CASE-015", "title": "右中上肺野气腔影（正位）", "modality": ["CR"], "body_part": "肺", "license": "CC0", "artist": "Mikael Häggström, M.D. Author info - Reusing images- Conflicts of interest:  None\nMikael Häggström, M.D.Consent note: Wr", "source_page": "https://commons.wikimedia.org/wiki/File%3AChest_radiograph_in_influensa_and_H_influenzae%2C_posteroanterior.jpg", "image": "images/case-015.jpg"}}, "SL-003": {"id": "SL-003", "n": 3, "sign_id": "SIGN-002", "sign_name": "实变", "quote": "肺实质密度均匀增高，掩盖其内血管走行", "caption": "原图标注 air-space opacities 指向右肺中上野片状致密影。", "reading": "来源标注为气腔影；图中致密区覆盖血管纹理，与实变的文字表述方向一致，但单张床旁片不足以确认空气支气管征。", "regions": [{"bbox": [0.15, 0.17, 0.35, 0.43], "label": "右肺中上野（AP 坐位）", "image_side": "left", "patient_side": "right", "laterality_rule": "ap_chest: image_left = patient_right", "atlas_level": "global", "note": "床旁 AP 坐位片，图像左侧为患者右侧；框为教学示意。"}], "basis": "source_label", "review": "single_review", "annotated_at": "2026-11-15", "image": {"id": "CASE-005", "title": "双肺气腔影伴肺不张（含中心静脉导管）", "modality": ["CR"], "body_part": "胸部", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "source_page": "https://commons.wikimedia.org/wiki/File:Chest_X-ray_showing_neurofibromatosis_with_bilateral_pneumonia.jpg", "image": "images/case-005.jpg"}}, "SL-007": {"id": "SL-007", "n": 1, "sign_id": "SIGN-007", "sign_name": "胸腔积液", "quote": "立位胸片表现为肋膈角变钝或下肺野均匀致密影", "caption": "双侧下肺野密度增高，肋膈角变钝。", "reading": "双侧肋膈角变钝、下肺野密度增高，与立位胸片的积液表述对应；少量积液与胸膜增厚需结合其他体位或超声。", "regions": [{"bbox": [0.05, 0.61, 0.29, 0.31], "label": "右侧肋膈角", "image_side": "left", "patient_side": "right", "laterality_rule": "pa_chest: image_left = patient_right", "atlas_level": "global", "note": "图像左上角有 R 标记；图像左侧为患者右侧。"}, {"bbox": [0.65, 0.57, 0.31, 0.34], "label": "左侧肋膈角", "image_side": "right", "patient_side": "left", "laterality_rule": "pa_chest: image_left = patient_right", "atlas_level": "global", "note": "图像左上角有 R 标记；图像右侧为患者左侧。"}], "basis": "source_description", "review": "single_review", "annotated_at": "2026-11-15", "image": {"id": "CASE-017", "title": "双侧下肺野模糊伴肋膈角变钝", "modality": ["CR"], "body_part": "胸膜", "license": "CC BY-SA 3.0", "artist": "Nevit Dilmen (talk)", "source_page": "https://commons.wikimedia.org/wiki/File%3AMedical_X-Ray_imaging_AGL02_nevit.jpg", "image": "images/case-017.jpg"}}, "SL-008": {"id": "SL-008", "n": 2, "sign_id": "SIGN-007", "sign_name": "胸腔积液", "quote": "立位胸片表现为肋膈角变钝或下肺野均匀致密影", "caption": "侧位片后肋膈角变钝，红色箭头为原图标注。", "reading": "侧位片不能区分左右，只能定位前后；后肋膈角变钝与积液表述对应。", "regions": [{"bbox": [0.52, 0.34, 0.31, 0.25], "label": "后肋膈角（侧位）", "image_side": null, "patient_side": null, "laterality_rule": "lateral_chest: no left-right distinction", "atlas_level": "global", "note": "侧位片只定位前后，不区分左右；框为教学示意。"}], "basis": "source_label", "review": "single_review", "annotated_at": "2026-11-15", "image": {"id": "CASE-018", "title": "侧位胸片：后肋膈角变钝（箭头）", "modality": ["CR"], "body_part": "胸膜", "license": "CC BY-SA 4.0", "artist": "James Heilman, MD", "source_page": "https://commons.wikimedia.org/wiki/File%3ALargePleuralEffusionLatPlain.png", "image": "images/case-018.png"}}, "SL-009": {"id": "SL-009", "n": 1, "sign_id": "SIGN-058", "sign_name": "低回声结节", "quote": "超声上回声低于周围腺体组织的结节", "caption": "结节回声低于周围腺体组织，边界可见；图中设备参数为原图自带。", "reading": "该模态没有全身定位参考，分区只表示图像内相对位置；回声高低需与邻近正常腺体比较。", "regions": [{"bbox": [0.17, 0.2, 0.7, 0.57], "label": "甲状腺结节（图像中央）", "image_side": null, "patient_side": null, "laterality_rule": "us_local: no whole-body reference", "atlas_level": "local", "note": "超声无全身定位参考，分区只表示图像内相对位置。"}], "basis": "source_description", "review": "single_review", "annotated_at": "2026-11-15", "image": {"id": "CASE-011", "title": "甲状腺结节超声", "modality": ["US"], "body_part": "甲状腺", "license": "CC BY-SA 3.0", "artist": "Nevit Dilmen", "source_page": "https://commons.wikimedia.org/wiki/File:Thyroid_ultrasound_110322134324_1347140.jpg", "image": "images/case-011.jpg"}}, "SL-006": {"id": "SL-006", "n": 1, "sign_id": "SIGN-008", "sign_name": "气胸", "quote": "可见脏层胸膜线，其外肺纹理消失", "caption": "CT 图像左侧大片无肺纹理透亮区，内侧可见被压缩肺组织的边缘。", "reading": "透亮区内肺纹理消失，受压肺组织边缘可作脏层胸膜线的对照；张力性气胸需结合纵隔移位，本图不作判断。", "regions": [{"bbox": [0.57, 0.13, 0.2, 0.63], "label": "右侧胸腔", "image_side": "left", "patient_side": "right", "laterality_rule": "axial_ct: image_left = patient_right", "atlas_level": "global", "note": "CT 轴位图像左侧为患者右侧；框覆盖无肺纹理透亮区。"}], "basis": "source_description", "review": "single_review", "annotated_at": "2026-11-15", "image": {"id": "CASE-020", "title": "气胸伴磨玻璃影（胸片与 CT）", "modality": ["CT"], "body_part": "肺", "license": "CC BY 4.0", "artist": "Carolyn M. Allen, Hamdan H. AL-Jahdali, Klaus L. Irion, Sarah Al Ghanem, Alaa Gouda, and Ali Nawaz Khan", "source_page": "https://commons.wikimedia.org/wiki/File%3AX-ray_and_CT_of_ground_glass_opacities_and_pneumothorax_in_pneumocystis_pneumonia.jpg", "image": "images/case-020.jpg"}}, "SL-005": {"id": "SL-005", "n": 1, "sign_id": "SIGN-001", "sign_name": "磨玻璃影", "quote": "肺野密度轻度增高，但其内血管与支气管边缘仍可辨认", "caption": "右半侧 CT 图像中，含气肺组织内可见密度轻度增高区，血管边缘仍可分辨。", "reading": "该区密度增高但未完全掩盖血管，与磨玻璃影的文字表述方向一致；图为胸片与 CT 对照，框只覆盖 CT 一侧。", "regions": [{"bbox": [0.76, 0.29, 0.21, 0.38], "label": "左肺", "image_side": "right", "patient_side": "left", "laterality_rule": "axial_ct: image_left = patient_right", "atlas_level": "global", "note": "CT 轴位图像右侧为患者左侧；框为教学示意，不是病灶分割。"}], "basis": "source_description", "review": "single_review", "annotated_at": "2026-11-15", "image": {"id": "CASE-020", "title": "气胸伴磨玻璃影（胸片与 CT）", "modality": ["CT"], "body_part": "肺", "license": "CC BY 4.0", "artist": "Carolyn M. Allen, Hamdan H. AL-Jahdali, Klaus L. Irion, Sarah Al Ghanem, Alaa Gouda, and Ali Nawaz Khan", "source_page": "https://commons.wikimedia.org/wiki/File%3AX-ray_and_CT_of_ground_glass_opacities_and_pneumothorax_in_pneumocystis_pneumonia.jpg", "image": "images/case-020.jpg"}}, "SL-012": {"id": "SL-012", "n": 1, "sign_id": "SIGN-011", "sign_name": "网状影", "quote": "肺内细线状影交织成网", "caption": "轴位图右侧肺野细线状影增多并交织，实心箭头指向支气管血管束增厚区。", "reading": "细线状影交织成网，与网状影的文字表述对应；需与正常肺纹理增多区分，并结合分布判断。", "regions": [{"bbox": [0.28, 0.45, 0.18, 0.3], "label": "左肺（轴位）", "image_side": "right", "patient_side": "left", "laterality_rule": "axial_ct: image_left = patient_right", "atlas_level": "global", "note": "轴位图像右侧为患者左侧；实心箭头指向支气管血管束增厚区。"}], "basis": "source_label", "review": "single_review", "annotated_at": "2026-11-15", "image": {"id": "CASE-021", "title": "双肺囊性改变与支气管血管束增厚", "modality": ["CT"], "body_part": "肺", "license": "CC BY 4.0", "artist": "Article authors: Daniel Simões Oliveira, José de Arimatéia Araújo Filho, Antonio Fernando Lins Paiva, Eduardo Seigo Ikar", "source_page": "https://commons.wikimedia.org/wiki/File%3ACT_of_lymphocytic_interstitial_pneumonia.jpg", "image": "images/case-021.jpg"}}, "SL-004": {"id": "SL-004", "n": 1, "sign_id": "SIGN-019", "sign_name": "肺不张", "quote": "肺组织含气量减少、体积缩小、密度增高", "caption": "原图标注 atelectasis 指向右肺下野，伴密度增高与体积缩小。", "reading": "该区密度增高并见体积缩小线索，与肺不张的文字表述对应；“体积缩小”需结合叶间裂与纵隔位置综合观察。", "regions": [{"bbox": [0.1, 0.46, 0.31, 0.34], "label": "右肺下野（AP 坐位）", "image_side": "left", "patient_side": "right", "laterality_rule": "ap_chest: image_left = patient_right", "atlas_level": "global", "note": "床旁 AP 坐位片，图像左侧为患者右侧；框为教学示意。"}], "basis": "source_label", "review": "single_review", "annotated_at": "2026-11-15", "image": {"id": "CASE-005", "title": "双肺气腔影伴肺不张（含中心静脉导管）", "modality": ["CR"], "body_part": "胸部", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "source_page": "https://commons.wikimedia.org/wiki/File:Chest_X-ray_showing_neurofibromatosis_with_bilateral_pneumonia.jpg", "image": "images/case-005.jpg"}}, "SL-011": {"id": "SL-011", "n": 1, "sign_id": "SIGN-012", "sign_name": "蜂窝影", "quote": "成簇的厚壁囊状透亮影", "caption": "轴位图左上（胸膜下）成簇囊状透亮影，空心箭头为原图标注。", "reading": "成簇、厚壁、胸膜下分布，与蜂窝影的文字表述对应；单层厚层图像易误判，需薄层确认。", "regions": [{"bbox": [0.06, 0.04, 0.16, 0.2], "label": "右肺胸膜下（轴位）", "image_side": "left", "patient_side": "right", "laterality_rule": "axial_ct: image_left = patient_right", "atlas_level": "global", "note": "轴位图像左侧为患者右侧；空心箭头为原图标注。"}], "basis": "source_label", "review": "single_review", "annotated_at": "2026-11-15", "image": {"id": "CASE-021", "title": "双肺囊性改变与支气管血管束增厚", "modality": ["CT"], "body_part": "肺", "license": "CC BY 4.0", "artist": "Article authors: Daniel Simões Oliveira, José de Arimatéia Araújo Filho, Antonio Fernando Lins Paiva, Eduardo Seigo Ikar", "source_page": "https://commons.wikimedia.org/wiki/File%3ACT_of_lymphocytic_interstitial_pneumonia.jpg", "image": "images/case-021.jpg"}}, "SL-010": {"id": "SL-010", "n": 1, "sign_id": "SIGN-006", "sign_name": "钙化", "quote": "密度接近骨皮质的斑点、条状或环状影", "caption": "原图标注 vascular calcification 为条状血管壁钙化；下方另见点状钙化。", "reading": "条状与点状高密度影接近骨皮质密度，与钙化的文字表述对应；乳腺钙化的形态意义需结合部位与分布，不能跨部位套用。", "regions": [{"bbox": [0.2, 0.25, 0.32, 0.3], "label": "血管走行区（条状钙化）", "image_side": null, "patient_side": null, "laterality_rule": "mg_mlo: laterality requires image marker", "atlas_level": "local", "note": "乳腺 MLO 位，图中未见 R/L 标记，不推断左右。"}, {"bbox": [0.21, 0.58, 0.08, 0.09], "label": "腺体区（点状钙化）", "image_side": null, "patient_side": null, "laterality_rule": "mg_mlo: laterality requires image marker", "atlas_level": "local", "note": "点状钙化位置为图像内相对位置，不推断左右。"}], "basis": "source_label", "review": "single_review", "annotated_at": "2026-11-15", "image": {"id": "CASE-013", "title": "乳腺 MLO 位血管钙化", "modality": ["MG"], "body_part": "乳腺", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "source_page": "https://commons.wikimedia.org/wiki/File:Mammography_MLO_view_showing_vascular_calculation_of_the_breast.jpg", "image": "images/case-013.jpg"}}}, "images": {"CASE-006": {"id": "CASE-006", "title": "大叶性肺炎（箭头标注）", "modality": ["CR"], "body_part": "胸部", "license": "CC0", "artist": "Mikael Häggström", "source_page": "https://commons.wikimedia.org/wiki/File:X-ray_of_lobar_pneumonia.jpg", "image": "images/case-006.jpg", "links": ["SL-001"]}, "CASE-015": {"id": "CASE-015", "title": "右中上肺野气腔影（正位）", "modality": ["CR"], "body_part": "肺", "license": "CC0", "artist": "Mikael Häggström, M.D. Author info - Reusing images- Conflicts of interest:  None\nMikael Häggström, M.D.Consent note: Wr", "source_page": "https://commons.wikimedia.org/wiki/File%3AChest_radiograph_in_influensa_and_H_influenzae%2C_posteroanterior.jpg", "image": "images/case-015.jpg", "links": ["SL-002"]}, "CASE-005": {"id": "CASE-005", "title": "双肺气腔影伴肺不张（含中心静脉导管）", "modality": ["CR"], "body_part": "胸部", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "source_page": "https://commons.wikimedia.org/wiki/File:Chest_X-ray_showing_neurofibromatosis_with_bilateral_pneumonia.jpg", "image": "images/case-005.jpg", "links": ["SL-003", "SL-004"]}, "CASE-017": {"id": "CASE-017", "title": "双侧下肺野模糊伴肋膈角变钝", "modality": ["CR"], "body_part": "胸膜", "license": "CC BY-SA 3.0", "artist": "Nevit Dilmen (talk)", "source_page": "https://commons.wikimedia.org/wiki/File%3AMedical_X-Ray_imaging_AGL02_nevit.jpg", "image": "images/case-017.jpg", "links": ["SL-007"]}, "CASE-018": {"id": "CASE-018", "title": "侧位胸片：后肋膈角变钝（箭头）", "modality": ["CR"], "body_part": "胸膜", "license": "CC BY-SA 4.0", "artist": "James Heilman, MD", "source_page": "https://commons.wikimedia.org/wiki/File%3ALargePleuralEffusionLatPlain.png", "image": "images/case-018.png", "links": ["SL-008"]}, "CASE-011": {"id": "CASE-011", "title": "甲状腺结节超声", "modality": ["US"], "body_part": "甲状腺", "license": "CC BY-SA 3.0", "artist": "Nevit Dilmen", "source_page": "https://commons.wikimedia.org/wiki/File:Thyroid_ultrasound_110322134324_1347140.jpg", "image": "images/case-011.jpg", "links": ["SL-009"]}, "CASE-020": {"id": "CASE-020", "title": "气胸伴磨玻璃影（胸片与 CT）", "modality": ["CT"], "body_part": "肺", "license": "CC BY 4.0", "artist": "Carolyn M. Allen, Hamdan H. AL-Jahdali, Klaus L. Irion, Sarah Al Ghanem, Alaa Gouda, and Ali Nawaz Khan", "source_page": "https://commons.wikimedia.org/wiki/File%3AX-ray_and_CT_of_ground_glass_opacities_and_pneumothorax_in_pneumocystis_pneumonia.jpg", "image": "images/case-020.jpg", "links": ["SL-006", "SL-005"]}, "CASE-021": {"id": "CASE-021", "title": "双肺囊性改变与支气管血管束增厚", "modality": ["CT"], "body_part": "肺", "license": "CC BY 4.0", "artist": "Article authors: Daniel Simões Oliveira, José de Arimatéia Araújo Filho, Antonio Fernando Lins Paiva, Eduardo Seigo Ikar", "source_page": "https://commons.wikimedia.org/wiki/File%3ACT_of_lymphocytic_interstitial_pneumonia.jpg", "image": "images/case-021.jpg", "links": ["SL-012", "SL-011"]}, "CASE-013": {"id": "CASE-013", "title": "乳腺 MLO 位血管钙化", "modality": ["MG"], "body_part": "乳腺", "license": "CC BY-SA 4.0", "artist": "Cerevisae", "source_page": "https://commons.wikimedia.org/wiki/File:Mammography_MLO_view_showing_vascular_calculation_of_the_breast.jpg", "image": "images/case-013.jpg", "links": ["SL-010"]}}, "gate": {"quotes": 9, "links": 12, "images": 9, "regions": 14}, "note": "框是人工标注的教学区域，不是模型识别，也不是病灶分割；仅用于文字与影像对照。"}; window.__IMG__={"CASE-006": "deepworks-kb-import/images/case-006.jpg", "CASE-015": "deepworks-kb-import/images/case-015.jpg", "CASE-005": "deepworks-kb-import/images/case-005.jpg", "CASE-017": "deepworks-kb-import/images/case-017.jpg", "CASE-018": "deepworks-kb-import/images/case-018.png", "CASE-011": "deepworks-kb-import/images/case-011.jpg", "CASE-020": "deepworks-kb-import/images/case-020.jpg", "CASE-021": "deepworks-kb-import/images/case-021.jpg", "CASE-013": "deepworks-kb-import/images/case-013.jpg"};</script>
+<script>
+/* 征象文字 ↔ 影像位置 · v1 离线演示
+ * 数据与图片由 build_sign_image_demo.py 注入，页面不发起网络请求。
+ */
+(() => {
+  const D = window.__DATA__ || { signs: [], links: {}, images: {}, gate: {} };
+  const IMG = window.__IMG__ || {};
+  const $ = (sel) => document.querySelector(sel);
+  const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+  const esc = (s) =>
+    String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  const BASIS_LABEL = {
+    source_label: "来源图内标注",
+    source_description: "来源公开描述",
+    teaching_estimate: "教学估计",
+  };
+  const REVIEW_LABEL = {
+    single_review: "单次人工标注",
+    double_review: "双人复核",
+  };
+
+  const state = {
+    signId: (D.signs[0] && D.signs[0].id) || "",
+    activeLink: "",
+    activeImage: "",
+  };
+
+  const signById = {};
+  D.signs.forEach((s) => (signById[s.id] = s));
+
+  function shortArtist(a) {
+    const s = String(a || "").split("\n")[0].trim();
+    return s.length > 80 ? s.slice(0, 80) + "…" : s;
+  }
+
+  function sideText(r) {
+    const p = r.patient_side === "right" ? "患者右侧" : r.patient_side === "left" ? "患者左侧" : "";
+    const i = r.image_side === "right" ? "图像右侧" : r.image_side === "left" ? "图像左侧" : "";
+    return [p, i].filter(Boolean).join(" · ");
+  }
+
+  function gateHtml(g) {
+    return (
+      [
+        [g.quotes, "句文字锚点"],
+        [g.links, "条图文关联"],
+        [g.images, "张影像"],
+        [g.regions, "个标注区域"],
+      ]
+        .map(([n, label]) => `<span class="gate-item"><b>${n}</b>${label}</span>`)
+        .join("") +
+      `<span class="gate-item ok"><b>0</b>条缺图</span><span class="gate-item ok"><b>0</b>条缺文</span>`
+    );
+  }
+
+  function renderPicker() {
+    $("#linksPicker").innerHTML = D.signs
+      .map(
+        (s) =>
+          `<button type="button" class="chip${state.signId === s.id ? " on" : ""}" data-sign="${esc(
+            s.id
+          )}">${esc(s.name)}<em>${s.links.length}</em></button>`
+      )
+      .join("");
+  }
+
+  function selectSign(id) {
+    const sign = signById[id];
+    if (!sign) return;
+    state.signId = id;
+    const first = sign.links[0];
+    state.activeLink = first || "";
+    state.activeImage = (first && D.links[first] && D.links[first].image.id) || (sign.image_ids[0] || "");
+    renderPicker();
+    renderSign();
+  }
+
+  function renderSign() {
+    const sign = signById[state.signId];
+    if (!sign) return;
+    const mods = (sign.modality || []).map((m) => `<span class="tag mod">${esc(m)}</span>`).join("");
+    $("#linksSignName").textContent = sign.name;
+    $("#linksSignEn").textContent = sign.en;
+    $("#linksSignTags").innerHTML =
+      mods +
+      (sign.body_part ? `<span class="tag">${esc(sign.body_part)}</span>` : "") +
+      `<span class="tag">${sign.links.length} 条关联</span>` +
+      `<span class="tag">${sign.image_ids.length} 张影像</span>`;
+
+    $("#linksAppearance").innerHTML = sign.segments
+      .map((seg) => {
+        if (!seg.link_ids.length) return esc(seg.text);
+        const first = D.links[seg.link_ids[0]];
+        const num = seg.link_ids.length > 1 ? String(seg.link_ids.length) : String(first.n);
+        return `<button type="button" class="text-link" data-links="${esc(
+          seg.link_ids.join(",")
+        )}" title="${seg.link_ids.length} 条图文关联">${esc(seg.text)}<span class="link-num">${num}</span></button>`;
+      })
+      .join("");
+
+    $("#linksLegend").innerHTML =
+      `<b>图例</b><span>下划线文字 = 已锚定</span><span>黄色框 = 标注区域</span><span>红色框 = 当前选中</span>`;
+    $("#linksList").innerHTML = sign.links.map((id) => linkRow(D.links[id])).join("");
+    $("#linksGate").innerHTML = gateHtml(D.gate);
+    $("#linksNote").textContent = D.note;
+    renderViewer();
+  }
+
+  function linkRow(l) {
+    const image = l.image || {};
+    const regions = (l.regions || [])
+      .map((r) => `${r.label}${r.patient_side && !/患者|图像/.test(r.label) ? `（${sideText(r)}）` : ""}`)
+      .join("；");
+    return `<article class="link-row" data-link="${esc(l.id)}" role="button" tabindex="0">
+      <div class="link-row-head">
+        <span class="num">${l.n}</span>
+        <b>${esc(image.title || image.id || "")}</b>
+        <span class="meta">${esc(BASIS_LABEL[l.basis] || l.basis)} · ${esc(
+          REVIEW_LABEL[l.review] || l.review
+        )}</span>
+      </div>
+      <p class="quote">“${esc(l.quote)}”</p>
+      <p class="region-line">区域：${esc(regions || "—")} · ${esc(l.annotated_at)} · 人工标注</p>
+      <p class="caption">${esc(l.caption)}</p>
+      <p class="reading">${esc(l.reading)}</p>
+    </article>`;
+  }
+
+  function renderViewer() {
+    const sign = signById[state.signId];
+    if (!sign) return;
+    const link = D.links[state.activeLink] || D.links[sign.links[0]];
+    if (!link) return;
+    const imageId = state.activeImage || link.image.id;
+    const group = D.images[imageId];
+    if (!group) return;
+    const groupLinks = group.links
+      .map((id) => D.links[id])
+      .filter((x) => x && x.sign_id === state.signId);
+
+    $("#linksImageTitle").textContent = group.title;
+    $("#linksImageMeta").textContent = `${(group.modality || []).join("/")} · ${group.body_part} · ${
+      group.license
+    } · ${shortArtist(group.artist)}`;
+    $("#linksImageBasis").textContent = BASIS_LABEL[link.basis] || link.basis;
+    $("#linkImg").src = IMG[imageId] || "";
+    $("#linkImg").alt = group.title;
+    $("#linkOverlay").innerHTML = groupLinks
+      .flatMap((l) => (l.regions || []).map((r) => boxHtml(l, r)))
+      .join("");
+    $("#linksCaption").textContent = link.caption;
+    $("#linksReading").innerHTML = `<b>对照说明</b>${esc(link.reading)}`;
+    $("#linksSource").href = group.source_page || "#";
+    $("#linksCredit").textContent = `许可：${group.license} · 作者：${shortArtist(
+      group.artist
+    )} · 已核验无患者标识`;
+    $("#linksThumbs").innerHTML = sign.image_ids
+      .map((id) => {
+        const g = D.images[id];
+        const n = g.links.filter((x) => D.links[x] && D.links[x].sign_id === state.signId).length;
+        return `<button type="button" class="thumb-btn${
+          id === state.activeImage ? " active" : ""
+        }" data-image="${esc(id)}"><img src="${esc(IMG[id] || "")}" alt=""><span>${esc(
+          id
+        )} · ${n} 处</span></button>`;
+      })
+      .join("");
+    renderActive();
+  }
+
+  function boxHtml(l, r) {
+    const [x, y, w, h] = r.bbox || [0, 0, 0, 0];
+    const below = y < 0.06;
+    const active = l.id === state.activeLink;
+    return `<div class="link-box${active ? " active" : ""}${
+      below ? " label-below" : ""
+    }" data-link="${esc(l.id)}" style="left:${x * 100}%;top:${y * 100}%;width:${w * 100}%;height:${
+      h * 100
+    }%" title="${esc(l.sign_name + " · " + r.label)}"><span class="box-label">${esc(
+      l.sign_name
+    )} · ${esc(r.label)}</span></div>`;
+  }
+
+  function renderActive() {
+    $$("#linksAppearance .text-link").forEach((b) => {
+      const ids = (b.dataset.links || "").split(",");
+      b.classList.toggle("active", ids.includes(state.activeLink));
+    });
+    $$("#linksList .link-row").forEach((r) =>
+      r.classList.toggle("active", r.dataset.link === state.activeLink)
+    );
+    $$("#linksThumbs .thumb-btn").forEach((b) =>
+      b.classList.toggle("active", b.dataset.image === state.activeImage)
+    );
+    $$("#linkOverlay .link-box").forEach((b) =>
+      b.classList.toggle("active", b.dataset.link === state.activeLink)
+    );
+  }
+
+  function focusLinks(ids, preferred) {
+    const id = preferred || ids[0];
+    const link = D.links[id];
+    if (!link) return;
+    state.activeLink = id;
+    state.activeImage = link.image.id;
+    renderViewer();
+  }
+
+  $("#linksPicker").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-sign]");
+    if (!b) return;
+    selectSign(b.dataset.sign);
+  });
+
+  $("#linksAppearance").addEventListener("click", (e) => {
+    const b = e.target.closest(".text-link");
+    if (!b) return;
+    focusLinks((b.dataset.links || "").split(",").filter(Boolean));
+  });
+
+  $("#linksList").addEventListener("click", (e) => {
+    const row = e.target.closest(".link-row");
+    if (!row) return;
+    focusLinks([row.dataset.link], row.dataset.link);
+  });
+
+  $("#linksList").addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const row = e.target.closest(".link-row");
+    if (!row) return;
+    e.preventDefault();
+    focusLinks([row.dataset.link], row.dataset.link);
+  });
+
+  $("#linkOverlay").addEventListener("click", (e) => {
+    const box = e.target.closest(".link-box");
+    if (!box) return;
+    focusLinks([box.dataset.link], box.dataset.link);
+  });
+
+  $("#linksThumbs").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-image]");
+    if (!b) return;
+    const group = D.images[b.dataset.image];
+    if (!group) return;
+    const first = group.links.map((id) => D.links[id]).find((l) => l && l.sign_id === state.signId);
+    state.activeImage = group.id;
+    state.activeLink = (first && first.id) || state.activeLink;
+    renderViewer();
+  });
+
+  if (state.signId) selectSign(state.signId);
+})();
+
+</script>
+</body>
+</html>
