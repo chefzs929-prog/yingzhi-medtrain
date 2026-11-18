@@ -232,3 +232,21 @@ table.audit tr:hover td{background:var(--panel2)}
   .shell{grid-template-columns:290px minmax(0,1fr) 350px}
   .search{width:220px}
 }
+
+/* ---------- 上传影像问答 ---------- */
+.askmeta{font-size:10.5px;color:var(--muted);line-height:1.6;margin-bottom:4px}
+.askbar{display:flex;gap:6px}
+.askbar input{
+  flex:1;min-width:0;background:#0c1218;border:1px solid var(--line2);color:var(--ink);
+  border-radius:5px;padding:7px 9px;font-size:11.5px;font-family:inherit;
+}
+.askbar input:focus{outline:none;border-color:var(--accent)}
+.askbar button{
+  background:var(--accent-dim);border:1px solid #2b6b5f;color:var(--accent);
+  border-radius:5px;padding:7px 12px;font-size:11.5px;cursor:pointer;font-family:inherit;
+}
+.askbar button:hover:not(:disabled){background:#26645a}
+.askbar button:disabled{opacity:.55;cursor:default}
+.answer{white-space:pre-wrap;word-break:break-word;color:#cfdbe4}
+/* 模型给的候选框用蓝色虚线，和用户自己拖的绿框区分开 */
+.selbox.model{border-color:var(--blue);background:rgba(90,167,214,.10)}

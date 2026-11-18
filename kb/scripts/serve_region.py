@@ -12,7 +12,10 @@ import argparse
 import hashlib
 import json
 import mimetypes
+import os
+import urllib.error
 import urllib.parse
+import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -22,6 +25,10 @@ DATA = KB / "data"
 IMAGES = KB / "images"
 
 VERSION = "2.0"
+
+# 模型服务在 8800（yingzhi/serve/main.py）。本服务只做页面与数据，
+# 模型调用原样转发过去，避免前端跨端口（SSE 跨端口要处理 CORS 与预检）。
+AGENT_BASE = (os.environ.get("YZ_AGENT_BASE") or "http://127.0.0.1:8800").rstrip("/")
 CROSS_GAP = 0.15
 MIN_COVER = 0.35
 SECOND_MIN = 0.25
@@ -423,11 +430,11 @@ class RegionKB:
                 "region_id": c["region_id"],
                 "text": c["text"],
                 "status": c["status"],
-                "spatial_cite": sp["cite_id"] if sp else None,
+                "spatial_cite": sp.get("cite_id") if sp else None,
                 "spatial_anchor": ("%s · %s · %s" % (
                     sp["anchor"]["image_id"], sp["anchor"]["region_id"],
                     ",".join("%.3f" % v for v in sp["anchor"]["bbox"]))) if sp else None,
-                "doc_cite": dc["cite_id"] if dc else None,
+                "doc_cite": dc.get("cite_id") if dc else None,
                 "doc_anchor": ("%s · %s · %s" % (
                     dc["anchor"]["doc_title"], dc["anchor"]["version"],
                     dc["anchor"]["locator"])) if dc else None,
@@ -488,6 +495,55 @@ def send_file(handler, path, cache=False):
     handler.wfile.write(body)
 
 
+def proxy_stream(handler, url, payload):
+    """把 SSE 逐块转发给浏览器。必须边读边写，攒完再发就失去流式意义。"""
+    req = urllib.request.Request(url, data=payload,
+                                 headers={"Content-Type": "application/json"})
+    try:
+        upstream = urllib.request.urlopen(req, timeout=300)
+    except urllib.error.HTTPError as e:
+        send_json(handler, {"error": "agent_http", "status": e.code,
+                            "detail": e.read().decode("utf8", "replace")[:200]}, 502)
+        return
+    except (urllib.error.URLError, OSError) as e:
+        send_json(handler, {"error": "agent_unavailable",
+                            "detail": str(e)[:160],
+                            "hint": "模型服务未启动：python3 yingzhi/serve/start.sh"}, 502)
+        return
+
+    handler.send_response(200)
+    handler.send_header("Content-Type", "text/event-stream; charset=utf-8")
+    handler.send_header("Cache-Control", "no-cache")
+    handler.send_header("Connection", "keep-alive")
+    handler.send_header("X-Accel-Buffering", "no")
+    handler.end_headers()
+    try:
+        while True:
+            chunk = upstream.read(512)
+            if not chunk:
+                break
+            handler.wfile.write(chunk)
+            handler.wfile.flush()
+    except (BrokenPipeError, ConnectionResetError):
+        pass
+    finally:
+        upstream.close()
+
+
+def proxy_json(handler, url):
+    try:
+        with urllib.request.urlopen(url, timeout=10) as r:
+            body = r.read()
+        handler.send_response(200)
+        handler.send_header("Content-Type", "application/json; charset=utf-8")
+        handler.send_header("Content-Length", str(len(body)))
+        handler.send_header("Cache-Control", "no-store")
+        handler.end_headers()
+        handler.wfile.write(body)
+    except (urllib.error.URLError, OSError) as e:
+        send_json(handler, {"error": "agent_unavailable", "detail": str(e)[:160]}, 502)
+
+
 class Handler(BaseHTTPRequestHandler):
     server_version = "RegionLocate/1.1"
 
@@ -514,6 +570,8 @@ class Handler(BaseHTTPRequestHandler):
                 cid = urllib.parse.unquote(u.path.rsplit("/", 1)[-1])
                 doc = K.lesson(cid)
                 send_json(self, doc or {"error": "not_found"}, 200 if doc else 404)
+            elif u.path == "/api/health":
+                proxy_json(self, AGENT_BASE + "/api/health")
             elif u.path == "/api/audit":
                 send_json(self, K.audit())
             elif u.path.startswith("/images/"):
@@ -545,12 +603,15 @@ class Handler(BaseHTTPRequestHandler):
         u = urllib.parse.urlparse(self.path)
         try:
             n = int(self.headers.get("Content-Length") or 0)
-            body = json.loads(self.rfile.read(n) or b"{}") if n else {}
+            raw = self.rfile.read(n) if n else b"{}"
+            body = json.loads(raw or b"{}")
         except Exception:
             send_json(self, {"error": "bad_json"}, 400)
             return
         try:
-            if u.path == "/api/locate":
+            if u.path == "/api/ask":
+                proxy_stream(self, AGENT_BASE + "/api/ask", raw)
+            elif u.path == "/api/locate":
                 image_id = body.get("image_id")
                 bbox = body.get("bbox")
                 if not image_id or not isinstance(bbox, list) or len(bbox) != 4:

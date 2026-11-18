@@ -29,12 +29,25 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from discover import DiscoverError, discover  # noqa: E402
 from gateway import Gateway, GatewayError  # noqa: E402
 import llm as llm_route  # noqa: E402
+import vision as vision_mod  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WORKSPACE = os.path.dirname(ROOT)
 RUN_DIR = os.path.join(ROOT, "run")
 DATA_DIR = os.path.join(WORKSPACE, "kb", "data")
 APP_DIR = os.path.join(ROOT, "app")
+IMAGE_DIR = os.path.join(WORKSPACE, "kb", "images")
+
+_IMAGE_INDEX = None
+
+
+def ensure_image_index():
+    """kb/images 的 md5 索引：上传原图时用来确认是哪一例。"""
+    global _IMAGE_INDEX
+    if _IMAGE_INDEX is None:
+        _IMAGE_INDEX = vision_mod.ImageIndex(IMAGE_DIR)
+        _IMAGE_INDEX.build()
+    return _IMAGE_INDEX
 
 # 前端只渲染这五段；guard / session 等内部阶段只写进 trace.json，不推给界面。
 TRACE_STAGES = {"kb_retrieve", "skill_invoke", "workflow", "agent_generate", "persist"}
@@ -671,14 +684,29 @@ class Handler(BaseHTTPRequestHandler):
         degraded = llm_ans is None and gateway is None
         reason = STATE["fallback_reason"] if degraded else None
         result = None
+        image_match = None
 
         self.sse_start()
 
         try:
             if llm_ans is not None:
                 # 双模型路由：body.image 为 data URL 时走视觉模型，否则走文本模型
-                result = llm_ans.ask(query, self.sse_send, image=body.get("image"))
+                image = body.get("image")
+                result = llm_ans.ask(query, self.sse_send, image=image)
                 text = result.get("text") or ""
+                if image:
+                    # 模型给的框要从正文里剥掉再发 delta，不能让用户看到 JSON
+                    bbox, raw, cleaned = vision_mod.extract_bbox(text)
+                    if bbox:
+                        text = cleaned
+                        result["text"] = text
+                    found = ensure_image_index().match_all(image)
+                    image_match = {
+                        "case_id": found[0] if found else None,
+                        "case_ids": found,
+                        "bbox": bbox,
+                        "raw_bbox": raw,
+                    }
                 cites = result.get("cites") or []
                 # 直连模型是一次性返回，没有「首字」时间，留空而不是填 0 假装有
                 result["total_ms"] = result.get("ms")
@@ -770,6 +798,8 @@ class Handler(BaseHTTPRequestHandler):
             "grounding": trace["citation_audit"]["grounding"],
             "marker_ok": trace["citation_audit"]["marker_ok"],
             "general_section_ids": trace["citation_audit"]["general_section_ids"],
+            # 上传影像时才有：命中的库内病例 + 模型给的框（已转成 [x,y,w,h]）
+            "image_match": image_match,
         })
 
 

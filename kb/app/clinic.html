@@ -88,6 +88,8 @@
         <button id="zoomReset" class="wide">100%</button>
         <button id="zoomIn">+</button>
         <button id="fit">适应</button>
+        <button id="uploadBtn" title="上传本地影像：仅本地服务可用">上传影像</button>
+        <input id="fileInput" type="file" accept="image/*" hidden>
       </div>
       <div class="sep"></div>
       <div class="tg">
@@ -110,6 +112,7 @@
   <aside class="panel">
     <div class="tabs">
       <button data-t="locate" class="on">定位</button>
+      <button data-t="chat">问答</button>
       <button data-t="evidence">证据 <i id="evCount">0</i></button>
       <button data-t="audit">审计</button>
     </div>

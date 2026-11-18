@@ -3,6 +3,9 @@ const S = {
   cases: [], filter: { q: '', level: '' }, current: null,
   detail: null, selected: null, showRegion: true, zoom: 1, tab: 'locate',
   drag: null, audit: null,
+  /* 上传影像问答：image 是 data URL，match 是后端返回的认图结果 */
+  chat: { q: '', text: '', cites: [], image: null, match: null, state: 'idle', err: '' },
+  locate: null,
 };
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -178,16 +181,20 @@ window.addEventListener('mouseup', async (e) => {
   } catch (err) { toast('定位请求失败'); }
 });
 
-function handleLocate(res) {
+function handleLocate(res, opt) {
+  const switchTab = !opt || opt.switchTab !== false;
   document.querySelectorAll('.region').forEach((x) => x.classList.remove('on', 'hit', 'cand'));
+  $('#selbox').classList.remove('model');
   if (res.status === 'single' && res.primary) {
     const r = res.primary.region;
     S.selected = r;
     const el = document.querySelector(`.region[data-rid="${r.id}"]`);
     if (el) el.classList.add('hit');
-    S.tab = 'evidence';
-    document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.dataset.t === 'evidence'));
-    renderTab();
+    if (switchTab) {
+      S.tab = 'evidence';
+      document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.dataset.t === 'evidence'));
+      renderTab();
+    }
     toast(`命中 ${r.name} · 覆盖 ${(res.primary.coverage * 100).toFixed(0)}%`);
   } else if (res.status === 'cross' && res.candidates) {
     res.candidates.forEach((c) => {
@@ -204,6 +211,7 @@ function handleLocate(res) {
 function renderTab() {
   const body = $('#tabBody');
   if (S.tab === 'locate') return renderLocate(body);
+  if (S.tab === 'chat') return renderChat(body);
   if (S.tab === 'evidence') return renderEvidence(body);
   if (S.tab === 'audit') return loadAudit();
 }
@@ -370,6 +378,222 @@ document.querySelectorAll('.tabs button').forEach((b) => {
     renderTab();
   };
 });
+
+
+/* ---------- 上传影像问答 ---------- */
+/* 静态托管版没有模型服务。上传按钮给出明确提示，而不是假装能用。 */
+const HAS_BACKEND = !window.YZStatic;
+
+function readAsDataURL(file) {
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(String(fr.result || ''));
+    fr.onerror = () => rej(new Error('读取文件失败'));
+    fr.readAsDataURL(file);
+  });
+}
+
+/* /api/ask 走 SSE，本页原来只消费 JSON 接口，这里补一个流式读取。 */
+async function askStream(payload, onEvent) {
+  const r = await fetch('/api/ask', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!r.ok) {
+    // 502 是「模型服务没起来」，直接把后端的提示透出来，别只显示一个状态码
+    let msg = 'HTTP ' + r.status;
+    try {
+      const j = await r.json();
+      if (j && (j.hint || j.detail)) msg = j.hint || j.detail;
+    } catch (e) { /* 非 JSON 就用状态码 */ }
+    throw new Error(msg);
+  }
+  if (!r.body) throw new Error('浏览器不支持流式响应');
+  const reader = r.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '';
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    let i;
+    while ((i = buf.indexOf('\n\n')) >= 0) {
+      const chunk = buf.slice(0, i);
+      buf = buf.slice(i + 2);
+      let ev = 'message';
+      let data = '';
+      chunk.split('\n').forEach((line) => {
+        if (line.startsWith('event:')) ev = line.slice(6).trim();
+        else if (line.startsWith('data:')) data += line.slice(5).trim();
+      });
+      if (!data) continue;
+      try { onEvent(ev, JSON.parse(data)); } catch (e) { /* 坏帧直接跳过，不影响整段 */ }
+    }
+  }
+}
+
+async function sendAsk(q) {
+  q = (q || '').trim();
+  if (!q) return;
+  if (!HAS_BACKEND) { toast('公网版不含模型服务，请在本地运行后使用'); return; }
+  const c = S.chat;
+  c.q = q; c.text = ''; c.cites = []; c.match = null; c.err = ''; c.state = 'run';
+  S.locate = null;
+  S.tab = 'chat';
+  document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.dataset.t === 'chat'));
+  renderTab();
+  try {
+    await askStream({
+      query: q,
+      image: c.image || undefined,
+      role: 'student',
+      device: 'desktop',
+      chain: 'clinic_upload',
+    }, (ev, d) => {
+      if (ev === 'delta') {
+        c.text += d.text || '';
+        // 增量只改文字节点，不重建 DOM，否则输入框每帧失焦
+        const out = document.querySelector('#askOut');
+        if (out) out.textContent = c.text;
+      } else if (ev === 'citation') {
+        c.cites.push(d);
+      } else if (ev === 'done') {
+        c.match = d.image_match || null;
+        c.state = 'done';
+      }
+    });
+  } catch (e) {
+    c.state = 'error';
+    c.err = (e && e.message) || String(e);
+  }
+  if (S.tab === 'chat') renderTab();
+  await applyImageMatch();
+}
+
+/* 后端只负责认图和给框，落到哪个分区由前端 locate 算，和拖框走同一套算法。 */
+async function applyImageMatch() {
+  const m = S.chat.match;
+  if (!m) return;
+  if (!m.case_id) { toast('该影像不在标注库内，未做区域定位'); return; }
+  if (!m.bbox) { toast('模型未给出候选框，无法落到分区'); return; }
+  if (!S.current || S.current.id !== m.case_id) await selectCase(m.case_id);
+  if (!S.detail) return;
+  drawBBox(m.bbox);
+  let res;
+  try {
+    res = window.YZLocate
+      ? window.YZLocate.locate(S.detail.regions, m.bbox)
+      : await api('/api/locate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image_id: m.case_id, bbox: m.bbox }),
+      });
+  } catch (e) { toast('定位失败'); return; }
+  S.locate = res;
+  handleLocate(res, { switchTab: false });
+  if (S.tab === 'chat') renderTab();
+}
+
+function drawBBox(b) {
+  const el = $('#selbox');
+  el.style.display = 'block';
+  el.style.left = b[0] * 100 + '%';
+  el.style.top = b[1] * 100 + '%';
+  el.style.width = b[2] * 100 + '%';
+  el.style.height = b[3] * 100 + '%';
+  el.classList.add('model');
+}
+
+function showUploaded(dataUrl) {
+  S.detail = null; S.current = null; S.selected = null; S.locate = null;
+  const img = $('#img');
+  img.onload = fitFrame;
+  img.src = dataUrl;
+  $('#overlay').innerHTML = '';
+  $('#selbox').style.display = 'none';
+  $('#selbox').classList.remove('model');
+  $('#stageEmpty').style.display = 'none';
+  $('#title').textContent = '上传影像';
+  $('#sub').textContent = '待模型返回候选框后再匹配分区';
+  $('#posePill').textContent = '—';
+  $('#atlasPill').textContent = '—';
+  $('#srcLine').textContent = '本地影像 · 未入库';
+  $('#licLine').textContent = '—';
+  $('#bboxMeta').textContent = '—';
+  renderRows();
+  applyZoom();
+}
+
+function chatLocateLine(c) {
+  const m = c.match;
+  if (!m) return '';
+  if (!m.case_id) {
+    return '<div class="sect">区域定位</div><div class="prob">该影像不在标注库内，未做区域定位，也不据此推断</div>';
+  }
+  const id = m.case_id.replace('CASE-', '');
+  const ids = (m.case_ids && m.case_ids.length) ? m.case_ids : [m.case_id];
+  const others = ids.filter((x) => x !== m.case_id).map((x) => x.replace('CASE-', ''));
+  // 同一张图被多例共用时必须说明，否则用户会以为「这张图只属于这一例」
+  const shared = others.length
+    ? `<br><span style="color:var(--muted)">同图另有 ${others.length} 例共用：${esc(others.join(' / '))}（当前按 ${esc(id)} 的分区展示）</span>`
+    : '';
+  if (!m.bbox) {
+    return `<div class="sect">区域定位</div><div class="prob">识别为病例 ${esc(id)}，但模型未给出候选框${shared}</div>`;
+  }
+  const lr = S.locate;
+  const tail = lr && lr.status === 'single'
+    ? `命中 ${esc(lr.primary.region.name)} · 覆盖 ${(lr.primary.coverage * 100).toFixed(0)}%`
+    : (lr ? esc(lr.message || '未命中分区') : '已识别');
+  return `<div class="sect">区域定位</div>
+    <div class="cite"><span class="lab">MATCH</span>病例 ${esc(id)}<br>
+    bbox ${m.bbox.map((v) => v.toFixed(3)).join(' , ')}<br>${tail}${shared}</div>`;
+}
+
+function renderChat(body) {
+  const c = S.chat || {};
+  const run = c.state === 'run';
+  body.innerHTML = `
+    <div class="sect">影像</div>
+    <div class="askmeta">${c.image
+      ? '已载入 · 提问将走视觉模型'
+      : '未载入 · 仅文本问答（可先点工具栏「上传影像」）'}</div>
+    <div class="sect">提问</div>
+    <div class="askbar">
+      <input id="askInput" placeholder="问这张影像，或问某个征象…" value="${esc(c.q || '')}" ${run ? 'disabled' : ''}>
+      <button id="askSend" ${run ? 'disabled' : ''}>${run ? '生成中' : '提问'}</button>
+    </div>
+    ${c.err ? `<div class="prob">${esc(c.err)}</div>` : ''}
+    ${c.text ? `<div class="sect">回答</div><div class="cite answer" id="askOut">${esc(c.text)}</div>` : ''}
+    ${(c.cites || []).length ? `<div class="sect">引用 ${c.cites.length}</div>${c.cites.map((x) => `
+      <div class="cite"><span class="lab">${esc(x.id)}</span>${esc(x.title || '')}</div>`).join('')}` : ''}
+    ${chatLocateLine(c)}
+  `;
+  const inp = body.querySelector('#askInput');
+  const btn = body.querySelector('#askSend');
+  if (btn) btn.onclick = () => sendAsk(inp.value);
+  if (inp) inp.onkeydown = (e) => { if (e.key === 'Enter' && !e.isComposing) sendAsk(inp.value); };
+}
+
+$('#uploadBtn').onclick = () => {
+  if (!HAS_BACKEND) { toast('公网版不含模型服务，请在本地运行后使用'); return; }
+  $('#fileInput').click();
+};
+$('#fileInput').onchange = async (e) => {
+  const f = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if (!f) return;
+  if (!/^image\//.test(f.type)) { toast('请选择图片文件'); return; }
+  if (f.size > 8 * 1024 * 1024) { toast('图片超过 8MB，请压缩后再试'); return; }
+  try {
+    const url = await readAsDataURL(f);
+    S.chat = { q: '', text: '', cites: [], image: url, match: null, state: 'ready', err: '' };
+    showUploaded(url);
+    S.tab = 'chat';
+    document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.dataset.t === 'chat'));
+    renderTab();
+    toast('已载入影像，输入问题开始');
+  } catch (err) { toast('读取失败'); }
+};
 
 window.addEventListener('resize', fitFrame);
 init();
