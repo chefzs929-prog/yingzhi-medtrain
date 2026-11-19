@@ -190,3 +190,25 @@ button.wide{width:100%}
 .wrong .a{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.8}
 .wrong .a b{color:var(--accent);font-weight:500}
 .wrong .a s{color:var(--danger);text-decoration:none}
+
+/* 姓名输入：只做区分，不做账号 */
+input.mini{
+  background:var(--panel2);border:1px solid var(--line);border-radius:6px;
+  color:var(--ink);padding:5px 9px;font-size:11.5px;outline:none;width:104px;
+}
+input.mini:focus{border-color:var(--accent)}
+input.mini::placeholder{color:#5d6c78}
+
+/* 班级视图 */
+.stu{display:grid;grid-template-columns:1fr 90px 62px;gap:10px;align-items:center;
+  padding:6px 2px;border-bottom:1px solid var(--line);font-size:11.5px}
+.stu:last-child{border-bottom:0}
+.stu .n{color:var(--ink)}
+.stu .t{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.stu .p{font-family:var(--mono);text-align:right}
+.stu .p.low{color:var(--danger)}
+.stu .p.mid{color:var(--warn)}
+.hot{display:flex;gap:11px;padding:10px 13px;background:#2a1c1e;
+  border:1px solid #4a2b2f;border-left:2px solid var(--danger);border-radius:7px}
+.hot .q{font-size:12px;line-height:1.7;flex:1}
+.hot .q small{display:block;color:var(--muted);font-size:10.5px;margin-top:3px}

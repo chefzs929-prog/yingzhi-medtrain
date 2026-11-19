@@ -321,6 +321,7 @@
     const rec = {
       paperId: p.id,
       title: p.title,
+      student: ($('#exStudent').value || '').trim(),
       submittedAt: new Date().toISOString(),
       total, right,
       pct: total ? Math.round((right / total) * 100) : 0,
@@ -410,8 +411,68 @@
             <span class="num">${x.pct}%</span>
           </div>`).join('')}</div>
       </div>` : ''}
+      ${classHtml()}
     `;
     bindReport();
+  }
+
+  /* 班级视图：同一份卷子收齐多份成绩后，看每道题的全班正确率。
+     教学价值不在平均分，而在"全班都错的那道题"——那通常意味着这个知识点没讲透。 */
+  function classHtml() {
+    const groups = {};
+    S.results.forEach((r) => (groups[r.paperId] = groups[r.paperId] || []).push(r));
+    const multi = Object.entries(groups)
+      .filter(([, arr]) => arr.length >= 2)
+      .sort((a, b) => b[1].length - a[1].length);
+    if (!multi.length) {
+      return `<div class="card"><h2>班级</h2>
+        <p class="note">同一份卷子收齐 2 份以上成绩后，这里会按题统计全班正确率，
+        并把正确率最低的几道题挑出来。</p></div>`;
+    }
+    const arr = multi[0][1];
+    const avg = Math.round(arr.reduce((s, x) => s + x.pct, 0) / arr.length);
+    const byQ = {};
+    arr.forEach((r) => r.items.forEach((it) => {
+      const k = it.qid;
+      byQ[k] = byQ[k] || { prompt: it.prompt, type: it.type, right: 0, total: 0 };
+      byQ[k].total++;
+      if (it.correct) byQ[k].right++;
+    }));
+    const rows = Object.entries(byQ).map(([qid, v]) => ({
+      qid, prompt: v.prompt, type: v.type, right: v.right, total: v.total,
+      pct: Math.round((v.right / v.total) * 100)
+    })).sort((a, b) => a.pct - b.pct);
+    const hot = rows.filter((x) => x.pct < 60).slice(0, 5);
+    const stu = arr.slice().sort((a, b) => b.pct - a.pct);
+
+    return `<div class="card">
+      <h2>班级 · ${arr.length} 份提交 · 平均 ${avg}%</h2>
+      ${hot.length ? `<div style="display:flex;flex-direction:column;gap:8px">
+        ${hot.map((x) => `<div class="hot">
+          <span class="tag">${esc(TYPE_NAME[x.type] || x.type)}</span>
+          <div class="q">${esc(x.prompt)}
+            <small>全班 ${x.right}/${x.total} 答对 · ${x.pct}%</small></div>
+        </div>`).join('')}
+      </div>` : '<p class="note">没有低于 60% 的题。可以加大题量或换章节。</p>'}
+      <h2 style="margin-top:6px">逐题正确率 · 最低 10 题</h2>
+      <div class="bars">${rows.slice(0, 10).map((x) => {
+        const cls = x.pct >= 80 ? '' : x.pct >= 60 ? 'mid' : 'low';
+        return `<div class="bar">
+          <span>${esc(TYPE_NAME[x.type] || x.type)} · ${esc(x.qid.slice(-5))}</span>
+          <span class="track"><span class="fill ${cls}" style="width:${x.pct}%"></span></span>
+          <span class="num">${x.pct}%</span>
+        </div>`;
+      }).join('')}</div>
+      <h2 style="margin-top:6px">学生</h2>
+      <div>${stu.map((x, i) => {
+        const cls = x.pct >= 80 ? '' : x.pct >= 60 ? 'mid' : 'low';
+        return `<div class="stu">
+          <span class="n">${esc(x.student || ('提交 ' + (i + 1)))}</span>
+          <span class="t">${new Date(x.submittedAt).toLocaleDateString('zh-CN')}</span>
+          <span class="p ${cls}">${x.pct}%</span>
+        </div>`;
+      }).join('')}</div>
+    </div>`;
   }
 
   function bindReport() {

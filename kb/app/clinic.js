@@ -475,7 +475,13 @@ async function sendAsk(q) {
 async function applyImageMatch() {
   const m = S.chat.match;
   if (!m) return;
-  if (!m.case_id) { toast('该影像不在标注库内，未做区域定位'); return; }
+  if (!m.case_id) {
+    // 认不出不等于死路：把库内可练的片子摆出来，让用户自己挑
+    S.chat.suggest = m.suggest || [];
+    toast('该影像不在标注库内，未做区域定位');
+    if (S.tab === 'chat') renderTab();
+    return;
+  }
   if (!m.bbox) { toast('模型未给出候选框，无法落到分区'); return; }
   if (!S.current || S.current.id !== m.case_id) await selectCase(m.case_id);
   if (!S.detail) return;
@@ -563,6 +569,14 @@ function renderChat(body) {
       <button id="askSend" ${run ? 'disabled' : ''}>${run ? '生成中' : '提问'}</button>
     </div>
     ${c.err ? `<div class="prob">${esc(c.err)}</div>` : ''}
+    ${(c.suggest || []).length ? `
+      <div class="sect">库内可练的片子</div>
+      <div class="askmeta">这张图不在标注库内，所以没有区域定位。下面是库里已标注的病例，可以直接切过去。</div>
+      <div class="suggrid">${c.suggest.map((s) => `
+        <button class="sug" data-id="${esc(s.id)}">
+          <img src="${esc(s.image)}" alt="" loading="lazy">
+          <span>${esc(s.id)}<i>${esc(s.chapter)}</i></span>
+        </button>`).join('')}</div>` : ''}
     ${c.text ? `<div class="sect">回答</div><div class="cite answer" id="askOut">${esc(c.text)}</div>` : ''}
     ${(c.cites || []).length ? `<div class="sect">引用 ${c.cites.length}</div>${c.cites.map((x) => `
       <div class="cite"><span class="lab">${esc(x.id)}</span>${esc(x.title || '')}</div>`).join('')}` : ''}
@@ -572,6 +586,12 @@ function renderChat(body) {
   const btn = body.querySelector('#askSend');
   if (btn) btn.onclick = () => sendAsk(inp.value);
   if (inp) inp.onkeydown = (e) => { if (e.key === 'Enter' && !e.isComposing) sendAsk(inp.value); };
+  body.querySelectorAll('.sug').forEach((b) => {
+    b.onclick = () => {
+      S.chat.suggest = [];
+      selectCase(b.dataset.id).catch(() => toast('加载该病例失败'));
+    };
+  });
 }
 
 $('#uploadBtn').onclick = () => {

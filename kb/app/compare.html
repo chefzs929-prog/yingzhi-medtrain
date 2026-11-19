@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>报告—指南对照 · 教学</title>
+<link rel="stylesheet" href="/compare.css">
+</head>
+<body>
+
+<header class="bar">
+  <div class="logo">
+    <span class="m">◫</span>
+    <div>
+      <b>报告—指南对照</b>
+      <i>REPORT × GUIDELINE</i>
+    </div>
+  </div>
+  <nav class="switch">
+    <a href="/teach">教学</a>
+    <a href="/clinic">临床</a>
+    <a href="/paper">组卷</a>
+    <a class="on" href="/compare">对照</a>
+  </nav>
+  <div class="spacer"></div>
+  <span class="pill" id="kbPill">指南加载中…</span>
+</header>
+
+<main>
+  <section class="pane left">
+    <h2>报告文本</h2>
+    <textarea id="src" placeholder="粘贴一段报告正文，按句拆开逐条对照…"></textarea>
+    <div class="row">
+      <button id="run" class="solid">开始对照</button>
+      <button id="demo">填入示例</button>
+      <button id="clear">清空</button>
+    </div>
+    <p class="warn">
+      请勿粘贴真实患者信息。<br>
+      对照按字面相似度匹配，只说明「这段表述与哪条指南最接近」，
+      不判断对错，也不构成诊断。
+    </p>
+    <p class="note" id="hint"></p>
+  </section>
+
+  <section class="pane right" id="out">
+    <div class="empty">左侧贴一段报告，点「开始对照」。</div>
+  </section>
+</main>
+
+<script src="/compare.js"></script>
+</body>
+</html>

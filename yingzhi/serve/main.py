@@ -39,6 +39,7 @@ APP_DIR = os.path.join(ROOT, "app")
 IMAGE_DIR = os.path.join(WORKSPACE, "kb", "images")
 
 _IMAGE_INDEX = None
+_CASES = None
 
 
 def ensure_image_index():
@@ -48,6 +49,60 @@ def ensure_image_index():
         _IMAGE_INDEX = vision_mod.ImageIndex(IMAGE_DIR)
         _IMAGE_INDEX.build()
     return _IMAGE_INDEX
+
+
+def ensure_cases():
+    global _CASES
+    if _CASES is None:
+        out = []
+        path = os.path.join(DATA_DIR, "cases.jsonl")
+        if os.path.exists(path):
+            with open(path, encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        c = json.loads(line)
+                    except ValueError:
+                        continue
+                    if str(c.get("status", "active")) == "inactive":
+                        continue
+                    out.append(c)
+        _CASES = out
+    return _CASES
+
+
+def suggest_cases(per_chapter=3, limit=12):
+    """库外影像的下一步。
+
+    刻意不猜这张图属于哪个部位：没有视觉分类依据时，猜错比不猜更糟。
+    只按章节给几张库内可练的片子，让用户自己挑。
+    """
+    by_ch = {}
+    for c in ensure_cases():
+        by_ch.setdefault(c.get("chapter") or "未分类", []).append(c)
+    out = []
+    seen = set()
+    for ch, arr in sorted(by_ch.items(), key=lambda x: -len(x[1])):
+        n = 0
+        for c in arr:
+            img = c.get("image") or ""
+            base = os.path.basename(img)
+            if not base or base in seen:
+                continue
+            seen.add(base)
+            out.append({
+                "id": c.get("id"),
+                "title": c.get("title") or "",
+                "image": "/images/" + base,
+                "chapter": ch,
+                "body_part": c.get("body_part") or "",
+            })
+            n += 1
+            if n >= per_chapter:
+                break
+    return out[:limit]
 
 # 前端只渲染这五段；guard / session 等内部阶段只写进 trace.json，不推给界面。
 TRACE_STAGES = {"kb_retrieve", "skill_invoke", "workflow", "agent_generate", "persist"}
@@ -707,6 +762,9 @@ class Handler(BaseHTTPRequestHandler):
                         "bbox": bbox,
                         "raw_bbox": raw,
                     }
+                    if not found:
+                        # 认不出就明说，并给一条可走的路，而不是让用户卡在这里
+                        image_match["suggest"] = suggest_cases()
                 cites = result.get("cites") or []
                 # 直连模型是一次性返回，没有「首字」时间，留空而不是填 0 假装有
                 result["total_ms"] = result.get("ms")

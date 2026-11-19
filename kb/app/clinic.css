@@ -250,3 +250,12 @@ table.audit tr:hover td{background:var(--panel2)}
 .answer{white-space:pre-wrap;word-break:break-word;color:#cfdbe4}
 /* 模型给的候选框用蓝色虚线，和用户自己拖的绿框区分开 */
 .selbox.model{border-color:var(--blue);background:rgba(90,167,214,.10)}
+
+/* 库外影像：不硬猜部位，只给库内可练的片子让用户自己挑 */
+.suggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin:6px 0 4px}
+.sug{background:var(--panel2);border:1px solid var(--line);border-radius:7px;
+  padding:0;overflow:hidden;cursor:pointer;text-align:left;line-height:0}
+.sug img{width:100%;height:62px;object-fit:cover;display:block;background:#05090c}
+.sug span{display:block;font-size:10px;padding:5px 6px;line-height:1.45;color:var(--ink)}
+.sug span i{display:block;font-style:normal;color:var(--muted);font-size:9.5px}
+.sug:hover{border-color:var(--accent)}
