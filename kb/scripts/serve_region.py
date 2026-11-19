@@ -574,6 +574,13 @@ class Handler(BaseHTTPRequestHandler):
                 proxy_json(self, AGENT_BASE + "/api/health")
             elif u.path == "/api/audit":
                 send_json(self, K.audit())
+            elif u.path == "/data/quiz_bank.json":
+                target = DATA / "quiz_bank.json"
+                if not target.exists():
+                    send_json(self, {"error": "not_built",
+                                     "hint": "python3 kb/scripts/build_quiz_bank.py"}, 404)
+                    return
+                send_file(self, target, cache=True)
             elif u.path.startswith("/images/"):
                 name = urllib.parse.unquote(u.path.split("/", 2)[-1])
                 target = (IMAGES / name).resolve()
@@ -587,6 +594,8 @@ class Handler(BaseHTTPRequestHandler):
                 send_file(self, APP / "teach.html")
             elif u.path in ("/clinic", "/clinic.html"):
                 send_file(self, APP / "clinic.html")
+            elif u.path in ("/paper", "/paper.html"):
+                send_file(self, APP / "paper.html")
             else:
                 name = urllib.parse.unquote(u.path.lstrip("/"))
                 target = (APP / name).resolve()

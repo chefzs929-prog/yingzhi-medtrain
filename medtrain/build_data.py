@@ -606,6 +606,12 @@ def main():
     (out / "data" / "kb.json").write_text(json.dumps({**payload, "regionsByCase": regions_by_case,
                                                       "claimsByCase": claims_by_case}, ensure_ascii=False, indent=1), encoding="utf8")
 
+    # 组卷题库：由 kb/scripts/build_quiz_bank.py 生成，静态站直接取用
+    qb = KB / "data" / "quiz_bank.json"
+    if qb.exists():
+        shutil.copy2(qb, out / "data" / "quiz_bank.json")
+        print("quiz_bank MB", round(qb.stat().st_size / 1e6, 2))
+
     # ---------- 影像压缩 ----------
     if not args.no_images:
         for case in cases:

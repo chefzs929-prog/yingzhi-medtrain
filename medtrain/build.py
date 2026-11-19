@@ -386,8 +386,10 @@ python3 medtrain/build.py        # 复制前端，生成版本入口与启动页
 
 
 def build_reading():
-    """阅片工作台：导出静态 JSON + 打包 kb/app 到 read/（纯静态可托管）。"""
-    for script in ("kb/scripts/export_teach_static.py", "kb/scripts/build_teach_pages.py"):
+    """阅片工作台：生成题库、导出静态 JSON、打包 kb/app 到 read/（纯静态可托管）。"""
+    for script in ("kb/scripts/build_quiz_bank.py",
+                   "kb/scripts/export_teach_static.py",
+                   "kb/scripts/build_teach_pages.py"):
         subprocess.run([sys.executable, str(ROOT / script)], check=True, cwd=str(ROOT))
 
 

@@ -14,8 +14,13 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 SRC = ROOT / "kb/app"
 OUT = ROOT / "outputs/medtrain/read"
 
-ASSETS = ["teach.css", "clinic.css", "app.css", "teach.js", "clinic.js", "static.js", "locate.js"]
-PAGES = {"teach.html": ("teach.css", "teach.js"), "clinic.html": ("clinic.css", "clinic.js")}
+ASSETS = ["teach.css", "clinic.css", "paper.css", "app.css",
+          "teach.js", "clinic.js", "paper.js", "static.js", "locate.js"]
+PAGES = {
+    "teach.html": ("teach.css", "teach.js"),
+    "clinic.html": ("clinic.css", "clinic.js"),
+    "paper.html": ("paper.css", "paper.js"),
+}
 
 
 def rewrite(html, css, js):
@@ -23,6 +28,7 @@ def rewrite(html, css, js):
     html = html.replace('src="/%s"' % js, 'src="%s"' % js)
     html = html.replace('href="/teach"', 'href="teach.html"')
     html = html.replace('href="/clinic"', 'href="clinic.html"')
+    html = html.replace('href="/paper"', 'href="paper.html"')
     # static.js / locate.js 必须先于业务脚本执行
     html = html.replace(
         '<script src="%s"></script>' % js,

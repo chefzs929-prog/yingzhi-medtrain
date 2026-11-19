@@ -13,6 +13,8 @@ REPO_URL="https://github.com/chefzs929-prog/yingzhi-medtrain.git"
 TMP="$ROOT/.deepworks/tmp/site"
 
 if [[ "${1:-}" != "--no-build" ]]; then
+  echo "==> 生成组卷题库"
+  python3 kb/scripts/build_quiz_bank.py
   echo "==> 生成知识库（kb/data -> outputs/medtrain/data）"
   python3 medtrain/build_data.py
   echo "==> 打包前端"
