@@ -1,0 +1,412 @@
+{
+  "source": {
+    "dataset": "BodyParts3D 4.0",
+    "tree": "PART-OF",
+    "reduction": "99%",
+    "publisher": "Database Center for Life Science (DBCLS)",
+    "license": "CC BY 4.0",
+    "attribution": "BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International",
+    "url": "https://dbarchive.biosciencedbc.jp/en/bodyparts3d/desc.html"
+  },
+  "coordinateSystem": {
+    "unit": "mm",
+    "up": "+Z",
+    "note": "原始模型 Z 轴向上，身高约 1700 mm；前端统一旋转为 Y-up 并缩放到米制。"
+  },
+  "regionUnits": {
+    "REG-HEAD-NECK": [
+      "skull",
+      "brain",
+      "neck"
+    ],
+    "REG-CHEST": [
+      "lung",
+      "heart",
+      "ribcage"
+    ],
+    "REG-ABDOMEN": [
+      "liver",
+      "gitract",
+      "kidney",
+      "pancreas"
+    ],
+    "REG-MSK": [
+      "spine",
+      "pelvis",
+      "limbs"
+    ]
+  },
+  "totals": {
+    "vertices": 208864,
+    "triangles": 495260
+  },
+  "units": [
+    {
+      "id": "body",
+      "name": "体表",
+      "en": "Skin surface",
+      "region": "",
+      "file": "models/body.obj",
+      "vertices": 14665,
+      "triangles": 43764,
+      "rawTriangles": 203382,
+      "gridResolution": 144,
+      "bytes": 1165199,
+      "elements": 1,
+      "bbox": {
+        "min": [
+          -329.47,
+          -243.43,
+          -76.68
+        ],
+        "max": [
+          328.38,
+          44.2,
+          1641.36
+        ]
+      },
+      "missingConcepts": []
+    },
+    {
+      "id": "skull",
+      "name": "颅骨",
+      "en": "Skull",
+      "region": "REG-HEAD-NECK",
+      "file": "models/skull.obj",
+      "vertices": 28090,
+      "triangles": 69435,
+      "rawTriangles": 330828,
+      "gridResolution": 124,
+      "bytes": 2039121,
+      "elements": 43,
+      "bbox": {
+        "min": [
+          -76.19,
+          -190.42,
+          1421.65
+        ],
+        "max": [
+          74.86,
+          18.0,
+          1636.27
+        ]
+      },
+      "missingConcepts": []
+    },
+    {
+      "id": "brain",
+      "name": "脑",
+      "en": "Brain",
+      "region": "REG-HEAD-NECK",
+      "file": "models/brain.obj",
+      "vertices": 16452,
+      "triangles": 47824,
+      "rawTriangles": 322262,
+      "gridResolution": 43,
+      "bytes": 1288757,
+      "elements": 59,
+      "bbox": {
+        "min": [
+          -69.48,
+          -169.4,
+          1464.88
+        ],
+        "max": [
+          68.8,
+          10.33,
+          1630.41
+        ]
+      },
+      "missingConcepts": []
+    },
+    {
+      "id": "neck",
+      "name": "颈部气道",
+      "en": "Trachea and cervical spine",
+      "region": "REG-HEAD-NECK",
+      "file": "models/neck.obj",
+      "vertices": 5259,
+      "triangles": 11476,
+      "rawTriangles": 28556,
+      "gridResolution": 82,
+      "bytes": 325757,
+      "elements": 14,
+      "bbox": {
+        "min": [
+          -40.83,
+          -109.91,
+          1285.17
+        ],
+        "max": [
+          40.23,
+          -21.27,
+          1481.43
+        ]
+      },
+      "missingConcepts": []
+    },
+    {
+      "id": "lung",
+      "name": "双肺",
+      "en": "Lungs",
+      "region": "REG-CHEST",
+      "file": "models/lung.obj",
+      "vertices": 14488,
+      "triangles": 35926,
+      "rawTriangles": 114750,
+      "gridResolution": 130,
+      "bytes": 1024779,
+      "elements": 280,
+      "bbox": {
+        "min": [
+          -116.2,
+          -177.37,
+          1015.45
+        ],
+        "max": [
+          125.43,
+          -20.31,
+          1355.94
+        ]
+      },
+      "missingConcepts": []
+    },
+    {
+      "id": "heart",
+      "name": "心脏",
+      "en": "Heart",
+      "region": "REG-CHEST",
+      "file": "models/heart.obj",
+      "vertices": 12621,
+      "triangles": 30677,
+      "rawTriangles": 102802,
+      "gridResolution": 50,
+      "bytes": 868844,
+      "elements": 83,
+      "bbox": {
+        "min": [
+          -36.23,
+          -176.1,
+          1175.23
+        ],
+        "max": [
+          79.39,
+          -70.17,
+          1279.43
+        ]
+      },
+      "missingConcepts": []
+    },
+    {
+      "id": "ribcage",
+      "name": "胸廓",
+      "en": "Rib cage and sternum",
+      "region": "REG-CHEST",
+      "file": "models/ribcage.obj",
+      "vertices": 33521,
+      "triangles": 70172,
+      "rawTriangles": 196432,
+      "gridResolution": 143,
+      "bytes": 2240578,
+      "elements": 43,
+      "bbox": {
+        "min": [
+          -145.28,
+          -213.29,
+          1008.21
+        ],
+        "max": [
+          143.84,
+          -3.73,
+          1370.48
+        ]
+      },
+      "missingConcepts": []
+    },
+    {
+      "id": "liver",
+      "name": "肝脏",
+      "en": "Liver",
+      "region": "REG-ABDOMEN",
+      "file": "models/liver.obj",
+      "vertices": 17117,
+      "triangles": 41326,
+      "rawTriangles": 191622,
+      "gridResolution": 78,
+      "bytes": 1210717,
+      "elements": 60,
+      "bbox": {
+        "min": [
+          -115.0,
+          -202.41,
+          1028.22
+        ],
+        "max": [
+          94.0,
+          -43.36,
+          1183.06
+        ]
+      },
+      "missingConcepts": []
+    },
+    {
+      "id": "gitract",
+      "name": "胃肠",
+      "en": "Stomach and intestines",
+      "region": "REG-ABDOMEN",
+      "file": "models/gitract.obj",
+      "vertices": 13158,
+      "triangles": 30087,
+      "rawTriangles": 76864,
+      "gridResolution": 106,
+      "bytes": 874666,
+      "elements": 64,
+      "bbox": {
+        "min": [
+          -126.78,
+          -196.93,
+          757.51
+        ],
+        "max": [
+          117.48,
+          -11.28,
+          1156.89
+        ]
+      },
+      "missingConcepts": []
+    },
+    {
+      "id": "kidney",
+      "name": "双肾",
+      "en": "Kidneys and adrenal glands",
+      "region": "REG-ABDOMEN",
+      "file": "models/kidney.obj",
+      "vertices": 4901,
+      "triangles": 9841,
+      "rawTriangles": 11582,
+      "gridResolution": 173,
+      "bytes": 290133,
+      "elements": 4,
+      "bbox": {
+        "min": [
+          -87.58,
+          -111.86,
+          966.81
+        ],
+        "max": [
+          90.38,
+          -59.59,
+          1108.19
+        ]
+      },
+      "missingConcepts": []
+    },
+    {
+      "id": "pancreas",
+      "name": "胰腺",
+      "en": "Pancreas",
+      "region": "REG-ABDOMEN",
+      "file": "models/pancreas.obj",
+      "vertices": 4281,
+      "triangles": 9369,
+      "rawTriangles": 16962,
+      "gridResolution": 163,
+      "bytes": 268911,
+      "elements": 4,
+      "bbox": {
+        "min": [
+          -56.62,
+          -146.38,
+          1004.36
+        ],
+        "max": [
+          72.67,
+          -95.42,
+          1078.1
+        ]
+      },
+      "missingConcepts": []
+    },
+    {
+      "id": "spine",
+      "name": "脊柱",
+      "en": "Vertebral column",
+      "region": "REG-MSK",
+      "file": "models/spine.obj",
+      "vertices": 25014,
+      "triangles": 55831,
+      "rawTriangles": 124220,
+      "gridResolution": 290,
+      "bytes": 1684914,
+      "elements": 48,
+      "bbox": {
+        "min": [
+          -59.54,
+          -115.99,
+          783.34
+        ],
+        "max": [
+          58.2,
+          7.25,
+          1481.43
+        ]
+      },
+      "missingConcepts": []
+    },
+    {
+      "id": "pelvis",
+      "name": "骨盆",
+      "en": "Bony pelvis",
+      "region": "REG-MSK",
+      "file": "models/pelvis.obj",
+      "vertices": 4779,
+      "triangles": 9682,
+      "rawTriangles": 14628,
+      "gridResolution": 101,
+      "bytes": 279499,
+      "elements": 3,
+      "bbox": {
+        "min": [
+          -144.87,
+          -139.01,
+          752.04
+        ],
+        "max": [
+          144.75,
+          7.25,
+          958.09
+        ]
+      },
+      "missingConcepts": []
+    },
+    {
+      "id": "limbs",
+      "name": "四肢骨骼",
+      "en": "Bones of limbs",
+      "region": "REG-MSK",
+      "file": "models/limbs.obj",
+      "vertices": 14518,
+      "triangles": 29850,
+      "rawTriangles": 83558,
+      "gridResolution": 402,
+      "bytes": 917247,
+      "elements": 26,
+      "bbox": {
+        "min": [
+          -309.37,
+          -153.17,
+          -24.54
+        ],
+        "max": [
+          309.61,
+          4.93,
+          1349.86
+        ]
+      },
+      "missingConcepts": [
+        "skeleton of left foot proper",
+        "skeleton of right foot proper"
+      ]
+    }
+  ]
+}

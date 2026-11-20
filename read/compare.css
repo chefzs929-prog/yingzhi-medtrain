@@ -1,0 +1,57 @@
+/* 报告—指南对照：把报告拆句，逐句找最接近的指南条款。
+ * 纯前端，不需要模型；算法是 IDF 加权的术语重叠，可解释、可复现。
+ */
+.bar-extra{display:flex;align-items:center;gap:12px;margin-left:auto}
+
+main{flex:1;min-height:0;display:flex;gap:14px;padding:14px 18px 18px}
+.pane{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  display:flex;flex-direction:column;min-height:0;box-shadow:var(--shadow)}
+.pane.left{flex:0 0 380px;padding:15px 16px;gap:10px}
+.pane.right{flex:1;min-width:0;padding:15px 16px;gap:11px;overflow-y:auto}
+h2{font-size:11px;color:var(--muted);font-weight:650;letter-spacing:.08em}
+
+textarea{
+  flex:1;min-height:180px;resize:none;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:9px;color:var(--ink);padding:12px 13px;font-size:13px;line-height:1.85;
+  outline:none;font-family:inherit;
+}
+textarea:focus{border-color:var(--brand);background:#fff}
+textarea::placeholder{color:var(--faint)}
+
+button{
+  background:var(--surface);border:1px solid var(--line-2);color:var(--ink-2);
+  font-size:12.5px;padding:8px 15px;border-radius:8px;cursor:pointer;font-family:inherit;
+}
+button:hover{border-color:var(--brand);color:var(--brand);background:#fff}
+button.solid{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+button.solid:hover{background:var(--brand-deep);border-color:var(--brand-deep);color:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+
+.warn{font-size:11.5px;color:#7c4a12;line-height:1.8;background:var(--warn-soft);
+  border-left:2px solid var(--warn);padding:9px 11px;border-radius:0 7px 7px 0}
+.note{font-size:11px;color:var(--muted);line-height:1.7}
+.empty{color:var(--muted);font-size:12.5px;line-height:2;
+  display:grid;place-items:center;text-align:center;flex:1;padding:40px}
+
+/* 对照结果 */
+.sum{font-size:11.5px;color:var(--muted);padding:2px 2px 4px;font-family:var(--mono)}
+.pair{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.pair.miss{border-color:#f0c9c6}
+.pair .src{
+  padding:10px 13px;font-size:12.5px;line-height:1.8;color:var(--ink);
+  background:var(--surface-2);border-bottom:1px solid var(--line);
+}
+.pair .gl{padding:11px 13px;display:flex;flex-direction:column;gap:6px}
+.pair .gl.miss{color:var(--muted)}
+.gh{display:flex;align-items:center;gap:8px;font-size:11px}
+.gh b{color:var(--brand-deep);font-weight:600}
+.gh span{font-family:var(--mono);font-size:10px;color:var(--muted);
+  border:1px solid var(--line-2);border-radius:4px;padding:1px 6px}
+.st{font-size:12.5px;line-height:1.85;color:var(--ink-2)}
+.ac{font-size:11.5px;color:var(--info)}
+.src-line{font-family:var(--mono);font-size:10px;color:var(--muted);
+  border-top:1px dashed var(--line);padding-top:6px;margin-top:2px}
+.ask-agent{display:inline-flex;align-items:center;margin:6px 0 8px;padding:4px 9px;
+  font-size:10.5px;color:var(--brand-deep);background:var(--brand-soft);
+  border:1px solid #cfe7e3;border-radius:999px;cursor:pointer}
+.ask-agent:hover{border-color:var(--brand);color:var(--brand)}

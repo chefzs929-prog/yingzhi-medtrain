@@ -1,0 +1,216 @@
+/* 读片工作台：外壳走亮色品牌，影像画布保持深色（看图需要）
+ * 令牌来自 base.css，这里只写工作区布局。
+ */
+.bar-extra{display:flex;align-items:center;gap:12px;margin-left:auto;min-width:0}
+
+/* ---------- 顶栏内的检索与筛选 ---------- */
+.search{display:flex;align-items:center;gap:7px;background:var(--surface-2);
+  border:1px solid var(--line);border-radius:8px;padding:0 10px;height:32px;width:236px}
+.search span{color:var(--faint);font-size:13px}
+.search input{flex:1;background:none;border:0;outline:none;color:var(--ink);font-size:12.5px}
+.search:focus-within{border-color:var(--brand);background:#fff}
+
+.seg{display:flex;margin:0 14px 8px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:2px}
+.seg button{flex:1;background:none;border:0;color:var(--muted);font-size:11px;
+  padding:5px 0;border-radius:6px;cursor:pointer;white-space:nowrap}
+.seg button:hover{color:var(--ink)}
+.seg button.on{background:#fff;color:var(--brand);font-weight:600;box-shadow:0 1px 2px rgba(16,35,46,.08)}
+
+.gate{display:flex;gap:14px;font-size:11px;color:var(--muted);white-space:nowrap}
+.gate span{display:flex;align-items:center;gap:6px}
+.gate b{color:var(--ink);font-family:var(--mono);font-size:11.5px}
+.gate .d{width:6px;height:6px;border-radius:50%}
+.gate .d.dual{background:var(--brand)}
+.gate .d.single{background:var(--warn)}
+.gate .d.broken{background:var(--danger)}
+
+/* ---------- 三栏 ---------- */
+.shell{flex:1;display:grid;grid-template-columns:320px minmax(0,1fr) 396px;min-height:0;background:var(--bg)}
+
+/* ---------- 左栏 ---------- */
+.list{background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.list-head{display:flex;align-items:center;justify-content:space-between;
+  padding:13px 15px 9px;font-size:11px;letter-spacing:.1em;color:var(--muted)}
+.list-head b{font-family:var(--mono);color:var(--brand);font-size:11px}
+.table-head,.row{
+  display:grid;grid-template-columns:70px 1fr 40px 40px 32px;gap:6px;
+  padding:6px 15px;font-size:10.5px;align-items:center;
+}
+.table-head{color:var(--faint);border-bottom:1px solid var(--line);letter-spacing:.06em}
+.rows{flex:1;overflow:auto}
+.row{cursor:pointer;border-left:2px solid transparent;color:var(--ink);
+  border-bottom:1px solid var(--line-2)}
+.row:hover{background:var(--surface-2)}
+.row.on{background:var(--brand-soft);border-left-color:var(--brand)}
+.row .id{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+.row .bp{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px}
+.row .n{font-family:var(--mono);font-size:10.5px;color:var(--muted);text-align:right}
+.row .ev{font-family:var(--mono);font-size:10px;text-align:center;border-radius:4px;padding:1px 0}
+.row .ev.B{background:var(--ok-soft);color:var(--ok)}
+.row .ev.C{background:var(--warn-soft);color:var(--warn)}
+.list-foot{display:flex;justify-content:space-between;padding:9px 15px;
+  border-top:1px solid var(--line);font-size:10.5px;color:var(--muted)}
+.list-foot b{color:var(--ink);font-family:var(--mono)}
+
+/* ---------- 中栏 ---------- */
+.work{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--bg)}
+.work-head{display:flex;align-items:flex-start;gap:14px;padding:14px 18px 8px}
+.work-head h1{font-size:15px;font-weight:650;line-height:1.4;color:var(--ink)}
+.sub{font-size:10.5px;color:var(--muted);margin-top:5px;font-family:var(--mono);
+  display:flex;gap:12px;flex-wrap:wrap}
+.head-right{margin-left:auto;display:flex;gap:6px}
+
+/* 命题三步链路 */
+.quest-strip{display:flex;align-items:center;gap:10px;padding:2px 18px 9px}
+.quest-strip .hint{color:var(--faint)}
+
+.stage{flex:1;min-height:0;position:relative;margin:0 18px;background:var(--view-bg);
+  border:1px solid var(--view-line);border-radius:10px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center}
+.frame{position:relative;max-width:100%;max-height:100%;line-height:0}
+.frame img{max-width:100%;max-height:100%;display:block;user-select:none;-webkit-user-drag:none}
+.overlay{position:absolute;inset:0}
+.selbox{position:absolute;border:1px dashed #4ec9b0;background:rgba(78,201,176,.10);
+  pointer-events:none;display:none}
+
+.region{position:absolute;border:1px solid rgba(78,201,176,.30);
+  background:rgba(78,201,176,.04);cursor:pointer;transition:.14s}
+.region:hover{border-color:#4ec9b0;background:rgba(78,201,176,.12)}
+.region.on{border-color:#e0a458;background:rgba(224,164,88,.16);
+  box-shadow:0 0 0 1px rgba(224,164,88,.4)}
+.region.hide{border-color:transparent;background:transparent}
+.region.local{border-style:dashed}
+.region .tag{position:absolute;top:0;left:0;font-size:10px;padding:2px 5px;
+  background:rgba(11,16,21,.86);color:#b9c9d4;
+  border-radius:0 0 4px 0;white-space:nowrap}
+.region.on .tag{background:#e0a458;color:#241a0d}
+.region.hide .tag{display:none}
+.region.hit{border-color:#4ec9b0;background:rgba(78,201,176,.2);
+  box-shadow:0 0 0 2px rgba(78,201,176,.3)}
+.region.cand{border-color:#e0a458;background:rgba(224,164,88,.16)}
+
+.stage-empty{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;color:#8fa0b3;text-align:center;padding:24px}
+.stage-empty b{color:#e4ecf4;font-size:13px;font-weight:500}
+.stage-empty span{font-size:11.5px;max-width:340px;line-height:1.65}
+.zoom{position:absolute;right:10px;top:10px;font-family:var(--mono);font-size:10px;
+  background:rgba(11,16,21,.8);border:1px solid #22303c;padding:3px 7px;
+  border-radius:4px;color:#8fa0b3}
+.toast{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
+  background:rgba(11,16,21,.94);border:1px solid #2c3d4b;color:#dfe8ef;
+  font-size:11.5px;padding:7px 13px;border-radius:6px;opacity:0;transition:.2s;
+  pointer-events:none;max-width:80%}
+.toast.show{opacity:1}
+
+.tools{display:flex;align-items:center;gap:9px;padding:10px 18px;flex-wrap:wrap}
+.tg{display:flex;gap:3px}
+.tools .btn{height:28px;padding:0 10px;font-size:11.5px}
+.tools .btn.on{background:var(--brand-soft);border-color:#bfe0da;color:var(--brand-deep)}
+.tools .btn i{display:inline-block;width:5px;height:5px;border-radius:1px;
+  background:var(--brand);margin-right:5px;vertical-align:1px}
+.sep{width:1px;height:16px;background:var(--line)}
+.hint{font-size:10.5px;color:var(--muted)}
+.work-foot{display:flex;align-items:center;padding:8px 18px 12px;
+  font-size:10px;color:var(--muted);gap:10px}
+.work-foot span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%}
+
+/* ---------- 右栏 ---------- */
+.panel{background:var(--surface);border-left:1px solid var(--line);
+  display:flex;flex-direction:column;min-height:0}
+.panel .tabs{display:flex;padding:0;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.panel .tabs button{flex:1;height:auto;padding:11px 0;border-radius:0;
+  justify-content:center;border-bottom:2px solid transparent;background:none;box-shadow:none}
+.panel .tabs button.on{background:none;color:var(--brand);border-bottom-color:var(--brand);box-shadow:none}
+.panel .tabs i{font-style:normal;font-family:var(--mono);font-size:9.5px;
+  background:var(--surface-3);padding:1px 4px;border-radius:3px;margin-left:3px;color:var(--muted)}
+.panel .tabs button.on i{background:var(--brand-soft);color:var(--brand)}
+.tab-body{flex:1;overflow:auto;padding:14px 15px}
+
+.empty{padding:24px 6px;color:var(--muted);font-size:11.5px;line-height:1.75}
+.empty b{display:block;color:var(--ink);font-size:12.5px;margin-bottom:7px}
+
+.sect{font-size:10px;letter-spacing:.12em;color:var(--faint);margin:14px 0 7px}
+.sect:first-child{margin-top:0}
+
+.kv{display:grid;grid-template-columns:78px 1fr;gap:5px 10px;font-size:11.5px}
+.kv dt{color:var(--muted);font-size:10.5px}
+.kv dd{color:var(--ink);word-break:break-word}
+.kv dd.mono{font-family:var(--mono);font-size:10.5px}
+
+.status{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:7px;
+  border:1px solid var(--line);background:var(--surface-2);font-size:11.5px;margin-bottom:12px}
+.status i{width:6px;height:6px;border-radius:50%}
+.status.dual i{background:var(--ok)}
+.status.single i{background:var(--warn)}
+.status.broken i{background:var(--danger)}
+.status b{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--muted)}
+
+.rcard{border:1px solid var(--line);border-radius:9px;background:var(--surface);
+  padding:11px 12px;margin-bottom:9px}
+.rcard .h{display:flex;align-items:center;gap:8px}
+.rcard .h b{font-size:12.5px;font-weight:600}
+.rcard .h .side{margin-left:auto;font-size:9.5px;color:var(--warn);font-family:var(--mono)}
+.rcard .n{font-size:10.5px;color:var(--muted);line-height:1.6;margin-top:6px}
+.rcard .sig{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
+.rcard .sig span{font-size:9.5px;padding:2px 6px;border-radius:4px;
+  background:var(--surface-3);color:var(--ink-2)}
+
+.cite{border-left:2px solid var(--line-2);padding:7px 10px;margin:7px 0;font-size:11px;
+  line-height:1.7;color:var(--ink-2);background:var(--surface-2);border-radius:0 6px 6px 0}
+.cite.sp{border-left-color:var(--brand)}
+.cite.dc{border-left-color:var(--info)}
+.cite .lab{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted);
+  display:block;margin-bottom:4px}
+.cite a{color:var(--info)}
+.cite a:hover{text-decoration:underline}
+.hash{font-family:var(--mono);font-size:9.5px;color:var(--muted);margin-top:4px;
+  display:flex;gap:10px;flex-wrap:wrap}
+.hash .ok{color:var(--ok)}
+.hash .bad{color:var(--danger)}
+
+.prob{border:1px solid #f0c9c6;background:var(--danger-soft);color:#8f2f2a;
+  padding:8px 10px;border-radius:6px;font-size:10.5px;margin-top:8px;line-height:1.6}
+
+table.audit{width:100%;border-collapse:collapse;font-size:10px}
+table.audit th{text-align:left;color:var(--muted);font-weight:400;
+  padding:5px 4px;border-bottom:1px solid var(--line);position:sticky;top:0;
+  background:var(--surface);font-family:var(--mono);font-size:9.5px}
+table.audit td{padding:5px 4px;border-bottom:1px solid var(--line-2);color:var(--ink-2);
+  font-family:var(--mono);font-size:9.5px}
+table.audit tr:hover td{background:var(--surface-2)}
+.st{font-size:9px;padding:1px 5px;border-radius:4px}
+.st.dual{background:var(--ok-soft);color:var(--ok)}
+.st.single{background:var(--warn-soft);color:var(--warn)}
+.st.broken{background:var(--danger-soft);color:var(--danger)}
+
+@media(max-width:1280px){
+  .shell{grid-template-columns:280px minmax(0,1fr) 350px}
+  .search{width:210px}
+  .bar-extra .quest-badge{display:none}
+}
+
+/* ---------- 上传影像问答 ---------- */
+.askmeta{font-size:10.5px;color:var(--muted);line-height:1.6;margin-bottom:4px}
+.askbar{display:flex;gap:6px}
+.askbar input{
+  flex:1;min-width:0;background:#fff;border:1px solid var(--line-2);color:var(--ink);
+  border-radius:7px;padding:7px 9px;font-size:11.5px;font-family:inherit;
+}
+.askbar input:focus{outline:none;border-color:var(--brand)}
+.askbar button{
+  background:var(--brand);border:1px solid var(--brand);color:#fff;
+  border-radius:7px;padding:7px 12px;font-size:11.5px;cursor:pointer;font-family:inherit;font-weight:600;
+}
+.askbar button:hover:not(:disabled){background:var(--brand-deep);border-color:var(--brand-deep)}
+.askbar button:disabled{opacity:.55;cursor:default}
+.answer{white-space:pre-wrap;word-break:break-word;color:var(--ink-2);line-height:1.75}
+.selbox.model{border-color:#5aa7d6;background:rgba(90,167,214,.10)}
+
+/* 库外影像：不硬猜部位，只给库内可练的片子让用户自己挑 */
+.suggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin:6px 0 4px}
+.sug{background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  padding:0;overflow:hidden;cursor:pointer;text-align:left;line-height:0}
+.sug img{width:100%;height:62px;object-fit:cover;display:block;background:#05090c}
+.sug span{display:block;font-size:10px;padding:5px 6px;line-height:1.45;color:var(--ink)}
+.sug span i{display:block;font-style:normal;color:var(--muted);font-size:9.5px}
+.sug:hover{border-color:var(--brand)}

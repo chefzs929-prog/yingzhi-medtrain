@@ -1,0 +1,1 @@
+{"version":"2.0","counts":{"cases":120,"locatable_cases":120,"atlases":19,"regions":440,"claims":441,"chapters":7},"evidence":{"B":50,"C":70},"gate":{"dual":30,"single":183,"broken":228},"thresholds":{"cross_gap":0.15,"min_coverage":0.35,"second_min":0.25,"min_side":0.015,"max_area":0.6}}

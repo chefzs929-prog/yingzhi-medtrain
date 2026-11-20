@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b4f55">
+<title>RadioCheck · 影像临床思维平台</title>
+<meta name="description" content="输入影像与报告/指南文档，回答同时引用影像区域与文献段落；证据不足时诚实拒答，并固定声明非诊断用途。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b4f55'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white' font-family='sans-serif'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RadioCheck">
+<meta name="application-name" content="RadioCheck">
+<link rel="stylesheet" href="landing.css?v=8ddc9c0f16">
+<link rel="stylesheet" href="pwa.css?v=002c3e5455">
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+</head>
+<body>
+
+<header class="ld-top">
+  <div class="ld-brand">
+    <div class="ld-mark">R</div>
+    <div><b>RadioCheck</b><span>影像临床思维平台</span></div>
+  </div>
+  <nav class="ld-nav">
+    <a href="#core">核心问答</a>
+    <a href="#body">按部位进入</a>
+    <a href="#chains">四链条</a>
+    <a href="#install">装到桌面</a>
+    <a href="#boundary">能力边界</a>
+  </nav>
+  <div class="ld-cta">
+    <a class="btn" href="#install" data-scroll="install">安装</a>
+    <a class="btn primary" href="app.html#/ask">进入问答</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="eyebrow">赛道 B · 医学影像知识问答 · 核心功能</div>
+    <h1>影像给区域，文献给段落；<br>不确定就明说。</h1>
+    <p>输入一张影像与一段报告/指南文字，回答必须同时引用「图上哪一块」与「哪份文献哪一段」。
+       缺影像侧或文献侧就降级，越出教学范围就拒答，所有输出固定声明非诊断用途。</p>
+    <div class="flow">
+      <span>① 影像区域引用</span><span>② 文献段落引用</span>
+      <span>③ 不确定就拒答</span><span>④ 非诊断用途</span>
+    </div>
+    <div class="acts">
+      <a class="btn primary lg" href="app.html#/ask">进入多模态问答</a>
+      <a class="btn lg" href="#install" data-scroll="install">安装到桌面</a>
+      <a class="btn lg" href="app.html">进入系统</a>
+    </div>
+  </section>
+
+  <div class="sec-h" id="core">
+    <h2>核心功能：一次问答的四个硬约束</h2>
+    <p>不是「答得像」，而是「答得出处」：每条结论都要能回到影像上的一块区域和文献里的一段原文。</p>
+  </div>
+  <div class="core-grid">
+    <div class="core-copy">
+      <div class="core-item"><span>01</span><b>影像区域引用</b><p>分区 id、bbox、atlas 与标注人一起返回；点引用可在影像上定位，左右侧规则显式写出。</p></div>
+      <div class="core-item"><span>02</span><b>文献段落引用</b><p>指南条款原文、版本、条款定位与官方入口；摘录带 hash 可回查，词条释义与指南条款分开标注。</p></div>
+      <div class="core-item"><span>03</span><b>不确定就拒答</b><p>缺分区、缺条款、缺尺寸、征象并列、左右冲突、越界诊断，都会给出具体原因，不拼凑答案。</p></div>
+      <div class="core-item"><span>04</span><b>非诊断用途</b><p>固定声明常驻；只做影像表现与文献条款的对照，不输出诊断、治疗或预后判断。</p></div>
+    </div>
+    <div class="core-demo">
+      <div class="cd-h"><span>示例回答</span><span class="cd-badge">可答 · 双引用齐全</span></div>
+      <div class="cd-q">问：右肺中野有没有结节？</div>
+      <p class="cd-a">在「正常后前位胸片」的「右肺中野」内，库内结论原文为：右肺中野透亮度均匀，未见明确局灶性密度增高、结节或空洞影。</p>
+      <div class="cd-cite spatial"><b>影像引用</b><span>REG-001-RML · 右肺中野</span><em>bbox [0.12, 0.35, 0.36, 0.23] · ATLAS-CHEST-PA-6</em></div>
+      <div class="cd-cite doc"><b>文献引用</b><span>ACR Lung-RADS 2019 · 类别 1</span><em>“未见肺结节或仅见良性表现者，按年度低剂量 CT 继续筛查。”</em></div>
+      <div class="cd-gate"><span class="ok">可答</span><span class="warn">降级</span><span class="bad">拒答</span><em>三种状态由覆盖检查算出</em></div>
+    </div>
+  </div>
+
+  <div class="sec-h" id="body">
+    <h2>从人体部位进入</h2>
+    <p>点选部位查看该分区在知识库中的真实词条与病例。模型层已抽象为可替换接口，
+       3D 适配器接入后无需改动本页其余部分。</p>
+  </div>
+  <div class="body-grid">
+    <div class="body-card">
+      <div class="body-card-h">
+        <b>人体部位</b>
+        <span class="bm-status" id="bmStatus">模型加载中…</span>
+      </div>
+      <div id="bmHost"></div>
+    </div>
+    <div class="body-panel" id="bmPanel"></div>
+  </div>
+  <div class="stat-strip" id="statRow"></div>
+
+  <div class="sec-h" id="chains">
+    <h2>四链条</h2>
+    <p>同一组能力，在三种角色下换任务说法与完成口径，不复制业务逻辑。</p>
+  </div>
+  <div class="chain-grid"><div class="chain"><span class="no">01</span><b>基础知识问答</b><p>征象是什么、怎么看、容易错在哪；每条解释都能回到出处。</p></div><div class="chain"><span class="no">02</span><b>临床知识迁移</b><p>换模态、换部位、换病种，同一征象的判断会不会跟着变。</p></div><div class="chain"><span class="no">03</span><b>真实病例演练</b><p>定位、描述、征象、依据四步，按步计分，结果可回放。</p></div><div class="chain"><span class="no">04</span><b>真实场景应用</b><p>实习任务、班级讲评、病例工作台与交班摘要。</p></div></div>
+
+  <div class="sec-h" id="roles">
+    <h2>三端入口</h2>
+    <p>一个应用入口，角色在界面内切换；桌面与移动共用一套代码。</p>
+  </div>
+  <div class="role-grid"><div class="role-card s"><b>学生端</b><p style="margin:0;font-size:11.5px;color:var(--faint)">医学生 / 规培生</p><p>从术语到病例，按四链条建立可追溯的影像思维。</p><a class="btn" href="app.html?role=student">以学生身份进入</a></div><div class="role-card t"><b>教师端</b><p style="margin:0;font-size:11.5px;color:var(--faint)">课程教师 / 带教老师</p><p>用同一套病例与错题数据备课、布置、讲评。</p><a class="btn" href="app.html?role=teacher">以教师身份进入</a></div><div class="role-card d"><b>医生端</b><p style="margin:0;font-size:11.5px;color:var(--faint)">影像科医生 / 临床带教</p><p>把可追溯的影像证据带进读片、交班与带教。</p><a class="btn" href="app.html?role=doctor">以医生身份进入</a></div></div>
+
+  <div class="sec-h" id="install">
+    <h2>像应用一样打开</h2>
+    <p>安装后从桌面 / 主屏 / 程序坞一键直达：独立窗口、没有地址栏；断网也能打开已看过的页面。</p>
+  </div>
+  <div class="quick-grid">
+    <div class="quick-card">
+      <div class="qk-icon">R</div>
+      <div class="qk-body">
+        <b>RadioCheck · 影像临床思维平台</b>
+        <span class="qk-sub">网页应用 · PWA · v5</span>
+        <p id="pwaState" data-kind="idle">正在检测安装能力…</p>
+        <div class="qk-acts">
+          <button class="btn primary js-install" type="button" hidden>安装到桌面</button>
+          <a class="btn" href="app.html#/ask">直接打开</a>
+          <a class="btn" href="read/clinic.html">读片工作台</a>
+        </div>
+        <p class="qk-hint" id="pwaHint">正在检测浏览器支持…</p>
+      </div>
+    </div>
+    <div class="dock">
+      <div class="dock-h"><b>应用内快捷入口</b><span>四个高频动作</span></div>
+      <div class="dock-row">
+        <a class="dock-item" href="app.html#/ask"><i>问</i>问答<small>影像 + 双引用</small></a>
+        <a class="dock-item" href="read/clinic.html"><i>片</i>读片<small>区域 → 溯源</small></a>
+        <a class="dock-item" href="read/paper.html"><i>卷</i>组卷<small>出卷 · 成绩</small></a>
+        <a class="dock-item" href="read/teach.html"><i>谱</i>图谱<small>分区系统学</small></a>
+      </div>
+      <p class="dock-foot"><b>iPhone / iPad：</b>Safari 分享 → 添加到主屏幕。<br><b>Windows / macOS：</b>Chrome 或 Edge 地址栏右侧安装图标。</p>
+    </div>
+  </div>
+
+  <div class="sec-h" id="boundary">
+    <h2>能力边界</h2>
+  </div>
+  <div class="note-box">
+    <b>能当场证明：</b>问答由本地规则引擎在已核验的知识库上生成；影像引用带分区 id、bbox、atlas 与标注人，
+    文献引用带条款原文、版本、条款定位与官方入口；缺任一侧即拒答或降级；8 项诚实性自检可在页面内当场重跑。<br>
+    <b>还没做到：</b>不做病灶检测与分割；不做语义向量检索（当前为词条/别名/关键词匹配）；
+    不接大模型自由生成（避免编造引用）；不做诊断、治疗或预后判断。<br>
+    <b>用途声明：</b>仅用于医学影像教学与研究，不构成诊断意见，不替代临床决策。
+    病例影像仅使用 CC0 / CC BY / CC BY-SA / 公有领域公开影像，分区框为人工标注解剖区，不是病灶分割。
+  </div>
+
+  <details class="dev">
+    <summary>开发者入口（固定角色 / 设备，评审对照用）</summary>
+    <div class="dev-list">
+      <a href="dev/student.html">学生 · 桌面</a>
+      <a href="dev/student-mobile.html">学生 · 移动</a>
+      <a href="dev/teacher.html">教师 · 桌面</a>
+      <a href="dev/teacher-mobile.html">教师 · 移动</a>
+      <a href="dev/doctor.html">医生 · 桌面</a>
+      <a href="dev/doctor-mobile.html">医生 · 移动</a>
+      <a href="dev/desktop.html">仅桌面</a>
+      <a href="dev/mobile.html">仅移动</a>
+    </div>
+  </details>
+
+  <div class="foot">
+    <span>知识底座：征象 60 · 指南条款 47 · 公开病例 120 · 解剖分区 440</span>
+    <span>核心问答在本地规则引擎上运行 · 每条回答可回查影像区域与文献段落</span>
+    <span>v5.0 · 可安装为桌面 / 主屏应用（PWA）</span>
+  </div>
+</div>
+
+<script src="data/kb.js?v=1c4fdaad2d"></script>
+<script src="body-model.js?v=bcbba92050"></script>
+<script src="body-3d.js?v=b1fad73388"></script>
+<script src="landing.js?v=362e50b344"></script>
+<script src="pwa.js?v=ba64ac5c6c"></script>
+</body>
+</html>
