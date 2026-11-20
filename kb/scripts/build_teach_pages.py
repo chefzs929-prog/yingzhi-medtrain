@@ -15,7 +15,8 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 SRC = ROOT / "kb/app"
 OUT = ROOT / "outputs/medtrain/read"
 
-ASSETS = ["teach.css", "clinic.css", "paper.css", "compare.css", "app.css",
+ASSETS = ["base.css", "common.js", "agent.css", "agent.js",
+          "teach.css", "clinic.css", "paper.css", "compare.css", "app.css",
           "teach.js", "clinic.js", "paper.js", "compare.js", "static.js", "locate.js"]
 PAGES = {
     "teach.html": ("teach.css", "teach.js"),
@@ -63,13 +64,9 @@ def main():
                                   separators=(",", ":")), encoding="utf8")
         print("guidelines.json %.0f KB" % (dst.stat().st_size / 1024))
 
-    # 入口页：read/ 被直接访问时跳到教学页
+    # 入口页：四场景统一入口，与 kb/app/index.html 保持一致
     (OUT / "index.html").write_text(
-        '<!DOCTYPE html><meta charset="utf-8">'
-        '<meta http-equiv="refresh" content="0;url=teach.html">'
-        '<title>分区读片</title><a href="teach.html">进入分区读片</a>',
-        encoding="utf8",
-    )
+        (SRC / "index.html").read_text(encoding="utf8"), encoding="utf8")
     print("wrote", OUT)
 
 

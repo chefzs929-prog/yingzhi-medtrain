@@ -3,31 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>影像教学 · 分区读片</title>
-<link rel="stylesheet" href="/teach.css">
+<title>分区图谱 · 按章节系统学</title>
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="teach.css">
+<link rel="stylesheet" href="agent.css">
 </head>
 <body>
 
-<header class="top">
-  <div class="brand">
-    <span class="glyph">◧</span>
-    <div>
-      <h1>分区读片</h1>
-      <p>影像教学 · 区域定位与文献对照</p>
-    </div>
+<header class="bar" data-page="teach">
+  <div class="bar-extra">
+    <span class="bar-note">按章节浏览 → 点分区看讲解 → 去工作台做单张溯源</span>
   </div>
-
-  <div class="progress" title="已学病例">
-    <div class="pbar"><i id="pfill"></i></div>
-    <span id="ptext">0 / 120</span>
-  </div>
-
-  <nav class="switch">
-    <a class="on" href="/teach">教学</a>
-    <a href="/clinic">临床</a>
-    <a href="/paper">组卷</a>
-    <a href="/compare">对照</a>
-  </nav>
 </header>
 
 <div class="shell">
@@ -36,13 +22,18 @@
       <span>课程章节</span>
       <b id="chCount">—</b>
     </div>
-    <div id="chapters" class="chapters"><div class="loading">加载中…</div></div>
+    <div id="chapters" class="chapters"><div class="empty-state"><span>加载中…</span></div></div>
 
     <div class="rail-head sub">
       <span id="caseHead">病例</span>
       <input id="q" type="search" placeholder="筛选" autocomplete="off">
     </div>
     <div id="cases" class="cases"></div>
+
+    <div class="rail-progress">
+      <div class="pbar"><i id="pfill"></i></div>
+      <span id="ptext">0 / 120</span>
+    </div>
   </aside>
 
   <main class="stage">
@@ -59,7 +50,7 @@
         <img id="img" alt="影像" draggable="false">
         <div class="overlay" id="overlay"></div>
       </div>
-      <div class="empty" id="empty">
+      <div class="empty-state" id="empty">
         <div class="ico">◧</div>
         <b>从左侧选一个病例</b>
         <span>点击影像上的彩色分区，右侧会给出解剖边界与文献对照</span>
@@ -68,13 +59,13 @@
     </div>
 
     <div class="stage-foot">
-      <button id="prev" class="ghost">← 上一例</button>
-      <button id="toggleRegion" class="ghost on">分区显示</button>
-      <button id="quizBtn" class="solid">开始自测</button>
-      <button id="learnBtn" class="ghost">标记已学</button>
+      <button class="btn" id="prev">← 上一例</button>
+      <button class="btn on" id="toggleRegion">分区显示</button>
+      <a class="btn solid" id="quizBtn" href="paper.html">去组卷自测 →</a>
+      <button class="btn" id="learnBtn">标记已学</button>
       <span class="spacer"></span>
       <span id="srcLine" class="src">—</span>
-      <button id="next" class="ghost">下一例 →</button>
+      <button class="btn" id="next">下一例 →</button>
     </div>
   </main>
 
@@ -97,17 +88,8 @@
   </aside>
 </div>
 
-<!-- 自测浮层 -->
-<div class="quiz" id="quiz">
-  <div class="quiz-card">
-    <div class="qhead">
-      <span>随堂自测</span>
-      <button id="qClose">×</button>
-    </div>
-    <div class="qbody" id="qBody"></div>
-  </div>
-</div>
-
-<script src="/teach.js"></script>
+<script src="common.js"></script>
+<script src="agent.js"></script>
+<script src="teach.js"></script>
 </body>
 </html>

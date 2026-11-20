@@ -1,0 +1,97 @@
+/* 影知 · Agent 抽屉（四页共用） */
+.yz-agent-root{position:fixed;inset:0;z-index:9500;display:flex;justify-content:flex-end}
+.yz-agent-mask{position:absolute;inset:0;background:rgba(16,35,46,.26);backdrop-filter:blur(1px)}
+.yz-agent{position:relative;width:min(430px,94vw);height:100%;background:var(--surface);
+  border-left:1px solid var(--line);box-shadow:-24px 0 60px -30px rgba(16,35,46,.45);
+  display:flex;flex-direction:column;animation:yzAgentIn .18s ease-out}
+@keyframes yzAgentIn{from{transform:translateX(16px);opacity:.6}to{transform:none;opacity:1}}
+.yz-agent-head{display:flex;align-items:flex-start;gap:12px;padding:16px 16px 12px;
+  border-bottom:1px solid var(--line)}
+.yz-agent-head b{display:block;font-size:14px;color:var(--ink)}
+.yz-agent-head span{display:block;margin-top:4px;font-size:11px;line-height:1.6;color:var(--faint)}
+.yz-agent-head>div{flex:1;min-width:0}
+.yz-agent-x{width:28px;height:28px;border:1px solid var(--line);border-radius:8px;
+  background:var(--surface);color:var(--muted);font-size:18px;line-height:1;cursor:pointer}
+.yz-agent-x:hover{border-color:var(--brand);color:var(--brand)}
+.yz-agent-ctx{display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px;border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,var(--brand-soft),transparent)}
+.yz-ctx{max-width:100%;font-size:10.5px;color:var(--brand-deep);background:var(--surface);
+  border:1px solid #cfe7e3;border-radius:999px;padding:3px 9px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.yz-agent-body{flex:1;overflow:auto;padding:14px 16px 20px}
+.yz-turn{border-top:1px dashed var(--line);padding-top:14px;margin-top:14px}
+.yz-turn:first-child{border-top:0;padding-top:0;margin-top:0}
+.yz-q{font-size:13px;font-weight:600;color:var(--ink);line-height:1.6;margin-bottom:8px}
+.yz-steps{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.yz-step{font-size:10px;color:var(--faint);border:1px solid var(--line);border-radius:999px;
+  padding:2px 7px;background:var(--surface)}
+.yz-step i{font-style:normal;margin-left:3px;color:var(--faint)}
+.yz-step.done{color:var(--ok);border-color:#bfe3d3;background:var(--ok-soft)}
+.yz-step.warn{color:var(--warn);border-color:#f0d3ac;background:var(--warn-soft)}
+.yz-step.err{color:var(--danger);border-color:#f0c3bf;background:var(--danger-soft)}
+.yz-step.off{opacity:.55}
+.yz-step-sep{font-size:10px;color:var(--line)}
+.yz-tools{margin:0 0 10px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;
+  background:var(--bg)}
+.yz-tool{display:flex;align-items:baseline;gap:6px;font-size:10.5px;color:var(--muted);
+  padding:3px 0;border-top:1px dotted var(--line)}
+.yz-tool:first-child{border-top:0}
+.yz-tool b{color:var(--ink-2,#334);font-weight:600;flex:none}
+.yz-tool span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.yz-tool i{font-style:normal;color:var(--faint);flex:none}
+.yz-tool.err b{color:var(--danger)}
+.yz-answer{font-size:12.5px;line-height:1.85;color:var(--ink);white-space:pre-wrap;
+  word-break:break-word}
+.yz-answer:empty{display:none}
+.yz-cites{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.yz-cite{display:flex;align-items:baseline;gap:7px;font-size:11px;color:var(--muted);
+  border:1px solid var(--line);border-radius:8px;padding:6px 9px;background:var(--surface)}
+button.yz-cite{font:inherit;text-align:left;cursor:pointer;width:100%}
+button.yz-cite:hover{border-color:var(--brand)}
+.yz-cite b{font-family:var(--mono);font-size:10px;color:var(--brand-deep);flex:none}
+.yz-cite span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.yz-cite a{color:var(--brand);flex:none}
+.yz-follow{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.yz-follow:empty{display:none}
+.yz-follow button{font-size:11px;color:var(--brand-deep);background:var(--brand-soft);
+  border:1px solid #cfe7e3;border-radius:999px;padding:5px 10px;cursor:pointer;text-align:left}
+.yz-follow button:hover{border-color:var(--brand);color:var(--brand)}
+.yz-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px;
+  font-size:10px;color:var(--faint)}
+.yz-meta a{color:var(--brand)}
+.yz-badge{font-size:9.5px;letter-spacing:.06em;border-radius:999px;padding:2px 7px;
+  background:var(--brand-soft);color:var(--brand-deep)}
+.yz-badge.warn{background:var(--warn-soft);color:var(--warn)}
+.yz-badge.err{background:var(--danger-soft);color:var(--danger)}
+.yz-reason{max-width:100%;color:var(--warn);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.yz-agent-foot{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line);
+  background:var(--surface)}
+.yz-agent-foot input{flex:1;min-width:0;height:36px;border:1px solid var(--line);border-radius:9px;
+  padding:0 11px;font-size:12.5px;background:var(--surface);color:var(--ink)}
+.yz-agent-foot input:focus{outline:none;border-color:var(--brand)}
+.yz-agent-foot button{height:36px;padding:0 14px;border-radius:9px;border:1px solid var(--brand);
+  background:var(--brand);color:#fff;font-size:12.5px;font-weight:600;cursor:pointer}
+.yz-agent-foot button:disabled{opacity:.55;cursor:default}
+body.yz-agent-open{overflow:hidden}
+@media(max-width:520px){.yz-agent{width:100%}}
+.linkbtn{border:0;background:none;color:var(--brand);font-size:10.5px;cursor:pointer;padding:0}
+.linkbtn:hover{text-decoration:underline}
+/* 双引用：库内证据 + 网络文献，两组视觉上必须分开，不能混成一个“引用数” */
+.yz-src{margin-left:6px;font-size:9.5px;color:var(--faint);letter-spacing:.04em}
+.yz-lit{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.yz-litcard{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:8px;
+  border:1px solid var(--line);background:var(--surface);text-decoration:none}
+.yz-litcard:hover{border-color:var(--brand)}
+.yz-litcard b{font-family:var(--mono);font-size:9.5px;color:var(--brand-deep)}
+.yz-litcard .t{font-size:11.5px;color:var(--ink);line-height:1.45}
+.yz-litcard .m{font-size:10px;color:var(--faint)}
+.yz-template{display:flex;gap:6px;align-items:center;margin-top:8px}
+.yz-template select{flex:1;min-width:0;height:30px;border:1px solid var(--line);border-radius:7px;
+  background:var(--surface);color:var(--ink);font-size:11px;padding:0 6px}
+.yz-template button{height:30px;padding:0 10px;border-radius:7px;border:1px solid var(--brand);
+  background:var(--brand-soft);color:var(--brand-deep);font-size:11px;cursor:pointer}
+.yz-tmplcard{margin-top:8px;padding:8px 10px;border-radius:8px;border:1px dashed var(--line);
+  font-size:11px;color:var(--muted);line-height:1.6}
+.yz-tmplcard b{color:var(--ink)}
+.yz-weak{font-style:normal;font-size:9px;color:#a8642a;border:1px solid #e6c9a8;
+  border-radius:4px;padding:0 3px;margin-left:auto;flex:none}

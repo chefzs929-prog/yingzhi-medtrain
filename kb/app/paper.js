@@ -272,7 +272,26 @@
     });
     const exp = $('#exExp');
     exp.hidden = false;
-    exp.innerHTML = `<b>${a.correct ? '✓ 正确' : '✗ 再想想'}</b> · ${esc(q.explain)}`;
+    exp.innerHTML = `<b>${a.correct ? '✓ 正确' : '✗ 再想想'}</b> · ${esc(q.explain)}
+      <button class="ask-agent" id="askQ">问 Agent · 这题为什么</button>`;
+    const ask = exp.querySelector('#askQ');
+    if (ask) ask.onclick = () => {
+      window.YZAgent.open({
+        surface: 'paper',
+        title: '问 Agent · 这题为什么',
+        subtitle: '只解释影像征象与指南依据，不扩展到诊断治疗',
+        context: {
+          题型: q.type,
+          章节: q.chapter || '',
+          题干: q.prompt,
+          选项: (q.options || []).join(' / '),
+          正确答案: q.answer,
+          你的答案: a.choice || '未作答',
+          解析: q.explain || '',
+        },
+        seed: '这题为什么选「' + q.answer + '」？请用库内依据解释，并指出干扰项错在哪。',
+      });
+    };
   }
 
   function choose(i) {
@@ -312,6 +331,7 @@
       const a = S.answers[i] || {};
       return {
         qid: q.qid, type: q.type, chapter: q.chapter, prompt: q.prompt,
+        options: q.options, explain: q.explain,
         answer: q.answer, choice: a.choice == null ? null : a.choice,
         correct: !!a.correct, ms: a.ms || 0
       };
@@ -359,6 +379,7 @@
       <span class="tag">${esc(TYPE_NAME[x.type] || x.type)}</span>
       <div class="q">${esc(x.prompt)}
         <div class="a">你的答案：<s>${esc(x.choice || '未作答')}</s> · 正确：<b>${esc(x.answer)}</b></div>
+        <button class="ask-agent" data-wrong="${esc(x.qid)}">问 Agent · 这题为什么</button>
       </div>
     </div>`;
   }
@@ -493,6 +514,28 @@
       } catch (err) { alert('导入失败：' + err.message); }
       e.target.value = '';
     };
+    document.querySelectorAll('#repBox [data-wrong]').forEach((b) => {
+      b.onclick = () => {
+        const it = ((S.results[0] || {}).items || []).find((x) => x.qid === b.dataset.wrong);
+        if (!it) return;
+        window.YZAgent.open({
+          surface: 'paper',
+          title: '问 Agent · 错题复盘',
+          subtitle: '只解释影像征象与指南依据，不扩展到诊断治疗',
+          context: {
+            题型: it.type,
+            章节: it.chapter || '',
+            题干: it.prompt,
+            选项: (it.options || []).join(' / '),
+            正确答案: it.answer,
+            你的答案: it.choice || '未作答',
+            解析: it.explain || '',
+          },
+          seed: '这题为什么选「' + it.answer + '」？请用库内依据解释，并指出我选的「'
+            + (it.choice || '未作答') + '」错在哪。',
+        });
+      };
+    });
   }
 
   function download(name, obj) {

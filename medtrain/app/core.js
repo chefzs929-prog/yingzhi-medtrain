@@ -417,8 +417,8 @@
     return `<aside class="rail">
       <nav class="nav">
         ${r.nav.map(navButton).join("")}
-        <a class="nav-a" href="read/teach.html">
-          <span class="ni">${icon("image", 18)}</span><span>读 · 分区读片</span>
+        <a class="nav-a" href="read/clinic.html">
+          <span class="ni">${icon("image", 18)}</span><span>读 · 影像循证</span>
         </a>
         <button data-act="nav" data-view="about" class="${state.view === "about" ? "on" : ""}">
           <span class="ni">${icon("shield", 18)}</span><span>关于与合规</span>

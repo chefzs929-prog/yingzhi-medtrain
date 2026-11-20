@@ -4,26 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>组卷与自测 · 教学</title>
-<link rel="stylesheet" href="/paper.css">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="paper.css">
+<link rel="stylesheet" href="agent.css">
 </head>
 <body>
 
-<header class="bar">
-  <div class="logo">
-    <span class="m">◫</span>
-    <div>
-      <b>组卷与自测</b>
-      <i>PAPER · QUIZ · REPORT</i>
-    </div>
+<header class="bar" data-page="paper">
+  <div class="bar-extra">
+    <span class="bar-note">出卷 → 作答 → 汇总</span>
+    <span class="pill" id="bankPill">题库加载中…</span>
   </div>
-  <nav class="switch">
-    <a href="/teach">教学</a>
-    <a href="/clinic">临床</a>
-    <a class="on" href="/paper">组卷</a>
-    <a href="/compare">对照</a>
-  </nav>
-  <div class="spacer"></div>
-  <span class="pill" id="bankPill">题库加载中…</span>
 </header>
 
 <div class="tabs" id="modeTabs">
@@ -114,6 +105,8 @@
 
 </main>
 
-<script src="/paper.js"></script>
+<script src="common.js"></script>
+<script src="agent.js"></script>
+<script src="paper.js"></script>
 </body>
 </html>

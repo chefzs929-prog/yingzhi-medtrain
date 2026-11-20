@@ -83,9 +83,10 @@
     out.className = 'pane right';
     out.innerHTML = `
       <div class="sum">${rows.length} 句 · ${hit} 句找到对应条款 · ${rows.length - hit} 句库内未覆盖</div>
-      ${rows.map((r) => `
+      ${rows.map((r, i) => `
         <div class="pair ${r.hit ? '' : 'miss'}">
           <div class="src">${esc(r.sent)}</div>
+          <button class="ask-agent" data-ask="${i}">问 Agent · 这句和指南差在哪</button>
           ${r.hit ? `
             <div class="gl">
               <div class="gh"><b>${esc(r.hit.standard_name)}</b>
@@ -100,6 +101,24 @@
             </div>`}
         </div>`).join('')}
     `;
+    out.querySelectorAll('[data-ask]').forEach((b) => {
+      b.onclick = () => {
+        const r = rows[parseInt(b.dataset.ask, 10)];
+        const hit = r.hit || {};
+        window.YZAgent.open({
+          surface: 'compare',
+          title: '问 Agent · 报告对照',
+          subtitle: '只解释表述差异，不判断对错，也不构成诊断',
+          context: {
+            报告句: r.sent,
+            指南: hit.standard_name || '库内未覆盖',
+            条款: hit.statement || '',
+            条款ID: hit.id || '',
+          },
+          seed: '这句报告和指南条款的表述差在哪？库内没有对应条款时请直接说没有。',
+        });
+      };
+    });
   }
 
   function run() {

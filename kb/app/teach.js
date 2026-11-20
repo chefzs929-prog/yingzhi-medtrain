@@ -212,58 +212,26 @@ function renderLesson(card) {
     <div class="state ${st}">
       <i></i><span class="txt">${stTxt}</span>
       <b>${st === 'dual' ? '空间 + 文献' : st === 'single' ? '仅一侧' : '已拦截'}</b>
-    </div>`;
-}
+    </div>
 
-/* ---------- 自测 ---------- */
-function startQuiz() {
-  if (!S.lesson?.quiz?.length) return;
-  S.quiz = S.lesson.quiz;
-  S.quizIdx = 0;
-  $('#quiz').classList.add('show');
-  renderQuiz();
-}
+    <a class="btn wide to-work" href="clinic.html?case=${encodeURIComponent(S.lesson.case.id)}">在工作台打开此病例 →</a>
+    <button class="btn wide" id="askRegion" style="margin-top:8px">问 Agent · 这个分区怎么讲</button>`;
 
-function renderQuiz() {
-  const q = S.quiz[S.quizIdx];
-  const body = $('#qBody');
-  if (!q) {
-    body.innerHTML = `<div class="q">本轮完成。</div>
-      <p class="qexp">自测只检验分区与征象的对应关系，不代表临床判读能力。</p>
-      <button class="solid qnext" onclick="closeQuiz()">关闭</button>`;
-    return;
-  }
-  body.innerHTML = `
-    <div class="q">${esc(q.prompt)}</div>
-    <div id="opts">${q.options.map((o) => `<button class="opt" data-o="${esc(o)}">${esc(o)}</button>`).join('')}</div>
-    <div class="qexp" id="qexp" style="display:none"></div>`;
-  const target = document.querySelector(`.region[data-rid="${q.region_id}"]`);
-  document.querySelectorAll('.region').forEach((x) => x.classList.remove('q-target'));
-  if (target) target.classList.add('q-target');
-  body.querySelectorAll('.opt').forEach((b) => {
-    b.onclick = () => {
-      const ok = b.dataset.o === q.answer;
-      body.querySelectorAll('.opt').forEach((x) => {
-        x.disabled = true;
-        if (x.dataset.o === q.answer) x.classList.add('right');
-      });
-      if (!ok) b.classList.add('wrong');
-      const exp = $('#qexp');
-      exp.style.display = 'block';
-      exp.innerHTML = `${ok ? '✓ 正确' : '✗ 再想想'} · ${esc(q.explain)}
-        <div><button class="solid qnext" onclick="nextQuiz()">${S.quizIdx + 1 < S.quiz.length ? '下一题' : '完成'}</button></div>`;
-    };
-  });
-}
-
-function nextQuiz() {
-  S.quizIdx += 1;
-  renderQuiz();
-}
-
-function closeQuiz() {
-  $('#quiz').classList.remove('show');
-  document.querySelectorAll('.region').forEach((x) => x.classList.remove('q-target'));
+  const ask = body.querySelector('#askRegion');
+  if (ask) ask.onclick = () => {
+    window.YZAgent.open({
+      surface: 'teach',
+      title: '问 Agent · ' + card.name,
+      subtitle: '带上病例与分区上下文，回答必须落到库内 id',
+      context: {
+        病例: S.lesson.case.id,
+        分区: card.region_id + ' · ' + card.name,
+        章节: S.lesson.case.chapter || '',
+        分区结论: card.claim_text || '',
+      },
+      seed: '请讲清 ' + card.name + '（' + card.region_id + '）的解剖边界、库内关联征象和依据。',
+    });
+  };
 }
 
 /* ---------- 交互 ---------- */
@@ -275,7 +243,6 @@ $('#toggleRegion').onclick = (e) => {
   e.currentTarget.classList.toggle('on', S.showRegion);
   document.querySelectorAll('.region').forEach((x) => x.classList.toggle('hide', !S.showRegion));
 };
-$('#quizBtn').onclick = startQuiz;
 $('#learnBtn').onclick = () => {
   const id = S.current?.case?.id;
   if (!id) return;
@@ -285,8 +252,6 @@ $('#learnBtn').onclick = () => {
   renderCases();
   $('#learnBtn').textContent = S.learned.has(id) ? '已标记已学' : '标记已学';
 };
-$('#qClose').onclick = closeQuiz;
-$('#quiz').addEventListener('click', (e) => { if (e.target.id === 'quiz') closeQuiz(); });
 
 function step(d) {
   const list = S.cases.filter((c) => c.chapter === S.chapter);
@@ -299,7 +264,6 @@ document.addEventListener('keydown', (e) => {
   if (e.target.tagName === 'INPUT') return;
   if (e.key === 'ArrowLeft') step(-1);
   if (e.key === 'ArrowRight') step(1);
-  if (e.key === 'Escape') closeQuiz();
   if (e.key === 'g' || e.key === 'G') $('#toggleRegion').click();
 });
 

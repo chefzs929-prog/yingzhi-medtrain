@@ -4,11 +4,17 @@ const S = {
   detail: null, selected: null, showRegion: true, zoom: 1, tab: 'locate',
   drag: null, audit: null,
   /* 上传影像问答：image 是 data URL，match 是后端返回的认图结果 */
-  chat: { q: '', text: '', cites: [], image: null, match: null, state: 'idle', err: '' },
+  chat: {
+    q: '', text: '', cites: [], image: null, match: null, state: 'idle', err: '',
+    trace: [], tools: [], followups: [], servedBy: null, degraded: false,
+    reason: '', runId: null, literature: null, template: null, tmplErr: '',
+    atlases: [], matchBBox: null,
+  },
   locate: null,
 };
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const SIDE = { right: '患者右侧', left: '患者左侧', midline: '中线', unknown: '侧别未知' };
 
 async function api(path, opt) {
   /* 静态托管：/api/* 映射到预生成 JSON（kb/scripts/export_teach_static.py） */
@@ -33,7 +39,20 @@ async function init() {
   $('#total').textContent = meta.counts.cases;
   $('#locatable').textContent = meta.counts.locatable_cases;
   renderRows();
-  if (S.cases.length) selectCase(S.cases[0].id);
+  const want = (window.YZCommon && window.YZCommon.query('case')) || '';
+  const first = S.cases.find((c) => c.id === want) || S.cases[0];
+  if (first) selectCase(first.id);
+}
+
+/* 命题三步：选片 → 定位 → 溯源 */
+function setStep(name, on, hint) {
+  const map = { case: 'stepCase', locate: 'stepLocate', trace: 'stepTrace' };
+  const el = document.getElementById(map[name]);
+  if (el) el.classList.toggle('on', !!on);
+  if (hint) {
+    const h = document.getElementById('flowHint');
+    if (h) h.textContent = hint;
+  }
 }
 
 function renderRows() {
@@ -75,6 +94,9 @@ async function selectCase(id) {
     $('#evCount').textContent = d.claims.length;
     renderStage();
     renderRows();
+    setStep('case', true, '已选影像 · 在图上拖框，或点右侧分区');
+    setStep('locate', false);
+    setStep('trace', false);
     if (S.tab === 'audit') loadAudit();
     else renderTab();
   } catch (e) { console.error(e); }
@@ -125,6 +147,9 @@ function pickRegion(r) {
   document.querySelectorAll('.region').forEach((x) => x.classList.remove('on', 'hit', 'cand'));
   const el = document.querySelector(`.region[data-rid="${r.id}"]`);
   if (el) el.classList.add('on');
+  const claim = (S.detail?.claims || []).find((c) => c.region_id === r.id);
+  setStep('locate', true);
+  setStep('trace', !!claim, claim ? '已命中分区 · 右侧给出空间 + 文献双锚点' : '已命中分区 · 该分区暂无绑定结论');
   S.tab = 'evidence';
   document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.dataset.t === 'evidence'));
   renderTab();
@@ -133,7 +158,7 @@ function pickRegion(r) {
 /* ---------- 框选 ---------- */
 const frame = $('#frame');
 frame.addEventListener('mousedown', (e) => {
-  if (!S.detail) return;
+  if (!S.detail && !(S.chat && S.chat.image)) return;
   if (e.shiftKey) return;
   const rect = frame.getBoundingClientRect();
   S.drag = {
@@ -170,6 +195,18 @@ window.addEventListener('mouseup', async (e) => {
   const bbox = [Math.min(x0, x1), Math.min(y0, y1), Math.abs(x1 - x0), Math.abs(y1 - y0)];
   if (bbox[2] < 0.01 || bbox[3] < 0.01) return;
   $('#bboxMeta').textContent = bbox.map((v) => v.toFixed(3)).join(' , ');
+  if (!S.current || !S.detail) {
+    // 陌生影像没有逐病例标注：记录框，让用户选模板后走 /api/vision/region。
+    S.chat.match = S.chat.match || { case_id: null };
+    S.chat.matchBBox = bbox;
+    S.chat.template = null;
+    S.tab = 'chat';
+    document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.dataset.t === 'chat'));
+    await loadAtlases();
+    renderTab();
+    toast('陌生影像：选一个分区模板后点「推断」');
+    return;
+  }
   try {
     const res = window.YZLocate
       ? window.YZLocate.locate(S.detail.regions, bbox)
@@ -195,6 +232,8 @@ function handleLocate(res, opt) {
       document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.dataset.t === 'evidence'));
       renderTab();
     }
+    setStep('locate', true);
+    setStep('trace', true, '框选命中 · 右侧为空间 + 文献双锚点');
     toast(`命中 ${r.name} · 覆盖 ${(res.primary.coverage * 100).toFixed(0)}%`);
   } else if (res.status === 'cross' && res.candidates) {
     res.candidates.forEach((c) => {
@@ -234,7 +273,7 @@ function renderLocate(body) {
     <div class="sect">分区（${d.regions.length}）</div>
     ${d.regions.map((r) => `
       <div class="rcard" data-rid="${r.id}" style="cursor:pointer">
-        <div class="h"><b>${esc(r.name)}</b><span class="side">${esc(r.patient_side)}</span></div>
+        <div class="h"><b>${esc(r.name)}</b><span class="side">${esc(SIDE[r.patient_side] || r.patient_side || '—')}</span></div>
         <div class="n">${esc(r.note)}</div>
         <div class="sig">${(r.signs || []).map((s) => `<span>${esc(s.name)}</span>`).join('')}</div>
       </div>`).join('')}`;
@@ -393,76 +432,105 @@ function readAsDataURL(file) {
   });
 }
 
-/* /api/ask 走 SSE，本页原来只消费 JSON 接口，这里补一个流式读取。 */
-async function askStream(payload, onEvent) {
-  const r = await fetch('/api/ask', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
-  if (!r.ok) {
-    // 502 是「模型服务没起来」，直接把后端的提示透出来，别只显示一个状态码
-    let msg = 'HTTP ' + r.status;
-    try {
-      const j = await r.json();
-      if (j && (j.hint || j.detail)) msg = j.hint || j.detail;
-    } catch (e) { /* 非 JSON 就用状态码 */ }
-    throw new Error(msg);
-  }
-  if (!r.body) throw new Error('浏览器不支持流式响应');
-  const reader = r.body.getReader();
-  const dec = new TextDecoder();
-  let buf = '';
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buf += dec.decode(value, { stream: true });
-    let i;
-    while ((i = buf.indexOf('\n\n')) >= 0) {
-      const chunk = buf.slice(0, i);
-      buf = buf.slice(i + 2);
-      let ev = 'message';
-      let data = '';
-      chunk.split('\n').forEach((line) => {
-        if (line.startsWith('event:')) ev = line.slice(6).trim();
-        else if (line.startsWith('data:')) data += line.slice(5).trim();
-      });
-      if (!data) continue;
-      try { onEvent(ev, JSON.parse(data)); } catch (e) { /* 坏帧直接跳过，不影响整段 */ }
-    }
-  }
+/* 五段 trace 的固定顺序；运行期与收尾会各发一次，按 stage 覆盖而不是追加。 */
+const TRACE_ORDER = [
+  ['kb_retrieve', '检索'], ['skill_invoke', '技能'], ['workflow', '工作流'],
+  ['agent_generate', '生成'], ['persist', '落盘'],
+];
+
+function traceMap(c) {
+  const m = {};
+  (c.trace || []).forEach((s) => { if (s && s.stage) m[s.stage] = s; });
+  return m;
+}
+
+function traceHTML(c) {
+  const m = traceMap(c);
+  return TRACE_ORDER.map(([k, label]) => {
+    const s = m[k] || {};
+    const cls = s.status === 'completed' ? 'done'
+      : s.status === 'error' ? 'err'
+        : s.status === 'degraded' ? 'warn'
+          : s.status === 'unavailable' || s.status === 'skipped' ? 'off' : '';
+    const text = s.skill && s.skill !== 'none' ? s.skill : label;
+    return `<span class="yz-step ${cls}">${esc(text)}${s.ms ? `<i>${s.ms}ms</i>` : ''}</span>`;
+  }).join('<span class="yz-step-sep">›</span>');
+}
+
+function toolsHTML(c) {
+  const rows = c.tools || [];
+  if (!rows.length) return '';
+  return `<div class="yz-tools">${rows.map((t) => `
+    <div class="yz-tool ${t.status === 'error' ? 'err' : ''}">
+      <b>${esc(t.skill || t.tool || 'tool')}</b>
+      <span>${esc(t.detail || '')}</span>
+      <i>${t.out_lines ? t.out_lines + ' 行 · ' : ''}${t.ms || 0}ms</i>
+    </div>`).join('')}</div>`;
+}
+
+function paintTrace(c) {
+  const el = document.querySelector('#askTrace');
+  if (el) el.innerHTML = traceHTML(c);
+  const tools = document.querySelector('#askTools');
+  if (tools) tools.innerHTML = toolsHTML(c);
 }
 
 async function sendAsk(q) {
   q = (q || '').trim();
   if (!q) return;
-  if (!HAS_BACKEND) { toast('公网版不含模型服务，请在本地运行后使用'); return; }
+  if (!HAS_BACKEND) { toast('公网版不含 Agent 服务，请在本地运行后使用'); return; }
   const c = S.chat;
-  c.q = q; c.text = ''; c.cites = []; c.match = null; c.err = ''; c.state = 'run';
+  Object.assign(c, {
+    q, text: '', cites: [], match: null, err: '', state: 'run',
+    trace: [], tools: [], followups: [], servedBy: null,
+    degraded: false, reason: '', runId: null,
+  });
   S.locate = null;
   S.tab = 'chat';
   document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.dataset.t === 'chat'));
   renderTab();
   try {
-    await askStream({
+    const res = await window.YZAgent.ask({
       query: q,
       image: c.image || undefined,
       role: 'student',
       device: 'desktop',
       chain: 'clinic_upload',
-    }, (ev, d) => {
-      if (ev === 'delta') {
-        c.text += d.text || '';
-        // 增量只改文字节点，不重建 DOM，否则输入框每帧失焦
-        const out = document.querySelector('#askOut');
-        if (out) out.textContent = c.text;
-      } else if (ev === 'citation') {
-        c.cites.push(d);
-      } else if (ev === 'done') {
-        c.match = d.image_match || null;
-        c.state = 'done';
-      }
+      surface: 'clinic',
+      research: true,
+    }, {
+      onEvent(ev, d) {
+        if (ev === 'delta') {
+          c.text += d.text || '';
+          // 增量只改文字节点，不重建 DOM，否则输入框每帧失焦
+          const out = document.querySelector('#askOut');
+          if (out) out.textContent = c.text;
+        } else if (ev === 'trace') {
+          c.trace.push(d);
+          paintTrace(c);
+        } else if (ev === 'tool') {
+          c.tools.push(d);
+          paintTrace(c);
+        } else if (ev === 'reset') {
+          c.text = '';
+          const out = document.querySelector('#askOut');
+          if (out) out.textContent = '';
+        }
+      },
     });
+    c.text = res.text || c.text;
+    c.cites = res.cites || [];
+    c.literature = (res.done && res.done.literature) || null;
+    c.ungrounded = !!(res.done && res.done.ungrounded);
+    c.trace = res.trace || c.trace;
+    c.tools = res.tools || c.tools;
+    c.followups = res.followups || [];
+    c.servedBy = res.servedBy;
+    c.degraded = res.degraded;
+    c.reason = (res.done && res.done.reason) || '';
+    c.runId = (res.done && res.done.run_id) || null;
+    c.match = (res.done && res.done.image_match) || null;
+    c.state = 'done';
   } catch (e) {
     c.state = 'error';
     c.err = (e && e.message) || String(e);
@@ -476,9 +544,17 @@ async function applyImageMatch() {
   const m = S.chat.match;
   if (!m) return;
   if (!m.case_id) {
-    // 认不出不等于死路：把库内可练的片子摆出来，让用户自己挑
+    // 认不出不等于死路：先给出库内可练的片子；有候选框时再让用户选模板做推断。
     S.chat.suggest = m.suggest || [];
-    toast('该影像不在标注库内，未做区域定位');
+    // 保留用户先前手动框选的框：模型没给框时不该把用户的框清掉。
+    S.chat.matchBBox = m.bbox || S.chat.matchBBox || null;
+    S.chat.template = null;
+    S.chat.tmplErr = '';
+    if (S.chat.matchBBox) {
+      await loadAtlases();
+    } else {
+      toast('该影像不在标注库内，模型也未给出候选框；请手动框选后按模板推断');
+    }
     if (S.tab === 'chat') renderTab();
     return;
   }
@@ -497,6 +573,43 @@ async function applyImageMatch() {
   } catch (e) { toast('定位失败'); return; }
   S.locate = res;
   handleLocate(res, { switchTab: false });
+  if (S.tab === 'chat') renderTab();
+}
+
+async function loadAtlases() {
+  if ((S.chat.atlases || []).length) return;
+  try {
+    const r = await fetch('/api/vision/atlases');
+    const j = await r.json();
+    S.chat.atlases = (j && j.atlases) || [];
+  } catch (e) {
+    S.chat.tmplErr = '模板列表加载失败';
+  }
+  if (S.tab === 'chat') renderTab();
+}
+
+async function runTemplate() {
+  const sel = document.querySelector('#atlasPick');
+  const atlasId = sel && sel.value;
+  if (!atlasId) { toast('请先选一个分区模板'); return; }
+  const bbox = S.chat.matchBBox;
+  if (!bbox) { toast('没有候选框，无法按模板推断'); return; }
+  try {
+    const r = await fetch('/api/vision/region', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ atlas_id: atlasId, bbox }),
+    });
+    const j = await r.json();
+    if (!j || !j.ok) {
+      S.chat.tmplErr = (j && j.message) || '模板推断失败';
+    } else {
+      S.chat.template = j;
+      S.chat.tmplErr = '';
+    }
+  } catch (e) {
+    S.chat.tmplErr = (e && e.message) || String(e);
+  }
   if (S.tab === 'chat') renderTab();
 }
 
@@ -534,7 +647,8 @@ function chatLocateLine(c) {
   const m = c.match;
   if (!m) return '';
   if (!m.case_id) {
-    return '<div class="sect">区域定位</div><div class="prob">该影像不在标注库内，未做区域定位，也不据此推断</div>';
+    if (c.template) return '';
+    return '<div class="sect">区域定位</div><div class="prob">该影像不在标注库内，未做逐病例标注；可在上方选模板做「模板推断」，结果不冒充人工标注</div>';
   }
   const id = m.case_id.replace('CASE-', '');
   const ids = (m.case_ids && m.case_ids.length) ? m.case_ids : [m.case_id];
@@ -555,20 +669,63 @@ function chatLocateLine(c) {
     bbox ${m.bbox.map((v) => v.toFixed(3)).join(' , ')}<br>${tail}${shared}</div>`;
 }
 
+function templateCard(t) {
+  const l = t.locate || {};
+  const atlas = t.atlas || {};
+  const p = (l.primary && l.primary.region) || null;
+  const cands = l.candidates || [];
+  const head = p ? p.name : (cands[0] && cands[0].region && cands[0].region.name) || '未命中分区';
+  const detail = p
+    ? `覆盖 ${(p.coverage === undefined ? l.primary.coverage * 100 : p.coverage * 100).toFixed(0)}% · 模板一致度 ${l.primary.agreement} · 样本 ${l.primary.template_n} 例`
+    : (l.message || '');
+  return `<div class="yz-tmplcard">
+    <b>${esc(head)}</b> · ${esc(atlas.name || '')}<br>
+    ${esc(detail)}<br>
+    <span class="yz-src">模板推断 · 非人工标注</span>
+  </div>`;
+}
+
 function renderChat(body) {
   const c = S.chat || {};
   const run = c.state === 'run';
+  const localCites = (c.cites || []).filter((x) => x.kind !== 'literature');
+  const litCites = (c.cites || []).filter((x) => x.kind === 'literature');
+  const lit = c.literature || null;
+  const badge = c.servedBy === 'agent' ? 'Agent'
+    : c.servedBy === 'llm' ? '直连模型'
+      : c.servedBy === 'fallback' ? '本地兜底' : '';
   body.innerHTML = `
     <div class="sect">影像</div>
     <div class="askmeta">${c.image
-      ? '已载入 · 提问将走视觉模型'
-      : '未载入 · 仅文本问答（可先点工具栏「上传影像」）'}</div>
+      ? '已载入 · 先视觉定位，再由 Agent 解释与引用'
+      : '未载入 · 文本问答（可先点工具栏「上传影像」）'}</div>
     <div class="sect">提问</div>
     <div class="askbar">
       <input id="askInput" placeholder="问这张影像，或问某个征象…" value="${esc(c.q || '')}" ${run ? 'disabled' : ''}>
       <button id="askSend" ${run ? 'disabled' : ''}>${run ? '生成中' : '提问'}</button>
     </div>
     ${c.err ? `<div class="prob">${esc(c.err)}</div>` : ''}
+    <div class="yz-steps" id="askTrace" ${((c.trace || []).length || run) ? '' : 'hidden'}>${traceHTML(c)}</div>
+    <div id="askTools">${toolsHTML(c)}</div>
+    ${c.degraded ? `<div class="prob">本轮已降级：${esc(c.reason || 'Agent 不可用')}。回答来自${esc(badge || '兜底链路')}，不是 Agent 结果。</div>` : ''}
+    ${c.servedBy ? `<div class="askmeta">
+      <span class="yz-badge ${c.degraded ? 'warn' : ''}">${esc(badge)}</span>
+      ${c.runId ? `<a href="/api/trace/${esc(c.runId)}" target="_blank" rel="noopener">trace ↗</a>` : ''}
+      <button class="linkbtn" id="askReset">重置会话</button>
+    </div>` : ''}
+    ${c.match && !c.match.case_id && c.matchBBox ? `
+      <div class="sect">按模板推断分区</div>
+      <div class="askmeta">这张图不在标注库内。选一个分区模板，系统按模板几何推断分区；结果是模板推断，不是人工标注。</div>
+      <div class="yz-template">
+        <select id="atlasPick">
+          <option value="">选择检查类型 / 部位</option>
+          ${(c.atlases || []).map((a) => `<option value="${esc(a.id)}">${esc(a.name)} · ${esc(a.view || (a.modality || []).join('/'))} · ${a.n_cases} 例</option>`).join('')}
+        </select>
+        <button id="atlasGo">推断</button>
+      </div>
+      ${c.template ? templateCard(c.template) : ''}
+      ${c.tmplErr ? `<div class="prob">${esc(c.tmplErr)}</div>` : ''}
+    ` : ''}
     ${(c.suggest || []).length ? `
       <div class="sect">库内可练的片子</div>
       <div class="askmeta">这张图不在标注库内，所以没有区域定位。下面是库里已标注的病例，可以直接切过去。</div>
@@ -577,9 +734,26 @@ function renderChat(body) {
           <img src="${esc(s.image)}" alt="" loading="lazy">
           <span>${esc(s.id)}<i>${esc(s.chapter)}</i></span>
         </button>`).join('')}</div>` : ''}
-    ${c.text ? `<div class="sect">回答</div><div class="cite answer" id="askOut">${esc(c.text)}</div>` : ''}
-    ${(c.cites || []).length ? `<div class="sect">引用 ${c.cites.length}</div>${c.cites.map((x) => `
-      <div class="cite"><span class="lab">${esc(x.id)}</span>${esc(x.title || '')}</div>`).join('')}` : ''}
+    <div class="sect">回答</div>
+    <div class="cite answer" id="askOut">${esc(c.text)}</div>
+    ${c.ungrounded ? '<div class="prob">本次回答没有库内引用，内容未与知识库核对，请谨慎使用</div>' : ''}
+    ${localCites.length ? `<div class="sect">库内证据 ${localCites.length}</div><div class="yz-cites">${localCites.map((x) => `
+      <button class="yz-cite" data-cite="${esc(x.id)}">
+        <b>${esc(x.id)}</b><span>${esc(x.title || '')}</span>
+        ${x.relevance === 'off' ? '<i class="yz-weak">弱相关</i>' : ''}
+      </button>`).join('')}</div>` : ''}
+    ${litCites.length ? `<div class="sect">网络文献 ${litCites.length}<span class="yz-src">PubMed 检索</span></div>
+      <div class="yz-lit">${litCites.map((x) => `
+        <a class="yz-litcard" href="${esc(x.url || '#')}" target="_blank" rel="noopener">
+          <b>${esc(x.id)}</b>
+          <span class="t">${esc(x.title || '')}</span>
+          <span class="m">${esc([x.journal, x.year].filter(Boolean).join(' · '))}</span>
+        </a>`).join('')}</div>` : ''}
+    ${lit && lit.ok === false && lit.reason && lit.reason !== 'not_requested'
+      ? `<div class="prob">文献检索未完成：${esc(lit.reason === 'no_english_term' ? '没有匹配到库内英文术语，无法检索 PubMed' : lit.reason)}</div>`
+      : ''}
+    ${(c.followups || []).length ? `<div class="sect">继续问</div><div class="yz-follow">${c.followups.map((x) => `
+      <button data-follow="${esc(x)}">${esc(x)}</button>`).join('')}</div>` : ''}
     ${chatLocateLine(c)}
   `;
   const inp = body.querySelector('#askInput');
@@ -592,6 +766,31 @@ function renderChat(body) {
       selectCase(b.dataset.id).catch(() => toast('加载该病例失败'));
     };
   });
+  body.querySelectorAll('[data-follow]').forEach((b) => {
+    b.onclick = () => sendAsk(b.dataset.follow);
+  });
+  body.querySelectorAll('[data-cite]').forEach((b) => {
+    b.onclick = () => {
+      S.tab = 'evidence';
+      document.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('on', x.dataset.t === 'evidence'));
+      renderTab();
+      toast('已切到双引用：' + b.dataset.cite);
+    };
+  });
+  const atlasGo = body.querySelector('#atlasGo');
+  if (atlasGo) atlasGo.onclick = () => runTemplate();
+  const reset = body.querySelector('#askReset');
+  if (reset) reset.onclick = () => {
+    if (window.YZAgent) window.YZAgent.resetConversation('clinic');
+    S.chat = {
+      q: '', text: '', cites: [], image: S.chat.image, match: null,
+      state: 'ready', err: '', trace: [], tools: [], followups: [],
+      servedBy: null, degraded: false, reason: '', runId: null,
+      literature: null, template: null, tmplErr: '', atlases: [], matchBBox: null,
+    };
+    renderTab();
+    toast('已重置会话，下一问从新上下文开始');
+  };
 }
 
 $('#uploadBtn').onclick = () => {
@@ -606,8 +805,14 @@ $('#fileInput').onchange = async (e) => {
   if (f.size > 8 * 1024 * 1024) { toast('图片超过 8MB，请压缩后再试'); return; }
   try {
     const url = await readAsDataURL(f);
-    S.chat = { q: '', text: '', cites: [], image: url, match: null, state: 'ready', err: '' };
+    S.chat = {
+      q: '', text: '', cites: [], image: url, match: null, state: 'ready', err: '',
+      trace: [], tools: [], followups: [], servedBy: null, degraded: false,
+      reason: '', runId: null, literature: null, template: null, tmplErr: '',
+      atlases: [], matchBBox: null,
+    };
     showUploaded(url);
+    setStep('case', true, '已载入本地影像 · 输入问题开始；库内影像可拖框定位');
     S.tab = 'chat';
     document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.dataset.t === 'chat'));
     renderTab();
