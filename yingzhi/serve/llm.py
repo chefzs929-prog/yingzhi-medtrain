@@ -64,6 +64,12 @@ def _env(name, default=""):
     return (os.environ.get(name) or default).strip()
 
 
+def _no_thinking():
+    """YZ_LLM_THINKING=off 时在请求体里带 enable_thinking=false。
+    仅对支持该字段的模型（如 qwen3 系列）有效，其他 provider 不要设这个变量。"""
+    return _env("YZ_LLM_THINKING", "auto").lower() in ("off", "false", "0", "no")
+
+
 class ModelConfig:
     def __init__(self, kind, base, key, model):
         self.kind = kind
@@ -212,6 +218,10 @@ class Client:
         }
         if response_format:
             payload["response_format"] = response_format
+        # 部分模型（qwen3 系列）默认带思考，会多花 5-10 倍时间。
+        # 用 YZ_LLM_THINKING=off 显式关闭；其他 provider 不认这个字段，默认不加。
+        if _no_thinking():
+            payload["enable_thinking"] = False
         body = json.dumps(payload).encode("utf8")
         last = None
         for attempt in range(retries + 1):
@@ -289,7 +299,29 @@ class Answerer:
                 (c.get("text") or c.get("claim") or "")[:200]))
         return "\n".join(lines) if lines else "（本次检索未命中任何库内条目）"
 
-    def ask(self, query, emit, image=None, context=None):
+    def _merge_ctx(self, queries, limit_signs=8, limit_claims=6, limit_concepts=3):
+        """多条查询分别检索后按 id 去重合并，先到先得（query 在前，权重天然更高）。"""
+        out = {"signs": [], "concepts": [], "claims": []}
+        seen = {k: set() for k in out}
+        for q in queries:
+            if not q:
+                continue
+            c = self.retriever.search(q)
+            for k in out:
+                for row in c.get(k) or []:
+                    rid = row.get("id")
+                    if rid and rid in seen[k]:
+                        continue
+                    if rid:
+                        seen[k].add(rid)
+                    out[k].append(row)
+        return {
+            "signs": out["signs"][:limit_signs],
+            "concepts": out["concepts"][:limit_concepts],
+            "claims": out["claims"][:limit_claims],
+        }
+
+    def ask(self, query, emit, image=None, context=None, percept=None):
         t0 = time.time()
         has_image = bool(image)
         cfg = self.router.pick(has_image)
@@ -300,7 +332,23 @@ class Answerer:
         # image_url——OpenAI 兼容的纯文本模型会直接 400，而且模型也没看过图。
         use_image = bool(has_image and cfg is self.router.vision and cfg.ready)
 
-        ctx = self.retriever.search(query)
+        # 视觉所见（findings）参与检索：用户只问「这张片子有什么异常」时，
+        # query 里没有任何征象词，单靠 query 检索必然 0 命中。
+        # 每条所见单独检索再合并，避免一句长描述被 bigram 稀释掉关键词。
+        findings = []
+        sign_terms = []
+        if percept:
+            findings = [str(x).strip() for x in (percept.get("findings") or []) if str(x).strip()]
+            sign_terms = [str(x).strip() for x in (percept.get("sign_terms") or []) if str(x).strip()]
+        percept_text = "；".join(findings)
+        if sign_terms:
+            percept_text = ("征象名：" + "、".join(sign_terms)
+                            + ("；" + percept_text if percept_text else ""))
+        if findings or sign_terms:
+            # 库内规范征象名放最前：它们是精确命中，优先级高于自由描述。
+            ctx = self._merge_ctx([query] + sign_terms[:3] + findings[:4])
+        else:
+            ctx = self.retriever.search(query)
         retrieve_ms = int((time.time() - t0) * 1000)
         hits = len(ctx["signs"]) + len(ctx["claims"])
         route = "vision" if use_image else "text"
@@ -314,6 +362,10 @@ class Answerer:
                                   "claims": len(ctx["claims"])}})
 
         user_text = "检索结果：\n%s\n\n用户问题：%s" % (self._context_text(ctx), query)
+        if percept_text:
+            # 视觉所见是模型自动识别的，用于把图上的描述接到检索上；
+            # 它不是人工标注，也不能当成库内证据。
+            user_text = ("视觉所见（模型自动识别，非人工标注）：\n%s\n\n" % percept_text) + user_text
         if context:
             # 页面上下文只帮助定位（哪一例、哪个分区、哪道题），
             # 不参与检索打分，也不能被模型当作库内证据引用。
@@ -329,7 +381,8 @@ class Answerer:
             user_text += ("\n\n（本次未配置视觉模型，未读取影像。"
                           "不要声称看过图，也不要编造病灶位置。）")
         if use_image:
-            user_text += "\n\n（附影像，请先描述解剖结构；若可定位病灶，按约定附 bbox）"
+            user_text += ("\n\n（附影像，请结合上面的视觉所见作答；"
+                          "不要输出 JSON、bbox 或坐标，定位已单独完成）")
             content = [
                 {"type": "text", "text": user_text},
                 {"type": "image_url", "image_url": {"url": _data_url(image)}},

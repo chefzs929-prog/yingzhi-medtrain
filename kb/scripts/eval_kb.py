@@ -42,8 +42,8 @@ QUESTIONS = [
 REFUSE_MARKS = ("库内未覆盖", "未覆盖", "没有检索到", "证据不足", "不足以判断")
 
 
-def ask(base, query, timeout=120):
-    body = json.dumps({"query": query, "mode": "auto", "research": False,
+def ask(base, query, timeout=120, mode="auto"):
+    body = json.dumps({"query": query, "mode": mode, "research": False,
                        "surface": "eval"}, ensure_ascii=False).encode("utf8")
     req = urllib.request.Request(base.rstrip("/") + "/api/ask", data=body,
                                  headers={"Content-Type": "application/json"})
@@ -79,6 +79,7 @@ def main():
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--json", default="")
     ap.add_argument("--timeout", type=int, default=120)
+    ap.add_argument("--mode", default="auto", choices=["auto", "agent", "llm"])
     args = ap.parse_args()
 
     qs = QUESTIONS[:args.limit] if args.limit else QUESTIONS
@@ -86,7 +87,7 @@ def main():
     stat = {"grounded": 0, "refused": 0, "ungrounded": 0, "error": 0}
     for i, q in enumerate(qs, 1):
         try:
-            r = ask(args.base, q, args.timeout)
+            r = ask(args.base, q, args.timeout, args.mode)
             local = [c for c in r["cites"] if c.get("kind") != "literature"]
             body = r["text"]
             if local:

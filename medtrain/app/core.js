@@ -1,4 +1,4 @@
-/* 影知 · 影像临床思维平台
+/* RadioCheck · 影像临床思维平台
  * 核心：数据、状态、路由、外壳、通用组件
  * 单引擎多版本：角色与设备只改变外壳与可见模块，不复制业务逻辑。
  */
@@ -467,7 +467,7 @@
     return `<header class="topbar">
       <div class="brand" data-act="nav" data-view="home" style="cursor:pointer">
         <div class="brand-mark">影</div>
-        <div class="brand-txt"><b>影知</b><span>影像临床思维平台</span></div>
+        <div class="brand-txt"><b>RadioCheck</b><span>影像临床思维平台</span></div>
       </div>
       <div class="top-search">
         <span class="si">${icon("search", 17)}</span>

@@ -1,4 +1,4 @@
-/* 影知 · 四页共用的 Agent 客户端
+/* RadioCheck · 四页共用的 Agent 客户端
  *
  * 职责只有三件：
  *   1. 把 /api/ask 的 SSE 解析成稳定事件（trace/tool/delta/citation/followup/reset/done）

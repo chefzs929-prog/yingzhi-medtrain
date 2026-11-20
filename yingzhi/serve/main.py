@@ -1,4 +1,4 @@
-"""影知动态服务层 · 最小可运行版（v3.0 骨架）。
+"""RadioCheck 动态服务层 · 最小可运行版（v3.0 骨架）。
 
 启动：
     python3 yingzhi/serve/main.py --port 8800
@@ -46,8 +46,26 @@ VISION_SCHEMA = """{
   "view": "PA|AP|LAT|CT-AXIAL|MR|US|MLO|null",
   "bbox": [x, y, w, h],
   "findings": ["中性描述，最多 4 条"],
+  "sign_terms": ["从候选征象名里选，最多 3 个，没有就空数组"],
   "confidence": 0.0
 }"""
+
+
+_SIGN_HINT = {"v": None}
+
+
+def vision_sign_hint():
+    """把库内征象名附在视觉提示后，让模型用库里认得的词描述所见。
+    不这样做，模型写「片状密度增高影」，而库里叫「斑片影/实变」，
+    bigram 检索会 0 命中，回答就只能拒答。"""
+    if _SIGN_HINT["v"] is not None:
+        return _SIGN_HINT["v"]
+    try:
+        names = [str(r.get("name")) for r in load_jsonl("signs.jsonl") if r.get("name")]
+    except Exception:
+        names = []
+    _SIGN_HINT["v"] = ("\n\n候选征象名（只能从这些里选，选不中就不要写）：\n" + "、".join(names)) if names else ""
+    return _SIGN_HINT["v"]
 
 REPORT_PROMPT = """你在做影像教学报告，不是诊断报告。按影像学描述规范写：
 - findings 只写可见表现：位置、密度/信号、形态、边缘、分布、伴随征象；
@@ -983,7 +1001,7 @@ class Handler(BaseHTTPRequestHandler):
         # 只有需要自动出框/自动分类时才调视觉，用户已给 atlas+bbox 就不浪费一次请求。
         if image and vision_ready and (not bbox or not atlas_id):
             try:
-                vision, _raw = ans.structured(VISION_PROMPT, VISION_SCHEMA,
+                vision, _raw = ans.structured(VISION_PROMPT + vision_sign_hint(), VISION_SCHEMA,
                                               image=image, max_tokens=600)
                 if not bbox and vision.get("bbox"):
                     bbox = vision_mod.extract_bbox(
@@ -1024,17 +1042,39 @@ class Handler(BaseHTTPRequestHandler):
             "match_score": (matched or {}).get("score"),
         }
 
+        bbox_source = "vision" if (vision and vision.get("bbox")) else (
+            "input" if body.get("bbox") else None)
+        warning = None
+        # 视觉模型常把整个肺野框进来，面积超过模板上限（0.30）会被判 too_large。
+        # 按中心等比缩小到 0.25，保留"病灶大概在哪"，同时标明是缩过的框。
+        if bbox and bbox[2] * bbox[3] > 0.25:
+            cx = bbox[0] + bbox[2] / 2.0
+            cy = bbox[1] + bbox[3] / 2.0
+            s = (0.25 / (bbox[2] * bbox[3])) ** 0.5
+            w, h = bbox[2] * s, bbox[3] * s
+            bbox = [max(0.0, cx - w / 2.0), max(0.0, cy - h / 2.0), w, h]
+            bbox_source = "vision_scaled"
+            warning = "视觉框过大，已按中心等比缩小到可定位范围"
         if not bbox:
-            return self.send_json(200, {
-                "ok": False,
-                "reason": "needs_bbox",
-                "atlas": atlas_card,
-                "vision": vision,
-                "vision_ready": vision_ready,
-                "vision_error": vision_error,
-                "message": ("未配置视觉模型或模型未给出可用框：请框选病灶后重试"
-                            if not vision_error else "视觉定位失败，请手动框选"),
-            })
+            if vision:
+                # 模型看图后认为没有明确病灶（常见于正常片），不给框。
+                # 此时用全肺野参考框继续定位，但必须标明这是参考框，不是病灶框。
+                # 模板定位有面积上限（>0.30 直接判 too_large），所以参考框取
+                # 图像中心 30%×30%，只用于给出一个可解释的参照分区。
+                bbox = [0.35, 0.35, 0.30, 0.30]
+                bbox_source = "fallback_center"
+                warning = "视觉模型未给出病灶框（可能未见明确病灶），已用图像中心参考框定位；分区结果仅供参考"
+            else:
+                return self.send_json(200, {
+                    "ok": False,
+                    "reason": "needs_bbox",
+                    "atlas": atlas_card,
+                    "vision": vision,
+                    "vision_ready": vision_ready,
+                    "vision_error": vision_error,
+                    "message": ("未配置视觉模型或模型未给出可用框：请框选病灶后重试"
+                                if not vision_error else "视觉定位失败，请手动框选"),
+                })
 
         try:
             located = T.locate(atlas["id"], bbox)
@@ -1047,6 +1087,9 @@ class Handler(BaseHTTPRequestHandler):
             "source": "atlas_template",
             "atlas": atlas_card,
             "locate": located,
+            "bbox": bbox,
+            "bbox_source": bbox_source,
+            "warning": warning,
             "vision": vision,
             "vision_error": vision_error,
             "honesty": {
@@ -1106,6 +1149,13 @@ class Handler(BaseHTTPRequestHandler):
         except Exception:
             pass
 
+        # 引用校验：模型正文里出现的 id 必须在库里真实存在，否则单独列出，
+        # 既不变成可点击卡片，也不静默丢掉。
+        full_text = " ".join([str(x) for x in (
+            (report.get("findings") or []) + (report.get("impression") or [])
+            + (report.get("limitations") or []))])
+        cited_ids, unverified_ids = audit_citations(full_text)
+
         region = None
         bbox = body.get("bbox") or report.get("bbox")
         atlas_id = (body.get("atlas_id") or "").strip()
@@ -1132,6 +1182,15 @@ class Handler(BaseHTTPRequestHandler):
             },
             "region": region,
             "citations": citations,
+            "citations_source": "retrieval_match",
+            "citations_audit": {
+                "cited": cited_ids,
+                "unverified": unverified_ids,
+            },
+            "warning": (
+                "报告提到 %d 个库内不存在的引用 id，已标记未校验：%s"
+                % (len(unverified_ids), "、".join(unverified_ids))
+            ) if unverified_ids else None,
             "disclaimer": "影像教学描述，不构成诊断意见；结论需人工复核。",
         })
 
@@ -1162,95 +1221,6 @@ class Handler(BaseHTTPRequestHandler):
         else:
             res = litsearch.search_signs(sign_ids, extra, modality, parts, limit)
         return self.send_json(200, res)
-
-    def api_vision_region(self, body):
-        """陌生影像的分区定位。
-
-        有 bbox：直接用通用 atlas 模板做确定性定位。
-        无 bbox：视觉模型可用就自动出框，否则明确要求框选，不猜。
-        """
-        T = atlas_mod.load()
-        atlas_id = (body.get("atlas_id") or "").strip()
-        atlas = T.atlases.get(atlas_id) if atlas_id else None
-        matched = None
-        if atlas is None:
-            matched = T.match(body.get("modality"), body.get("body_part"), body.get("view"))
-            if matched:
-                atlas = matched["atlas"]
-
-        if atlas is None:
-            return self.send_json(200, {
-                "ok": False,
-                "reason": "no_atlas_match",
-                "message": "没有匹配到分区模板：请指定 atlas_id，或提供检查类型/部位/投照位",
-                "atlases": T.list_atlases(),
-            })
-
-        atlas_card = {
-            "id": atlas.get("id"),
-            "name": atlas.get("name"),
-            "modality": atlas.get("modality") or [],
-            "body_part": atlas.get("body_part") or "",
-            "view": atlas.get("view") or "",
-            "n_cases": atlas.get("n_cases") or 0,
-            "n_regions": atlas.get("n_regions") or 0,
-            "match_score": (matched or {}).get("score"),
-        }
-
-        bbox = body.get("bbox")
-        vision_note = None
-        if not bbox:
-            ans = ensure_llm()
-            vision_ready = bool(ans and ans.router.vision.ready)
-            if not vision_ready or not body.get("image"):
-                return self.send_json(200, {
-                    "ok": False,
-                    "reason": "needs_bbox",
-                    "atlas": atlas_card,
-                    "vision_ready": vision_ready,
-                    "message": "未配置视觉模型或未提供影像：请框选病灶后重试",
-                })
-            try:
-                prompt = (
-                    "只做一件事：给出病灶在图像中的归一化外接框。"
-                    "不要解释，不要下诊断。只输出 JSON："
-                    '{"bbox":[x,y,w,h]}，x/y/w/h 都是 0-1 之间的小数。'
-                )
-                _, text, _ = ans.ask(prompt, lambda *a, **k: None, image=body.get("image"))
-                found_bbox, _raw, _cleaned = vision_mod.extract_bbox(text)
-                if not found_bbox:
-                    return self.send_json(200, {
-                        "ok": False, "reason": "vision_no_bbox",
-                        "atlas": atlas_card,
-                        "message": "视觉模型没有给出可用的框，请手动框选",
-                    })
-                bbox = found_bbox
-                vision_note = "bbox 由视觉模型给出，分区由模板推断"
-            except Exception as exc:
-                return self.send_json(200, {
-                    "ok": False, "reason": "vision_failed",
-                    "atlas": atlas_card,
-                    "message": "视觉定位失败：%s" % str(exc)[:160],
-                })
-
-        try:
-            located = T.locate(atlas["id"], bbox)
-        except Exception as exc:
-            return self.send_json(400, {"ok": False, "reason": "bad_bbox",
-                                        "message": str(exc)[:160]})
-
-        return self.send_json(200, {
-            "ok": True,
-            "source": "atlas_template",
-            "atlas": atlas_card,
-            "locate": located,
-            "vision_note": vision_note,
-            "honesty": {
-                "template_inference": True,
-                "human_annotated": False,
-                "note": "陌生影像没有人工标注，这里是模板推断；结论需人工复核",
-            },
-        })
 
     def do_POST(self):
         parsed = urllib.parse.urlparse(self.path)
@@ -1344,11 +1314,33 @@ class Handler(BaseHTTPRequestHandler):
                 emitted["delta"] = True
             self.sse_send(kind, payload)
 
+        # 带图时先做一次视觉感知：出 bbox/modality/部位/投照/中性所见。
+        # 这一段同时服务两条路——直连模型拿 findings 去检索，
+        # agent 拿 findings 当定位上下文。只调用一次，不重复烧 token。
+        percept = {}
+        if body.get("image") and llm_ans is not None and llm_ans.router.vision.ready:
+            t_v = time.time()
+            try:
+                percept, _pv = llm_ans.structured(
+                    VISION_PROMPT + vision_sign_hint(), VISION_SCHEMA,
+                    image=body.get("image"), max_tokens=600)
+                percept = percept or {}
+                emit("trace", {"stage": "vision_percept", "status": "completed",
+                               "ms": int((time.time() - t_v) * 1000),
+                               "detail": {"findings": len(percept.get("findings") or []),
+                                          "modality": percept.get("modality"),
+                                          "view": percept.get("view")}})
+            except Exception as exc:
+                percept = {}
+                emit("trace", {"stage": "vision_percept", "status": "error",
+                               "ms": int((time.time() - t_v) * 1000),
+                               "detail": str(exc)[:120]})
+
         def run_llm():
             """直连模型分支：文本/视觉二选一，返回 (result, text, cites)。"""
             nonlocal image_match
             image = body.get("image")
-            res = llm_ans.ask(query, emit, image=image, context=context)
+            res = llm_ans.ask(query, emit, image=image, context=context, percept=percept)
             out = res.get("text") or ""
             if image:
                 # 模型给的框要从正文里剥掉再发 delta，不能让用户看到 JSON
@@ -1381,17 +1373,17 @@ class Handler(BaseHTTPRequestHandler):
                 # 也不能因为走 agent 就把视觉定位丢掉。
                 if body.get("image") and llm_ans is not None and mode == "auto":
                     try:
-                        vres = llm_ans.ask(
-                            query, lambda kind, payload: None,
-                            image=body.get("image"), context=context)
-                        vtext = vres.get("text") or ""
-                        bbox, raw, _cleaned = vision_mod.extract_bbox(vtext)
+                        # 视觉感知已在上面做过一次，这里只复用结果，不再调用模型。
+                        bbox = None
+                        if percept.get("bbox"):
+                            bbox = vision_mod.extract_bbox(
+                                json.dumps({"bbox": percept["bbox"]}))[0]
                         found = ensure_image_index().match_all(body.get("image"))
                         image_match = {
                             "case_id": found[0] if found else None,
                             "case_ids": found,
                             "bbox": bbox,
-                            "raw_bbox": raw,
+                            "raw_bbox": percept.get("bbox"),
                         }
                         if not found:
                             image_match["suggest"] = suggest_cases()
@@ -1399,9 +1391,16 @@ class Handler(BaseHTTPRequestHandler):
                         ctx2["图像定位"] = "病例 %s；bbox %s" % (
                             image_match["case_id"] or "未入库",
                             bbox or "未给出")
+                        findings = [str(x) for x in (percept.get("findings") or []) if str(x).strip()]
+                        if findings:
+                            # 视觉所见只作定位线索，agent 仍要回库找证据。
+                            ctx2["视觉所见"] = "；".join(findings[:4])
+                        if percept.get("modality") or percept.get("body_part"):
+                            ctx2["检查信息"] = "%s %s %s" % (
+                                percept.get("modality") or "",
+                                percept.get("body_part") or "",
+                                percept.get("view") or "")
                         context = ctx2
-                        emit("trace", {"stage": "vision_locate", "status": "completed",
-                                       "ms": vres.get("ms", 0)})
                     except Exception as exc:
                         # 视觉失败不阻断 agent：仍可用文本回答，只是没有定位
                         emit("trace", {"stage": "vision_locate", "status": "error",
@@ -1656,7 +1655,7 @@ def main():
 
     server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
     server.daemon_threads = True
-    print("影知动态层已启动：http://127.0.0.1:%d/" % args.port)
+    print("RadioCheck 动态层已启动：http://127.0.0.1:%d/" % args.port)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

@@ -66,9 +66,9 @@
       ["医生端 · 桌面", "读片演练、病例工作台、引用审计", "app.html?role=doctor&device=desktop"],
       ["医生端 · 移动", "床旁/读片室速查、核验与交班摘要", "app.html?role=doctor&device=mobile"],
     ];
-    return `<div class="page-head"><div><div class="eyebrow">ABOUT · COMPLIANCE</div><h1>关于影知</h1><p>一个知识底座，四个功能链条，三种角色外壳，两种设备形态。</p></div></div>
+    return `<div class="page-head"><div><div class="eyebrow">ABOUT · COMPLIANCE</div><h1>关于 RadioCheck</h1><p>一个知识底座，四个功能链条，三种角色外壳，两种设备形态。</p></div></div>
     <div class="about-hero">
-      <h1>影知 · 影像临床思维平台</h1>
+      <h1>RadioCheck · 影像临床思维平台</h1>
       <p>面向医学影像教学与临床带教：把征象、指南条款、公开病例、解剖分区与双引用结论组织成一条可回看的证据链。平台只做描述性解释、条款对照与出处定位，<b>不输出诊断结论，不替代临床决策</b>。</p>
       <div class="flow">
         <div><b>01 学</b><span>征象是什么、怎么看、错在哪</span></div>

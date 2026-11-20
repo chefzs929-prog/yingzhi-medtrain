@@ -154,7 +154,7 @@
 
   function teacherReportText() {
     return [
-      `# 影知 · 班级学习报告`,
+      `# RadioCheck · 班级学习报告`,
       ``,
       `- 生成日期：${today()}`,
       `- 班级：演示班级 · ${DB.mockClass.length} 人`,

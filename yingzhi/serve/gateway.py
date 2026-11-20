@@ -119,7 +119,7 @@ class Gateway:
                       if now - v.get("at", 0) > self.session_ttl]:
                 self._sessions.pop(k, None)
         session = self._request("POST", "/session", {
-            "title": "影知·%s·%s" % (role, device),
+            "title": "RadioCheck·%s·%s" % (role, device),
             "directory": self.directory,
         })
         sid = session["id"]

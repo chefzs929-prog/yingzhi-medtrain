@@ -1,4 +1,4 @@
-"""影知首页 3D 模型接入自检：模型就绪 → 点击胸部 → 面板出现影像 → 灯箱打开。"""
+"""RadioCheck 首页 3D 模型接入自检：模型就绪 → 点击胸部 → 面板出现影像 → 灯箱打开。"""
 import os
 import sys
 from playwright.sync_api import sync_playwright

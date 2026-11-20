@@ -1,4 +1,4 @@
-/* 影知 · BodyParts3D 3D 适配器（首页人体模型）
+/* RadioCheck · BodyParts3D 3D 适配器（首页人体模型）
  *
  * 实现 body-model.js 预留的适配器契约：
  *   window.YZ_BODY_MODEL_ADAPTER = { name, mount(el, opts) -> handle }

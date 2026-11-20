@@ -1,6 +1,6 @@
 # Agent 接入指南（实测版 · v3.0）
 
-> 日期：2026-11-16（v3.1 接口更新：2026-11-19）｜ 适用：影知 v3.0 / v3.1 动态服务层
+> 日期：2026-11-16（v3.1 接口更新：2026-11-19）｜ 适用：RadioCheck v3.0 / v3.1 动态服务层
 > 结论先行：**入口是 DeepWorks 内置的 opencode server**，不是知识库 API，也不是技能 API。
 > 本文所有结论都在本机实测过，含耗时数据与九个真实踩过的坑。
 > v3.1 新增：`mode=auto/agent/llm`、有界多轮、`tool`/`followup` 事件、`/api/agent/capabilities`。

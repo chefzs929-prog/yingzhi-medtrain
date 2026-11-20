@@ -1,4 +1,4 @@
-/* 影知 · Agent 抽屉（四页共用） */
+/* RadioCheck · Agent 抽屉（四页共用） */
 .yz-agent-root{position:fixed;inset:0;z-index:9500;display:flex;justify-content:flex-end}
 .yz-agent-mask{position:absolute;inset:0;background:rgba(16,35,46,.26);backdrop-filter:blur(1px)}
 .yz-agent{position:relative;width:min(430px,94vw);height:100%;background:var(--surface);

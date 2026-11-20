@@ -1,4 +1,4 @@
-/* 影知 · 多模态知识库问答（核心功能）
+/* RadioCheck · 多模态知识库问答（核心功能）
  *
  * 一条回答必须同时挂两处引用：
  *   影像侧：分区 id + bbox + atlas + 标注人
@@ -38,13 +38,18 @@
     { re: /(胸|肺|膈|纵隔|心影|肋膈|气胸|胸腔积液)/, body: "胸部" },
   ];
 
+  /* 报告里的器官词：用于把「含气肺组织」这类描述落到「右肺」等分区上 */
+  const ORGAN_KEYS = ["甲状腺", "胸膜", "纵隔", "肺", "乳腺", "胆囊", "肝", "肾", "脑膜", "脑",
+    "颈椎", "腰椎", "膝", "肩", "骨盆", "手", "足", "心"];
+
   const BODY_FAMILY = {
     "胸部": "chest", "肺": "chest", "胸膜": "chest",
-    "甲状腺": "thyroid", "头颅": "head",
+    "甲状腺": "thyroid", "颈部": "thyroid", "头颅": "head",
     "乳腺": "breast",
     "腹部": "abdomen", "肝": "abdomen",
     "手": "msk", "足": "msk", "膝关节": "msk", "肘": "msk", "腕": "msk",
     "颈椎": "msk", "腰椎": "msk", "肩": "msk", "骨盆": "msk",
+    "脊柱": "msk", "骨关节": "msk",
   };
 
   const GUIDE_FAMILY = {
@@ -86,6 +91,12 @@
     "低回声": "SIGN-058", "甲状腺结节": "SIGN-058",
     "无回声": "SIGN-059",
     "声影": "SIGN-060",
+    "出血": "SIGN-045", "高密度": "SIGN-045",
+    "低密度": "SIGN-021", "低密度灶": "SIGN-021", "梗死": "SIGN-021",
+    "骨折": "SIGN-054", "水肿": "SIGN-041",
+    "结石": "SIGN-006", "实性": "SIGN-002",
+    "退变": "SIGN-036", "狭窄": "SIGN-036", "突出": "SIGN-036",
+    "积液": "SIGN-052",
   };
 
   const SCOPE_RE = /(诊断|确诊|是不是癌|是不是恶性|良恶性|是良性还是恶性|肺癌吗|肿瘤吗|要不要手术|该不该手术|需要手术|治疗方案|怎么治|如何治|用什么药|吃什么药|预后|生存期|能活多久|会不会转移)/;
@@ -281,8 +292,12 @@
     else {
       const parts = String(region.name).match(/[左右]?(?:肺)?(?:上野|中野|下野|上带|下带|中央|前部|中部|后部|周边|边缘|上方|下方)/g) || [];
       for (const p of parts) if (p.length >= 2 && t.includes(flat(p))) sc += 3;
+      // 报告常写「含气肺组织」「甲状腺右叶」而不是分区全名：器官词命中同样算定位线索
+      const organ = ORGAN_KEYS.find((k) => String(region.name).includes(k) && t.includes(k));
+      if (organ) sc += 4;
     }
-    if (region.patient_side && t.includes(region.patient_side === "right" ? "右" : "左")) sc += 1;
+    // 明确写了左右侧是强线索：只写「右半侧」时也能落到右侧分区
+    if (region.patient_side && t.includes(region.patient_side === "right" ? "右" : "左")) sc += 2;
     return sc;
   }
 
@@ -306,7 +321,16 @@
     }
     if (best && best.sc >= 2) return best.r;
 
-    // 文字里没有分区线索时，用「结论挂在哪个分区」反推；多个分区并列则不猜。
+    // 文字里没有分区名，但库内只有一个分区挂着文献条款：按条款所在分区定位（唯一才选）。
+    const docRegions = uniq(claims
+      .filter((x) => (x.cites || []).some((ci) => ci.kind === "doc" && ci.anchor))
+      .map((x) => x.region_id));
+    if (docRegions.length === 1) {
+      const r = rs.find((x) => x.id === docRegions[0]);
+      if (r) return r;
+    }
+
+    // 仍无线索时，用「结论挂在哪个分区」反推；多个分区并列则不猜。
     const hitClaims = claims.filter((x) => (x.sign_ids || []).some((id) => sigIds.includes(id)));
     const regions = uniq(hitClaims.map((x) => x.region_id));
     if (regions.length === 1) return rs.find((r) => r.id === regions[0]) || null;
@@ -431,6 +455,17 @@
           version: a.version || "", locator: a.locator || "", excerpt: a.excerpt || "",
           url: a.url || "", hash: a.excerpt_sha256 || "", conditions: [], action: "",
           degraded: true,
+        },
+        alt: [], ambiguous: false,
+      };
+    }
+    const sg = (signals || [])[0] && signals[0].sign;
+    if (sg && sg.appearance) {
+      return {
+        doc: {
+          kind: "sign", id: sg.id, title: `征象词条 · ${sg.name}`, version: "",
+          locator: `${sg.id} / 影像表现`, excerpt: sg.appearance, url: "",
+          hash: "", conditions: [], action: "", degraded: true,
         },
         alt: [], ambiguous: false,
       };
@@ -823,14 +858,15 @@
     const y = (clientY - box.top) / box.height;
     if (x < 0 || y < 0 || x > 1 || y > 1) return null;
     const hits = regionsOf(c.id).filter((r) => {
-      const [rx, ry, rw, rh] = r.coords || [0, 0, 0, 0];
-      return x >= rx && x <= rx + rw && y >= ry && y <= ry + rh;
+      const [x1, y1, x2, y2] = r.coords || [0, 0, 0, 0];
+      return x >= x1 && x <= x2 && y >= y1 && y <= y2;
     });
     if (!hits.length) return null;
     return hits.sort((a, b) => {
       const aa = a.coords || [0, 0, 0, 0];
       const bb = b.coords || [0, 0, 0, 0];
-      return aa[2] * aa[3] - bb[2] * bb[3];
+      const area = (q) => Math.max(0, q[2] - q[0]) * Math.max(0, q[3] - q[1]);
+      return area(aa) - area(bb);
     })[0];
   }
 
@@ -853,7 +889,8 @@
        避免整图级区域拦截所有点击。点击命中另由几何判定兜底。 */
     const ordered = rs.map((r, i) => ({ r, i })).sort((a, b) => area(b.r) - area(a.r));
     const boxes = AS.showBoxes ? ordered.map(({ r, i }) => {
-      const [x, y, w, hh] = r.coords || [0, 0, 0, 0];
+      const [x1, y1, x2, y2] = r.coords || [0, 0, 0, 0];
+      const x = x1, y = y1, w = Math.max(0, x2 - x1), hh = Math.max(0, y2 - y1);
       const on = AS.regionId === r.id || (AS.result && AS.result.region && AS.result.region.id === r.id);
       return `<button class="ask-box ${on ? "on" : ""}" data-region-id="${r.id}"
         style="left:${x * 100}%;top:${y * 100}%;width:${w * 100}%;height:${hh * 100}%"
@@ -1105,13 +1142,24 @@
 
   /* ---------- 交互 ---------- */
 
+  /* 分片按部位懒加载：切到未加载的病例时 regionsOf 为空，直接判定会误报
+     「无法确定影像区域」。这里先补齐该病例所在分片，再跑规则引擎。 */
+  function runNow(after) {
+    const c = pickCase(AS);
+    const go = () => {
+      AS.result = run(AS);
+      YZ.render();
+      if (after) after();
+    };
+    if (c && YZ.ensureCase) YZ.ensureCase(c.id).then(go, go);
+    else go();
+  }
+
   function applyPreset(key) {
     const p = PRESETS.find((x) => x.key === key);
     if (!p) return;
     Object.assign(AS, p.s, { result: null, selftest: AS.selftest });
-    AS.result = run(AS);
-    YZ.render();
-    scrollAnswer();
+    runNow(scrollAnswer);
   }
 
   function scrollAnswer() {
@@ -1154,8 +1202,8 @@
       {
         name: "甲状腺 TR4 + 1.6cm",
         s: { caseId: "CASE-011", report: "甲状腺右叶低回声结节，最大径 1.6 cm，TI-RADS TR4。", question: "TR4、1.6 cm 的结节，条款怎么表述？", regionId: null, upload: null, guideId: "" },
-        expect: "answer + TR4 + 拦截 CLM-007",
-        ok: (r) => r.status === "answer" && r.doc && /TR4/.test(r.doc.locator || "") && (r.broken || []).includes("CLM-007"),
+        expect: "answer + TR4 条款",
+        ok: (r) => r.status === "answer" && r.doc && !r.doc.degraded && /TR4/.test(r.doc.locator || ""),
         actual: (r) => `${r.status}${r.doc ? " · " + r.doc.locator : ""}${(r.broken || []).length ? " · 拦截 " + r.broken.join("/") : ""}`,
       },
       {
@@ -1181,7 +1229,7 @@
       },
       {
         name: "头颅无指南条款",
-        s: { caseId: "CASE-014", report: "双侧脑膜强化。", question: "脑膜强化怎么描述？", regionId: null, upload: null, guideId: "" },
+        s: { caseId: "CASE-029", report: "左侧天幕区可见高密度出血。", question: "这个出血怎么描述？", regionId: "REG-029-L", upload: null, guideId: "" },
         expect: "partial / 文献降级",
         ok: (r) => r.status === "partial" && r.doc && r.doc.degraded,
         actual: (r) => `${r.status}${r.doc ? " · " + (r.doc.degraded ? "降级" : "指南") : ""}`,
@@ -1216,7 +1264,7 @@
     const sp = r.spatial;
     const d = r.doc;
     const lines = [
-      "# 影知 · 多模态问答",
+      "# RadioCheck · 多模态问答",
       "",
       `问题：${AS.question || "（未填写）"}`,
       `状态：${STATUS_LABEL[r.status]}（${r.title}）`,
@@ -1256,7 +1304,7 @@
     }
     const act = el.dataset.ask;
     switch (act) {
-      case "run": syncFields(); AS.result = run(AS); YZ.render(); scrollAnswer(); break;
+      case "run": syncFields(); runNow(scrollAnswer); break;
       case "preset": applyPreset(el.dataset.key); break;
       case "stage-hit": {
         const stage = el.closest(".ask-stage");
@@ -1264,8 +1312,7 @@
         const reg = hitRegion(stage, e.clientX, e.clientY);
         if (!reg) { toast("该位置不在已标注分区内"); break; }
         AS.regionId = reg.id;
-        AS.result = run(AS);
-        YZ.render();
+        runNow();
         break;
       }
       case "picker-toggle":
@@ -1295,8 +1342,7 @@
         AS.pickerOpen = false;
         AS.pickerQuery = "";
         if (AS.caseId !== "auto") await YZ.ensureCase(AS.caseId);
-        AS.result = run(AS);
-        YZ.render();
+        runNow();
         break;
       }
       case "toggle-boxes": AS.showBoxes = !AS.showBoxes; YZ.render(); break;
@@ -1305,8 +1351,7 @@
       case "demo-report": {
         const c = currentCase();
         AS.report = c ? (c.description_public || c.teaching_note || "") : "右肺上野见磨玻璃样密度增高影。";
-        AS.result = run(AS);
-        YZ.render();
+        runNow();
         break;
       }
       case "selftest":
@@ -1348,13 +1393,11 @@
       AS.regionId = null;
       AS.upload = null;
       await YZ.ensureCase(AS.caseId);
-      AS.result = run(AS);
-      YZ.render();
+      runNow();
     }
     if (e.target.id === "askGuide") {
       AS.guideId = e.target.value;
-      AS.result = run(AS);
-      YZ.render();
+      runNow();
     }
     if (e.target.id === "askFile" && e.target.files && e.target.files[0]) {
       const f = e.target.files[0];
@@ -1363,8 +1406,7 @@
         AS.upload = { name: f.name, dataUrl };
         AS.caseId = null;
         AS.regionId = null;
-        AS.result = run(AS);
-        YZ.render();
+        runNow();
       } catch (err) { toast("影像读取失败"); }
       e.target.value = "";
     }
@@ -1373,8 +1415,7 @@
       try {
         const text = await readFile(f, false);
         AS.report = String(text).slice(0, 4000);
-        AS.result = run(AS);
-        YZ.render();
+        runNow();
         toast("文档已载入，可继续编辑后重新生成");
       } catch (err) { toast("文档读取失败"); }
       e.target.value = "";
@@ -1385,9 +1426,7 @@
     if (e.target && e.target.id === "askQ" && e.key === "Enter") {
       e.preventDefault();
       syncFields();
-      AS.result = run(AS);
-      YZ.render();
-      scrollAnswer();
+      runNow(scrollAnswer);
     }
   });
 

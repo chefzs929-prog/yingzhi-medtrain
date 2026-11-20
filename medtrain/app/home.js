@@ -30,7 +30,7 @@
       : "把一次读片，留下可核对的依据";
     return `<section class="hero${state.role === "student" ? "" : " solo"}">
       <div class="hero-main">
-        <div class="eyebrow">YINGZHI · TRACK B · 医学影像知识问答</div>
+        <div class="eyebrow">RADIOCHECK · TRACK B · 医学影像知识问答</div>
         <h1>${greet}</h1>
         <p>${r.desc}。知识、指南、病例、分区与双引用结论共用一套底座。</p>
         <div class="row wrap">

@@ -1,4 +1,4 @@
-/* 影知 · 阅片四页共享外壳
+/* RadioCheck · 阅片四页共享外壳
  * 顶栏品牌、导航、页面参数、通用提示集中在这里；四页不再各自复制一份。
  */
 (function () {
@@ -16,9 +16,9 @@
       `<a href="${n.href}" class="${n.id === page ? 'on' : ''}" title="${n.hint}">${n.label}</a>`
     ).join('');
     return `
-      <a class="logo" href="clinic.html" title="影知 · 影像循证">
-        <span class="m">影</span>
-        <div><b>影知 · 影像循证</b><i>REGION · CITATION · TRACE</i></div>
+      <a class="logo" href="clinic.html" title="RadioCheck · 影像循证">
+        <span class="m">R</span>
+        <div><b>RadioCheck · 影像循证</b><i>REGION · CITATION · TRACE</i></div>
       </a>
       <nav class="switch" aria-label="场景切换">${nav}</nav>`;
   }

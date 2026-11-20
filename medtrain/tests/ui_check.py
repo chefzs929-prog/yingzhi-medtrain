@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""影知多版本软件 · 逐版验收。
+"""RadioCheck 多版本软件 · 逐版验收。
 
 用法：
   cd outputs/medtrain
@@ -121,7 +121,7 @@ def main() -> int:
             print("\n[1] 产品首页")
             ctx, page, errs = new_page(browser, 1440, 1000)
             goto(page, "index.html")
-            check(page.title().startswith("影知"), "标题正确")
+            check(page.title().startswith("RadioCheck"), "标题正确")
             status_txt = page.inner_text("#bmStatus")
             n_svg = page.locator(".bm-region").count()
             if n_svg:
@@ -357,7 +357,7 @@ def main() -> int:
             page.click('[data-ask="preset"][data-key="trads"]')
             page.wait_for_timeout(320)
             check("可答" in page.inner_text(".ans-status"), "TR4 条款可答")
-            check("CLM-007" in page.inner_text(".ans-notes"), "hash 校验失败的结论被拦截并说明", page.inner_text(".ans-notes")[:80].replace("\n", " "))
+            check("CLM-011-BROKEN" in page.inner_text(".ans-notes"), "hash 校验失败的结论被拦截并说明", page.inner_text(".ans-notes")[:80].replace("\n", " "))
 
             page.click('[data-ask="preset"][data-key="scope"]')
             page.wait_for_timeout(320)

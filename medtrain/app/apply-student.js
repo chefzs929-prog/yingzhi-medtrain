@@ -47,7 +47,7 @@
   function studentReportText() {
     const rows = Object.entries(progress.drills);
     return [
-      `# 影知 · 学习报告`,
+      `# RadioCheck · 学习报告`,
       ``,
       `- 生成日期：${today()}`,
       `- 角色：学生端`,

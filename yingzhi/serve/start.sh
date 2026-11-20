@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 启动影知本地服务。
+# 启动RadioCheck 本地服务。
 #
 #   yingzhi/serve/start.sh              # 用 .env 里的配置启动
 #   yingzhi/serve/start.sh --offline    # 强制本地降级，不调任何模型

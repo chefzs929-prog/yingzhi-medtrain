@@ -1,4 +1,6 @@
-# 影知 · 影像临床思维平台
+# RadioCheck · 影像临床思维平台
+
+> 当前版本：**v5.0**（2026-11-20）· 可安装为桌面 / 主屏应用
 
 面向医学影像教学的多模态知识库问答演示系统。输入影像与报告/指南文档，回答同时引用
 **影像分区**与**文献段落**；证据不足时降级或拒答，并固定声明非诊断用途。
@@ -12,14 +14,31 @@ GitHub Pages：`https://chefzs929-prog.github.io/yingzhi-medtrain/`
 
 站点由 `gh-pages` 分支托管，内容等于 `outputs/medtrain/` 的构建产物。
 
+### 像应用一样打开（快捷进入）
+
+首页「像应用一样打开」区块 = PWA 快捷入口：`manifest.webmanifest` + `sw.js` + R 字标图标。
+
+| 平台 | 操作 |
+| --- | --- |
+| Chrome / Edge（桌面） | 点区块里的「安装到桌面」，或地址栏右侧安装图标；安装后独立窗口、无地址栏 |
+| iPhone / iPad | Safari → 分享 → 添加到主屏幕 |
+| Android | Chrome → ⋮ → 安装应用 / 添加到主屏幕 |
+
+安装后桌面/主屏出现「RadioCheck」图标，长按可直达 manifest 里的 4 个 shortcuts
+（问答 / 读片 / 组卷 / 图谱）。Service Worker 只缓存同源静态资源，跳过 `/api/`、
+`/images/`、`/models/`；断网时仍能打开看过的页面。
+
 ## 目录
 
 | 路径 | 说明 |
 | --- | --- |
 | `medtrain/app/` | 前端源码（问、学、迁、练、用五条链路） |
 | `medtrain/build.py` | 打包 `app/` → `outputs/medtrain/`，给静态资源加内容哈希 |
+| `medtrain/make_icons.py` | 生成 PWA 图标（192 / 512 / maskable / apple-touch） |
+| `medtrain/app/manifest.webmanifest` | 快捷进入清单：名称、图标、start_url、4 个 shortcuts |
+| `medtrain/app/sw.js` | Service Worker：导航网络优先、静态资源缓存优先、跳过影像大图 |
 | `medtrain/build_data.py` | 知识库 JSONL → `data/kb.js` + 6 个 `kb.part.*.js` 分片 |
-| `kb/data/` | 病例 200（可用 195，5 例停用）/ 分区 981 / 结论 967 / 段落 546 |
+| `kb/data/` | 病例 120 / 分区 440 / 结论 440 / 段落 546 |
 | `kb/images/` | 影像文件（Wikimedia Commons，许可见 `ATTRIBUTION.md`） |
 | `kb/scripts/` | 内容重建、扩容、分区服务与自检脚本 |
 | `docs/` | 评估与实现记录（分区、扩容、AI 预审、内容重建 v2、分片） |
@@ -52,6 +71,10 @@ python3 kb/scripts/serve_region.py --port 4191
 `serve_region.py` 把 `/api/ask`、`/api/agent/capabilities`、`/api/trace/*`、
 `/api/vision/*`、`/api/lit/search` 转发给 8800，所以前端只需同源访问 4191。
 `/api/ask` 默认 `mode=auto`：先走 agent，失败且未产出内容才降级。
+配好 `YZ_LLM_TEXT_KEY` 后，问答页会读 `/api/health` 的 `llm_route`：
+纯文本问题自动改发 `mode=llm`（直连模型，几秒返回），带图仍走 `auto`；
+直连失败会先提示原因，再自动用 agent 重答一次。
+配置与排障见 [docs/纯文本模型接入指南.md](docs/纯文本模型接入指南.md)。
 能力探测：`curl http://127.0.0.1:4191/api/agent/capabilities`。
 
 陌生影像（不在标注库内）走通用 atlas 模板：
@@ -102,24 +125,21 @@ curl -X POST http://127.0.0.1:4191/api/vision/region \
 - **定位成功不等于有结论**：分区必须绑定了 claim 才显示证据，否则显示「该分区暂无绑定结论」。
 
 定位算法自检：`python3 kb/scripts/selfcheck_locate.py` → `outputs/medtrain/locate_selfcheck.md`。
-当前数字：981 个分区自命中 90.4%，跨区 8.6%，未命中 1.0%（全部是「边缘带」这类窄条分区）。
+当前数字：见 `outputs/medtrain/locate_selfcheck.md`（每次重建后复跑）。
 这是**算法下限**，不是端到端准确率——模型框准不准需真实 key 才能测。
 
 ## 数据构成
 
-`kb/data/cases.jsonl` 共 200 条，其中 5 条 `status=inactive`（素材为检查场景照片或大体标本），
-**可用 195 例**：
+`kb/data/cases.jsonl` 共 120 条，全部 `status=active`，一图一例：
 
 | 来源 | 数量 | 说明 |
 | --- | --- | --- |
-| 人工核验 | 45 | `human_verified_no_identifier` |
-| 历史自动筛查 | 102 | `auto_screened` |
-| 扩容新增 | 48 | 新影像，`auto_screened_pending_human`（**待人工核验**） |
-| 分区聚焦视角 | 29 | 复用已有影像，`shared_image_of` 指向源病例 |
+| 原有病例（按影像重核） | 73 | 逐张核对部位/模态/标题，修正 20 余例图文错配 |
+| 补充采集 | 47 | Wikimedia Commons，CC0/CC BY/CC BY-SA，逐条记录来源页与作者 |
 
-**195 例不是 195 张独立影像**：`kb/images/` 有 209 个文件，去重后 89 张唯一图像；
-29 例为同图不同分区视角，其余为多例共用同一张图。详见
-`docs/分片与200例扩容记录.md` 与 `docs/病例元数据体检.md`。
+**120 例 = 120 张独立影像**：按文件哈希去重后无重复图。
+原有 200 例中，127 例因重复用图、图文错配或素材非影像（检查场景照、大体标本、统计图表、工作站截图）被移除；
+6 张含患者姓名缩写/检查号/日期的影像已用色块遮盖，处理记录见 `kb/licenses/ATTRIBUTION.md`。
 
 ## 工程特性
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""把 kb/ 的知识资产编译成影知 App 的离线数据包。
+"""把 kb/ 的知识资产编译成RadioCheck App 的离线数据包。
 
 输出：
   outputs/medtrain/data/kb.js      window.__KB__ = {...}（可 file:// 直接打开）
@@ -546,7 +546,7 @@ def main():
 
     payload = {
         "meta": {
-            "name": "影知 · 影像临床思维平台",
+            "name": "RadioCheck · 影像临床思维平台",
             "version": "2.0.0",
             "builtAt": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "counts": counts,

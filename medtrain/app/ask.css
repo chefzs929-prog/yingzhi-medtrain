@@ -1,4 +1,4 @@
-/* 影知 · 多模态问答（核心功能）样式
+/* RadioCheck · 多模态问答（核心功能）样式
    三栏：输入 / 影像与分区 / 回答与双引用。窄屏依次堆叠。 */
 
 .ask{display:flex;flex-direction:column;gap:16px;padding-bottom:8px}
@@ -320,8 +320,8 @@
   background:#0f2a31;color:#c9e5e0;font-size:11px;line-height:1.65;
 }
 .ask-disclaim svg{flex:none;color:#7fd6c7}
-.ask-disclaim b{color:#fff;white-space:nowrap}
-.ask-disclaim span{color:#9dbab8}
+.ask-disclaim b{color:#fff;min-width:0}
+.ask-disclaim span{color:#9dbab8;min-width:0;overflow-wrap:anywhere}
 .ask-test{
   border:1px solid var(--line);border-radius:11px;background:var(--surface);padding:0 16px;
 }

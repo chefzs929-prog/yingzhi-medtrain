@@ -3,6 +3,8 @@ const S = {
   cases: [], filter: { q: '', level: '' }, current: null,
   detail: null, selected: null, showRegion: true, zoom: 1, tab: 'locate',
   drag: null, audit: null,
+  /* /api/health 探测到的模型能力：text 有值才把纯文本问答切到直连模型 */
+  models: {}, agentReady: false,
   /* 上传影像问答：image 是 data URL，match 是后端返回的认图结果 */
   chat: {
     q: '', text: '', cites: [], image: null, match: null, state: 'idle', err: '',
@@ -42,6 +44,19 @@ async function init() {
   const want = (window.YZCommon && window.YZCommon.query('case')) || '';
   const first = S.cases.find((c) => c.id === want) || S.cases[0];
   if (first) selectCase(first.id);
+}
+
+/* 探测后端模型能力：有文本模型就把纯文本问答切到直连模型（快），
+   没有就继续走 agent，行为与之前一致。失败不影响页面。 */
+async function initModels() {
+  if (!HAS_BACKEND) return;
+  try {
+    const h = await api('/api/health');
+    S.models = (h && h.llm_route) || {};
+    S.agentReady = !!(h && h.agent_ready);
+  } catch (e) {
+    S.models = {};
+  }
 }
 
 /* 命题三步：选片 → 定位 → 溯源 */
@@ -475,11 +490,40 @@ function paintTrace(c) {
   if (tools) tools.innerHTML = toolsHTML(c);
 }
 
-async function sendAsk(q) {
+/* 把当前定位结果作为「页面上下文」带给 agent：
+   只帮助定位（哪一例、哪个分区、视觉看到了什么），
+   服务端明确把它当定位信息、不当库内证据，也不参与引用打分。 */
+function askContext(prevMatch) {
+  const c = S.chat || {};
+  const t = c.template || null;
+  const m = prevMatch || c.match || null;
+  const ctx = {};
+  if (m && m.case_id) ctx.case_id = m.case_id;
+  if (t && t.atlas) {
+    ctx.atlas = t.atlas.name || t.atlas.id || '';
+    ctx.region_source = 'atlas_template';
+    const p = (t.locate && t.locate.primary) || null;
+    if (p && p.region) ctx.region = p.region.name;
+  }
+  if (t && t.vision) {
+    const v = t.vision;
+    if (v.modality) ctx.modality = v.modality;
+    if (v.body_part) ctx.body_part = v.body_part;
+    if (v.view) ctx.view = v.view;
+    if (Array.isArray(v.findings) && v.findings.length) {
+      ctx.vision_findings = v.findings.slice(0, 4).join('；');
+    }
+  }
+  return Object.keys(ctx).length ? ctx : undefined;
+}
+
+async function sendAsk(q, opts) {
   q = (q || '').trim();
   if (!q) return;
   if (!HAS_BACKEND) { toast('公网版不含 Agent 服务，请在本地运行后使用'); return; }
+  const forceAgent = !!(opts && opts.forceAgent);
   const c = S.chat;
+  const prevMatch = c.match;   // 重置会清掉 match，但定位信息仍要带给本轮
   Object.assign(c, {
     q, text: '', cites: [], match: null, err: '', state: 'run',
     trace: [], tools: [], followups: [], servedBy: null,
@@ -490,6 +534,12 @@ async function sendAsk(q) {
   document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.dataset.t === 'chat'));
   renderTab();
   try {
+    // 纯文本且有文本模型 → 直连模型，省掉 agent 的十几秒；
+    // 带图或没有模型 → 交给 auto（视觉定位 + agent 解释）。
+    // 有对应模型就走直连：纯文本看 text 模型，带图看 vision 模型。
+    // 两者都没有才退回 auto（agent）。
+    const direct = !forceAgent && S.models
+      && (c.image ? S.models.vision : S.models.text);
     const res = await window.YZAgent.ask({
       query: q,
       image: c.image || undefined,
@@ -498,6 +548,8 @@ async function sendAsk(q) {
       chain: 'clinic_upload',
       surface: 'clinic',
       research: true,
+      mode: direct ? 'llm' : 'auto',
+      context: askContext(prevMatch),
     }, {
       onEvent(ev, d) {
         if (ev === 'delta') {
@@ -531,6 +583,13 @@ async function sendAsk(q) {
     c.runId = (res.done && res.done.run_id) || null;
     c.match = (res.done && res.done.image_match) || null;
     c.state = 'done';
+    // 直连模型失败（余额不足 / 网络 / 超时）会落到本地模板，质量明显下降。
+    // 此时自动用 agent 重答一次；只重试一次，避免来回打转。
+    if (direct && c.servedBy === 'fallback' && S.agentReady) {
+      const why = (c.reason || '').slice(0, 80);
+      toast('直连模型不可用，改用 Agent 重答' + (why ? '：' + why : ''));
+      return sendAsk(q, { forceAgent: true });
+    }
   } catch (e) {
     c.state = 'error';
     c.err = (e && e.message) || String(e);
@@ -822,3 +881,4 @@ $('#fileInput').onchange = async (e) => {
 
 window.addEventListener('resize', fitFrame);
 init();
+initModels();

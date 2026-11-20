@@ -233,12 +233,12 @@
         }
         case "download-modal": {
           const ta = YZ.$("#modalText");
-          YZ.download((state.modal && state.modal.title ? state.modal.title : "影知导出") + ".md", ta ? ta.value : "");
+          YZ.download((state.modal && state.modal.title ? state.modal.title : "RadioCheck 导出") + ".md", ta ? ta.value : "");
           break;
         }
         case "modal-close": state.modal = null; render(); break;
 
-        case "export-json": YZ.download("影知学习记录.json", JSON.stringify(progress, null, 2), "application/json"); break;
+        case "export-json": YZ.download("RadioCheck 学习记录.json", JSON.stringify(progress, null, 2), "application/json"); break;
         case "reset": state.modal = { type: "confirm", title: "清空本地记录？", text: "将删除收藏、迁移卡、演练记录与自建任务；知识库数据不受影响。" }; render(); break;
         case "confirm-reset": {
           progress.learned = []; progress.bookmarks = []; progress.cards = []; progress.drills = {}; progress.checks = {}; progress.last = {}; progress.reviewed = [];
@@ -343,7 +343,7 @@
     const boot = state.caseId ? YZ.ensureCase(state.caseId) : Promise.resolve();
     boot.then(render);
     // 页面加载后把首屏搜索框聚焦留给用户，不自动抢焦点
-    console.info("[影知] 数据版本", DB.meta.version, DB.meta.counts);
+    console.info("[RadioCheck] 数据版本", DB.meta.version, DB.meta.counts);
   }
 
   init();

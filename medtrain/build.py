@@ -21,6 +21,8 @@ APP_FILES = [
     "styles.css", "ask.css",
     # 产品首页（index.html）专用
     "body-model.js", "body-3d.js", "landing.js", "landing.css",
+    # 快捷进入组件（PWA：manifest + service worker + 安装卡）
+    "pwa.js", "pwa.css", "manifest.webmanifest", "sw.js",
 ]
 
 VERSIONS = [
@@ -65,7 +67,7 @@ def copy_app():
     (OUT / "app.html").write_text(
         stamp_assets((OUT / "app.html").read_text(encoding="utf8")), encoding="utf8")
     # 首页 3D 人体模型：three.js 运行时 + BodyParts3D 网格
-    for sub in ("vendor", "models"):
+    for sub in ("vendor", "models", "icons"):
         src = SRC / sub
         if src.exists():
             shutil.copytree(src, OUT / sub, dirs_exist_ok=True)
@@ -87,7 +89,7 @@ def write_entries():
         target = f"../app.html?{role_q}device={device}"
         html = f"""<!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{label} · 影知（开发者入口）</title>
+<title>{label} · RadioCheck（开发者入口）</title>
 <style>html,body{{height:100%;margin:0;background:#0b1c24;color:#dff3ef;font-family:-apple-system,"PingFang SC",sans-serif;display:grid;place-items:center}}
 .box{{text-align:center}}.mark{{width:54px;height:54px;border-radius:16px;background:#0e7c7b;display:grid;place-items:center;font-size:24px;margin:0 auto 12px}}
 a{{color:#8fe3d6}}</style></head>
@@ -100,7 +102,7 @@ a{{color:#8fe3d6}}</style></head>
     ]:
         html = f"""<!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{label} · 影知（开发者入口）</title>
+<title>{label} · RadioCheck（开发者入口）</title>
 <style>html,body{{height:100%;margin:0;background:#0b1c24;color:#dff3ef;font-family:-apple-system,"PingFang SC",sans-serif;display:grid;place-items:center}}
 .box{{text-align:center}}.mark{{width:54px;height:54px;border-radius:16px;background:#0e7c7b;display:grid;place-items:center;font-size:24px;margin:0 auto 12px}}
 a{{color:#8fe3d6}}</style></head>
@@ -150,26 +152,35 @@ def write_homepage():
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b4f55">
-<title>影知 · 影像临床思维平台</title>
+<title>RadioCheck · 影像临床思维平台</title>
 <meta name="description" content="输入影像与报告/指南文档，回答同时引用影像区域与文献段落；证据不足时诚实拒答，并固定声明非诊断用途。">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b4f55'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white' font-family='sans-serif'%3E影%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b4f55'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white' font-family='sans-serif'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RadioCheck">
+<meta name="application-name" content="RadioCheck">
 <link rel="stylesheet" href="landing.css">
+<link rel="stylesheet" href="pwa.css">
 <script type="importmap">{{"imports":{{"three":"./vendor/three.module.js"}}}}</script>
 </head>
 <body>
 
 <header class="ld-top">
   <div class="ld-brand">
-    <div class="ld-mark">影</div>
-    <div><b>影知</b><span>YINGZHI · 影像临床思维平台</span></div>
+    <div class="ld-mark">R</div>
+    <div><b>RadioCheck</b><span>影像临床思维平台</span></div>
   </div>
   <nav class="ld-nav">
     <a href="#core">核心问答</a>
     <a href="#body">按部位进入</a>
     <a href="#chains">四链条</a>
+    <a href="#install">装到桌面</a>
     <a href="#boundary">能力边界</a>
   </nav>
   <div class="ld-cta">
+    <a class="btn" href="#install" data-scroll="install">安装</a>
     <a class="btn primary" href="app.html#/ask">进入问答</a>
   </div>
 </header>
@@ -187,7 +198,7 @@ def write_homepage():
     </div>
     <div class="acts">
       <a class="btn primary lg" href="app.html#/ask">进入多模态问答</a>
-      <a class="btn lg" href="#core">看一次回答怎么组成</a>
+      <a class="btn lg" href="#install" data-scroll="install">安装到桌面</a>
       <a class="btn lg" href="app.html">进入系统</a>
     </div>
   </section>
@@ -242,6 +253,37 @@ def write_homepage():
   </div>
   <div class="role-grid">{role_html}</div>
 
+  <div class="sec-h" id="install">
+    <h2>像应用一样打开</h2>
+    <p>安装后从桌面 / 主屏 / 程序坞一键直达：独立窗口、没有地址栏；断网也能打开已看过的页面。</p>
+  </div>
+  <div class="quick-grid">
+    <div class="quick-card">
+      <div class="qk-icon">R</div>
+      <div class="qk-body">
+        <b>RadioCheck · 影像临床思维平台</b>
+        <span class="qk-sub">网页应用 · PWA · v5</span>
+        <p id="pwaState" data-kind="idle">正在检测安装能力…</p>
+        <div class="qk-acts">
+          <button class="btn primary js-install" type="button" hidden>安装到桌面</button>
+          <a class="btn" href="app.html#/ask">直接打开</a>
+          <a class="btn" href="read/clinic.html">读片工作台</a>
+        </div>
+        <p class="qk-hint" id="pwaHint">正在检测浏览器支持…</p>
+      </div>
+    </div>
+    <div class="dock">
+      <div class="dock-h"><b>应用内快捷入口</b><span>四个高频动作</span></div>
+      <div class="dock-row">
+        <a class="dock-item" href="app.html#/ask"><i>问</i>问答<small>影像 + 双引用</small></a>
+        <a class="dock-item" href="read/clinic.html"><i>片</i>读片<small>区域 → 溯源</small></a>
+        <a class="dock-item" href="read/paper.html"><i>卷</i>组卷<small>出卷 · 成绩</small></a>
+        <a class="dock-item" href="read/teach.html"><i>谱</i>图谱<small>分区系统学</small></a>
+      </div>
+      <p class="dock-foot"><b>iPhone / iPad：</b>Safari 分享 → 添加到主屏幕。<br><b>Windows / macOS：</b>Chrome 或 Edge 地址栏右侧安装图标。</p>
+    </div>
+  </div>
+
   <div class="sec-h" id="boundary">
     <h2>能力边界</h2>
   </div>
@@ -271,6 +313,7 @@ def write_homepage():
   <div class="foot">
     <span>知识底座：征象 {c['signs']} · 指南条款 {c['guidelines']} · 公开病例 {c['cases']} · 解剖分区 {c['regions']}</span>
     <span>核心问答在本地规则引擎上运行 · 每条回答可回查影像区域与文献段落</span>
+    <span>v5.0 · 可安装为桌面 / 主屏应用（PWA）</span>
   </div>
 </div>
 
@@ -278,13 +321,14 @@ def write_homepage():
 <script src="body-model.js"></script>
 <script src="body-3d.js"></script>
 <script src="landing.js"></script>
+<script src="pwa.js"></script>
 </body>
 </html>"""
     (OUT / "index.html").write_text(stamp_assets(html), encoding="utf8")
 
 
 def write_readme():
-    text = """# 影知 · 影像临床思维平台（演示包）
+    text = """# RadioCheck · 影像临床思维平台（演示包）
 
 **核心功能：多模态知识库问答。** 输入影像与报告/指南文档，回答同时引用影像区域与文献段落；
 证据不足时降级或拒答，并固定声明非诊断用途。
@@ -302,6 +346,21 @@ python3 -m http.server 8080
 
 首页的人体模型是 BodyParts3D 三维网格，通过 ES module 与 fetch 载入，**必须用本地服务器打开**。
 若用 `file://` 直接双击，浏览器会拦截模块加载，3D 自动回落为可点击的 SVG 部位图（功能不中断）。
+
+## 快捷进入（PWA）
+
+首页「像应用一样打开」区块把浏览器安装能力变成页面里的一个按钮：
+
+| 能力 | 说明 |
+| --- | --- |
+| 安装 | Chrome / Edge 点「安装到桌面」或地址栏右侧安装图标；安装后独立窗口打开，无地址栏 |
+| 主屏 | iOS Safari「分享 → 添加到主屏幕」；Android Chrome「⋮ → 安装应用」 |
+| 快捷方式 | manifest 内置 4 个 shortcuts：问答 / 读片 / 组卷 / 图谱 |
+| 离线 | 首次访问后缓存外壳与静态资源；断网可打开看过的页面（影像大图不缓存） |
+
+图标由 `medtrain/make_icons.py` 生成（R 字标：192 / 512 / maskable / apple-touch）。
+Service Worker 只缓存同源静态资源，跳过 `/api/`、`/images/`、`/models/`；
+升级时改 `sw.js` 的 `VERSION`，旧缓存自动清理。
 
 ## 入口
 
