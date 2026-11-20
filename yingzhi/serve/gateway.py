@@ -50,8 +50,11 @@ class Gateway:
         # clean：等生成完成再分片推送，正文干净（默认，演示用）
         # raw  ：直接转发模型增量，首字快但可能混入英文思考
         self.mode = mode
+        # 有界多轮：同一 conversation_id 在 TTL 内复用 session。
+        # 不做无界复用——实测上下文无限累积会把 7s 拖到 90s。
         self._sessions = {}
         self._lock = threading.Lock()
+        self.session_ttl = 600
 
     # ---------- 基础 HTTP ----------
 
@@ -97,18 +100,31 @@ class Gateway:
 
     # ---------- 会话 ----------
 
-    def ensure_session(self, role="student", device="desktop", force=False):
-        key = "%s:%s" % (role, device)
+    def ensure_session(self, role="student", device="desktop", force=False, key=None):
+        """取或建会话。
+
+        key 优先用前端传来的 conversation_id：同一页面、同一轮对话复用，
+        不同用户/不同页面互不污染。force=True 仍然强制新建（排障用）。
+        超过 session_ttl 的会话自动淘汰，避免长期驻留把上下文拖慢。
+        """
+        key = key or "%s:%s" % (role, device)
+        now = time.time()
         with self._lock:
-            if not force and key in self._sessions:
-                return self._sessions[key]
+            rec = self._sessions.get(key)
+            if rec and not force and now - rec.get("at", 0) < self.session_ttl:
+                rec["at"] = now
+                return rec["id"]
+            # 顺手清理过期会话，避免字典只增不减
+            for k in [k for k, v in self._sessions.items()
+                      if now - v.get("at", 0) > self.session_ttl]:
+                self._sessions.pop(k, None)
         session = self._request("POST", "/session", {
             "title": "影知·%s·%s" % (role, device),
             "directory": self.directory,
         })
         sid = session["id"]
         with self._lock:
-            self._sessions[key] = sid
+            self._sessions[key] = {"id": sid, "at": now}
         return sid
 
     # ---------- 主流程 ----------
@@ -127,6 +143,16 @@ class Gateway:
                 "知识库根目录：%s（只读；检索用 grep/read 指定具体文件，"
                 "禁止 find / 或递归全盘搜索）" % self.kb_root
             )
+        if context:
+            # 页面上下文只做“定位提示”，不替代用户问题，也不当作证据。
+            # 截断到 8 个键、每值 300 字，防止前端把整份报告/整张图塞进来。
+            ctx = []
+            for k, v in list(context.items())[:8]:
+                if v in (None, "", [], {}):
+                    continue
+                ctx.append("%s：%s" % (k, str(v)[:300]))
+            if ctx:
+                head.append("【页面上下文】以下只用于定位，不是知识库证据：\n" + "\n".join(ctx))
         if hint:
             head.append("执行顺序是强制的，不要跳步，也不要先列目录：\n" + hint)
         if head:
@@ -284,12 +310,25 @@ class Gateway:
                         stage, label = "skill_invoke", (skill_name or "skill")
                     else:
                         stage, label = "kb_retrieve", tool
+                    span_ms = int((rec["end"] - rec["start"]) * 1000)
                     emit("trace", {
                         "stage": stage,
                         "skill": label,
                         "status": status,
-                        "ms": int((rec["end"] - rec["start"]) * 1000),
+                        "ms": span_ms,
                     })
+                    # 明细事件只发一次：前端用它显示「查了什么、命中几行」，
+                    # 与五段 trace 分开，避免把界面变成日志墙。
+                    if not rec.get("emitted"):
+                        rec["emitted"] = True
+                        emit("tool", {
+                            "tool": tool,
+                            "skill": skill_name,
+                            "detail": (rec.get("detail") or "")[:160],
+                            "status": status,
+                            "ms": span_ms,
+                            "out_lines": int(rec.get("out_lines") or 0),
+                        })
                 continue
 
             if etype == "session.idle":

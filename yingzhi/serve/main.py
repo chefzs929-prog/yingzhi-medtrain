@@ -30,6 +30,37 @@ from discover import DiscoverError, discover  # noqa: E402
 from gateway import Gateway, GatewayError  # noqa: E402
 import llm as llm_route  # noqa: E402
 import vision as vision_mod  # noqa: E402
+import atlas as atlas_mod  # noqa: E402
+import litsearch  # noqa: E402
+import segment as segment_mod  # noqa: E402
+VISION_PROMPT = """你在做影像教学标注，不是诊断。只回答三件事：
+1. 这张图属于什么检查类型、什么部位、什么投照位/层面；
+2. 病灶或可疑区域的归一化外接框；
+3. 可见的影像学表现，用中性描述，不写诊断结论。
+
+没有把握的字段填 null；不要编造病灶。"""
+
+VISION_SCHEMA = """{
+  "modality": "CR|CT|MR|US|MG|null",
+  "body_part": "胸部|头颈|腹部|骨关节|乳腺|甲状腺|null",
+  "view": "PA|AP|LAT|CT-AXIAL|MR|US|MLO|null",
+  "bbox": [x, y, w, h],
+  "findings": ["中性描述，最多 4 条"],
+  "confidence": 0.0
+}"""
+
+REPORT_PROMPT = """你在做影像教学报告，不是诊断报告。按影像学描述规范写：
+- findings 只写可见表现：位置、密度/信号、形态、边缘、分布、伴随征象；
+- impression 写成「影像学印象（非诊断）」，只列鉴别方向，不写确诊、不写治疗；
+- 证据不足时明确写「不足以判断」，不要补全。"""
+
+REPORT_SCHEMA = """{
+  "findings": ["..."],
+  "impression": ["影像学印象（非诊断）：..."],
+  "bbox": [x, y, w, h],
+  "limitations": ["..."]
+}"""
+
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WORKSPACE = os.path.dirname(ROOT)
@@ -187,6 +218,10 @@ def _rebuild_gateway():
 
 
 def ensure_gateway():
+    # --offline 是断网演练开关：不能被 /api/health 的“自愈”悄悄覆盖。
+    # 之前 health 会重建 gateway，导致 offline 启动后仍然真实调用 agent。
+    if STATE.get("offline"):
+        return None
     gw = STATE.get("gateway")
     if gw is not None and _port_alive(gw.base):
         return gw
@@ -298,6 +333,132 @@ def known_ids():
                     ids.add(str(row["id"]))
         _KNOWN_IDS = ids
     return _KNOWN_IDS
+
+
+_CITE_INDEX = None
+_SIGN_INDEX = None
+
+# 引用语义校验用：问题里的部位词。只做「部位是否对得上」，
+# 不做真正的语义相似度——那需要 embedding，当前没有。
+_PART_HINTS = {
+    "胸部": ["肺", "胸", "气", "纵隔", "心包", "支气管", "膈"],
+    "肾脏": ["肾"],
+    "乳腺": ["乳腺"],
+    "甲状腺": ["甲状腺"],
+    "脑": ["脑", "出血", "梗死", "腔隙"],
+    "骨关节": ["骨", "膝", "关节", "腕", "踝", "脊柱"],
+    "腹部": ["腹", "肝", "胆", "肠", "胰", "脾"],
+    "头颈": ["头", "颈", "鼻", "咽"],
+}
+
+
+def ensure_sign_index():
+    global _SIGN_INDEX
+    if _SIGN_INDEX is None:
+        _SIGN_INDEX = {str(r.get("id")): r for r in load_jsonl("signs.jsonl") if r.get("id")}
+    return _SIGN_INDEX
+
+
+def _char_overlap(a, b):
+    """字符二元组 Dice：只用来判断「名称是否有实质重叠」。"""
+    def grams(t):
+        t = "".join(ch for ch in (t or "") if ch.isalnum())
+        return {t[i:i + 2] for i in range(len(t) - 1)} if len(t) > 1 else ({t} if t else set())
+    A, B = grams(a), grams(b)
+    if not A or not B:
+        return 0.0
+    return 2.0 * len(A & B) / (len(A) + len(B))
+
+
+def cite_relevance(cite, query):
+    """判断引用与问题的关系：direct / related / off。
+
+    direct  名称/别名直接出现在问题里；
+    related 名称不在问题里，但部位一致，属于合理扩展证据；
+    off     部位也对不上，前端必须标「弱相关」。
+
+    这只是最低成本校验，不等于语义正确：肾积水和肾囊肿都是「肾脏」，
+    会被判 related。真正的语义校验需要 embedding，见 README 未来方向。
+    """
+    if not cite or cite.get("type") != "sign":
+        return "n/a"
+    row = ensure_sign_index().get(str(cite.get("id"))) or {}
+    q = (query or "").lower()
+    name = str(row.get("name") or "").lower()
+    if name and name in q:
+        return "direct"
+    for a in row.get("aliases") or []:
+        a = str(a).lower()
+        if a and a in q:
+            return "direct"
+    en = str(row.get("en") or "").lower()
+    if en and en in q:
+        return "direct"
+    bp = str(row.get("body_part") or "")
+    if bp == "全身":
+        return "related"
+    if bp in _PART_HINTS and any(w in q for w in _PART_HINTS[bp]):
+        return "related"
+    return "off"
+
+
+def ensure_cite_index():
+    """id → 可展示的引用卡片。只用于把 agent 正文里的 id 变成 citation 事件，
+    不做任何语义判断；title 直接来自知识库字段。"""
+    global _CITE_INDEX
+    if _CITE_INDEX is not None:
+        return _CITE_INDEX
+    idx = {}
+    specs = [
+        ("signs.jsonl", "sign", lambda r: r.get("name") or ""),
+        ("claims.jsonl", "claim", lambda r: (r.get("text") or r.get("claim") or "")[:48]),
+        ("guidelines.jsonl", "guideline", lambda r: r.get("standard_name") or r.get("statement") or ""),
+        ("regions.jsonl", "region", lambda r: r.get("name") or ""),
+        ("cases.jsonl", "case", lambda r: r.get("title") or ""),
+    ]
+    for name, kind, title_of in specs:
+        for row in load_jsonl(name):
+            rid = row.get("id")
+            if rid and rid not in idx:
+                idx[str(rid)] = {
+                    "id": str(rid), "type": kind, "title": title_of(row),
+                    "source_url": row.get("source_url") or "",
+                    "hash_ok": bool(row.get("excerpt_sha256") or row.get("source_url")),
+                }
+    _CITE_INDEX = idx
+    return idx
+
+
+def cites_from_text(text, query=""):
+    """把回答里真实存在的 id 变成 citation 事件。编造 id 不在这里发，
+    由 citation_audit 单独标红，避免把不存在的 id 做成可点击卡片。"""
+    cited, _ = audit_citations(text)
+    idx = ensure_cite_index()
+    out = []
+    for i in cited:
+        if i not in idx:
+            continue
+        card = dict(idx[i])
+        card["relevance"] = cite_relevance(card, query)
+        out.append(card)
+
+    # 同部位扩展：问题里没写「肺」，但 direct 引用是胸部征象时，
+    # 同部位的伴随征象（反晕征、铺路石征）应算 related，不是 off。
+    signs = ensure_sign_index()
+    anchors = set()
+    for c in out:
+        if c["relevance"] != "direct":
+            continue
+        bp = str((signs.get(str(c.get("id"))) or {}).get("body_part") or "")
+        if bp and bp != "全身":
+            anchors.add(bp)
+    for c in out:
+        if c["relevance"] != "off":
+            continue
+        bp = str((signs.get(str(c.get("id"))) or {}).get("body_part") or "")
+        if bp in anchors:
+            c["relevance"] = "related"
+    return out[:8]
 
 
 def audit_citations(text):
@@ -444,6 +605,29 @@ def extract_keyword(query):
     if not runs:
         return None
     return max(runs, key=len)
+
+
+def make_followups(cites, grounding, image_match):
+    """给前端三个可点的追问。
+
+    这是规则生成的“下一步入口”，不是模型输出；done 里会标 source=rules，
+    避免把模板问题伪装成 agent 的主动追问。
+    """
+    out = []
+    if image_match and image_match.get("case_id"):
+        out.append("这个分区的解剖边界怎么划？")
+        out.append("库内还有哪些相似病例？")
+    if cites:
+        out.append("把 %s 这条依据展开说说" % cites[0].get("id"))
+    if grounding in ("general", "degraded"):
+        out.append("库内有没有能直接支撑这个说法的词条？")
+    else:
+        out.append("这个征象还需要和什么鉴别？")
+    seen = []
+    for item in out:
+        if item not in seen:
+            seen.append(item)
+    return seen[:3]
 
 
 def build_trace(run_id, request, result, degraded, reason):
@@ -641,7 +825,8 @@ class Handler(BaseHTTPRequestHandler):
                 "skills": STATE.get("skills") or [],
                 "fallback_reason": STATE["fallback_reason"],
                 "llm_route": (ensure_llm().router.describe() if ensure_llm() else None),
-                "models": ["dth/Auto"],
+                "models": ["%s/%s" % (STATE["args"].provider, STATE["args"].model)]
+                if STATE.get("args") else ["dth/Auto"],
                 # 诚实边界：答辩时可直接读这段，不用靠口头解释。
                 # 每一项都对应代码里能指认的实现，或明确为 false。
                 "honesty": {
@@ -650,15 +835,82 @@ class Handler(BaseHTTPRequestHandler):
                     "real_workflow": False,
                     "semantic_search": False,
                     "multiturn_memory": False,
+                    "bounded_multiturn": True,
+                    "agent_interface": True,
                     "citation_audit": True,
                     "trace_evidence": True,
                     "notes": [
                         "semantic_search=false：当前是词典归一化 + 关键词 grep，不是向量检索",
-                        "multiturn_memory=false：每次提问新建会话，避免上下文污染",
+                        "multiturn_memory=false：没有跨会话长期记忆；仅在 10 分钟 TTL 内按 conversation_id 复用 session",
+                        "bounded_multiturn=true：有界多轮，超时或换 conversation_id 即重开，避免上下文无限累积",
+                        "agent_interface=true：POST /api/ask 支持 mode=auto|agent|llm，GET /api/agent/capabilities 可探测",
                         "real_workflow=false：工作流未创建，trace 里标 unavailable",
                         "citation_audit=true：回答中的 id 会回查知识库，编造会被标出",
                     ],
                 },
+            })
+
+        if path == "/api/agent/capabilities":
+            # 给前端/外部接入方的“能力探测”端点：先看这里，再决定用 agent 还是降级。
+            gw = ensure_gateway()
+            ans = ensure_llm()
+            return self.send_json(200, {
+                "version": "1.0",
+                "ok": gw is not None or ans is not None,
+                "transport": {
+                    "ask": "POST /api/ask (SSE)",
+                    "trace": "GET /api/trace/{run_id}",
+                    "health": "GET /api/health",
+                    "literature": "POST /api/lit/search",
+                    "region_template": "POST /api/vision/region",
+                    "vision_report": "POST /api/vision/report",
+                    "vision_segment": "POST /api/vision/segment",
+                },
+                "events": ["trace", "tool", "delta", "citation",
+                           "followup", "reset", "done"],
+                "modes": ["auto", "agent", "llm"],
+                "citation_kinds": ["local", "literature"],
+                "research": {
+                    "enabled": True,
+                    "source": "PubMed E-utilities",
+                    "trigger": "body.research=true 或 surface=literature",
+                    "needs_english_term": True,
+                },
+                "region_template": {
+                    "enabled": bool(atlas_mod.load().atlases),
+                    "atlases": len(atlas_mod.load().atlases),
+                    "source": "atlas_template",
+                    "note": "陌生影像用通用模板推断，不是人工标注",
+                },
+                "agent": {
+                    "name": (STATE.get("args").agent if STATE.get("args") else None),
+                    "ready": bool(STATE.get("agent_ready")),
+                    "persona_injected": bool(STATE.get("persona_injected")),
+                    "skills": STATE.get("skills") or [],
+                    "skill_ready": bool(STATE.get("skill_ready")),
+                },
+                "llm": (ans.router.describe() if ans else None),
+                "limits": {
+                    "image_max_mb": 8,
+                    "context_keys": 8,
+                    "context_value_chars": 300,
+                    "conversation_ttl_s": 600,
+                },
+                "surfaces": ["clinic", "teach", "paper", "compare"],
+                "notes": [
+                    "auto 先走 agent，失败且未产出内容时才降级 llm",
+                    "done.served_by 会如实标注 agent / llm / fallback",
+                    "followups 是规则生成的下一步入口，不是模型输出",
+                ],
+            })
+
+        if path == "/api/vision/atlases":
+            T = atlas_mod.load()
+            return self.send_json(200, {
+                "ok": True,
+                "source": "atlas_template",
+                "note": "陌生影像用通用模板推断，不是人工标注",
+                "atlases": T.list_atlases(),
             })
 
         if path.startswith("/api/trace/"):
@@ -683,10 +935,326 @@ class Handler(BaseHTTPRequestHandler):
 
         return self.send_json(404, {"error": "not found", "path": path})
 
+
+    def api_lit_search(self, body):
+        """网络文献检索。只返回检索结果，不生成结论。"""
+        if STATE["offline"]:
+            return self.send_json(200, {
+                "ok": False, "reason": "offline_mode", "items": [],
+                "query": body.get("query"), "source": "PubMed",
+            })
+        sign_ids = [s for s in (body.get("sign_ids") or []) if s]
+        extra = [t for t in (body.get("terms") or []) if t]
+        modality = body.get("modality")
+        parts = body.get("body_parts") or []
+        try:
+            limit = max(1, min(int(body.get("limit") or 5), 10))
+        except Exception:
+            limit = 5
+
+        raw_q = (body.get("query") or "").strip()
+        if raw_q and not sign_ids:
+            # 只有全 ASCII 的查询才直接送 PubMed；中文查询明确拒绝，不返回假结果。
+            if all(ord(ch) < 128 for ch in raw_q):
+                res = litsearch.search(raw_q, limit)
+            else:
+                res = {"ok": False, "reason": "no_english_term", "items": [],
+                       "query": raw_q, "source": "PubMed"}
+        else:
+            res = litsearch.search_signs(sign_ids, extra, modality, parts, limit)
+        return self.send_json(200, res)
+
+    def api_vision_region(self, body):
+        """陌生影像的分区定位。
+
+        顺序：视觉模型出 {bbox, modality, body_part, view} → 匹配 atlas 模板
+        → 模板几何定位。任何一步失败都显式降级，不猜。
+        """
+        T = atlas_mod.load()
+        atlas_id = (body.get("atlas_id") or "").strip()
+        bbox = body.get("bbox")
+        image = body.get("image")
+        vision = None
+        vision_error = None
+
+        ans = ensure_llm()
+        vision_ready = bool(ans and ans.router.vision.ready)
+
+        # 只有需要自动出框/自动分类时才调视觉，用户已给 atlas+bbox 就不浪费一次请求。
+        if image and vision_ready and (not bbox or not atlas_id):
+            try:
+                vision, _raw = ans.structured(VISION_PROMPT, VISION_SCHEMA,
+                                              image=image, max_tokens=600)
+                if not bbox and vision.get("bbox"):
+                    bbox = vision_mod.extract_bbox(
+                        json.dumps({"bbox": vision["bbox"]}))[0]
+            except Exception as exc:
+                vision_error = str(exc)[:160]
+
+        atlas = T.atlases.get(atlas_id) if atlas_id else None
+        matched = None
+        if atlas is None:
+            src = vision or {}
+            matched = T.match(
+                src.get("modality") or body.get("modality"),
+                src.get("body_part") or body.get("body_part"),
+                src.get("view") or body.get("view"),
+            )
+            if matched:
+                atlas = matched["atlas"]
+
+        if atlas is None:
+            return self.send_json(200, {
+                "ok": False,
+                "reason": "no_atlas_match",
+                "message": "没有匹配到分区模板：请指定 atlas_id，或提供检查类型/部位/投照位",
+                "vision": vision,
+                "vision_error": vision_error,
+                "atlases": T.list_atlases(),
+            })
+
+        atlas_card = {
+            "id": atlas.get("id"),
+            "name": atlas.get("name"),
+            "modality": atlas.get("modality") or [],
+            "body_part": atlas.get("body_part") or "",
+            "view": atlas.get("view") or "",
+            "n_cases": atlas.get("n_cases") or 0,
+            "n_regions": atlas.get("n_regions") or 0,
+            "match_score": (matched or {}).get("score"),
+        }
+
+        if not bbox:
+            return self.send_json(200, {
+                "ok": False,
+                "reason": "needs_bbox",
+                "atlas": atlas_card,
+                "vision": vision,
+                "vision_ready": vision_ready,
+                "vision_error": vision_error,
+                "message": ("未配置视觉模型或模型未给出可用框：请框选病灶后重试"
+                            if not vision_error else "视觉定位失败，请手动框选"),
+            })
+
+        try:
+            located = T.locate(atlas["id"], bbox)
+        except Exception as exc:
+            return self.send_json(400, {"ok": False, "reason": "bad_bbox",
+                                        "message": str(exc)[:160]})
+
+        return self.send_json(200, {
+            "ok": True,
+            "source": "atlas_template",
+            "atlas": atlas_card,
+            "locate": located,
+            "vision": vision,
+            "vision_error": vision_error,
+            "honesty": {
+                "template_inference": True,
+                "human_annotated": False,
+                "note": "陌生影像没有人工标注，这里是模板推断；结论需人工复核",
+            },
+        })
+
+    def api_vision_segment(self, body):
+        """bbox → mask。未装模型时明确 unavailable，不返回假轮廓。"""
+        st = segment_mod.status()
+        if not st["available"]:
+            return self.send_json(200, {
+                "ok": False, "reason": "segment_unavailable",
+                "segment": st,
+                "message": "未安装分割模型；当前只提供 bbox，不提供 mask",
+            })
+        try:
+            mask = segment_mod.segment(body.get("image"), body.get("bbox"))
+        except Exception as exc:
+            return self.send_json(200, {"ok": False, "reason": "segment_failed",
+                                        "message": str(exc)[:200], "segment": st})
+        return self.send_json(200, {"ok": True, "mask": mask, "segment": st})
+
+    def api_vision_report(self, body):
+        """结构化影像教学报告。只做描述与鉴别方向，不下诊断。"""
+        image = body.get("image")
+        if not image:
+            return self.send_json(400, {"error": "image required"})
+
+        ans = ensure_llm()
+        if not ans or not ans.router.vision.ready:
+            return self.send_json(200, {
+                "ok": False, "reason": "vision_unavailable",
+                "message": "未配置视觉模型：无法生成影像报告",
+            })
+
+        try:
+            report, _raw = ans.structured(REPORT_PROMPT, REPORT_SCHEMA,
+                                          image=image, max_tokens=900)
+        except Exception as exc:
+            return self.send_json(200, {
+                "ok": False, "reason": "vision_failed",
+                "message": str(exc)[:200],
+            })
+
+        # 报告里的描述回查库内征象，能匹配就带上 id；匹配不到不硬塞。
+        text = " ".join([str(x) for x in (report.get("findings") or [])])
+        citations = []
+        try:
+            ctx = ans.retriever.search(text, limit=6)
+            for s in ctx.get("signs") or []:
+                if s.get("id"):
+                    citations.append({"id": s["id"], "kind": "local",
+                                      "type": "sign", "title": s.get("name") or ""})
+        except Exception:
+            pass
+
+        region = None
+        bbox = body.get("bbox") or report.get("bbox")
+        atlas_id = (body.get("atlas_id") or "").strip()
+        if bbox:
+            T = atlas_mod.load()
+            atlas = T.atlases.get(atlas_id) if atlas_id else None
+            if atlas is None:
+                m = T.match(body.get("modality"), body.get("body_part"), body.get("view"))
+                atlas = (m or {}).get("atlas")
+            if atlas:
+                try:
+                    region = {"atlas_id": atlas.get("id"),
+                              "locate": T.locate(atlas["id"], bbox)}
+                except Exception:
+                    region = None
+
+        return self.send_json(200, {
+            "ok": True,
+            "source": "vision_structured",
+            "report": {
+                "findings": report.get("findings") or [],
+                "impression": report.get("impression") or [],
+                "limitations": report.get("limitations") or [],
+            },
+            "region": region,
+            "citations": citations,
+            "disclaimer": "影像教学描述，不构成诊断意见；结论需人工复核。",
+        })
+
+    def api_lit_search(self, body):
+        """网络文献检索。只返回检索结果，不生成结论。"""
+        if STATE["offline"]:
+            return self.send_json(200, {
+                "ok": False, "reason": "offline_mode", "items": [],
+                "query": body.get("query"), "source": "PubMed",
+            })
+        sign_ids = [s for s in (body.get("sign_ids") or []) if s]
+        extra = [t for t in (body.get("terms") or []) if t]
+        modality = body.get("modality")
+        parts = body.get("body_parts") or []
+        try:
+            limit = max(1, min(int(body.get("limit") or 5), 10))
+        except Exception:
+            limit = 5
+
+        raw_q = (body.get("query") or "").strip()
+        if raw_q and not sign_ids:
+            # 只有全 ASCII 的查询才直接送 PubMed；中文查询明确拒绝，不返回假结果。
+            if all(ord(ch) < 128 for ch in raw_q):
+                res = litsearch.search(raw_q, limit)
+            else:
+                res = {"ok": False, "reason": "no_english_term", "items": [],
+                       "query": raw_q, "source": "PubMed"}
+        else:
+            res = litsearch.search_signs(sign_ids, extra, modality, parts, limit)
+        return self.send_json(200, res)
+
+    def api_vision_region(self, body):
+        """陌生影像的分区定位。
+
+        有 bbox：直接用通用 atlas 模板做确定性定位。
+        无 bbox：视觉模型可用就自动出框，否则明确要求框选，不猜。
+        """
+        T = atlas_mod.load()
+        atlas_id = (body.get("atlas_id") or "").strip()
+        atlas = T.atlases.get(atlas_id) if atlas_id else None
+        matched = None
+        if atlas is None:
+            matched = T.match(body.get("modality"), body.get("body_part"), body.get("view"))
+            if matched:
+                atlas = matched["atlas"]
+
+        if atlas is None:
+            return self.send_json(200, {
+                "ok": False,
+                "reason": "no_atlas_match",
+                "message": "没有匹配到分区模板：请指定 atlas_id，或提供检查类型/部位/投照位",
+                "atlases": T.list_atlases(),
+            })
+
+        atlas_card = {
+            "id": atlas.get("id"),
+            "name": atlas.get("name"),
+            "modality": atlas.get("modality") or [],
+            "body_part": atlas.get("body_part") or "",
+            "view": atlas.get("view") or "",
+            "n_cases": atlas.get("n_cases") or 0,
+            "n_regions": atlas.get("n_regions") or 0,
+            "match_score": (matched or {}).get("score"),
+        }
+
+        bbox = body.get("bbox")
+        vision_note = None
+        if not bbox:
+            ans = ensure_llm()
+            vision_ready = bool(ans and ans.router.vision.ready)
+            if not vision_ready or not body.get("image"):
+                return self.send_json(200, {
+                    "ok": False,
+                    "reason": "needs_bbox",
+                    "atlas": atlas_card,
+                    "vision_ready": vision_ready,
+                    "message": "未配置视觉模型或未提供影像：请框选病灶后重试",
+                })
+            try:
+                prompt = (
+                    "只做一件事：给出病灶在图像中的归一化外接框。"
+                    "不要解释，不要下诊断。只输出 JSON："
+                    '{"bbox":[x,y,w,h]}，x/y/w/h 都是 0-1 之间的小数。'
+                )
+                _, text, _ = ans.ask(prompt, lambda *a, **k: None, image=body.get("image"))
+                found_bbox, _raw, _cleaned = vision_mod.extract_bbox(text)
+                if not found_bbox:
+                    return self.send_json(200, {
+                        "ok": False, "reason": "vision_no_bbox",
+                        "atlas": atlas_card,
+                        "message": "视觉模型没有给出可用的框，请手动框选",
+                    })
+                bbox = found_bbox
+                vision_note = "bbox 由视觉模型给出，分区由模板推断"
+            except Exception as exc:
+                return self.send_json(200, {
+                    "ok": False, "reason": "vision_failed",
+                    "atlas": atlas_card,
+                    "message": "视觉定位失败：%s" % str(exc)[:160],
+                })
+
+        try:
+            located = T.locate(atlas["id"], bbox)
+        except Exception as exc:
+            return self.send_json(400, {"ok": False, "reason": "bad_bbox",
+                                        "message": str(exc)[:160]})
+
+        return self.send_json(200, {
+            "ok": True,
+            "source": "atlas_template",
+            "atlas": atlas_card,
+            "locate": located,
+            "vision_note": vision_note,
+            "honesty": {
+                "template_inference": True,
+                "human_annotated": False,
+                "note": "陌生影像没有人工标注，这里是模板推断；结论需人工复核",
+            },
+        })
+
     def do_POST(self):
         parsed = urllib.parse.urlparse(self.path)
-        if parsed.path != "/api/ask":
-            return self.send_json(404, {"error": "not found"})
+        path = parsed.path
 
         try:
             length = int(self.headers.get("Content-Length") or 0)
@@ -694,6 +1262,17 @@ class Handler(BaseHTTPRequestHandler):
             body = json.loads(raw.decode("utf-8") or "{}")
         except Exception as exc:
             return self.send_json(400, {"error": "bad json: %s" % exc})
+
+        if path == "/api/lit/search":
+            return self.api_lit_search(body)
+        if path == "/api/vision/region":
+            return self.api_vision_region(body)
+        if path == "/api/vision/report":
+            return self.api_vision_report(body)
+        if path == "/api/vision/segment":
+            return self.api_vision_segment(body)
+        if path != "/api/ask":
+            return self.send_json(404, {"error": "not found", "path": path})
 
         query = (body.get("query") or "").strip()
         if not query:
@@ -706,6 +1285,9 @@ class Handler(BaseHTTPRequestHandler):
         request = {
             "run_id": run_id, "query": query, "role": role,
             "device": device, "chain": chain,
+            "surface": body.get("surface") or chain,
+            "conversation_id": (body.get("conversation_id") or "").strip()[:80] or None,
+            "mode": (body.get("mode") or os.environ.get("YZ_ASK_MODE") or "auto").lower(),
             "filters": body.get("filters") or {},
             "context": body.get("context") or {},
             "kb_version": body.get("client_kb_version") or "local",
@@ -734,48 +1316,99 @@ class Handler(BaseHTTPRequestHandler):
                                    "blocked": True, "reason": "out_of_scope"})
             return
 
-        llm_ans = ensure_llm()
-        gateway = None if llm_ans is not None else ensure_gateway()
-        degraded = llm_ans is None and gateway is None
+        # 路由：auto = agent 优先、失败降级直连模型；agent = 只用 agent；
+        # llm = 只用直连模型。前端可用 mode 显式指定，服务端可用 YZ_ASK_MODE 设默认。
+        mode = (body.get("mode") or os.environ.get("YZ_ASK_MODE") or "auto").lower()
+        if mode not in ("auto", "agent", "llm"):
+            mode = "auto"
+        conversation_id = (body.get("conversation_id") or "").strip()[:80]
+        context = body.get("context") or {}
+        gateway = ensure_gateway() if mode in ("auto", "agent") else None
+        llm_ans = ensure_llm() if mode in ("auto", "llm") else None
+        degraded = gateway is None and llm_ans is None
         reason = STATE["fallback_reason"] if degraded else None
+        if mode == "auto" and gateway is None and llm_ans is not None:
+            # agent 不可用但直连模型可用：这不是正常 agent 链路，必须标降级。
+            degraded = True
+            reason = STATE["fallback_reason"] or "agent_unavailable"
+        served_by = None
+        session_id = None
         result = None
         image_match = None
+        emitted = {"delta": False}
 
         self.sse_start()
 
+        def emit(kind, payload):
+            if kind == "delta" and (payload or {}).get("text"):
+                emitted["delta"] = True
+            self.sse_send(kind, payload)
+
+        def run_llm():
+            """直连模型分支：文本/视觉二选一，返回 (result, text, cites)。"""
+            nonlocal image_match
+            image = body.get("image")
+            res = llm_ans.ask(query, emit, image=image, context=context)
+            out = res.get("text") or ""
+            if image:
+                # 模型给的框要从正文里剥掉再发 delta，不能让用户看到 JSON
+                bbox, raw, cleaned = vision_mod.extract_bbox(out)
+                if bbox:
+                    out = cleaned
+                    res["text"] = out
+                found = ensure_image_index().match_all(image)
+                image_match = {
+                    "case_id": found[0] if found else None,
+                    "case_ids": found,
+                    "bbox": bbox,
+                    "raw_bbox": raw,
+                }
+                if not found:
+                    # 认不出就明说，并给一条可走的路，而不是让用户卡在这里
+                    image_match["suggest"] = suggest_cases()
+            cs = res.get("cites") or []
+            # 直连模型是一次性返回，没有「首字」时间，留空而不是填 0 假装有
+            res["total_ms"] = res.get("ms")
+            res["delta_chars"] = len(out)
+            res["first_token_ms"] = None
+            emit("delta", {"text": out})
+            return res, out, cs
+
         try:
-            if llm_ans is not None:
-                # 双模型路由：body.image 为 data URL 时走视觉模型，否则走文本模型
-                image = body.get("image")
-                result = llm_ans.ask(query, self.sse_send, image=image)
-                text = result.get("text") or ""
-                if image:
-                    # 模型给的框要从正文里剥掉再发 delta，不能让用户看到 JSON
-                    bbox, raw, cleaned = vision_mod.extract_bbox(text)
-                    if bbox:
-                        text = cleaned
-                        result["text"] = text
-                    found = ensure_image_index().match_all(image)
-                    image_match = {
-                        "case_id": found[0] if found else None,
-                        "case_ids": found,
-                        "bbox": bbox,
-                        "raw_bbox": raw,
-                    }
-                    if not found:
-                        # 认不出就明说，并给一条可走的路，而不是让用户卡在这里
-                        image_match["suggest"] = suggest_cases()
-                cites = result.get("cites") or []
-                # 直连模型是一次性返回，没有「首字」时间，留空而不是填 0 假装有
-                result["total_ms"] = result.get("ms")
-                result["delta_chars"] = len(text)
-                result["first_token_ms"] = None
-                self.sse_send("delta", {"text": text})
-            elif gateway is not None:
-                # 每次提问新建会话：复用同一 session 会让上下文无限累积，
-                # 实测同一 session 连续提问会从 7s 涨到 90s 超时。
-                session_id = gateway.ensure_session(role, device, force=True)
-                # 会话建立不属于链路五段，不再发 trace（前端只认五段，多发会变脏事件）
+            if gateway is not None:
+                # 影像问答拆成两段：视觉只负责“这是哪一例、框在哪”，
+                # agent 负责解释与引用。不能让 agent 直接吃 base64，
+                # 也不能因为走 agent 就把视觉定位丢掉。
+                if body.get("image") and llm_ans is not None and mode == "auto":
+                    try:
+                        vres = llm_ans.ask(
+                            query, lambda kind, payload: None,
+                            image=body.get("image"), context=context)
+                        vtext = vres.get("text") or ""
+                        bbox, raw, _cleaned = vision_mod.extract_bbox(vtext)
+                        found = ensure_image_index().match_all(body.get("image"))
+                        image_match = {
+                            "case_id": found[0] if found else None,
+                            "case_ids": found,
+                            "bbox": bbox,
+                            "raw_bbox": raw,
+                        }
+                        if not found:
+                            image_match["suggest"] = suggest_cases()
+                        ctx2 = dict(context or {})
+                        ctx2["图像定位"] = "病例 %s；bbox %s" % (
+                            image_match["case_id"] or "未入库",
+                            bbox or "未给出")
+                        context = ctx2
+                        emit("trace", {"stage": "vision_locate", "status": "completed",
+                                       "ms": vres.get("ms", 0)})
+                    except Exception as exc:
+                        # 视觉失败不阻断 agent：仍可用文本回答，只是没有定位
+                        emit("trace", {"stage": "vision_locate", "status": "error",
+                                       "ms": 0, "detail": str(exc)[:120]})
+                # 同一 conversation_id 在 TTL 内复用；不再每次 force=True。
+                session_id = gateway.ensure_session(
+                    role, device, key=conversation_id or None)
                 # 技能必须真实调用，否则 trace 里的 skill_invoke 只能标 unavailable。
                 # 实测：不显式要求时 agent 会直接 bash grep，跳过 skill 工具。
                 hint = "1) 先调用 skill 工具，参数 name 为 retrieve-sign（加载检索规范）"
@@ -805,32 +1438,107 @@ class Handler(BaseHTTPRequestHandler):
                              % (keyword or "", DATA_DIR))
                     hint += ("\n四步都未命中才进入通识分支：通识段以 %s 单独成段，段内禁止出现任何 id。"
                              % GENERAL_MARK)
-                result = gateway.ask(session_id, query, self.sse_send, hint=hint)
+                result = gateway.ask(session_id, query, emit, context=context, hint=hint)
                 text = result.get("text") or ""
-                cites = []
+                # agent 的引用写在正文里；这里把真实存在的 id 提成 citation 事件，
+                # 前端才能显示可核对的卡片，而不是让用户自己在长文里找 id。
+                cites = cites_from_text(text, query)
+                served_by = "agent"
+            elif llm_ans is not None:
+                # 双模型路由：body.image 为 data URL 时走视觉模型，否则走文本模型
+                result, text, cites = run_llm()
+                served_by = "llm"
             else:
                 text, cites = fallback_answer(query)
-                self.sse_send("trace", {"stage": "kb_retrieve", "skill": "local_keyword",
-                                        "status": "degraded", "ms": 1})
-                self.sse_send("delta", {"text": text})
-        except (GatewayError, Exception) as exc:
+                emit("trace", {"stage": "kb_retrieve", "skill": "local_keyword",
+                               "status": "degraded", "ms": 1})
+                emit("delta", {"text": text})
+                served_by = "fallback"
+        except Exception as exc:
+            agent_error = str(exc)[:200]
+            had_delta = emitted["delta"]
+            # 已经吐出部分内容时先清空，避免 fallback 拼在思考后面。
+            if had_delta:
+                emit("reset", {"reason": "agent_failed"})
+                emitted["delta"] = False
+            emit("trace", {"stage": "agent_generate", "skill": "fallback",
+                           "status": "error", "ms": 0})
             degraded = True
-            reason = str(exc)[:200]
-            text, cites = fallback_answer(query)
-            self.sse_send("trace", {"stage": "agent_generate", "skill": "fallback",
-                                    "status": "error", "ms": 0})
-            self.sse_send("reset", {"reason": "agent_failed"})
-            self.sse_send("delta", {"text": text})
+            reason = agent_error
+            # 只有 auto 且 agent 还没产出内容时才降级到直连模型；
+            # 已产出内容说明用户已经看到一部分，再答一遍会重复。
+            if mode == "auto" and llm_ans is not None and not had_delta:
+                try:
+                    result, text, cites = run_llm()
+                    served_by = "llm"
+                except Exception as exc2:
+                    text, cites = fallback_answer(query)
+                    served_by = "fallback"
+                    reason = (agent_error + " / " + str(exc2))[:200]
+                    emit("delta", {"text": text})
+            else:
+                text, cites = fallback_answer(query)
+                served_by = "fallback"
+                emit("delta", {"text": text})
 
+        # 本地引用先发；每条都标 kind=local，前端才能和文献引用分组。
         for cite in cites:
+            if isinstance(cite, dict) and not cite.get("kind"):
+                cite["kind"] = "local"
             self.sse_send("citation", cite)
+
+        # 网络文献：显式开关，失败不阻断主回答，但必须在 done 里说清楚。
+        research = bool(body.get("research")) or (body.get("surface") == "literature")
+        literature = {"ok": False, "reason": "not_requested", "items": [],
+                      "query": None, "source": "PubMed"}
+        lit_items = []
+        if research and STATE["offline"]:
+            # 离线演练必须真的离线：不能一边说降级，一边偷偷打 PubMed。
+            literature = {"ok": False, "reason": "offline_mode", "items": [],
+                          "query": None, "source": "PubMed"}
+        elif research:
+            sign_ids = []
+            for c in cites:
+                cid = (c.get("id") or "") if isinstance(c, dict) else ""
+                if cid.startswith("SIGN-") and cid not in sign_ids:
+                    sign_ids.append(cid)
+                for sid in (c.get("sign_ids") or []) if isinstance(c, dict) else []:
+                    if str(sid).startswith("SIGN-") and sid not in sign_ids:
+                        sign_ids.append(sid)
+            for sid in body.get("sign_ids") or []:
+                if sid not in sign_ids:
+                    sign_ids.append(sid)
+            modality = (body.get("modality")
+                        or (context or {}).get("检查类型")
+                        or (context or {}).get("modality"))
+            t_lit = time.time()
+            try:
+                literature = litsearch.search_signs(
+                    sign_ids[:3], extra=body.get("terms"),
+                    modality=modality, limit=int(body.get("lit_limit") or 4))
+            except Exception as exc:
+                literature = {"ok": False,
+                              "reason": "%s: %s" % (type(exc).__name__, exc),
+                              "items": [], "query": None, "source": "PubMed"}
+            lit_items = literature.get("items") or []
+            for item in lit_items:
+                self.sse_send("citation", item)
+            self.sse_send("trace", {
+                "stage": "literature_search", "skill": "pubmed",
+                "status": "completed" if literature.get("ok") else "error",
+                "ms": int((time.time() - t_lit) * 1000),
+                "hits": len(lit_items),
+                "detail": {"query": literature.get("query"),
+                           "reason": literature.get("reason")},
+            })
 
         t_persist = time.time()
         persist_ms = 0
         trace = build_trace(run_id, request, result, degraded, reason)
         save_run(run_id, "trace.json", trace)
         save_run(run_id, "answer.json", {"run_id": run_id, "text": text,
-                                         "citations": cites, "degraded": degraded})
+                                         "citations": cites, "literature": lit_items,
+                                         "degraded": degraded})
         persist_ms = int((time.time() - t_persist) * 1000)
         trace["spans"].append({"stage": "persist", "skill": "json", "status": "completed",
                                "ms": persist_ms})
@@ -842,10 +1550,22 @@ class Handler(BaseHTTPRequestHandler):
             if span.get("stage") in TRACE_STAGES:
                 self.sse_send("trace", span)
 
+        grounding = trace["citation_audit"]["grounding"]
+        followups = make_followups(cites, grounding, image_match)
+        # 先发 followup，再发 done：前端可以先渲染可点的下一步，再收本轮汇总。
+        self.sse_send("followup", {"items": followups, "source": "rules"})
         self.sse_send("done", {
             "run_id": run_id,
             "degraded": degraded,
             "reason": reason,
+            # 实际是谁回答的：agent / llm / fallback。前端据此显示链路徽标，
+            # 不允许把降级回答包装成 agent 回答。
+            "served_by": served_by or ("fallback" if degraded else "agent"),
+            "mode": mode,
+            "conversation_id": conversation_id or None,
+            "session_id": session_id,
+            "followups": followups,
+            "followups_source": "rules",
             "first_token_ms": trace["summary"]["first_token_ms"],
             "total_ms": trace["summary"]["total_ms"],
             "trace_url": "/api/trace/%s" % run_id,
@@ -858,6 +1578,23 @@ class Handler(BaseHTTPRequestHandler):
             "general_section_ids": trace["citation_audit"]["general_section_ids"],
             # 上传影像时才有：命中的库内病例 + 模型给的框（已转成 [x,y,w,h]）
             "image_match": image_match,
+            # 双引用：本地库引用 + 网络文献引用，分开计数，前端分组渲染
+            # 有回答但没有任何库内引用：不篡改正文，只如实标记，前端必须提示
+            "ungrounded": bool(not cites and not degraded),
+            "citations": {
+                "local": len(cites),
+                "literature": len(lit_items),
+                "direct": len([c for c in cites if c.get("relevance") == "direct"]),
+                "related": len([c for c in cites if c.get("relevance") == "related"]),
+                "off": len([c for c in cites if c.get("relevance") == "off"]),
+            },
+            "literature": {
+                "ok": bool(literature.get("ok")),
+                "reason": literature.get("reason"),
+                "query": literature.get("query"),
+                "source": literature.get("source"),
+                "hit_count": literature.get("hit_count"),
+            },
         })
 
 
@@ -872,6 +1609,7 @@ def main():
                     help="clean=生成完再分片推送（正文干净）；raw=直接转发增量")
     args = ap.parse_args()
     STATE["args"] = args
+    STATE["offline"] = bool(args.offline)
 
     os.makedirs(RUN_DIR, exist_ok=True)
 

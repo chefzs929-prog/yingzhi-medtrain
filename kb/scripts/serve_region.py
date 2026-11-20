@@ -495,6 +495,34 @@ def send_file(handler, path, cache=False):
     handler.wfile.write(body)
 
 
+def proxy_json_post(handler, url, payload):
+    """POST 的 JSON 端点：读完整个响应再转发，不能套 SSE 的逐块转发。
+
+    proxy_stream 会声明 text/event-stream 并按块读到 EOF；8800 的 JSON 响应
+    在 keep-alive 下不会立刻 EOF，浏览器 fetch().json() 会一直等。
+    """
+    req = urllib.request.Request(url, data=payload,
+                                 headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            body = r.read()
+        handler.send_response(200)
+        handler.send_header("Content-Type", "application/json; charset=utf-8")
+        handler.send_header("Content-Length", str(len(body)))
+        handler.send_header("Cache-Control", "no-store")
+        handler.end_headers()
+        handler.wfile.write(body)
+    except urllib.error.HTTPError as e:
+        body = e.read()
+        handler.send_response(e.code)
+        handler.send_header("Content-Type", "application/json; charset=utf-8")
+        handler.send_header("Content-Length", str(len(body)))
+        handler.end_headers()
+        handler.wfile.write(body)
+    except (urllib.error.URLError, OSError) as e:
+        send_json(handler, {"error": "agent_unavailable", "detail": str(e)[:160]}, 502)
+
+
 def proxy_stream(handler, url, payload):
     """把 SSE 逐块转发给浏览器。必须边读边写，攒完再发就失去流式意义。"""
     req = urllib.request.Request(url, data=payload,
@@ -572,6 +600,15 @@ class Handler(BaseHTTPRequestHandler):
                 send_json(self, doc or {"error": "not_found"}, 200 if doc else 404)
             elif u.path == "/api/health":
                 proxy_json(self, AGENT_BASE + "/api/health")
+            elif u.path == "/api/agent/capabilities":
+                # 能力探测：前端/外部接入方先看这里再决定走 agent 还是降级
+                proxy_json(self, AGENT_BASE + "/api/agent/capabilities")
+            elif u.path == "/api/vision/atlases":
+                # 陌生影像的通用分区模板列表
+                proxy_json(self, AGENT_BASE + "/api/vision/atlases")
+            elif u.path.startswith("/api/trace/"):
+                # 运行回放：trace 链接必须能穿过 4191 代理，否则前端点开是 404
+                proxy_json(self, AGENT_BASE + u.path)
             elif u.path == "/api/audit":
                 send_json(self, K.audit())
             elif u.path == "/api/kb":
@@ -631,6 +668,10 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if u.path == "/api/ask":
                 proxy_stream(self, AGENT_BASE + "/api/ask", raw)
+            elif u.path in ("/api/lit/search", "/api/vision/region",
+                          "/api/vision/report", "/api/vision/segment"):
+                # 文献检索与陌生影像模板分区是普通 JSON，必须用非流式转发
+                proxy_json_post(self, AGENT_BASE + u.path, raw)
             elif u.path == "/api/locate":
                 image_id = body.get("image_id")
                 bbox = body.get("bbox")

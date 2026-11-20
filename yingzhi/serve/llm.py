@@ -21,9 +21,22 @@ import re
 import time
 import urllib.error
 import urllib.request
+
+import vision as _vision
 from pathlib import Path
 
 DATA_DIR = Path(__file__).resolve().parent.parent.parent / "kb/data"
+
+_PART_HINTS = {
+    "胸部": ["肺", "胸", "气", "纵隔", "心包", "支气管", "膈"],
+    "肾脏": ["肾"],
+    "乳腺": ["乳腺"],
+    "甲状腺": ["甲状腺"],
+    "脑": ["脑", "出血", "梗死", "腔隙"],
+    "骨关节": ["骨", "膝", "关节", "腕", "踝", "脊柱"],
+    "腹部": ["腹", "肝", "胆", "肠", "胰", "脾"],
+    "头颈": ["头", "颈", "鼻", "咽"],
+}
 
 ID_RE = re.compile(r"\b(?:CLM|SIGN|CON|GDL)-[A-Za-z0-9_-]+\b")
 GENERAL_MARK = "【通识补充】"
@@ -85,6 +98,20 @@ class Router:
         }
 
 
+def _bigrams(text):
+    t = re.sub(r"[\s，。？、,.;:!?（）()\[\]【】\"'“”‘’]", "", text or "")
+    if len(t) < 2:
+        return {t} if t else set()
+    return {t[i:i + 2] for i in range(len(t) - 1)}
+
+
+def _dice(a, b):
+    A, B = _bigrams(a), _bigrams(b)
+    if not A or not B:
+        return 0.0
+    return 2.0 * len(A & B) / (len(A) + len(B))
+
+
 class Retriever:
     """轻量检索：词条名/别名 → 概念 → 结论。数据量小，全量载入内存。"""
 
@@ -113,14 +140,40 @@ class Retriever:
         return out
 
     def search(self, query, limit=8):
+        """词条名/别名精确命中优先，字符二元组 Dice 兜底。
+
+        兜底只解决「磨玻璃密度影 vs 磨玻璃影」这类同义表述，
+        不做向量检索；阈值 0.45，低于它宁可不召回。
+        """
         q = (query or "").strip().lower()
-        hits, ids = [], set()
+        scored = []
         for s in self.signs:
             name = str(s.get("name") or "").lower()
             aliases = [str(a).lower() for a in (s.get("aliases") or []) if a]
-            if (name and name in q) or any(a in q for a in aliases):
-                hits.append(s)
-                ids.add(s.get("id"))
+            en = str(s.get("en") or "").lower()
+            score = 0.0
+            if name and name in q:
+                score = 10.0
+            elif any(a and a in q for a in aliases):
+                score = 9.0
+            elif en and en in q:
+                score = 8.0
+            else:
+                sim = _dice(name, q)
+                for a in aliases:
+                    sim = max(sim, _dice(a, q))
+                if sim >= 0.45:
+                    score = 4.0 * sim
+            if score <= 0:
+                continue
+            bp = str(s.get("body_part") or "")
+            if bp in _PART_HINTS and any(w in q for w in _PART_HINTS[bp]):
+                score += 1.0
+            scored.append((score, s))
+        scored.sort(key=lambda x: -x[0])
+        hits = [s for _, s in scored][:limit]
+        ids = {s.get("id") for s in hits if s.get("id")}
+
         concepts = []
         for c in self.concepts:
             if str(c.get("name") or "").lower() in q and q:
@@ -149,34 +202,55 @@ class Client:
     def __init__(self, timeout=60):
         self.timeout = timeout
 
-    def chat(self, cfg, messages):
-        body = json.dumps({
+    def chat(self, cfg, messages, temperature=0.2, max_tokens=900,
+             response_format=None, retries=1):
+        payload = {
             "model": cfg.model,
             "messages": messages,
-            "temperature": 0.2,
-            "max_tokens": 900,
-        }).encode("utf8")
-        req = urllib.request.Request(
-            cfg.base + "/chat/completions",
-            data=body,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + cfg.key,
-            },
-            method="POST",
-        )
-        try:
-            with urllib.request.urlopen(req, timeout=self.timeout) as r:
-                data = json.loads(r.read().decode("utf8"))
-        except urllib.error.HTTPError as e:
-            detail = e.read().decode("utf8", "replace")[:200]
-            raise RuntimeError("HTTP %s: %s" % (e.code, detail))
-        except Exception as e:
-            raise RuntimeError(str(e))
-        try:
-            return data["choices"][0]["message"]["content"] or ""
-        except Exception:
-            raise RuntimeError("unexpected response: %s" % str(data)[:200])
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+        }
+        if response_format:
+            payload["response_format"] = response_format
+        body = json.dumps(payload).encode("utf8")
+        last = None
+        for attempt in range(retries + 1):
+            req = urllib.request.Request(
+                cfg.base + "/chat/completions",
+                data=body,
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + cfg.key,
+                },
+                method="POST",
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                    data = json.loads(r.read().decode("utf8"))
+                try:
+                    return data["choices"][0]["message"]["content"] or ""
+                except Exception:
+                    raise RuntimeError("unexpected response: %s" % str(data)[:200])
+            except urllib.error.HTTPError as e:
+                detail = e.read().decode("utf8", "replace")[:200]
+                last = RuntimeError("HTTP %s: %s" % (e.code, detail))
+                # 429/5xx 重试一次；4xx（除 408）直接失败，重试没意义。
+                if e.code in (408, 429, 500, 502, 503, 504) and attempt < retries:
+                    time.sleep(0.8 * (attempt + 1))
+                    continue
+                raise last
+            except Exception as e:
+                last = RuntimeError(str(e))
+                if attempt < retries:
+                    time.sleep(0.8 * (attempt + 1))
+                    continue
+                raise last
+        raise last
+
+
+JSON_SYSTEM = """只输出一个 JSON 对象，不要 markdown 代码围栏，不要解释。
+字段必须严格按调用方给的 schema；没有把握的字段用 null，不要编造。
+医学内容只做教学描述，不给诊断结论，不给治疗建议。"""
 
 
 class Answerer:
@@ -215,17 +289,21 @@ class Answerer:
                 (c.get("text") or c.get("claim") or "")[:200]))
         return "\n".join(lines) if lines else "（本次检索未命中任何库内条目）"
 
-    def ask(self, query, emit, image=None):
+    def ask(self, query, emit, image=None, context=None):
         t0 = time.time()
         has_image = bool(image)
         cfg = self.router.pick(has_image)
         if not cfg or not cfg.ready:
             raise RuntimeError("no model configured")
 
+        # 有图但视觉模型未配置时，pick() 会退回文本模型。此时绝不能再发
+        # image_url——OpenAI 兼容的纯文本模型会直接 400，而且模型也没看过图。
+        use_image = bool(has_image and cfg is self.router.vision and cfg.ready)
+
         ctx = self.retriever.search(query)
         retrieve_ms = int((time.time() - t0) * 1000)
         hits = len(ctx["signs"]) + len(ctx["claims"])
-        route = "vision" if has_image else "text"
+        route = "vision" if use_image else "text"
         # trace 必须与事实一致：这里真实命中了几个词条、几条结论，就报几个。
         emit("trace", {"stage": "kb_retrieve", "skill": "llm_retriever",
                        "status": "completed", "ms": retrieve_ms,
@@ -236,7 +314,21 @@ class Answerer:
                                   "claims": len(ctx["claims"])}})
 
         user_text = "检索结果：\n%s\n\n用户问题：%s" % (self._context_text(ctx), query)
-        if has_image:
+        if context:
+            # 页面上下文只帮助定位（哪一例、哪个分区、哪道题），
+            # 不参与检索打分，也不能被模型当作库内证据引用。
+            lines = []
+            for k, v in list(context.items())[:8]:
+                if v in (None, "", [], {}):
+                    continue
+                lines.append("%s：%s" % (k, str(v)[:300]))
+            if lines:
+                user_text = ("页面上下文（只用于定位，不是知识库证据）：\n"
+                             + "\n".join(lines) + "\n\n" + user_text)
+        if has_image and not use_image:
+            user_text += ("\n\n（本次未配置视觉模型，未读取影像。"
+                          "不要声称看过图，也不要编造病灶位置。）")
+        if use_image:
             user_text += "\n\n（附影像，请先描述解剖结构；若可定位病灶，按约定附 bbox）"
             content = [
                 {"type": "text", "text": user_text},
@@ -272,6 +364,42 @@ class Answerer:
                 "model": cfg.model,
             },
         }
+
+    def structured(self, prompt, schema_hint, image=None, max_tokens=700):
+        """要求模型输出 JSON，解析失败重试一次（第二次去掉 response_format）。
+
+        返回 (obj, raw_text)。两次都失败抛 RuntimeError，由上层显式降级。
+        """
+        cfg = self.router.vision if (image and self.router.vision.ready) else self.router.text
+        if not cfg or not cfg.ready:
+            raise RuntimeError("no model configured")
+
+        user_text = prompt + "\n\nJSON 结构：\n" + schema_hint
+        if image and cfg is self.router.vision:
+            content = [
+                {"type": "text", "text": user_text},
+                {"type": "image_url", "image_url": {"url": _data_url(image)}},
+            ]
+        else:
+            content = user_text
+
+        messages = [
+            {"role": "system", "content": JSON_SYSTEM},
+            {"role": "user", "content": content},
+        ]
+        last = None
+        for attempt in range(2):
+            try:
+                raw = self.client.chat(
+                    cfg, messages, temperature=0, max_tokens=max_tokens,
+                    response_format={"type": "json_object"} if attempt == 0 else None)
+                obj = _vision.extract_json(raw)
+                if isinstance(obj, dict):
+                    return obj, raw
+                last = RuntimeError("output is not a json object")
+            except Exception as exc:
+                last = exc
+        raise RuntimeError("structured failed: %s" % str(last)[:200])
 
     def _cites(self, ctx, text):
         cites = []

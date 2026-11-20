@@ -1,8 +1,10 @@
 # Agent 接入指南（实测版 · v3.0）
 
-> 日期：2026-11-16 ｜ 适用：影知 v3.0 动态服务层
+> 日期：2026-11-16（v3.1 接口更新：2026-11-19）｜ 适用：影知 v3.0 / v3.1 动态服务层
 > 结论先行：**入口是 DeepWorks 内置的 opencode server**，不是知识库 API，也不是技能 API。
 > 本文所有结论都在本机实测过，含耗时数据与九个真实踩过的坑。
+> v3.1 新增：`mode=auto/agent/llm`、有界多轮、`tool`/`followup` 事件、`/api/agent/capabilities`。
+> 四页统一接入见 §10；缺口清单见 [功能缺口与补齐清单.md](功能缺口与补齐清单.md)。
 
 ---
 
@@ -148,8 +150,12 @@ GET /skill?directory=/Users/fz/Desktop/黑客松   → 37 个，含 retrieve-sig
 ### 坑 4：复用 session 会让上下文无限累积
 
 第一版按 `role:device` 缓存 session。连续问 4 次后，耗时从 7s 涨到 90s 超时。
-**解法**：每次提问 `ensure_session(..., force=True)` 新建会话。
+**解法（v3.0）**：每次提问 `ensure_session(..., force=True)` 新建会话。
 代价是单轮问答，没有多轮记忆——v3.0 不需要多轮。
+
+**v3.1 更新**：已改为**有界多轮**——按 `conversation_id` 复用，10 分钟 TTL，
+过期或换 id 即重开；仍不做无界复用。实测同一 id 连问两轮仍为 7.9s，没有回到 90s。
+接入方式见 §10。
 
 ### 坑 5：不限制检索，agent 会乱搜然后挂死（最致命）
 
@@ -419,5 +425,196 @@ id 格式必须照抄知识库真实结构，否则要么漏检、要么误报�
 `false` 的每一项都有 note 说明原因，不隐藏。
 
 ---
+
+---
+
+## 10. v3.1 统一 Agent 接口（四页共用）
+
+### 10.1 三步接入
+
+```bash
+# 1) 起服务：8800 是 Agent 服务，4191 是同源页面 + 代理
+python3 yingzhi/serve/main.py --port 8800
+python3 kb/scripts/serve_region.py --port 4191
+
+# 2) 探测能力：先看 agent 是否真的加载，不要盲接
+curl -s http://127.0.0.1:4191/api/agent/capabilities | python3 -m json.tool
+
+# 3) 发一问：mode=auto 会先走 agent，失败且未产出内容才降级
+curl -sN -X POST http://127.0.0.1:4191/api/ask \
+  -H 'Content-Type: application/json' \
+  -d '{"query":"磨玻璃影在CT上怎么描述？","surface":"clinic","mode":"auto"}'
+```
+
+`capabilities.agent.ready=false` 时不要假装接了 agent：页面会显示降级徽标，
+`done.served_by` 会写 `llm` 或 `fallback`。
+
+### 10.2 请求字段
+
+| 字段 | 必填 | 说明 |
+| --- | --- | --- |
+| `query` | 是 | 用户问题 |
+| `surface` | 否 | `clinic / teach / paper / compare`，用于会话隔离 |
+| `conversation_id` | 否 | 同一 id 在 10 分钟内复用 session；不传则按 surface 生成 |
+| `mode` | 否 | `auto`（默认）/ `agent` / `llm` |
+| `context` | 否 | 页面上下文，最多 8 键、每值 300 字；只用于定位，不是证据 |
+| `image` | 否 | data URL；视觉只负责定位，解释与引用仍由 agent 做 |
+
+### 10.3 事件
+
+```text
+trace    五段步骤：kb_retrieve / skill_invoke / workflow / agent_generate / persist
+tool     工具明细：tool / skill / detail / ms / out_lines（只发一次）
+delta    正文增量
+citation 真实 id → 引用卡片
+followup 规则生成的追问 chips（source=rules）
+reset    降级/重答前清空
+done     served_by / degraded / reason / run_id / trace_url / followups
+```
+
+完整字段见 [功能缺口与补齐清单.md](功能缺口与补齐清单.md) 的“事件契约”。
+
+### 10.4 前端两种接法
+
+**A. 直接使用四页共用客户端（推荐）**
+
+```js
+const res = await window.YZAgent.ask({
+  query: '这个征象怎么描述？',
+  surface: 'clinic',
+  context: { 病例: 'CASE-001', 分区: 'REG-001-RUL' },
+}, {
+  onEvent(kind, data) {
+    if (kind === 'trace')    paintStep(data);     // 五段
+    if (kind === 'tool')     appendTool(data);    // 查了什么
+    if (kind === 'delta')    appendText(data.text);
+    if (kind === 'citation') addCite(data);       // 真实 id
+    if (kind === 'reset')    clearText();
+  },
+});
+// res.done.served_by / res.done.reason / res.followups
+```
+
+**B. 需要不打断页面的追问抽屉**
+
+```js
+window.YZAgent.open({
+  surface: 'teach',
+  title: '问 Agent · 这个分区怎么讲',
+  context: { 病例: 'CASE-001', 分区: 'REG-001-RUL' },
+  seed: '请讲清这个分区的解剖边界和库内依据。',
+});
+```
+
+抽屉已处理：SSE 解析、五段步骤条、工具明细、引用卡片、追问 chips、
+降级徽标、trace 链接、Esc 关闭。不要在每个页面再复制一份。
+
+### 10.5 四页入口
+
+| 页面 | 入口 | 文件 |
+| --- | --- | --- |
+| 读片工作台 | 问答 tab（含步骤条/工具/引用/追问） | `kb/app/clinic.js` |
+| 分区图谱 | 讲解卡底部“问 Agent” | `kb/app/teach.js` |
+| 组卷自测 | 作答解析、错题卡“问 Agent” | `kb/app/paper.js` |
+| 报告对照 | 每句下方“问 Agent” | `kb/app/compare.js` |
+
+### 10.6 降级与排障
+
+| 现象 | 先看 | 处理 |
+| --- | --- | --- |
+| `served_by=fallback` | `done.reason`、`/api/health.fallback_reason` | agent 未加载或 offline；不要把它当 agent 结果 |
+| `skill_invoke=unavailable` | `capabilities.agent.skills` | 技能未加载；检查 `directory` 与 `retrieve-sign` |
+| 4191 下 trace 404 | 是否重启过 `serve_region.py` | 新代理路由需要重启 |
+| 第二轮明显变慢 | 是否复用同一个 `conversation_id` | 超过 TTL 会重开；不要无界复用 |
+| 静态版按钮无反应 | `window.YZStatic` 是否存在 | 静态版没有 Agent 服务，只保留入口与提示 |
+| `--offline` 仍在调 agent | `/api/health.agent_ready` | v3.1 已修；若仍为 true，说明跑的是旧进程 |
+
+
+## 11. v3.2：陌生影像模板分区 + 网络文献双引用
+
+### 11.1 两个新端点
+
+| 方法 | 路径 | 用途 |
+| --- | --- | --- |
+| GET | `/api/vision/atlases` | 列出通用分区模板（26 个） |
+| POST | `/api/vision/region` | 陌生影像按模板定位分区 |
+| POST | `/api/lit/search` | PubMed 文献检索 |
+
+`/api/ask` 增加 `research: true`，回答后自动追加文献引用。
+
+### 11.2 陌生影像
+
+```bash
+curl -s -X POST http://127.0.0.1:4191/api/vision/region \
+  -H 'Content-Type: application/json' \
+  -d '{"modality":"CR","body_part":"胸部","view":"PA","bbox":[0.13,0.11,0.14,0.13]}'
+```
+
+返回的关键字段：
+
+```json
+{
+  "ok": true,
+  "source": "atlas_template",
+  "atlas": { "id": "ATLAS-CHEST-PA-6", "n_cases": 74, "n_regions": 476 },
+  "locate": {
+    "status": "single",
+    "primary": {
+      "region": { "name": "右肺上野", "id": null },
+      "coverage": 1.0,
+      "template_n": 74,
+      "agreement": 0.843,
+      "source": "atlas_template"
+    }
+  },
+  "honesty": { "template_inference": true, "human_annotated": false }
+}
+```
+
+接入时注意：
+
+- `region.id` 为 `null`：模板没有 `REG-xxx`，不要伪造；
+- `agreement` 是模板一致度，不是模型置信度；
+- `n_cases < 3` 的模板会带 `warning`，前端必须显示。
+
+没有 bbox 时：
+
+- 配了 `YZ_LLM_VISION_*`：服务端让视觉模型出框，再走模板；
+- 没配：返回 `reason=needs_bbox`，要求前端框选，不猜。
+
+### 11.3 双引用
+
+```bash
+curl -s -X POST http://127.0.0.1:4191/api/ask \
+  -H 'Content-Type: application/json' \
+  -d '{"query":"磨玻璃影在CT上怎么描述？","research":true,"modality":"CT"}'
+```
+
+`citation` 事件按 `kind` 分两组：
+
+```json
+{"id":"SIGN-001","kind":"local","title":"磨玻璃影"}
+{"id":"PMID:33729289","kind":"literature","title":"Differential diagnoses of acute ground-glass opacity...",
+ "journal":"Einstein (Sao Paulo)","year":"2021","url":"https://pubmed.ncbi.nlm.nih.gov/33729289/"}
+```
+
+`done` 汇总：
+
+```json
+{"citations":{"local":3,"literature":4},
+ "literature":{"ok":true,"reason":null,"query":"(...) AND ("computed tomography") AND (...)","source":"PubMed"}}
+```
+
+前端必须把两组分开渲染。不要把“引用 7 条”混成一个数字，评委无法判断哪条来自库、哪条来自网络。
+
+### 11.4 排障
+
+| 现象 | 原因 | 处理 |
+| --- | --- | --- |
+| `reason=no_english_term` | 问题/引用里没有英文术语 | 正常降级；不要让模型编文献 |
+| `reason=needs_bbox` | 没配视觉模型且没给框 | 前端框选，或配置 `YZ_LLM_VISION_*` |
+| `reason=no_atlas_match` | 没给 atlas_id 且 modality/body_part/view 不匹配 | 先 `GET /api/vision/atlases` 让用户选 |
+| 文献 0 条但 `ok=true` | PubMed 无命中 | 显示“未检索到”，不要补假条目 |
+| 4191 下 POST 卡住 | 旧代理用 SSE 转发 JSON | v3.2 已改为 `proxy_json_post`，需重启 4191 |
 
 > 本指南仅用于医学影像教学与研究的技术接入，不构成诊断意见。病例影像均为公开许可素材。

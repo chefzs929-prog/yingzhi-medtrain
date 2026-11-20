@@ -94,8 +94,73 @@ class ImageIndex:
         return len(self.map)
 
 
-_BBOX_JSON = re.compile(r"```(?:json)?\s*(\{[^{}]*\"bbox\"[^{}]*\})\s*```"
-                        r"|(\{[^{}]*\"bbox\"[^{}]*\})", re.I)
+_BBOX_KEY = re.compile(r'"(bbox|box_2d|bbox_2d)"\s*:\s*(\[[^\]]*\]|\{[^{}]*\})', re.I)
+
+
+def extract_json(text):
+    """从模型输出里取第一个 JSON 对象。
+
+    兼容三种常见形态：裸 JSON、```json 围栏、正文里夹一个对象。
+    取不到返回 None，不抛异常。
+    """
+    if not text:
+        return None
+    s = text.strip()
+    fence = re.search(r"```(?:json)?\s*([\s\S]*?)```", s, re.I)
+    if fence:
+        s = fence.group(1).strip()
+    start = s.find("{")
+    if start < 0:
+        return None
+    depth = 0
+    in_str = False
+    esc = False
+    for i in range(start, len(s)):
+        ch = s[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                try:
+                    return json.loads(s[start:i + 1])
+                except Exception:
+                    return None
+    return None
+
+
+def _norm_bbox(raw):
+    """把模型给的 4 个数统一成 [x,y,w,h]，0-1。"""
+    vals = [float(v) for v in raw]
+    if len(vals) != 4:
+        return None
+    # 千分制（Gemini/Qwen 常见）：全部 > 1.5 且 <= 1000
+    if max(vals) > 1.5:
+        if max(vals) <= 1000:
+            vals = [v / 1000.0 for v in vals]
+        else:
+            return None
+    vals = [max(0.0, min(1.0, v)) for v in vals]
+    x, y, a, b = vals
+    # 新契约是 [x,y,w,h]；若按宽高算会越界，则按 [x1,y1,x2,y2] 解释。
+    if x + a > 1.02 or y + b > 1.02:
+        x1, y1, x2, y2 = sorted((x, a))[0], sorted((y, b))[0], sorted((x, a))[1], sorted((y, b))[1]
+        w, h = x2 - x1, y2 - y1
+    else:
+        w, h = a, b
+    if w <= 0 or h <= 0:
+        return None
+    return [round(x, 4), round(y, 4), round(w, 4), round(h, 4)]
 
 
 def extract_bbox(text):
@@ -103,35 +168,41 @@ def extract_bbox(text):
 
     返回 (bbox, raw, stripped)：
         bbox     [x, y, w, h]，0-1 归一化，可直接喂 locate.js；取不到为 None
-        raw      模型原始给法 [x1, y1, x2, y2]
+        raw      模型原始给法
         stripped 去掉这段 JSON 后的正文
+
+    兼容 [x,y,w,h]、[x1,y1,x2,y2]、千分制、{"bbox":{"x":..}}。
     """
     if not text:
         return None, None, text
     m = None
-    for m in _BBOX_JSON.finditer(text):
+    for m in _BBOX_KEY.finditer(text):
         pass  # 取最后一个：模型常在结尾给框
     if not m:
         return None, None, text
 
-    blob = m.group(1) or m.group(2)
+    key = (m.group(1) or "bbox").lower()
+    blob = m.group(2).strip()
     try:
         obj = json.loads(blob)
-        raw = [float(v) for v in obj["bbox"]]
-    except (ValueError, KeyError, TypeError):
-        return None, None, text
-    if len(raw) != 4:
-        return None, None, text
-
-    if max(raw) > _SCALE_HINT:
-        raw = [v / 1000.0 for v in raw]
-
-    x1, y1, x2, y2 = raw
-    x1, x2 = sorted((max(0.0, min(1.0, x1)), max(0.0, min(1.0, x2))))
-    y1, y2 = sorted((max(0.0, min(1.0, y1)), max(0.0, min(1.0, y2))))
-    w, h = x2 - x1, y2 - y1
-    if w <= 0 or h <= 0:
+        if isinstance(obj, dict):
+            raw = [obj.get("x", 0), obj.get("y", 0), obj.get("w", obj.get("width", 0)),
+                   obj.get("h", obj.get("height", 0))]
+        else:
+            raw = obj
+    except (ValueError, TypeError):
         return None, None, text
 
+    if key == "box_2d" and len(raw) == 4:
+        # Gemini 约定：[y_min, x_min, y_max, x_max]，0-1000
+        y1, x1, y2, x2 = [float(v) for v in raw]
+        if max(raw) > 1.5:
+            y1, x1, y2, x2 = y1 / 1000.0, x1 / 1000.0, y2 / 1000.0, x2 / 1000.0
+        # 已经知道是 x1y1x2y2，先转成 xywh，避免 _norm_bbox 再猜一次
+        raw = [x1, y1, max(0.0, x2 - x1), max(0.0, y2 - y1)]
+
+    bbox = _norm_bbox(raw)
+    if not bbox:
+        return None, None, text
     stripped = (text[:m.start()] + text[m.end():]).rstrip()
-    return [round(x1, 4), round(y1, 4), round(w, 4), round(h, 4)], raw, stripped
+    return bbox, raw, stripped

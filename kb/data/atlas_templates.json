@@ -1,0 +1,3257 @@
+{
+ "version": "2026-11-19",
+ "source": "kb/data/regions.jsonl",
+ "method": "同 atlas 同名分区坐标取中位数；sd 为病例间标准差",
+ "note": "模板推断，不是人工标注。陌生影像使用本模板时必须标注 source=atlas_template。",
+ "atlases": {
+  "ATLAS-ABD-CT-4": {
+   "id": "ATLAS-ABD-CT-4",
+   "name": "ATLAS-ABD-CT-4",
+   "modality": [],
+   "body_part": "",
+   "view": "CT-AXIAL",
+   "laterality_rule": "",
+   "note": "",
+   "n_cases": 3,
+   "n_regions": 12,
+   "regions": [
+    {
+     "name": "肝区",
+     "name_en": "liver",
+     "coords": [
+      0.1,
+      0.1,
+      0.4,
+      0.34
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-腹部",
+     "patient_side": "right",
+     "image_side": "",
+     "note": "肝右叶与左叶大部。",
+     "sign_ids": [
+      "SIGN-021",
+      "SIGN-022",
+      "SIGN-027"
+     ]
+    },
+    {
+     "name": "脾区",
+     "name_en": "spleen",
+     "coords": [
+      0.66,
+      0.12,
+      0.22,
+      0.24
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-腹部",
+     "patient_side": "left",
+     "image_side": "",
+     "note": "脾脏与脾门。",
+     "sign_ids": [
+      "SIGN-021",
+      "SIGN-022",
+      "SIGN-027"
+     ]
+    },
+    {
+     "name": "肾区",
+     "name_en": "kidney",
+     "coords": [
+      0.12,
+      0.48,
+      0.34,
+      0.28
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-腹部",
+     "patient_side": "bilateral",
+     "image_side": "",
+     "note": "双肾实质与肾盂。",
+     "sign_ids": [
+      "SIGN-021",
+      "SIGN-022",
+      "SIGN-027"
+     ]
+    },
+    {
+     "name": "肠管区",
+     "name_en": "bowel",
+     "coords": [
+      0.46,
+      0.34,
+      0.3,
+      0.38
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-腹部",
+     "patient_side": "midline",
+     "image_side": "",
+     "note": "小肠与结肠肠管。",
+     "sign_ids": [
+      "SIGN-021",
+      "SIGN-022",
+      "SIGN-027"
+     ]
+    }
+   ]
+  },
+  "ATLAS-ABD-CT-LOCAL": {
+   "id": "ATLAS-ABD-CT-LOCAL",
+   "name": "腹部 CT 轴位 · 图像内分区",
+   "modality": [
+    "CR",
+    "CT"
+   ],
+   "body_part": "腹部",
+   "view": "CT-LOCAL",
+   "laterality_rule": "ct_local: no_laterality_inference",
+   "note": "单层轴位层面不固定，只给图像内相对位置，不推断具体器官。",
+   "n_cases": 5,
+   "n_regions": 25,
+   "regions": [
+    {
+     "name": "图像中央",
+     "name_en": "center",
+     "coords": [
+      0.26,
+      0.28,
+      0.48,
+      0.44
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 5,
+     "level": 2,
+     "parent_region_id": "REG-肝",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "中央区域，含肠管与系膜。",
+     "sign_ids": [
+      "SIGN-023",
+      "SIGN-031",
+      "SIGN-034"
+     ]
+    },
+    {
+     "name": "前部",
+     "name_en": "ant",
+     "coords": [
+      0.12,
+      0.04,
+      0.76,
+      0.24
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 5,
+     "level": 2,
+     "parent_region_id": "REG-肝",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "腹前壁与网膜区。",
+     "sign_ids": [
+      "SIGN-023",
+      "SIGN-031",
+      "SIGN-034"
+     ]
+    },
+    {
+     "name": "后部",
+     "name_en": "post",
+     "coords": [
+      0.12,
+      0.7,
+      0.76,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 5,
+     "level": 2,
+     "parent_region_id": "REG-肝",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "脊柱旁与腹膜后区。",
+     "sign_ids": [
+      "SIGN-023",
+      "SIGN-031",
+      "SIGN-034"
+     ]
+    },
+    {
+     "name": "图像左侧",
+     "name_en": "left",
+     "coords": [
+      0.04,
+      0.22,
+      0.24,
+      0.56
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 5,
+     "level": 2,
+     "parent_region_id": "REG-肝",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像左缘区域。",
+     "sign_ids": [
+      "SIGN-023",
+      "SIGN-031",
+      "SIGN-034"
+     ]
+    },
+    {
+     "name": "图像右侧",
+     "name_en": "right",
+     "coords": [
+      0.72,
+      0.22,
+      0.24,
+      0.56
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 5,
+     "level": 2,
+     "parent_region_id": "REG-肝",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像右缘区域。",
+     "sign_ids": [
+      "SIGN-023",
+      "SIGN-031",
+      "SIGN-034"
+     ]
+    }
+   ]
+  },
+  "ATLAS-BREAST-MLO-4": {
+   "id": "ATLAS-BREAST-MLO-4",
+   "name": "ATLAS-BREAST-MLO-4",
+   "modality": [],
+   "body_part": "",
+   "view": "MLO",
+   "laterality_rule": "",
+   "note": "",
+   "n_cases": 9,
+   "n_regions": 36,
+   "regions": [
+    {
+     "name": "上外象限",
+     "name_en": "upper outer quadrant",
+     "coords": [
+      0.1,
+      0.08,
+      0.38,
+      0.34
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0063,
+      0.0063
+     ],
+     "n": 9,
+     "level": 2,
+     "parent_region_id": "REG-乳腺",
+     "patient_side": "unknown",
+     "image_side": "",
+     "note": "乳腺上外象限。",
+     "sign_ids": [
+      "SIGN-055",
+      "SIGN-056"
+     ]
+    },
+    {
+     "name": "上内象限",
+     "name_en": "upper inner quadrant",
+     "coords": [
+      0.52,
+      0.08,
+      0.38,
+      0.34
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0063,
+      0.0063
+     ],
+     "n": 9,
+     "level": 2,
+     "parent_region_id": "REG-乳腺",
+     "patient_side": "unknown",
+     "image_side": "",
+     "note": "乳腺上内象限。",
+     "sign_ids": [
+      "SIGN-055",
+      "SIGN-056"
+     ]
+    },
+    {
+     "name": "下外象限",
+     "name_en": "lower outer quadrant",
+     "coords": [
+      0.1,
+      0.44,
+      0.38,
+      0.3
+     ],
+     "sd": [
+      0.0,
+      0.0063,
+      0.0063,
+      0.0126
+     ],
+     "n": 9,
+     "level": 2,
+     "parent_region_id": "REG-乳腺",
+     "patient_side": "unknown",
+     "image_side": "",
+     "note": "乳腺下外象限。",
+     "sign_ids": [
+      "SIGN-055",
+      "SIGN-056"
+     ]
+    },
+    {
+     "name": "下内象限",
+     "name_en": "lower inner quadrant",
+     "coords": [
+      0.52,
+      0.44,
+      0.38,
+      0.3
+     ],
+     "sd": [
+      0.0,
+      0.0063,
+      0.0063,
+      0.0126
+     ],
+     "n": 9,
+     "level": 2,
+     "parent_region_id": "REG-乳腺",
+     "patient_side": "unknown",
+     "image_side": "",
+     "note": "乳腺下内象限。",
+     "sign_ids": [
+      "SIGN-055",
+      "SIGN-056"
+     ]
+    }
+   ]
+  },
+  "ATLAS-BREAST-MLO-LOCAL": {
+   "id": "ATLAS-BREAST-MLO-LOCAL",
+   "name": "乳腺 MLO · 图像内分区",
+   "modality": [
+    "CR",
+    "MG"
+   ],
+   "body_part": "乳腺",
+   "view": "MLO-LOCAL",
+   "laterality_rule": "mg_local: no_laterality_inference",
+   "note": "MLO 位为投影图，只给图像内相对位置，不推断象限与侧别。",
+   "n_cases": 16,
+   "n_regions": 48,
+   "regions": [
+    {
+     "name": "图像上部",
+     "name_en": "upper",
+     "coords": [
+      0.18,
+      0.06,
+      0.64,
+      0.34
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 16,
+     "level": 2,
+     "parent_region_id": "REG-乳腺",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像上缘腺体区。",
+     "sign_ids": [
+      "SIGN-055",
+      "SIGN-056"
+     ]
+    },
+    {
+     "name": "图像下部",
+     "name_en": "lower",
+     "coords": [
+      0.18,
+      0.44,
+      0.64,
+      0.34
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 16,
+     "level": 2,
+     "parent_region_id": "REG-乳腺",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像下缘腺体区。",
+     "sign_ids": [
+      "SIGN-055",
+      "SIGN-056"
+     ]
+    },
+    {
+     "name": "乳晕后区",
+     "name_en": "retro",
+     "coords": [
+      0.26,
+      0.62,
+      0.48,
+      0.28
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 16,
+     "level": 2,
+     "parent_region_id": "REG-乳腺",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "乳头后方中央区。",
+     "sign_ids": [
+      "SIGN-055",
+      "SIGN-056"
+     ]
+    }
+   ]
+  },
+  "ATLAS-CHEST-CT-5": {
+   "id": "ATLAS-CHEST-CT-5",
+   "name": "ATLAS-CHEST-CT-5",
+   "modality": [],
+   "body_part": "",
+   "view": "CT-AXIAL",
+   "laterality_rule": "",
+   "note": "",
+   "n_cases": 9,
+   "n_regions": 45,
+   "regions": [
+    {
+     "name": "右肺上叶",
+     "name_en": "right upper lobe",
+     "coords": [
+      0.08,
+      0.1,
+      0.34,
+      0.34
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 9,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "right",
+     "image_side": "",
+     "note": "气管分叉以上层面的右肺。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003"
+     ]
+    },
+    {
+     "name": "右肺下叶",
+     "name_en": "right lower lobe",
+     "coords": [
+      0.08,
+      0.46,
+      0.34,
+      0.44
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 9,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "right",
+     "image_side": "",
+     "note": "斜裂后方的右肺。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003"
+     ]
+    },
+    {
+     "name": "左肺上叶",
+     "name_en": "left upper lobe",
+     "coords": [
+      0.58,
+      0.1,
+      0.34,
+      0.34
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 9,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "left",
+     "image_side": "",
+     "note": "斜裂前方的左肺。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003"
+     ]
+    },
+    {
+     "name": "左肺下叶",
+     "name_en": "left lower lobe",
+     "coords": [
+      0.58,
+      0.46,
+      0.34,
+      0.44
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 9,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "left",
+     "image_side": "",
+     "note": "斜裂后方的左肺。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003"
+     ]
+    },
+    {
+     "name": "纵隔窗区",
+     "name_en": "mediastinal window",
+     "coords": [
+      0.4,
+      0.12,
+      0.2,
+      0.5
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 9,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "midline",
+     "image_side": "",
+     "note": "纵隔结构、血管与淋巴结。",
+     "sign_ids": [
+      "SIGN-009"
+     ]
+    }
+   ]
+  },
+  "ATLAS-CHEST-CT-LOCAL": {
+   "id": "ATLAS-CHEST-CT-LOCAL",
+   "name": "胸部 CT 轴位 · 图像内分区",
+   "modality": [
+    "CR",
+    "CT"
+   ],
+   "body_part": "胸部",
+   "view": "CT-LOCAL",
+   "laterality_rule": "ct_local: no_laterality_inference",
+   "note": "单层轴位层面不固定，只给图像内相对位置，不推断肺叶。",
+   "n_cases": 16,
+   "n_regions": 80,
+   "regions": [
+    {
+     "name": "图像中央",
+     "name_en": "center",
+     "coords": [
+      0.26,
+      0.28,
+      0.48,
+      0.44
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 16,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "中央区域，含纵隔旁与肺门区。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003"
+     ]
+    },
+    {
+     "name": "前部",
+     "name_en": "ant",
+     "coords": [
+      0.12,
+      0.04,
+      0.76,
+      0.24
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 16,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像上缘肺野。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003"
+     ]
+    },
+    {
+     "name": "后部",
+     "name_en": "post",
+     "coords": [
+      0.12,
+      0.7,
+      0.76,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 16,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像下缘肺野与脊柱旁。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003"
+     ]
+    },
+    {
+     "name": "图像左侧",
+     "name_en": "left",
+     "coords": [
+      0.04,
+      0.22,
+      0.24,
+      0.56
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 16,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像左缘肺野。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003"
+     ]
+    },
+    {
+     "name": "图像右侧",
+     "name_en": "right",
+     "coords": [
+      0.72,
+      0.22,
+      0.24,
+      0.56
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 16,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像右缘肺野。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003"
+     ]
+    }
+   ]
+  },
+  "ATLAS-CHEST-LAT-4": {
+   "id": "ATLAS-CHEST-LAT-4",
+   "name": "胸片侧位四区",
+   "modality": [
+    "CR"
+   ],
+   "body_part": "胸部",
+   "view": "LAT",
+   "laterality_rule": "chest_lat: no_laterality_inference",
+   "note": "侧位片按前后方向划分，不推断左右侧别。",
+   "n_cases": 2,
+   "n_regions": 8,
+   "regions": [
+    {
+     "name": "胸骨后间隙",
+     "name_en": "retrosternal",
+     "coords": [
+      0.12,
+      0.1,
+      0.32,
+      0.3
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 2,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "胸骨后方至升主动脉前缘。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003"
+     ]
+    },
+    {
+     "name": "心后间隙",
+     "name_en": "retrocardiac",
+     "coords": [
+      0.12,
+      0.42,
+      0.32,
+      0.28
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 2,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "心影后方至脊柱前缘。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003"
+     ]
+    },
+    {
+     "name": "后肋膈角",
+     "name_en": "cpa",
+     "coords": [
+      0.42,
+      0.6,
+      0.38,
+      0.28
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 2,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "侧位片上显示最早的胸腔积液部位。",
+     "sign_ids": [
+      "SIGN-007",
+      "SIGN-008",
+      "SIGN-020"
+     ]
+    },
+    {
+     "name": "膈面",
+     "name_en": "diaph",
+     "coords": [
+      0.1,
+      0.86,
+      0.82,
+      0.12
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 2,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "膈肌轮廓，左右膈面重叠。",
+     "sign_ids": [
+      "SIGN-021",
+      "SIGN-022",
+      "SIGN-026"
+     ]
+    }
+   ]
+  },
+  "ATLAS-CHEST-PA-6": {
+   "id": "ATLAS-CHEST-PA-6",
+   "name": "胸片六分区（PA）",
+   "modality": [
+    "CR"
+   ],
+   "body_part": "胸部",
+   "view": "PA",
+   "laterality_rule": "pa_chest: image_left = patient_right",
+   "note": "第 2/4 前肋下缘水平线划分上中下野；纵隔与膈下单独成区。",
+   "n_cases": 74,
+   "n_regions": 476,
+   "regions": [
+    {
+     "name": "右肺上野",
+     "name_en": "right upper lung zone",
+     "coords": [
+      0.09,
+      0.09,
+      0.38,
+      0.24
+     ],
+     "sd": [
+      0.0107,
+      0.0032,
+      0.0089,
+      0.0086
+     ],
+     "n": 74,
+     "level": 2,
+     "parent_region_id": "REG-CHEST",
+     "patient_side": "right",
+     "image_side": "left",
+     "note": "肺尖至第 2 前肋下缘水平。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003",
+      "SIGN-004",
+      "SIGN-005"
+     ]
+    },
+    {
+     "name": "左肺中野",
+     "name_en": "left middle lung zone",
+     "coords": [
+      0.54,
+      0.33,
+      0.37,
+      0.24
+     ],
+     "sd": [
+      0.0072,
+      0.0089,
+      0.0043,
+      0.0085
+     ],
+     "n": 74,
+     "level": 2,
+     "parent_region_id": "REG-CHEST",
+     "patient_side": "left",
+     "image_side": "right",
+     "note": "第 2 至第 4 前肋下缘之间，含心影左缘。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003",
+      "SIGN-010",
+      "SIGN-014"
+     ]
+    },
+    {
+     "name": "左肺下野",
+     "name_en": "left lower lung zone",
+     "coords": [
+      0.54,
+      0.57,
+      0.37,
+      0.24
+     ],
+     "sd": [
+      0.0072,
+      0.0166,
+      0.0043,
+      0.0082
+     ],
+     "n": 74,
+     "level": 2,
+     "parent_region_id": "REG-CHEST",
+     "patient_side": "left",
+     "image_side": "right",
+     "note": "第 4 前肋下缘至膈面，含左侧肋膈角。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003",
+      "SIGN-007",
+      "SIGN-008",
+      "SIGN-019"
+     ]
+    },
+    {
+     "name": "纵隔",
+     "name_en": "mediastinum",
+     "coords": [
+      0.47,
+      0.09,
+      0.07,
+      0.72
+     ],
+     "sd": [
+      0.002,
+      0.0036,
+      0.0026,
+      0.0026
+     ],
+     "n": 58,
+     "level": 2,
+     "parent_region_id": "REG-CHEST",
+     "patient_side": "midline",
+     "image_side": "midline",
+     "note": "脊柱旁开至心影右缘，含气管与肺门区。",
+     "sign_ids": [
+      "SIGN-009",
+      "SIGN-028"
+     ]
+    },
+    {
+     "name": "右肺中野",
+     "name_en": "right middle lung zone",
+     "coords": [
+      0.09,
+      0.33,
+      0.38,
+      0.24
+     ],
+     "sd": [
+      0.0121,
+      0.01,
+      0.01,
+      0.0098
+     ],
+     "n": 45,
+     "level": 2,
+     "parent_region_id": "REG-CHEST",
+     "patient_side": "right",
+     "image_side": "left",
+     "note": "第 2 至第 4 前肋下缘之间。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003",
+      "SIGN-014",
+      "SIGN-019"
+     ]
+    },
+    {
+     "name": "右肺下野",
+     "name_en": "right lower lung zone",
+     "coords": [
+      0.09,
+      0.57,
+      0.38,
+      0.24
+     ],
+     "sd": [
+      0.0121,
+      0.0193,
+      0.01,
+      0.0096
+     ],
+     "n": 45,
+     "level": 2,
+     "parent_region_id": "REG-CHEST",
+     "patient_side": "right",
+     "image_side": "left",
+     "note": "第 4 前肋下缘至膈面。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003",
+      "SIGN-007",
+      "SIGN-019",
+      "SIGN-020"
+     ]
+    },
+    {
+     "name": "左肺上野",
+     "name_en": "left upper lung zone",
+     "coords": [
+      0.54,
+      0.09,
+      0.37,
+      0.24
+     ],
+     "sd": [
+      0.008,
+      0.0029,
+      0.0048,
+      0.0096
+     ],
+     "n": 45,
+     "level": 2,
+     "parent_region_id": "REG-CHEST",
+     "patient_side": "left",
+     "image_side": "right",
+     "note": "肺尖至第 2 前肋下缘水平。",
+     "sign_ids": [
+      "SIGN-001",
+      "SIGN-002",
+      "SIGN-003",
+      "SIGN-004",
+      "SIGN-005"
+     ]
+    },
+    {
+     "name": "膈下",
+     "name_en": "subdiaphragmatic",
+     "coords": [
+      0.15,
+      0.82,
+      0.7,
+      0.15
+     ],
+     "sd": [
+      0.0091,
+      0.0036,
+      0.0182,
+      0.0057
+     ],
+     "n": 29,
+     "level": 2,
+     "parent_region_id": "REG-CHEST",
+     "patient_side": "midline",
+     "image_side": "midline",
+     "note": "膈面以下，含胃泡与肝影上部。",
+     "sign_ids": [
+      "SIGN-021",
+      "SIGN-022",
+      "SIGN-026"
+     ]
+    },
+    {
+     "name": "纵隔区",
+     "name_en": "mediastinum",
+     "coords": [
+      0.4,
+      0.14,
+      0.2,
+      0.52
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 16,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "midline",
+     "image_side": "",
+     "note": "脊柱旁开至心影右缘，含气管与肺门区。",
+     "sign_ids": [
+      "SIGN-009"
+     ]
+    },
+    {
+     "name": "膈下区",
+     "name_en": "subdiaphragmatic",
+     "coords": [
+      0.12,
+      0.87,
+      0.76,
+      0.1
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 16,
+     "level": 2,
+     "parent_region_id": "REG-胸部",
+     "patient_side": "midline",
+     "image_side": "",
+     "note": "膈面以下，含胃泡与肝右叶顶部。",
+     "sign_ids": [
+      "SIGN-021",
+      "SIGN-022",
+      "SIGN-027"
+     ]
+    }
+   ]
+  },
+  "ATLAS-CSPINE-LAT-3": {
+   "id": "ATLAS-CSPINE-LAT-3",
+   "name": "ATLAS-CSPINE-LAT-3",
+   "modality": [],
+   "body_part": "",
+   "view": "LAT",
+   "laterality_rule": "",
+   "note": "",
+   "n_cases": 2,
+   "n_regions": 6,
+   "regions": [
+    {
+     "name": "上颈段",
+     "name_en": "upper cervical",
+     "coords": [
+      0.2,
+      0.08,
+      0.56,
+      0.28
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 2,
+     "level": 2,
+     "parent_region_id": "REG-颈椎",
+     "patient_side": "midline",
+     "image_side": "",
+     "note": "C1—C3 椎体与寰枢关节。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "中颈段",
+     "name_en": "mid cervical",
+     "coords": [
+      0.2,
+      0.36,
+      0.56,
+      0.28
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 2,
+     "level": 2,
+     "parent_region_id": "REG-颈椎",
+     "patient_side": "midline",
+     "image_side": "",
+     "note": "C4—C5 椎体与椎间隙。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "下颈段",
+     "name_en": "lower cervical",
+     "coords": [
+      0.2,
+      0.64,
+      0.56,
+      0.28
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 2,
+     "level": 2,
+     "parent_region_id": "REG-颈椎",
+     "patient_side": "midline",
+     "image_side": "",
+     "note": "C6—C7 椎体与颈胸交界。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    }
+   ]
+  },
+  "ATLAS-CSPINE-LAT-4": {
+   "id": "ATLAS-CSPINE-LAT-4",
+   "name": "颈椎侧位四区",
+   "modality": [
+    "CR"
+   ],
+   "body_part": "颈椎",
+   "view": "LAT",
+   "laterality_rule": "cspine_lat: no_laterality_inference",
+   "note": "按上中下颈椎与椎前软组织划分。",
+   "n_cases": 3,
+   "n_regions": 12,
+   "regions": [
+    {
+     "name": "上颈椎",
+     "name_en": "upper",
+     "coords": [
+      0.22,
+      0.04,
+      0.58,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-颈椎",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "C1—C2，含齿状突。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "中颈椎",
+     "name_en": "mid",
+     "coords": [
+      0.22,
+      0.3,
+      0.58,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-颈椎",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "C3—C4。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "下颈椎",
+     "name_en": "lower",
+     "coords": [
+      0.22,
+      0.56,
+      0.58,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-颈椎",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "C5—C7。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "椎前软组织",
+     "name_en": "prevert",
+     "coords": [
+      0.1,
+      0.18,
+      0.16,
+      0.62
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-颈椎",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "椎体前方软组织带。",
+     "sign_ids": [
+      "SIGN-006",
+      "SIGN-028",
+      "SIGN-035"
+     ]
+    }
+   ]
+  },
+  "ATLAS-ELBOW-AP-3": {
+   "id": "ATLAS-ELBOW-AP-3",
+   "name": "肘正位三区",
+   "modality": [
+    "CR"
+   ],
+   "body_part": "肘",
+   "view": "AP",
+   "laterality_rule": "elbow_ap: image_left = patient_right",
+   "note": "按肱骨远端、尺桡骨近端与关节间隙划分。",
+   "n_cases": 1,
+   "n_regions": 3,
+   "regions": [
+    {
+     "name": "肱骨远端",
+     "name_en": "hum_dist",
+     "coords": [
+      0.22,
+      0.04,
+      0.56,
+      0.38
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-肘",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "肱骨内上髁、外上髁与滑车。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "尺桡骨近端",
+     "name_en": "forearm",
+     "coords": [
+      0.22,
+      0.54,
+      0.56,
+      0.36
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-肘",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "尺骨鹰嘴与桡骨头。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "关节间隙",
+     "name_en": "joint",
+     "coords": [
+      0.24,
+      0.4,
+      0.52,
+      0.14
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-肘",
+     "patient_side": "midline",
+     "image_side": "midline",
+     "note": "肱尺与肱桡关节间隙。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-052",
+      "SIGN-053"
+     ]
+    }
+   ]
+  },
+  "ATLAS-FOOT-AP-4": {
+   "id": "ATLAS-FOOT-AP-4",
+   "name": "足正位四区",
+   "modality": [
+    "CR"
+   ],
+   "body_part": "足",
+   "view": "AP",
+   "laterality_rule": "foot_ap: image_left = patient_right",
+   "note": "按跗骨、跖骨、趾骨与跟骨划分。",
+   "n_cases": 5,
+   "n_regions": 20,
+   "regions": [
+    {
+     "name": "跗骨区",
+     "name_en": "tarsal",
+     "coords": [
+      0.14,
+      0.5,
+      0.72,
+      0.28
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 5,
+     "level": 2,
+     "parent_region_id": "REG-足",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "距骨、舟骨、骰骨与楔骨。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "跖骨区",
+     "name_en": "metatarsal",
+     "coords": [
+      0.12,
+      0.28,
+      0.76,
+      0.24
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 5,
+     "level": 2,
+     "parent_region_id": "REG-足",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "第 1—5 跖骨骨干。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "趾骨区",
+     "name_en": "toes",
+     "coords": [
+      0.1,
+      0.04,
+      0.8,
+      0.24
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 5,
+     "level": 2,
+     "parent_region_id": "REG-足",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "各趾近节、中节与远节趾骨。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "跟骨区",
+     "name_en": "calcaneus",
+     "coords": [
+      0.2,
+      0.74,
+      0.6,
+      0.18
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 5,
+     "level": 2,
+     "parent_region_id": "REG-足",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "跟骨体与跟骨结节。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    }
+   ]
+  },
+  "ATLAS-HAND-PA-4": {
+   "id": "ATLAS-HAND-PA-4",
+   "name": "手正位四区",
+   "modality": [
+    "CR"
+   ],
+   "body_part": "手",
+   "view": "PA",
+   "laterality_rule": "hand_pa: image_left = patient_right",
+   "note": "按掌骨、近节指骨、中远节指骨与腕掌关节划分。",
+   "n_cases": 3,
+   "n_regions": 12,
+   "regions": [
+    {
+     "name": "掌骨区",
+     "name_en": "metacarpal",
+     "coords": [
+      0.12,
+      0.42,
+      0.76,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-手",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "第 1—5 掌骨骨干。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "近节指骨区",
+     "name_en": "prox",
+     "coords": [
+      0.1,
+      0.24,
+      0.8,
+      0.18
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-手",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "第 2—5 近节指骨。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "中远节指骨区",
+     "name_en": "dist",
+     "coords": [
+      0.08,
+      0.04,
+      0.84,
+      0.2
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-手",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "中节与远节指骨、末节指骨粗隆。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "腕掌关节区",
+     "name_en": "cmc",
+     "coords": [
+      0.14,
+      0.66,
+      0.72,
+      0.16
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-手",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "腕掌关节与大多角骨相邻区。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-052",
+      "SIGN-053"
+     ]
+    }
+   ]
+  },
+  "ATLAS-HEAD-MR-4": {
+   "id": "ATLAS-HEAD-MR-4",
+   "name": "ATLAS-HEAD-MR-4",
+   "modality": [],
+   "body_part": "",
+   "view": "MR",
+   "laterality_rule": "",
+   "note": "",
+   "n_cases": 5,
+   "n_regions": 20,
+   "regions": [
+    {
+     "name": "额叶区",
+     "name_en": "frontal lobe",
+     "coords": [
+      0.14,
+      0.1,
+      0.34,
+      0.34
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 5,
+     "level": 2,
+     "parent_region_id": "REG-头颅",
+     "patient_side": "unknown",
+     "image_side": "",
+     "note": "额叶皮层与白质。",
+     "sign_ids": [
+      "SIGN-038",
+      "SIGN-039",
+      "SIGN-040"
+     ]
+    },
+    {
+     "name": "顶叶区",
+     "name_en": "parietal lobe",
+     "coords": [
+      0.5,
+      0.1,
+      0.34,
+      0.34
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 5,
+     "level": 2,
+     "parent_region_id": "REG-头颅",
+     "patient_side": "unknown",
+     "image_side": "",
+     "note": "顶叶皮层与白质。",
+     "sign_ids": [
+      "SIGN-038",
+      "SIGN-039",
+      "SIGN-040"
+     ]
+    },
+    {
+     "name": "颞叶区",
+     "name_en": "temporal lobe",
+     "coords": [
+      0.14,
+      0.46,
+      0.3,
+      0.34
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 5,
+     "level": 2,
+     "parent_region_id": "REG-头颅",
+     "patient_side": "unknown",
+     "image_side": "",
+     "note": "颞叶与海马区。",
+     "sign_ids": [
+      "SIGN-038",
+      "SIGN-039",
+      "SIGN-040"
+     ]
+    },
+    {
+     "name": "脑室区",
+     "name_en": "ventricles",
+     "coords": [
+      0.4,
+      0.36,
+      0.22,
+      0.3
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 5,
+     "level": 2,
+     "parent_region_id": "REG-头颅",
+     "patient_side": "midline",
+     "image_side": "",
+     "note": "侧脑室与第三脑室。",
+     "sign_ids": [
+      "SIGN-038",
+      "SIGN-039",
+      "SIGN-040"
+     ]
+    }
+   ]
+  },
+  "ATLAS-HEAD-MR-LOCAL": {
+   "id": "ATLAS-HEAD-MR-LOCAL",
+   "name": "头颅 MR 轴位 · 图像内分区",
+   "modality": [
+    "CR",
+    "CT"
+   ],
+   "body_part": "头颅",
+   "view": "MR-LOCAL",
+   "laterality_rule": "mr_local: no_laterality_inference",
+   "note": "单层轴位无全身参考，只给图像内相对位置，不推断左右与具体脑叶。",
+   "n_cases": 11,
+   "n_regions": 44,
+   "regions": [
+    {
+     "name": "图像前部",
+     "name_en": "ant",
+     "coords": [
+      0.14,
+      0.08,
+      0.72,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 11,
+     "level": 2,
+     "parent_region_id": "REG-头颅",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像上缘区域。",
+     "sign_ids": [
+      "SIGN-038",
+      "SIGN-039",
+      "SIGN-040"
+     ]
+    },
+    {
+     "name": "图像中部",
+     "name_en": "mid",
+     "coords": [
+      0.14,
+      0.36,
+      0.72,
+      0.28
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 11,
+     "level": 2,
+     "parent_region_id": "REG-头颅",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像中央区域。",
+     "sign_ids": [
+      "SIGN-038",
+      "SIGN-039",
+      "SIGN-040"
+     ]
+    },
+    {
+     "name": "图像后部",
+     "name_en": "post",
+     "coords": [
+      0.14,
+      0.66,
+      0.72,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 11,
+     "level": 2,
+     "parent_region_id": "REG-头颅",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像下缘区域。",
+     "sign_ids": [
+      "SIGN-038",
+      "SIGN-039",
+      "SIGN-040"
+     ]
+    },
+    {
+     "name": "周边带",
+     "name_en": "edge",
+     "coords": [
+      0.03,
+      0.03,
+      0.94,
+      0.94
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 11,
+     "level": 2,
+     "parent_region_id": "REG-头颅",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "含颅骨与脑外间隙。",
+     "sign_ids": [
+      "SIGN-038",
+      "SIGN-039",
+      "SIGN-040"
+     ]
+    }
+   ]
+  },
+  "ATLAS-KNEE-AP-4": {
+   "id": "ATLAS-KNEE-AP-4",
+   "name": "膝关节正位四区",
+   "modality": [
+    "CR"
+   ],
+   "body_part": "膝关节",
+   "view": "AP",
+   "laterality_rule": "knee_ap: image_left = patient_right",
+   "note": "按股骨、胫骨、腓骨与关节间隙划分。",
+   "n_cases": 4,
+   "n_regions": 16,
+   "regions": [
+    {
+     "name": "股骨远端",
+     "name_en": "femur",
+     "coords": [
+      0.26,
+      0.04,
+      0.48,
+      0.32
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 4,
+     "level": 2,
+     "parent_region_id": "REG-膝关节",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "股骨内外髁及髁间窝。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "胫骨近端",
+     "name_en": "tibia",
+     "coords": [
+      0.26,
+      0.52,
+      0.46,
+      0.36
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 4,
+     "level": 2,
+     "parent_region_id": "REG-膝关节",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "胫骨平台与近端干骺端。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "腓骨近端",
+     "name_en": "fibula",
+     "coords": [
+      0.72,
+      0.5,
+      0.16,
+      0.34
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 4,
+     "level": 2,
+     "parent_region_id": "REG-膝关节",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "腓骨头与腓骨颈。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "关节间隙",
+     "name_en": "joint",
+     "coords": [
+      0.26,
+      0.38,
+      0.48,
+      0.14
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 4,
+     "level": 2,
+     "parent_region_id": "REG-膝关节",
+     "patient_side": "midline",
+     "image_side": "midline",
+     "note": "股胫关节间隙，含髁间嵴。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050",
+      "SIGN-052",
+      "SIGN-053"
+     ]
+    }
+   ]
+  },
+  "ATLAS-LIMB-LOCAL": {
+   "id": "ATLAS-LIMB-LOCAL",
+   "name": "四肢侧/斜位 · 图像内分区",
+   "modality": [
+    "CR"
+   ],
+   "body_part": "四肢",
+   "view": "",
+   "laterality_rule": "limb_local: no_laterality_inference",
+   "note": "侧位或斜位投照存在骨重叠，只给图像内相对位置，不推断具体骨段。",
+   "n_cases": 6,
+   "n_regions": 24,
+   "regions": [
+    {
+     "name": "图像上部",
+     "name_en": "upper",
+     "coords": [
+      0.1,
+      0.06,
+      0.8,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 6,
+     "level": 2,
+     "parent_region_id": "REG-膝关节",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像上缘区域。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "图像中部",
+     "name_en": "mid",
+     "coords": [
+      0.1,
+      0.34,
+      0.8,
+      0.3
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 6,
+     "level": 2,
+     "parent_region_id": "REG-膝关节",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像中央区域。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "图像下部",
+     "name_en": "lower",
+     "coords": [
+      0.1,
+      0.66,
+      0.8,
+      0.28
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 6,
+     "level": 2,
+     "parent_region_id": "REG-膝关节",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像下缘区域。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "边缘带",
+     "name_en": "edge",
+     "coords": [
+      0.03,
+      0.03,
+      0.94,
+      0.94
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 6,
+     "level": 2,
+     "parent_region_id": "REG-膝关节",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像周边区域。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    }
+   ]
+  },
+  "ATLAS-LIMB-LOCAL-3": {
+   "id": "ATLAS-LIMB-LOCAL-3",
+   "name": "ATLAS-LIMB-LOCAL-3",
+   "modality": [],
+   "body_part": "",
+   "view": "",
+   "laterality_rule": "",
+   "note": "",
+   "n_cases": 3,
+   "n_regions": 9,
+   "regions": [
+    {
+     "name": "近端",
+     "name_en": "proximal",
+     "coords": [
+      0.16,
+      0.1,
+      0.68,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-骨",
+     "patient_side": "unknown",
+     "image_side": "",
+     "note": "骨近端与关节面。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "骨干",
+     "name_en": "diaphysis",
+     "coords": [
+      0.16,
+      0.36,
+      0.68,
+      0.28
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-骨",
+     "patient_side": "unknown",
+     "image_side": "",
+     "note": "骨干皮质与髓腔。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "远端",
+     "name_en": "distal",
+     "coords": [
+      0.16,
+      0.64,
+      0.68,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-骨",
+     "patient_side": "unknown",
+     "image_side": "",
+     "note": "骨远端与关节面。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    }
+   ]
+  },
+  "ATLAS-LSPINE-LAT-4": {
+   "id": "ATLAS-LSPINE-LAT-4",
+   "name": "腰椎侧位四区",
+   "modality": [
+    "CR"
+   ],
+   "body_part": "腰椎",
+   "view": "LAT",
+   "laterality_rule": "lspine_lat: no_laterality_inference",
+   "note": "按腰椎节段与椎前软组织划分。",
+   "n_cases": 2,
+   "n_regions": 8,
+   "regions": [
+    {
+     "name": "L1—L2",
+     "name_en": "l12",
+     "coords": [
+      0.22,
+      0.06,
+      0.58,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 2,
+     "level": 2,
+     "parent_region_id": "REG-腰椎",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "上段腰椎。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "L3—L4",
+     "name_en": "l34",
+     "coords": [
+      0.22,
+      0.32,
+      0.58,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 2,
+     "level": 2,
+     "parent_region_id": "REG-腰椎",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "中段腰椎。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "L5—S1",
+     "name_en": "l5s1",
+     "coords": [
+      0.22,
+      0.58,
+      0.58,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 2,
+     "level": 2,
+     "parent_region_id": "REG-腰椎",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "腰骶交界。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "椎前软组织",
+     "name_en": "prevert",
+     "coords": [
+      0.1,
+      0.2,
+      0.16,
+      0.6
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 2,
+     "level": 2,
+     "parent_region_id": "REG-腰椎",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "椎体前方软组织带。",
+     "sign_ids": [
+      "SIGN-006",
+      "SIGN-028",
+      "SIGN-035"
+     ]
+    }
+   ]
+  },
+  "ATLAS-LUMBAR-MR-SAG": {
+   "id": "ATLAS-LUMBAR-MR-SAG",
+   "name": "ATLAS-LUMBAR-MR-SAG",
+   "modality": [],
+   "body_part": "",
+   "view": "MR",
+   "laterality_rule": "",
+   "note": "",
+   "n_cases": 1,
+   "n_regions": 4,
+   "regions": [
+    {
+     "name": "前柱 · 椎体与终板",
+     "name_en": "ant",
+     "coords": [
+      0.06,
+      0.08,
+      0.44,
+      0.84
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-头颅",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "前柱：椎体与终板。",
+     "sign_ids": [
+      "SIGN-036",
+      "SIGN-048"
+     ]
+    },
+    {
+     "name": "中柱 · 椎管与硬膜囊",
+     "name_en": "mid",
+     "coords": [
+      0.5,
+      0.08,
+      0.2,
+      0.84
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-头颅",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "中柱：椎管、硬膜囊与马尾。",
+     "sign_ids": [
+      "SIGN-036"
+     ]
+    },
+    {
+     "name": "后柱 · 棘突与关节突",
+     "name_en": "post",
+     "coords": [
+      0.7,
+      0.08,
+      0.24,
+      0.84
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-头颅",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "后柱：棘突、关节突与椎旁肌。",
+     "sign_ids": [
+      "SIGN-036"
+     ]
+    },
+    {
+     "name": "周边范围（整体）",
+     "name_en": "edge",
+     "coords": [
+      0.02,
+      0.02,
+      0.96,
+      0.96
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-头颅",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "整幅影像的周边范围，用作整体定位，不代替具体分区。",
+     "sign_ids": [
+      "SIGN-036"
+     ]
+    }
+   ]
+  },
+  "ATLAS-PELVIS-AP-4": {
+   "id": "ATLAS-PELVIS-AP-4",
+   "name": "骨盆正位四区",
+   "modality": [
+    "CR"
+   ],
+   "body_part": "骨盆",
+   "view": "AP",
+   "laterality_rule": "pelvis_ap: image_left = patient_right",
+   "note": "按髂骨、髋臼、耻坐骨与骶髂关节划分。",
+   "n_cases": 1,
+   "n_regions": 4,
+   "regions": [
+    {
+     "name": "髂骨翼",
+     "name_en": "iliac",
+     "coords": [
+      0.1,
+      0.08,
+      0.8,
+      0.26
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-骨盆",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "双侧髂骨翼与髂嵴。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "髋臼",
+     "name_en": "acetab",
+     "coords": [
+      0.14,
+      0.38,
+      0.72,
+      0.24
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-骨盆",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "双侧髋臼与股骨头。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-052",
+      "SIGN-053"
+     ]
+    },
+    {
+     "name": "耻坐骨",
+     "name_en": "pubis",
+     "coords": [
+      0.2,
+      0.64,
+      0.6,
+      0.24
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-骨盆",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "耻骨支、坐骨支与耻骨联合。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "骶髂关节",
+     "name_en": "si",
+     "coords": [
+      0.32,
+      0.26,
+      0.36,
+      0.16
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-骨盆",
+     "patient_side": "midline",
+     "image_side": "midline",
+     "note": "骶骨与髂骨相邻区。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-052",
+      "SIGN-053"
+     ]
+    }
+   ]
+  },
+  "ATLAS-SHOULDER-AP-3": {
+   "id": "ATLAS-SHOULDER-AP-3",
+   "name": "肩正位三区",
+   "modality": [
+    "CR"
+   ],
+   "body_part": "肩",
+   "view": "AP",
+   "laterality_rule": "shoulder_ap: image_left = patient_right",
+   "note": "按肱骨头、肩盂与锁骨远端划分。",
+   "n_cases": 1,
+   "n_regions": 3,
+   "regions": [
+    {
+     "name": "肱骨头",
+     "name_en": "hum_head",
+     "coords": [
+      0.1,
+      0.26,
+      0.4,
+      0.42
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-肩",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "肱骨头与肱骨近端。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "肩盂",
+     "name_en": "glenoid",
+     "coords": [
+      0.5,
+      0.24,
+      0.24,
+      0.38
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-肩",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "肩胛盂与盂唇区。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-052",
+      "SIGN-053"
+     ]
+    },
+    {
+     "name": "锁骨远端",
+     "name_en": "clavicle",
+     "coords": [
+      0.42,
+      0.06,
+      0.46,
+      0.2
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-肩",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "锁骨远端与肩锁关节。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    }
+   ]
+  },
+  "ATLAS-THY-US-LOCAL": {
+   "id": "ATLAS-THY-US-LOCAL",
+   "name": "ATLAS-THY-US-LOCAL",
+   "modality": [],
+   "body_part": "",
+   "view": "US-LOCAL",
+   "laterality_rule": "",
+   "note": "",
+   "n_cases": 1,
+   "n_regions": 5,
+   "regions": [
+    {
+     "name": "图像中央低回声区",
+     "name_en": "central hypoechoic zone",
+     "coords": [
+      0.3,
+      0.28,
+      0.44,
+      0.38
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-THYROID",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像内相对位置，不代表解剖左叶或右叶。",
+     "sign_ids": [
+      "SIGN-057",
+      "SIGN-058",
+      "SIGN-060"
+     ]
+    },
+    {
+     "name": "上方腺体",
+     "name_en": "superior glandular band",
+     "coords": [
+      0.06,
+      0.14,
+      0.86,
+      0.14
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-THYROID",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像内相对位置。",
+     "sign_ids": [
+      "SIGN-058"
+     ]
+    },
+    {
+     "name": "下方腺体",
+     "name_en": "inferior glandular band",
+     "coords": [
+      0.06,
+      0.66,
+      0.86,
+      0.2
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-THYROID",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像内相对位置，含后方声影带。",
+     "sign_ids": [
+      "SIGN-059",
+      "SIGN-060"
+     ]
+    },
+    {
+     "name": "左侧腺体",
+     "name_en": "left image-side band",
+     "coords": [
+      0.06,
+      0.28,
+      0.24,
+      0.38
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-THYROID",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像内相对位置，不推断患者侧别。",
+     "sign_ids": [
+      "SIGN-060"
+     ]
+    },
+    {
+     "name": "右侧腺体",
+     "name_en": "right image-side band",
+     "coords": [
+      0.74,
+      0.28,
+      0.18,
+      0.38
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 1,
+     "level": 2,
+     "parent_region_id": "REG-THYROID",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像内相对位置，不推断患者侧别。",
+     "sign_ids": [
+      "SIGN-058"
+     ]
+    }
+   ]
+  },
+  "ATLAS-US-LOCAL": {
+   "id": "ATLAS-US-LOCAL",
+   "name": "超声 · 探头相对分区",
+   "modality": [
+    "CR",
+    "US"
+   ],
+   "body_part": "甲状腺",
+   "view": "US",
+   "laterality_rule": "us_local: no_laterality_inference",
+   "note": "超声仅有局部视野，无全身解剖参考，只给图像内相对位置。",
+   "n_cases": 10,
+   "n_regions": 40,
+   "regions": [
+    {
+     "name": "图像中央",
+     "name_en": "center",
+     "coords": [
+      0.28,
+      0.26,
+      0.44,
+      0.46
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 10,
+     "level": 2,
+     "parent_region_id": "REG-甲状腺",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "中央回声区。",
+     "sign_ids": [
+      "SIGN-057",
+      "SIGN-058"
+     ]
+    },
+    {
+     "name": "上方带",
+     "name_en": "upper",
+     "coords": [
+      0.08,
+      0.06,
+      0.84,
+      0.2
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 10,
+     "level": 2,
+     "parent_region_id": "REG-甲状腺",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像上缘。",
+     "sign_ids": [
+      "SIGN-057",
+      "SIGN-058"
+     ]
+    },
+    {
+     "name": "下方带",
+     "name_en": "lower",
+     "coords": [
+      0.08,
+      0.72,
+      0.84,
+      0.22
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 10,
+     "level": 2,
+     "parent_region_id": "REG-甲状腺",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像下缘，含后方声影带。",
+     "sign_ids": [
+      "SIGN-057",
+      "SIGN-058"
+     ]
+    },
+    {
+     "name": "边缘带",
+     "name_en": "edge",
+     "coords": [
+      0.03,
+      0.03,
+      0.94,
+      0.94
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 10,
+     "level": 2,
+     "parent_region_id": "REG-甲状腺",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "图像周边。",
+     "sign_ids": [
+      "SIGN-057",
+      "SIGN-058"
+     ]
+    }
+   ]
+  },
+  "ATLAS-US-LOCAL-3": {
+   "id": "ATLAS-US-LOCAL-3",
+   "name": "ATLAS-US-LOCAL-3",
+   "modality": [],
+   "body_part": "",
+   "view": "US-LOCAL",
+   "laterality_rule": "",
+   "note": "",
+   "n_cases": 3,
+   "n_regions": 9,
+   "regions": [
+    {
+     "name": "右侧腺叶",
+     "name_en": "right lobe",
+     "coords": [
+      0.1,
+      0.2,
+      0.36,
+      0.58
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-甲状腺",
+     "patient_side": "right",
+     "image_side": "",
+     "note": "右侧甲状腺腺叶。",
+     "sign_ids": [
+      "SIGN-057",
+      "SIGN-058"
+     ]
+    },
+    {
+     "name": "左侧腺叶",
+     "name_en": "left lobe",
+     "coords": [
+      0.54,
+      0.2,
+      0.36,
+      0.58
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-甲状腺",
+     "patient_side": "left",
+     "image_side": "",
+     "note": "左侧甲状腺腺叶。",
+     "sign_ids": [
+      "SIGN-057",
+      "SIGN-058"
+     ]
+    },
+    {
+     "name": "峡部",
+     "name_en": "isthmus",
+     "coords": [
+      0.44,
+      0.3,
+      0.12,
+      0.36
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 3,
+     "level": 2,
+     "parent_region_id": "REG-甲状腺",
+     "patient_side": "midline",
+     "image_side": "",
+     "note": "连接两侧腺叶的峡部。",
+     "sign_ids": [
+      "SIGN-057",
+      "SIGN-058"
+     ]
+    }
+   ]
+  },
+  "ATLAS-WRIST-PA-3": {
+   "id": "ATLAS-WRIST-PA-3",
+   "name": "腕正位三区",
+   "modality": [
+    "CR"
+   ],
+   "body_part": "腕",
+   "view": "PA",
+   "laterality_rule": "wrist_pa: image_left = patient_right",
+   "note": "按近排腕骨、远排腕骨与桡尺骨远端划分。",
+   "n_cases": 4,
+   "n_regions": 12,
+   "regions": [
+    {
+     "name": "近排腕骨",
+     "name_en": "prox_carpal",
+     "coords": [
+      0.14,
+      0.4,
+      0.72,
+      0.22
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 4,
+     "level": 2,
+     "parent_region_id": "REG-腕",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "舟骨、月骨、三角骨与豌豆骨。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "远排腕骨",
+     "name_en": "dist_carpal",
+     "coords": [
+      0.14,
+      0.22,
+      0.72,
+      0.18
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 4,
+     "level": 2,
+     "parent_region_id": "REG-腕",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "大多角骨、小多角骨、头状骨与钩骨。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    },
+    {
+     "name": "桡尺骨远端",
+     "name_en": "radioulnar",
+     "coords": [
+      0.12,
+      0.62,
+      0.76,
+      0.24
+     ],
+     "sd": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": 4,
+     "level": 2,
+     "parent_region_id": "REG-腕",
+     "patient_side": "unknown",
+     "image_side": "unknown",
+     "note": "桡骨远端与尺骨茎突。",
+     "sign_ids": [
+      "SIGN-048",
+      "SIGN-049",
+      "SIGN-050"
+     ]
+    }
+   ]
+  }
+ }
+}
