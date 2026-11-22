@@ -1052,6 +1052,12 @@
     const r = AS.result;
 
     return `<div class="ask">
+      <a class="v6-banner" href="read/clinic.html">
+        <span class="v6-k">v6 · 胸片阅片优先</span>
+        <b>当前版本的主链路已收敛到胸片阅片</b>
+        <span class="v6-d">21 例 CR 胸部逐区校正；旧版多模态问答保留为实验，胸片请用新工作台。</span>
+        <em>进入胸片阅片 →</em>
+      </a>
       <header class="ask-hero">
         <div class="ah-l">
           <span class="ah-eye">核心功能 · 多模态知识库问答</span>

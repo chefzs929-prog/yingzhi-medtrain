@@ -4,11 +4,21 @@
 (function () {
   'use strict';
 
+  /* v7 收缩版不再使用 Service Worker；清掉旧版缓存，避免演示时看到旧页面 */
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function (rs) {
+      rs.forEach(function (r) { r.unregister(); });
+    }).catch(function () {});
+  }
+  if (window.caches && caches.keys) {
+    caches.keys().then(function (ks) {
+      ks.forEach(function (k) { caches.delete(k); });
+    }).catch(function () {});
+  }
+
   const NAV = [
-    { id: 'clinic', label: '读片工作台', href: 'clinic.html', hint: '命题主链路' },
-    { id: 'teach', label: '分区图谱', href: 'teach.html', hint: '按章节系统学' },
-    { id: 'paper', label: '组卷自测', href: 'paper.html', hint: '出卷与判分' },
-    { id: 'compare', label: '报告对照', href: 'compare.html', hint: '第二知识源' },
+    { id: 'clinic', label: '胸片阅片', href: 'clinic.html', hint: '唯一功能页' },
+    { id: 'home', label: '方法与边界', href: '../index.html#method', hint: '范围、数据与声明' },
   ];
 
   function barHTML(page) {
@@ -16,11 +26,11 @@
       `<a href="${n.href}" class="${n.id === page ? 'on' : ''}" title="${n.hint}">${n.label}</a>`
     ).join('');
     return `
-      <a class="logo" href="clinic.html" title="RadioCheck · 影像循证">
+      <a class="logo" href="../index.html" title="RadioCheck · 返回首页">
         <span class="m">R</span>
         <div><b>RadioCheck · 影像循证</b><i>REGION · CITATION · TRACE</i></div>
       </a>
-      <nav class="switch" aria-label="场景切换">${nav}</nav>`;
+      <nav class="switch" aria-label="页面导航">${nav}</nav>`;
   }
 
   function mountBar() {

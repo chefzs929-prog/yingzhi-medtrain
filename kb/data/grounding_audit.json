@@ -1,0 +1,43 @@
+{
+  "generated_at": "2026-11-20",
+  "invalid_regions": {
+    "REG-009-PLE": {
+      "mean": 0.0,
+      "p95": 0,
+      "dark_frac": 1.0
+    },
+    "REG-028-ADJ": {
+      "mean": 13.8,
+      "p95": 30,
+      "dark_frac": 0.79
+    },
+    "REG-104-ADJ": {
+      "mean": 0.7,
+      "p95": 0,
+      "dark_frac": 0.99
+    },
+    "REG-118-PAR": {
+      "mean": 3.7,
+      "p95": 2,
+      "dark_frac": 0.97
+    },
+    "REG-158-PLE": {
+      "mean": 0.0,
+      "p95": 0,
+      "dark_frac": 1.0
+    },
+    "REG-238-PAR": {
+      "mean": 3.7,
+      "p95": 2,
+      "dark_frac": 0.97
+    },
+    "REG-242-ADJ": {
+      "mean": 8.2,
+      "p95": 36,
+      "dark_frac": 0.85
+    }
+  },
+  "claims_dropped_for_black_region": 7,
+  "claims_rewritten_case_level": 280,
+  "doc_cites_removed": 22
+}

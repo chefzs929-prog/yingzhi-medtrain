@@ -4,6 +4,23 @@
 .ask{display:flex;flex-direction:column;gap:16px;padding-bottom:8px}
 
 /* ---------- 头部 ---------- */
+/* v6 横幅：把当前主链路指向胸片阅片 */
+.v6-banner{
+  display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"k b e" "k d e";
+  gap:2px 14px;align-items:center;padding:12px 16px;margin-bottom:14px;
+  background:linear-gradient(180deg,#f3fbf9,#fff);border:1px solid #bfe0da;border-radius:12px;
+  color:var(--ink);text-decoration:none;transition:.16s;
+}
+.v6-banner:hover{border-color:var(--brand);box-shadow:0 10px 26px -18px rgba(11,79,85,.5)}
+.v6-k{grid-area:k;font-family:var(--mono);font-size:10px;color:var(--brand);letter-spacing:.08em;
+  background:var(--brand-soft);border:1px solid #bfe0da;padding:4px 7px;border-radius:6px;white-space:nowrap}
+.v6-banner b{grid-area:b;font-size:13px;color:var(--ink)}
+.v6-banner .v6-d{grid-area:d;font-size:11.5px;color:var(--muted);line-height:1.6}
+.v6-banner em{grid-area:e;font-style:normal;font-size:12px;font-weight:600;color:var(--brand);white-space:nowrap}
+@media(max-width:760px){
+  .v6-banner{grid-template-columns:1fr auto;grid-template-areas:"k e" "b b" "d d";gap:5px 10px}
+}
+
 .ask-hero{
   display:grid;grid-template-columns:minmax(0,1fr) auto;gap:26px;align-items:end;
   padding:26px 28px;border-radius:var(--r-lg);

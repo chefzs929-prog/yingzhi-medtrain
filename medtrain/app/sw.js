@@ -7,7 +7,7 @@
  *
  * 升级方式：改 VERSION 即可，activate 时清掉旧缓存。
  */
-const VERSION = 'v5.0.0';
+const VERSION = 'v6.0.0';
 const CACHE = `yingzhi-${VERSION}`;
 const OFFLINE_PAGE = './index.html';
 

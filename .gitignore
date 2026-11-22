@@ -21,6 +21,9 @@ __pycache__/
 # 站点构建产物：发布在 gh-pages 分支，不重复进 main
 outputs/medtrain/
 
+# 桌面端构建产物：由 desktop/build.sh 本地生成，不入库
+outputs/desktop/
+
 # 候选影像池与中间产物（已消费，保留在本地）
 kb/_candidates/
 kb/_candidates2/

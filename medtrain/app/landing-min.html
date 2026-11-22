@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b4f55">
+<title>RadioCheck · 胸片阅片</title>
+<meta name="description" content="一张胸片，一个分区，一条出处。21 例 CR 胸部逐区校正，纯静态，非诊断用途。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b4f55'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white' font-family='sans-serif'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+<style>
+:root{
+  --bg:#f4fbfa;--surface:#fff;--ink:#10232e;--ink2:#2c4652;--muted:#5b7480;
+  --faint:#8aa0a9;--line:#dcebe8;--brand:#0b4f55;--brand2:#0e7c7b;
+  --ok:#147a5b;--warn:#a9690b;--bad:#b23b3b;--r:14px;
+  --mono:"SFMono-Regular",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.7 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.top{height:64px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--line);background:rgba(244,251,250,.9);
+  position:sticky;top:0;z-index:10;backdrop-filter:blur(10px)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px}
+.brand .m{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--brand),var(--brand2));color:#fff;font-size:15px}
+.brand span{font-weight:500;color:var(--faint);font-size:11px;letter-spacing:.08em}
+.top nav{display:flex;align-items:center;gap:18px;font-size:13px;color:var(--ink2)}
+.top nav a:hover{color:var(--brand)}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 18px;
+  border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink2);
+  font-size:13.5px;font-weight:600;transition:.16s;white-space:nowrap}
+.btn:hover{border-color:var(--brand);color:var(--brand)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff;
+  box-shadow:0 12px 26px -16px rgba(11,79,85,.8)}
+.btn.primary:hover{background:#083f44;color:#fff}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center;
+  padding:58px 0 42px}
+.kicker{font-size:11px;letter-spacing:.18em;color:var(--brand2);font-weight:700;margin:0 0 14px}
+h1{font-size:44px;line-height:1.24;letter-spacing:-.02em;margin:0;font-weight:750}
+h1 em{font-style:normal;color:var(--brand2)}
+.lede{margin:18px 0 0;font-size:14.5px;line-height:1.95;color:var(--muted);max-width:36em}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.micro{margin:14px 0 0;font-size:11.5px;color:var(--faint);letter-spacing:.02em}
+.demo{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:0 24px 60px -40px rgba(16,35,46,.45);overflow:hidden}
+.demo-h{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;
+  border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10.5px;color:var(--faint);
+  letter-spacing:.06em;background:#fbfefd}
+.demo-h span:first-child{color:var(--brand);font-weight:700}
+.demo-body{padding:16px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chips span{font-size:10.5px;padding:3px 9px;border-radius:999px;border:1px solid transparent}
+.chips .bad{color:var(--bad);background:#fdf1f1;border-color:#f3d4d4}
+.chips .warn{color:var(--warn);background:#fdf6e9;border-color:#f0dfba}
+.chips .ok{color:var(--ok);background:#eef8f4;border-color:#cfe9df}
+.chips .mute{color:var(--faint);background:#f5f8f8;border-color:#e3eceb}
+.q{font-size:12.5px;color:var(--muted);margin:0 0 8px}
+.a{font-size:13.5px;line-height:1.8;color:var(--ink2);margin:0}
+.a b{color:var(--warn)}
+.cite{margin-top:14px;padding:10px 12px;border-radius:9px;background:#f4faf8;
+  border:1px solid #dcece7;font-size:11.5px;color:var(--muted)}
+.cite b{display:block;color:var(--brand);font-size:10px;letter-spacing:.12em;margin-bottom:3px}
+.demo-f{padding:10px 16px;border-top:1px solid var(--line);font-size:10.5px;
+  color:var(--faint);background:#fbfefd}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:8px 0 54px}
+.metrics div{background:var(--surface);padding:16px 18px}
+.metrics b{display:block;font-size:22px;letter-spacing:-.02em;color:var(--brand)}
+.metrics span{font-size:11.5px;color:var(--muted)}
+.method{padding:0 0 48px}
+.method h2{font-size:22px;letter-spacing:-.01em;margin:0 0 6px}
+.method>p{color:var(--muted);font-size:13.5px;margin:0 0 20px}
+.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.mgrid div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.mgrid b{display:block;font-size:13.5px;margin-bottom:5px}
+.mgrid p{margin:0;font-size:12px;line-height:1.8;color:var(--muted)}
+.boundary{margin-top:12px;padding:14px 18px;border-left:3px solid var(--brand2);
+  background:#f0f8f6;border-radius:0 10px 10px 0;font-size:12px;line-height:1.85;color:var(--ink2)}
+.boundary b{color:var(--brand)}
+footer{border-top:1px solid var(--line);padding:18px 0 30px;font-size:11px;
+  line-height:1.85;color:var(--faint)}
+footer b{color:var(--muted);font-weight:600}
+@media(max-width:860px){
+  .hero{grid-template-columns:1fr;gap:28px;padding:36px 0 30px}
+  h1{font-size:34px}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .mgrid{grid-template-columns:1fr}
+  .top nav a:first-child{display:none}
+}
+@media(max-width:520px){
+  .wrap{padding:0 18px}
+  h1{font-size:30px}
+  .top{height:58px}
+  .brand span{display:none}
+  .acts .btn{width:100%}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;width:100%">
+    <a class="brand" href="./"><span class="m">R</span>RadioCheck <span>影像循证</span></a>
+    <nav aria-label="页面导航">
+      <a href="#method">方法与边界</a>
+      <a class="btn primary" href="read/clinic.html">进入胸片阅片</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <p class="kicker">赛道 B · 胸片阅片</p>
+      <h1>一张胸片，<br>一个分区，<br><em>一条出处。</em></h1>
+      <p class="lede">
+        21 例 CR 胸部逐区校正。点分区或拖框，只回答这一区；
+        公开来源没写的，明确写“未提及”，不补成正常。
+      </p>
+      <div class="acts">
+        <a class="btn primary" href="read/clinic.html">进入胸片阅片 →</a>
+        <a class="btn" href="#method">先看范围与边界</a>
+      </div>
+      <p class="micro">纯静态 · 无需登录 · 不调用大模型 · 非诊断用途</p>
+    </div>
+
+    <div class="demo" aria-label="分区回答示例">
+      <div class="demo-h"><span>CASE-006</span><span>PA · 右肺中野</span></div>
+      <div class="demo-body">
+        <div class="chips">
+          <span class="bad">异常</span><span class="warn">未提及</span>
+          <span class="ok">未见异常</span><span class="mute">判读受限</span>
+        </div>
+        <p class="q">问：右肺上野有没有异常？</p>
+        <p class="a">右肺上野：公开来源未逐区描述，<b>不作推断</b>。<br>
+          右肺中野：大片实变，红箭头指向病灶边缘。</p>
+        <div class="cite"><b>出处</b>病例来源页 · 原图箭头 · REG-006-RML</div>
+      </div>
+      <div class="demo-f">四种状态由数据规则算出，不靠模型语气</div>
+    </div>
+  </section>
+
+  <section class="metrics" aria-label="范围数字">
+    <div><b>21</b><span>例 CR 胸部</span></div>
+    <div><b>8 + 3</b><span>PA / LAT 教学分区</span></div>
+    <div><b>4</b><span>种分区状态</span></div>
+    <div><b>183 / 35</b><span>数据 / 端到端检查</span></div>
+  </section>
+
+  <section class="method" id="method">
+    <h2>只做一件事，并把边界写清楚</h2>
+    <p>对外只保留这一个工作台；其他入口已收缩为跳转，不再扩功能。</p>
+    <div class="mgrid">
+      <div><b>只做 CR 胸部</b><p>23 例中 21 例进入队列；多图拼接、双幅对照移出。其他部位、组卷、报告对照、角色端不再作为对外功能。</p></div>
+      <div><b>未提及 ≠ 正常</b><p>每个分区独立状态：异常 / 未见异常 / 来源未提及 / 判读受限。来源没写的，明确不作推断。</p></div>
+      <div><b>出处可回查</b><p>病例来源页、许可、原图标注、分区依据、征象词条。不把只适用于 CT 的指南硬挂到胸片。</p></div>
+      <div><b>不猜、不诊断</b><p>上传只做库内 SHA-256 精确匹配；陌生图明确拒绝。只做影像表现与来源对照，不输出诊断、分期、治疗或预后。</p></div>
+    </div>
+    <div class="boundary">
+      <b>能当场证明：</b>21 例逐区校正；点分区或拖框定位；库内原图精确命中、陌生图拒绝；阅片记录可复制/下载；数据 183/183、端到端 35/35 可复跑。<br>
+      <b>还没做到：</b>非胸片未逐区校正；不做病灶检测与分割；静态页不调大模型；不做诊断、分期、治疗或预后判断。<br>
+      <b>用途声明：</b>仅用于医学影像教学与研究，不构成诊断意见。影像仅来自 CC0 / CC BY / CC BY-SA / 公有领域；分区框为教学分区，不是病灶分割。逐区文本由 AI 辅助整理，正式教学前须由医学人员逐条审核签字。
+    </div>
+  </section>
+
+  <footer>
+    <b>RadioCheck · 影像循证</b> · 赛道 B 胸片阅片 · v7 收缩版<br>
+    一个首页，一个工作台；旧入口自动跳转到胸片阅片。
+  </footer>
+</main>
+
+<script>
+/* v7 收缩版不再使用 Service Worker；清掉旧版缓存，避免演示时看到旧页面 */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function (rs) {
+    rs.forEach(function (r) { r.unregister(); });
+  }).catch(function () {});
+}
+if (window.caches && caches.keys) {
+  caches.keys().then(function (ks) {
+    ks.forEach(function (k) { caches.delete(k); });
+  }).catch(function () {});
+}
+</script>
+</body>
+</html>

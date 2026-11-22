@@ -34,7 +34,8 @@
         <h1>${greet}</h1>
         <p>${r.desc}。知识、指南、病例、分区与双引用结论共用一套底座。</p>
         <div class="row wrap">
-          <button class="btn primary lg" data-act="nav" data-view="${state.role === "student" ? "drill" : "apply"}">${icon("play", 16)} ${state.role === "student" ? "开始今日一例" : state.role === "teacher" ? "查看班级概览" : "打开病例工作台"}</button>
+          <a class="btn primary lg" href="read/clinic.html">${icon("image", 16)} 进入胸片阅片</a>
+          <button class="btn ghost" data-act="nav" data-view="${state.role === "student" ? "drill" : "apply"}">${icon("play", 15)} ${state.role === "student" ? "开始今日一例" : state.role === "teacher" ? "查看班级概览" : "打开病例工作台"}</button>
           <button class="btn ghost" data-act="nav" data-view="learn">${icon("search", 15)} 先查一个征象</button>
         </div>
       </div>
@@ -198,12 +199,12 @@
   }
 
   function coreBanner() {
-    return `<button class="core-banner" data-act="nav" data-view="ask">
-      <span class="cb-k">核心功能</span>
-      <b>多模态知识库问答</b>
-      <span class="cb-d">影像区域 + 文献段落，缺证据就降级或拒答</span>
-      <em>进入问答 ${icon("right", 13)}</em>
-    </button>`;
+    return `<a class="core-banner" href="read/clinic.html">
+      <span class="cb-k">当前主链路</span>
+      <b>胸片阅片：选片 → 分区 → 所见与出处</b>
+      <span class="cb-d">21 例 CR 胸部逐区校正；四种状态，未提及不写成正常</span>
+      <em>进入胸片阅片 ${icon("right", 13)}</em>
+    </a>`;
   }
 
   function homeView() {
@@ -212,7 +213,7 @@
         <div class="dash-main">${statStrip()}${state.role === "teacher" ? teacherPanel() : state.role === "doctor" ? doctorPanel() : studentPanel()}</div>
         <aside class="stack">${state.role === "student" ? studentSide() : state.role === "teacher" ? teacherSide() : doctorSide()}</aside>
       </div>
-      <div class="sec-title"><h2>四个基本功能链条</h2><span>同一条学习/工作流的四段，按顺序推进</span></div>
+      <div class="sec-title"><h2>辅助功能（不再扩范围）</h2><span>四链条保留为辅助演示；当前主链路是胸片阅片</span></div>
       <div class="chain-grid">
         ${chains().map((item, i) => {
           const p = chainProgress(item.id);
