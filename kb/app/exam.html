@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>病例题 · 执业医师胸片 · RadioCheck</title>
+<meta name="theme-color" content="#0b4f55">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon-180.png">
+<link rel="stylesheet" href="base.css?v=10">
+<link rel="stylesheet" href="exam.css?v=1">
+</head>
+<body class="exam-body">
+
+<header class="bar" data-page="exam">
+  <div class="bar-extra">
+    <span class="quest-badge">病例题 · 大纲胸部 10 例</span>
+    <span class="bar-note">先主诉，后阅片；每题 5 选 1</span>
+    <span class="spacer"></span>
+    <a class="btn sm" href="compare.html">对比阅片</a>
+    <a class="btn sm" href="clinic.html">逐区阅片</a>
+  </div>
+</header>
+
+<div class="global-disclaimer"><b>非诊断用途</b><span>仅用于医学影像教学与研究，不构成诊断意见，不替代临床决策；题目与解析只代表库内教学标注。</span></div>
+
+<div class="exam-shell">
+  <aside class="syllabus" aria-label="考试大纲">
+    <div class="syl-head">
+      <div>
+        <b>考试大纲 · 胸部 X 线</b>
+        <span>临床执业 / 助理 · 实践技能</span>
+      </div>
+      <em id="sylCount">0/10</em>
+    </div>
+    <div class="syl-progress"><i id="sylBar"></i></div>
+    <div class="syl-list" id="sylList">
+      <div class="empty-state"><b>正在载入大纲…</b></div>
+    </div>
+    <div class="syl-foot">
+      <p><b>只做胸部平片。</b>腹部、泌尿系、长骨骨折与颅脑 CT 不在本页；不把胸片结论外推到其他部位。</p>
+      <details>
+        <summary>题源与边界</summary>
+        <div id="sourceBox" class="src-box"></div>
+      </details>
+    </div>
+  </aside>
+
+  <main class="exam-main">
+    <div class="case-head">
+      <div class="ch-l">
+        <div class="ch-kicker">
+          <span id="caseNo">—</span>
+          <span class="dot"></span>
+          <span id="caseTopic">—</span>
+          <span class="badge" id="caseDiff">—</span>
+        </div>
+        <h1 id="caseChief">正在载入病例…</h1>
+        <div class="ch-meta" id="caseMeta">—</div>
+      </div>
+      <div class="ch-r">
+        <button class="btn sm" id="prevBtn" title="上一题">← 上一题</button>
+        <button class="btn sm" id="nextBtn" title="下一题">下一题 →</button>
+      </div>
+    </div>
+
+    <div class="case-grid">
+      <section class="vignette card" aria-label="病例摘要">
+        <div class="vg-head">
+          <span class="vg-k">病例摘要</span>
+          <span class="vg-hint">先读主诉，再看影像</span>
+        </div>
+        <div class="vg-body" id="vignette">
+          <div class="empty-state"><b>正在载入…</b></div>
+        </div>
+      </section>
+
+      <section class="imaging" aria-label="胸片影像">
+        <div class="img-tools">
+          <span class="img-k" id="imgPose">PA</span>
+          <span class="spacer"></span>
+          <button class="btn sm" id="zoomOut" title="缩小">−</button>
+          <span class="zoom-badge" id="zoomBadge">100%</span>
+          <button class="btn sm" id="zoomIn" title="放大">+</button>
+          <button class="btn sm" id="fitBtn" title="适应窗口">适应</button>
+        </div>
+        <div class="img-stage" id="stage">
+          <img id="img" alt="胸片" draggable="false">
+          <div class="img-empty" id="imgEmpty">影像载入中…</div>
+          <div class="img-note" id="imgNote" hidden></div>
+        </div>
+        <div class="img-foot">
+          <span id="imgSource">—</span>
+          <button class="btn sm ghost" id="noteBtn">标注说明</button>
+        </div>
+      </section>
+    </div>
+
+    <section class="qcard card" aria-label="题目">
+      <div class="q-head">
+        <span class="q-k">第 <b id="qNo">1</b> 题</span>
+        <span class="q-type">影像诊断 · 单选</span>
+        <span class="spacer"></span>
+        <span class="q-state" id="qState">未作答</span>
+      </div>
+      <h2 class="q-stem" id="qStem">—</h2>
+      <div class="options" id="options"></div>
+      <div class="q-actions">
+        <button class="btn solid" id="submitBtn">提交答案</button>
+        <button class="btn" id="retryBtn" hidden>重做本题</button>
+        <span class="spacer"></span>
+        <a class="btn ghost" id="compareBtn" href="compare.html">拿这一例做对比 →</a>
+      </div>
+      <div class="feedback" id="feedback" hidden></div>
+    </section>
+  </main>
+
+  <aside class="sheet" aria-label="答题卡">
+    <div class="sheet-head">
+      <div>
+        <b>答题卡</b>
+        <span id="sheetSub">本机记录 · 不上传</span>
+      </div>
+      <em id="sheetScore">0 / 0</em>
+    </div>
+    <div class="sheet-grid" id="sheetGrid"></div>
+    <div class="sheet-legend">
+      <span><i class="lg right"></i>正确</span>
+      <span><i class="lg wrong"></i>错误</span>
+      <span><i class="lg todo"></i>未答</span>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn sm" id="wrongOnly">只看错题</button>
+      <button class="btn sm" id="randomBtn">随机一题</button>
+      <button class="btn sm ghost" id="resetBtn">清空记录</button>
+    </div>
+    <div class="sheet-note">
+      <b>怎么用</b>
+      <p>先读主诉与查体，在影像上按“气道 → 肺野 → 肺门 → 心影 → 膈与肋膈角 → 骨骼”顺序扫一遍，再选项。</p>
+      <p>提交后看“影像所见 / 易错点 / 对比”，最后用对比阅片把相似病放在一起看。</p>
+    </div>
+    <a class="sheet-compare" href="compare.html">
+      <span>打开对比阅片</span>
+      <b>拖动两张影像 → 并排 / 擦除</b>
+    </a>
+  </aside>
+</div>
+
+<div id="yzToast" role="status" aria-live="polite"></div>
+
+<script src="common.js?v=10"></script>
+<script src="exam.js?v=1"></script>
+</body>
+</html>

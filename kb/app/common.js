@@ -17,7 +17,10 @@
   }
 
   const NAV = [
-    { id: 'clinic', label: '胸片阅片', href: 'clinic.html', hint: '唯一功能页' },
+    { id: 'clinic', label: '胸片阅片', href: 'clinic.html', hint: '21 例逐区阅片' },
+    { id: 'exam', label: '病例题', href: 'exam.html', hint: '大纲胸部 10 例 · 主诉 + 胸片' },
+    { id: 'compare', label: '对比阅片', href: 'compare.html', hint: '拖动两张影像 · 相似表征鉴别' },
+    { id: 'classroom', label: '课堂', href: 'classroom.html', hint: '作业 · 问答 · 陪练 · 自测 · 互助小组' },
     { id: 'home', label: '方法与边界', href: '../index.html#method', hint: '范围、数据与声明' },
   ];
 

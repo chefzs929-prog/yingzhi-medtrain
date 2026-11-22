@@ -56,6 +56,7 @@
   --serif:"Songti SC","Noto Serif SC",Georgia,serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
 html,body{height:100%}
 body{
   background:var(--bg);color:var(--ink);
@@ -106,6 +107,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 .switch a:hover{color:var(--brand);background:#fff}
 .switch a.on{background:var(--brand);color:#fff;font-weight:600;box-shadow:0 1px 2px rgba(11,79,85,.2)}
 
+.bar-extra{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
 .bar .spacer{flex:1}
 .bar-note{font-size:11.5px;color:var(--faint);white-space:nowrap}
 .bar-user{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
@@ -211,3 +213,65 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 /* 通用滚动区 */
 .scroll{overflow:auto;min-height:0}
+
+/* 小屏顶栏：只留品牌图标与必要导航，避免角色/课堂按钮被挤成两行 */
+@media (max-width:760px){
+  .bar{padding:0 12px;gap:8px;overflow:hidden}
+  .logo div{display:none}
+  .bar-extra{gap:6px}
+  .bar-extra .quest-badge{display:none}
+}
+
+/* 病例题 / 对比页：中屏先让出顶栏空间，导航已包含同一入口 */
+@media (max-width:1200px){
+  .exam-body .bar-note, .cmp-body .bar-note{display:none}
+  .exam-body .bar-extra .btn, .cmp-body .bar-extra .btn{display:none}
+}
+@media (max-width:760px){
+  .exam-body .bar-extra, .cmp-body .bar-extra{display:none}
+  .switch{max-width:calc(100vw - 92px);overflow-x:auto;scrollbar-width:none}
+  .switch::-webkit-scrollbar{display:none}
+  .switch a{padding:0 9px;font-size:11.5px}
+}
+
+/* 全站非诊断声明：每个页面常驻，不依赖答案内容 */
+.global-disclaimer{
+  display:flex;gap:7px;align-items:center;justify-content:center;flex-wrap:wrap;
+  padding:6px 14px;background:#fff8e8;border-bottom:1px solid #f0dcc0;
+  color:#7c4a12;font-size:11px;line-height:1.55;text-align:center;
+}
+.global-disclaimer b{font-weight:700}
+.global-disclaimer span{color:#8a6a3d}
+.upload-warn{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:#a35a1f}
+
+/* 轻量 Agent 桥：只在本地服务可用时出现 */
+.qa-agent{margin-top:8px}
+.agent-panel{margin-top:8px;border:1px solid var(--line);border-radius:10px;background:#fbfdfd;padding:9px 11px;max-height:360px;overflow:auto}
+.agent-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.agent-head b{font-size:11px;color:var(--brand-deep)}
+.agent-badge{font-size:9px;padding:2px 7px;border-radius:999px;background:var(--brand-soft);color:var(--brand-deep)}
+.agent-badge.ok{background:#e8f7f1;color:#0b6b52}
+.agent-badge.warn{background:var(--warn-soft);color:var(--warn)}
+.agent-badge.err{background:#fdecec;color:#a12b2b}
+.agent-text{font-size:12px;line-height:1.7;color:var(--ink-2);white-space:pre-wrap}
+.agent-text:empty{display:none}
+.agent-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+.agent-toggle{font:inherit;font-size:10px;color:var(--brand);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+.agent-toggle:hover{color:var(--brand-deep)}
+.agent-note{font-size:9px;color:var(--faint)}
+.agent-detail{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line)}
+.agent-cites{display:grid;gap:5px}
+.agent-cite{border:1px solid var(--line);border-radius:7px;background:#fff;padding:5px 7px;font-size:9.5px;line-height:1.5}
+.agent-cite b{color:var(--brand-deep);margin-right:5px}
+.agent-cite span{color:var(--muted)}
+.agent-cite a{color:var(--brand);margin-left:6px}
+.agent-cite.bad{border-color:#e7b4b4;background:#fff7f7}
+.agent-cite em{display:block;color:#a12b2b;font-style:normal;margin-top:2px}
+.agent-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:9px;color:var(--faint)}
+.agent-disclaimer{margin-top:7px;font-size:9px;color:var(--faint)}
+.agent-empty{font-size:9.5px;color:var(--warn)}
+
+@media (max-width:760px){
+  .global-disclaimer{font-size:10px;padding:5px 10px}
+  .global-disclaimer span{display:none}
+}

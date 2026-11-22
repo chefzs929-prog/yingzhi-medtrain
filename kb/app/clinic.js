@@ -65,7 +65,60 @@
     showZones: true,
     zoom: 1,
     reportOpen: false,
+    task: null,
+    quiz: {
+      zoneId: "",
+      status: "",
+      signs: [],
+      signsTouched: false,
+      result: null,
+      redo: false,
+    },
   };
+
+  /* ---------------- 课堂任务 ---------------- */
+
+  function quizSubmitted(caseId) {
+    if (!S.task) return false;
+    if (S.quiz.redo) return false;
+    return !!(S.quiz.result && S.quiz.result.caseId === caseId) ||
+      !!taskAttempt(caseId);
+  }
+
+  function taskAttempt(caseId) {
+    if (!S.task || !S.task.attempts) return null;
+    return S.task.attempts.find((a) => a.caseId === caseId) || null;
+  }
+
+  function taskDoneCount() {
+    if (!S.task) return 0;
+    return new Set((S.task.attempts || []).map((a) => a.caseId)).size;
+  }
+
+  function syncTaskChrome() {
+    const banner = $("#taskBanner");
+    if (!banner) return;
+    if (!S.task) {
+      banner.hidden = true;
+      return;
+    }
+    const a = S.task.assignment;
+    const done = taskDoneCount();
+    const total = a.caseIds.length;
+    document.body.classList.toggle("task-locked", !quizSubmitted(S.caseId));
+    banner.hidden = false;
+    banner.innerHTML = `<div class="tb-main">
+        <span class="tb-kicker">课堂任务</span>
+        <b>${esc(a.title)}</b>
+        <span class="tb-meta">${done}/${total} 例 · 截止 ${esc(a.due || "待定")} · ${esc(S.task.student.name)}</span>
+      </div>
+      <div class="tb-actions">
+        <button class="btn sm" id="taskGoQuiz">去作答</button>
+        <button class="btn sm" id="taskJumpNext">下一例未完成</button>
+        <a class="btn sm" href="classroom.html?role=student">返回课堂</a>
+        <a class="btn sm ghost" href="clinic.html">退出作业</a>
+      </div>`;
+  }
 
   /* ---------------- 数据与查询 ---------------- */
 
@@ -93,7 +146,12 @@
   }
 
   function enabledCases() {
-    return (S.data ? S.data.cases : []).filter((c) => c.enabled);
+    let list = (S.data ? S.data.cases : []).filter((c) => c.enabled);
+    if (S.task) {
+      const ids = S.task.assignment.caseIds;
+      list = ids.map((id) => list.find((c) => c.id === id)).filter(Boolean);
+    }
+    return list;
   }
 
   function tagsOf(c) {
@@ -145,6 +203,7 @@
   }
 
   function visibleCases() {
+    if (S.task) return enabledCases();
     const q = S.query.trim().toLowerCase();
     return enabledCases().filter((c) => {
       if (!matchFilter(c, S.filter)) return false;
@@ -165,19 +224,22 @@
       list.innerHTML = `<div class="empty-state"><b>没有匹配的胸片</b><span>换一个筛选条件，或清空搜索词。</span></div>`;
       return;
     }
-    list.innerHTML = rows.map((c) => {
+    list.innerHTML = rows.map((c, idx) => {
       const on = c.id === S.caseId ? " on" : "";
-      const tags = Array.from(new Set(tagsOf(c))).map((t) => {
+      const reveal = !S.task || quizSubmitted(c.id);
+      const title = reveal ? c.title : `考核病例 ${idx + 1} · ${c.pose_label}`;
+      const tags = reveal ? Array.from(new Set(tagsOf(c))).map((t) => {
         const cls = (t === "正常" || t === "未见异常") ? "nm" : (t === "气腔影" || t === "气胸" || t === "积液" || t === "结节" ? "ab" : "q");
         return `<span class="q-tag ${cls}">${esc(t)}</span>`;
-      }).join("");
-      const sum = summaryOf(c);
-      const sumTag = Array.from(new Set(tagsOf(c))).includes(sum) ? "" : `<span class="q-tag q">${esc(sum)}</span>`;
+      }).join("") : `<span class="q-tag q">待作答</span>`;
+      const sum = reveal ? summaryOf(c) : "";
+      const sumTag = reveal && !Array.from(new Set(tagsOf(c))).includes(sum) ? `<span class="q-tag q">${esc(sum)}</span>` : "";
+      const doneTag = S.task && reveal ? `<span class="q-tag nm">已提交</span>` : "";
       return `<div class="q-row${on}" data-case="${esc(c.id)}">
         <span class="q-no">${esc(c.id.replace("CASE-", ""))}</span>
         <div class="q-main">
-          <b>${esc(c.title)}</b>
-          <div class="q-tags">${tags}${sumTag}</div>
+          <b>${esc(title)}</b>
+          <div class="q-tags">${tags}${sumTag}${doneTag}</div>
         </div>
       </div>`;
     }).join("");
@@ -188,14 +250,18 @@
   function renderViewer() {
     const c = currentCase();
     if (!c) return;
+    const reveal = !S.task || quizSubmitted(c.id);
+    const taskIndex = S.task ? S.task.assignment.caseIds.indexOf(c.id) + 1 : 0;
     $("#caseId").textContent = c.id;
     $("#casePose").textContent = `${c.modality} · ${c.pose_label}`;
-    $("#caseTitle").textContent = c.title;
-    $("#caseMeta").textContent = `${c.quality} · ${c.zones.length} 个教学分区 · ${c.signs.length ? c.signs.map((id) => (signOf(id) || {}).name || id).join(" / ") : "未挂征象词条"}`;
-    $("#caseQuality").textContent = c.quality;
+    $("#caseTitle").textContent = reveal ? c.title : `考核病例 ${taskIndex} · ${c.pose_label}`;
+    $("#caseMeta").textContent = reveal
+      ? `${c.quality} · ${c.zones.length} 个教学分区 · ${c.signs.length ? c.signs.map((id) => (signOf(id) || {}).name || id).join(" / ") : "未挂征象词条"}`
+      : "考核模式 · 提交后显示病例信息与征象";
+    $("#caseQuality").textContent = reveal ? c.quality : "考核模式";
     const src = $("#caseSource");
     src.href = c.source_page || "#";
-    src.style.display = c.source_page ? "" : "none";
+    src.style.display = reveal && c.source_page ? "" : "none";
 
     const img = $("#img");
     const zones = $("#zones");
@@ -218,29 +284,41 @@
     }
 
     zones.innerHTML = c.zones.map((z) => {
-      const on = z.id === S.zoneId ? " on" : "";
+      const on = S.task && !reveal
+        ? (z.id === S.quiz.zoneId ? " on" : "")
+        : (z.id === S.zoneId ? " on" : "");
       const hide = S.showZones ? "" : " hide";
+      const statusClass = reveal ? z.status : "quiz";
       const style = `left:${(z.coords[0] * 100).toFixed(2)}%;top:${(z.coords[1] * 100).toFixed(2)}%;width:${(z.coords[2] * 100).toFixed(2)}%;height:${(z.coords[3] * 100).toFixed(2)}%`;
-      return `<div class="zone ${z.status}${on}${hide}" data-zone="${esc(z.id)}" style="${style}"
-        title="${esc(z.name)} · ${esc(statusLabel(z.status))}">
+      return `<div class="zone ${statusClass}${on}${hide}" data-zone="${esc(z.id)}" style="${style}"
+        title="${esc(z.name)}${reveal ? " · " + esc(statusLabel(z.status)) : ""}">
         <span class="zl">${esc(SHORT[z.id] || z.name)}</span>
       </div>`;
     }).join("");
 
-    $("#srcLine").innerHTML = c.source_page
-      ? `来源：<a href="${esc(c.source_page)}" target="_blank" rel="noopener">${esc(c.source_page.replace(/^https?:\/\//, "").slice(0, 82))}</a>`
-      : "来源：—";
-    $("#licLine").textContent = `${c.license || "许可未标注"} · ${(c.artist || "作者未标注").slice(0, 60)}`;
-    $("#bboxMeta").textContent = S.zoneId ? `分区 ${S.zoneId} · ${SIDE[currentZone() ? currentZone().side : ""] || ""}` : "未选分区";
+    if (reveal) {
+      $("#srcLine").innerHTML = c.source_page
+        ? `来源：<a href="${esc(c.source_page)}" target="_blank" rel="noopener">${esc(c.source_page.replace(/^https?:\/\//, "").slice(0, 82))}</a>`
+        : "来源：—";
+      $("#licLine").textContent = `${c.license || "许可未标注"} · ${(c.artist || "作者未标注").slice(0, 60)}`;
+      $("#bboxMeta").textContent = S.zoneId ? `分区 ${S.zoneId} · ${SIDE[currentZone() ? currentZone().side : ""] || ""}` : "未选分区";
+    } else {
+      $("#srcLine").textContent = "考核模式 · 提交后显示来源";
+      $("#licLine").textContent = "提交后显示许可与作者";
+      $("#bboxMeta").textContent = S.quiz.zoneId ? "已选择分区 · 提交后揭示状态" : "请选择异常分区";
+    }
 
+    const legend = $("#legend");
+    if (legend) legend.style.display = reveal ? "" : "none";
     const zt = $("#zoneToggle");
     if (zt) zt.classList.toggle("on", S.showZones);
-    $("#step2").classList.toggle("on", !!S.zoneId);
-    $("#step3").classList.toggle("on", !!S.zoneId);
-    $("#chainHint").textContent = S.zoneId
-      ? `已选：${currentZone().name} · 右栏显示所见与出处`
-      : "点影像上的彩色分区，或直接提问";
+    $("#step2").classList.toggle("on", S.task ? !!S.quiz.zoneId : !!S.zoneId);
+    $("#step3").classList.toggle("on", S.task ? reveal : !!S.zoneId);
+    $("#chainHint").textContent = S.task && !reveal
+      ? (S.quiz.zoneId ? "已选择分区 · 到右栏完成判读与征象" : "点影像分区作答，或到右栏课堂任务")
+      : (S.zoneId ? `已选：${currentZone().name} · 右栏显示所见与出处` : "点影像上的彩色分区，或直接提问");
     applyZoom();
+    syncTaskChrome();
   }
 
   function fitStage() {
@@ -266,6 +344,22 @@
 
   /* ---------------- 渲染：右栏 ---------------- */
 
+  function syncTabs() {
+    const taskBtn = $("#taskTab");
+    if (!taskBtn) return;
+    taskBtn.hidden = !S.task;
+    if (!S.task) {
+      $$("#tabs button").forEach((b) => { b.hidden = false; });
+      return;
+    }
+    const locked = !quizSubmitted(S.caseId);
+    $$("#tabs button").forEach((b) => {
+      if (b.dataset.tab === "task") b.hidden = false;
+      else b.hidden = locked;
+    });
+    if (locked) S.tab = "task";
+  }
+
   function renderPanel() {
     const c = currentCase();
     const body = $("#panelBody");
@@ -273,11 +367,101 @@
       body.innerHTML = `<div class="empty-state"><b>正在载入…</b></div>`;
       return;
     }
-    if (S.tab === "zone") body.innerHTML = zoneTabHTML(c);
+    syncTabs();
+    if (S.tab === "task" && S.task) body.innerHTML = taskTabHTML(c);
+    else if (S.tab === "zone") body.innerHTML = zoneTabHTML(c);
     else if (S.tab === "system") body.innerHTML = systemTabHTML(c);
     else if (S.tab === "qa") body.innerHTML = qaTabHTML(c);
     else body.innerHTML = sourceTabHTML(c);
     $$("#tabs button").forEach((b) => b.classList.toggle("on", b.dataset.tab === S.tab));
+  }
+
+  function signNames(ids) {
+    return (ids || []).map((id) => (signOf(id) || {}).name || id).filter(Boolean).join("、");
+  }
+
+  function zoneNames(c, ids) {
+    const list = (ids || []).map((id) => (c.zones.find((z) => z.id === id) || {}).name).filter(Boolean);
+    return list.length ? list.join("、") : "未见明确异常分区";
+  }
+
+  function taskTabHTML(c) {
+    if (!S.task) return `<div class="empty-state"><b>当前不在课堂任务中</b><span>从课堂作业进入，或直接使用分区阅片。</span></div>`;
+    const a = S.task.assignment;
+    const idx = a.caseIds.indexOf(c.id) + 1;
+    const total = a.caseIds.length;
+    const reveal = quizSubmitted(c.id);
+    const attempt = S.quiz.result || taskAttempt(c.id);
+    if (reveal && attempt) {
+      const d = attempt.detail || {};
+      const score = attempt.score;
+      const allDone = taskDoneCount() >= total;
+      const answeredZone = d.answeredZoneId === "none"
+        ? "未见明确异常分区"
+        : ((c.zones.find((z) => z.id === d.answeredZoneId) || {}).name || d.answeredZoneId || "—");
+      const correctZone = zoneNames(c, d.correctZoneIds);
+      return `<div class="task-quiz-head">
+          <div class="tq-kicker">课堂任务 · 第 ${idx}/${total} 例 · 已提交</div>
+          <h3>${esc(c.title)}</h3>
+          <p>提交后已解锁分区所见、系统阅片与出处。先对照，再决定是否重做。</p>
+        </div>
+        <div class="quiz-result ${score >= 60 ? "ok" : "bad"}">
+          <div class="qr-top">
+            <div class="qr-score">${score}<span>/100</span></div>
+            <div class="qr-lines">
+              <div class="${d.zoneOk ? "ok" : "bad"}"><b>定位</b><span>${d.zonePoints || 0}/40 · ${d.zoneOk ? "正确" : "错误"}</span></div>
+              <div class="${d.statusOk ? "ok" : "bad"}"><b>判读</b><span>${d.statusPoints || 0}/30 · ${d.statusOk ? "正确" : "错误"}</span></div>
+              <div class="${d.signRatio >= 0.8 ? "ok" : "bad"}"><b>征象</b><span>${d.signPoints || 0}/30 · ${Math.round((d.signRatio || 0) * 100)}%</span></div>
+            </div>
+          </div>
+          <div class="qr-answer">
+            <p><b>你的作答：</b>${esc(answeredZone)} · ${esc(statusLabel(d.answeredStatus))} · ${esc(signNames(d.answeredSigns) || "未见明确征象")}</p>
+            <p><b>正确答案：</b>${esc(correctZone)} · ${esc(statusLabel(d.expectedStatus))} · ${esc(signNames(d.expectedSigns) || "无明确征象")}</p>
+            <p class="qr-note">定位题接受该病例任一异常分区；判读题按你选择分区的真实状态判分；征象题按命中数减错选计分。</p>
+          </div>
+          <div class="sys-actions">
+            <button class="btn sm primary" data-quiz-next>${allDone ? "全部完成，返回课堂" : "下一例"}</button>
+            <button class="btn sm" data-quiz-redo>重做本病例</button>
+            <button class="btn sm" data-tab="zone">对照分区所见</button>
+          </div>
+        </div>`;
+    }
+
+    const opts = window.RCClass ? window.RCClass.signOptions(c) : { options: c.signs.slice() };
+    const zoneOpts = c.zones.map((z) =>
+      `<button class="qopt ${S.quiz.zoneId === z.id ? "on" : ""}" data-quiz-zone="${esc(z.id)}">${esc(z.name)}</button>`).join("");
+    const statusOpts = Object.keys(STATUS).map((k) =>
+      `<button class="qopt ${S.quiz.status === k ? "on" : ""}" data-quiz-status="${k}">${esc(STATUS[k])}</button>`).join("");
+    const signOpts = opts.options.map((id) =>
+      `<button class="qopt sign ${S.quiz.signs.includes(id) ? "on" : ""}" data-quiz-sign="${esc(id)}">${esc((signOf(id) || {}).name || id)}</button>`).join("");
+    const noneOn = S.quiz.signsTouched && !S.quiz.signs.length ? " on" : "";
+    const canSubmit = !!S.quiz.zoneId && !!S.quiz.status && S.quiz.signsTouched;
+
+    return `<div class="task-quiz-head">
+        <div class="tq-kicker">课堂任务 · 第 ${idx}/${total} 例 · ${esc(S.task.student.name)}</div>
+        <h3>考核病例 · ${esc(c.pose_label)}</h3>
+        <p>病例标题、分区颜色与出处暂时隐藏。先自己读片，提交后再对照。</p>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-qh"><b>1</b><span>异常所见主要位于哪个分区？</span><em>40 分</em></div>
+        <div class="quiz-opts">${zoneOpts}
+          <button class="qopt ${S.quiz.zoneId === "none" ? "on" : ""}" data-quiz-zone="none">未见明确异常分区</button>
+        </div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-qh"><b>2</b><span>${S.quiz.zoneId === "none" ? "本病例整体最符合哪种状态？" : "你选择的分区是什么状态？"}</span><em>30 分</em></div>
+        <div class="quiz-opts">${statusOpts}</div>
+      </div>
+      <div class="quiz-q">
+        <div class="quiz-qh"><b>3</b><span>本病例公开标注的征象是？</span><em>30 分 · 可多选</em></div>
+        <div class="quiz-opts">${signOpts}
+          <button class="qopt sign${noneOn}" data-quiz-sign="none">未见明确征象</button>
+        </div>
+      </div>
+      <div class="quiz-submit">
+        <button class="btn solid wide" id="quizSubmit" ${canSubmit ? "" : "disabled"}>提交本病例</button>
+        <span class="quiz-hint">${canSubmit ? "提交后立即评分并解锁对照。" : "三题都作答后才能提交。"}</span>
+      </div>`;
   }
 
   function zoneTabHTML(c) {
@@ -371,7 +555,7 @@
     const log = S.qa.length
       ? S.qa.map((m) => m.role === "user"
         ? `<div class="qa-msg user">${esc(m.text)}</div>`
-        : qaAnswerHTML(m.answer)).join("")
+        : qaAnswerHTML(m.answer, m.agent)).join("")
       : `<div class="hint-box">
           <b>只答当前病例：</b>${esc(c.id)} · ${esc(c.title)}。
           可以问分区（右肺上野）、征象（气胸/积液/结节）或“这张片怎么读”。
@@ -385,17 +569,24 @@
       </div>`;
   }
 
-  function qaAnswerHTML(a) {
+  function qaAnswerHTML(a, agent) {
     const cls = a.status === "refuse" ? "refuse" : (a.status === "partial" ? "partial" : "");
     const body = (a.body || []).map((p) => `<p>${esc(p)}</p>`).join("");
     const bullets = (a.bullets && a.bullets.length)
       ? `<ul>${a.bullets.map((b) => `<li>${esc(b)}</li>`).join("")}</ul>` : "";
     const cites = (a.cites && a.cites.length)
       ? `<div class="qa-cites">${a.cites.map(citeHTML).join("")}</div>` : "";
+    const agentBtn = (agent && a.status !== "refuse")
+      ? `<div class="qa-agent"><button class="btn sm" data-agent-ask data-agent-surface="clinic"
+          data-agent-case="${esc(agent.case_id || "")}" data-agent-zone="${esc(agent.zone_id || "")}"
+          data-agent-evidence="${esc(agent.evidence || "")}"
+          data-agent-query="${esc(`请解释上面的库内回答：“${agent.query}”。只引用库内证据，不诊断、不治疗、不判分、不补造引用。`)}">问 Agent 解释</button></div>`
+      : "";
     return `<div class="qa-msg bot ${cls}">
       <div class="qa-title">${esc(a.title || "回答")}</div>
       <div class="qa-body">${body}${bullets}</div>
       ${cites}
+      ${agentBtn}
     </div>`;
   }
 
@@ -416,10 +607,15 @@
       ? (S.upload.ok
         ? `<div class="src-block"><b>上传匹配成功</b><p>${esc(S.upload.name)} → ${esc(S.upload.caseId)}（SHA-256 精确匹配）。</p></div>`
         : `<div class="upload-alert">
-            <b>该影像未入库，不能定位或回答</b>
+            <b>该影像未入库：只提供通用分区定位</b>
             <p>文件：${esc(S.upload.name)} · ${(S.upload.size / 1024).toFixed(0)} KB<br>
             SHA-256：${esc(S.upload.hash || "浏览器不支持，未能计算")}<br>
-            静态版只做库内原图的精确匹配，不猜“最像的一例”。请换用左侧队列中的胸片，或在本地服务下接入视觉模型。</p>
+            图片只在当前浏览器内存中显示，不上传服务器、不落盘。请勿上传真实患者影像。</p>
+            ${S.upload.url ? `<img class="upload-preview" src="${esc(S.upload.url)}" alt="上传影像预览">` : ""}
+            <div class="generic-zones">${["右肺上野", "右肺中野", "右肺下野", "左肺上野", "左肺中野", "左肺下野", "纵隔与心影", "膈下"].map((z) =>
+              `<button class="chip ${S.upload.genericZone === z ? "on" : ""}" data-generic-zone="${esc(z)}">${esc(z)}</button>`).join("")}</div>
+            ${genericZoneHTML(S.upload.genericZone)}
+            <p class="hint">通用分区只帮助定位解剖位置；没有库内逐区标注时，本工具不对异常/正常作判断。</p>
           </div>`)
       : "";
     const signs = c.signs.length
@@ -697,8 +893,23 @@
   function ask(q) {
     const text = String(q || "").trim();
     if (!text) return;
+    const c = currentCase();
+    const z = c ? detectZone(text, c) : null;
+    const signText = z
+      ? (z.sign_ids || []).map((id) => {
+        const s = signOf(id);
+        return s ? `${s.id} ${s.name}` : id;
+      }).join("、")
+      : "";
+    const evidence = z
+      ? `病例 ${c.id}，分区 ${z.name}（${z.id}），状态 ${statusLabel(z.status)}，所见：${z.text}，关联征象：${signText || "无"}`
+      : "";
     S.qa.push({ role: "user", text });
-    S.qa.push({ role: "bot", answer: answer(text) });
+    S.qa.push({
+      role: "bot",
+      answer: answer(text),
+      agent: c ? { query: text, case_id: c.id, zone_id: z ? z.id : "", evidence } : null,
+    });
     S.qaDraft = "";
     S.tab = "qa";
     renderPanel();
@@ -810,25 +1021,51 @@
     return Array.from(new Uint8Array(d)).map((b) => b.toString(16).padStart(2, "0")).join("");
   }
 
+  function readDataURL(file) {
+    return new Promise((resolve) => {
+      const fr = new FileReader();
+      fr.onload = () => resolve(String(fr.result || ""));
+      fr.onerror = () => resolve("");
+      fr.readAsDataURL(file);
+    });
+  }
+
   async function handleUpload(file) {
     if (!file) return;
+    if (file.size > 8 * 1024 * 1024) {
+      toast("图片超过 8 MB，未读取；请使用公开教学影像的压缩版");
+      return;
+    }
     let hash = "";
     try {
       hash = await sha256Hex(await file.arrayBuffer());
     } catch (e) {
       hash = "";
     }
+    const url = await readDataURL(file);
     const hit = hash ? enabledCases().find((c) => c.sha256 === hash || c.sha256_source === hash) : null;
     if (hit) {
       S.upload = { ok: true, name: file.name, size: file.size, hash, caseId: hit.id };
       selectCase(hit.id);
       toast(`已匹配库内病例 ${hit.id}`);
     } else {
-      S.upload = { ok: false, name: file.name, size: file.size, hash };
+      S.upload = {
+        ok: false, generic: true, name: file.name, size: file.size, hash, url,
+        genericZone: "",
+      };
       S.tab = "source";
       renderPanel();
-      toast("该影像未入库，不能定位或回答");
+      toast("该影像未入库：只提供通用分区定位，不下结论");
     }
+  }
+
+  function genericZoneHTML(zone) {
+    if (!zone) return "";
+    return `<div class="src-block generic-result">
+      <b>通用解剖分区 · ${esc(zone)}</b>
+      <p>这是按胸片比例给出的通用分区，<b>不含该影像的库内标注</b>；不能据此判断有无异常，也不生成征象结论。</p>
+      <p>可对照左侧 21 例库内影像的同一分区，或换用库内原图做逐区对照。需要模型自动定位时，请在本地启动 Agent 服务后使用视觉分区接口。</p>
+    </div>`;
   }
 
   /* ---------------- 交互 ---------------- */
@@ -842,7 +1079,16 @@
     S.qaDraft = "";
     S.zoom = 1;
     S.upload = null;
-    S.tab = "zone";
+    const attempt = taskAttempt(id);
+    S.quiz = {
+      zoneId: "",
+      status: "",
+      signs: [],
+      signsTouched: false,
+      result: attempt,
+      redo: false,
+    };
+    S.tab = S.task ? "task" : "zone";
     render();
     window.scrollTo({ top: 0, behavior: "auto" });
   }
@@ -852,6 +1098,14 @@
     if (!c) return;
     const z = c.zones.find((x) => x.id === id);
     if (!z) return;
+    if (S.task && !quizSubmitted(c.id)) {
+      S.quiz.zoneId = id;
+      S.quiz.redo = false;
+      S.tab = "task";
+      renderViewer();
+      renderPanel();
+      return;
+    }
     S.zoneId = id;
     S.tab = "zone";
     renderViewer();
@@ -873,10 +1127,124 @@
     toast._t = setTimeout(() => el.classList.remove("on"), 2400);
   }
 
+  function submitQuiz() {
+    const c = currentCase();
+    if (!c || !S.task) return;
+    if (!S.quiz.zoneId || !S.quiz.status || !S.quiz.signsTouched) {
+      toast("三题都作答后才能提交");
+      return;
+    }
+    if (!window.RCClass) {
+      toast("课堂数据层未载入");
+      return;
+    }
+    const graded = window.RCClass.gradeCase(c, {
+      zoneId: S.quiz.zoneId,
+      status: S.quiz.status,
+      signs: S.quiz.signs,
+    });
+    const attempt = window.RCClass.saveAttempt({
+      classId: S.task.classId,
+      assignmentId: S.task.assignment.id,
+      studentId: S.task.student.id,
+      caseId: c.id,
+      answers: {
+        zoneId: S.quiz.zoneId,
+        status: S.quiz.status,
+        signs: S.quiz.signs,
+      },
+      score: graded.score,
+      detail: graded.detail,
+    });
+    if (!attempt) {
+      toast("提交失败，请返回课堂重新进入作业");
+      return;
+    }
+    S.quiz.result = attempt;
+    S.quiz.redo = false;
+    S.task.attempts = window.RCClass.attemptsFor(S.task.classId, S.task.assignment.id, S.task.student.id);
+    toast(`已提交：${attempt.score} 分`);
+    render();
+    const body = $("#panelBody");
+    if (body) body.scrollTop = 0;
+  }
+
+  function nextTaskCase() {
+    if (!S.task) return;
+    const a = S.task.assignment;
+    const done = new Set((S.task.attempts || []).map((x) => x.caseId));
+    const cur = a.caseIds.indexOf(S.caseId);
+    const after = a.caseIds.slice(cur + 1).find((id) => !done.has(id));
+    const any = a.caseIds.find((id) => !done.has(id));
+    const next = after || any;
+    if (next) selectCase(next);
+    else location.href = "classroom.html?role=student";
+  }
+
+  function redoQuiz() {
+    S.quiz = {
+      zoneId: "",
+      status: "",
+      signs: [],
+      signsTouched: false,
+      result: null,
+      redo: true,
+    };
+    S.tab = "task";
+    render();
+  }
+
   function bind() {
     document.addEventListener("click", (e) => {
+      const genericZone = e.target.closest("[data-generic-zone]");
+      if (genericZone) {
+        if (S.upload && S.upload.generic) {
+          S.upload.genericZone = genericZone.dataset.genericZone;
+          renderPanel();
+        }
+        return;
+      }
       const qRow = e.target.closest("[data-case]");
       if (qRow) { selectCase(qRow.dataset.case); return; }
+
+      const quizZone = e.target.closest("[data-quiz-zone]");
+      if (quizZone) {
+        S.quiz.zoneId = quizZone.dataset.quizZone;
+        renderViewer();
+        renderPanel();
+        return;
+      }
+
+      const quizStatus = e.target.closest("[data-quiz-status]");
+      if (quizStatus) {
+        S.quiz.status = quizStatus.dataset.quizStatus;
+        renderPanel();
+        return;
+      }
+
+      const quizSign = e.target.closest("[data-quiz-sign]");
+      if (quizSign) {
+        const id = quizSign.dataset.quizSign;
+        S.quiz.signsTouched = true;
+        if (id === "none") S.quiz.signs = [];
+        else {
+          const set = new Set(S.quiz.signs);
+          if (set.has(id)) set.delete(id); else set.add(id);
+          S.quiz.signs = Array.from(set);
+        }
+        renderPanel();
+        return;
+      }
+
+      if (e.target && e.target.id === "quizSubmit") { submitQuiz(); return; }
+      if (e.target && e.target.closest("[data-quiz-next]")) { nextTaskCase(); return; }
+      if (e.target && e.target.closest("[data-quiz-redo]")) { redoQuiz(); return; }
+      if (e.target && e.target.id === "taskJumpNext") { nextTaskCase(); return; }
+      if (e.target && e.target.id === "taskGoQuiz") {
+        const body = $("#panelBody");
+        if (body) body.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
 
       const f = e.target.closest("[data-f]");
       if (f) {
@@ -1038,14 +1406,44 @@
       $("#stageEmpty").innerHTML = `<b>胸片数据未载入</b><span>${esc(String(e.message || e))}</span>`;
       return;
     }
+    let params = null;
+    try { params = new URLSearchParams(location.search); } catch (e) { params = null; }
+    const taskId = params ? params.get("task") : "";
+    const studentId = params ? params.get("student") : "";
+    let taskError = "";
+    if (taskId && window.RCClass) {
+      const ctx = window.RCClass.taskContext(taskId, studentId);
+      if (ctx.ok) {
+        S.task = ctx;
+        document.body.classList.add("task-mode");
+      } else {
+        taskError = ctx.error || "作业不可用";
+      }
+    }
+
     const first = enabledCases()[0];
-    const qp = (() => { try { return new URLSearchParams(location.search).get("case") || ""; } catch (e) { return ""; } })();
+    const qp = params ? (params.get("case") || "") : "";
     const deep = qp ? enabledCases().find((c) => c.id === qp) : null;
+    const pending = S.task ? enabledCases().find((c) => !taskAttempt(c.id)) : null;
     if (deep) S.caseId = deep.id;
+    else if (pending) S.caseId = pending.id;
     else if (first) S.caseId = first.id;
+    const initialAttempt = taskAttempt(S.caseId);
+    S.quiz = {
+      zoneId: "",
+      status: "",
+      signs: [],
+      signsTouched: false,
+      result: initialAttempt,
+      redo: false,
+    };
+    S.tab = S.task ? "task" : "zone";
     bind();
     render();
-    $("#barNote").textContent = `CR 胸部 · ${enabledCases().length} 例逐区校正`;
+    $("#barNote").textContent = S.task
+      ? `课堂任务 · ${S.task.assignment.title}`
+      : `CR 胸部 · ${enabledCases().length} 例逐区校正`;
+    if (taskError) toast(taskError);
   }
 
   boot();

@@ -7,8 +7,8 @@
 <meta name="theme-color" content="#0b4f55">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="apple-touch-icon" href="../icons/apple-touch-icon-180.png">
-<link rel="stylesheet" href="base.css?v=7">
-<link rel="stylesheet" href="clinic.css?v=7">
+<link rel="stylesheet" href="base.css?v=9">
+<link rel="stylesheet" href="clinic.css?v=9">
 </head>
 <body>
 
@@ -23,6 +23,10 @@
     </label>
   </div>
 </header>
+
+<div class="global-disclaimer"><b>非诊断用途</b><span>仅用于医学影像教学与研究，不构成诊断意见，不替代临床决策；分区框为教学分区，不是病灶分割。</span></div>
+
+<div class="task-banner" id="taskBanner" hidden></div>
 
 <div class="chest-shell">
   <aside class="queue">
@@ -101,8 +105,9 @@
         <button class="btn sm" id="zoomIn">+</button>
       </div>
       <span class="sep"></span>
-      <label class="btn sm" for="fileInput">上传胸片</label>
+      <label class="btn sm" for="fileInput" title="仅上传公开教学影像；请勿上传真实患者影像">上传胸片</label>
       <input id="fileInput" type="file" accept="image/*" hidden>
+      <span class="mono hint" style="font-size:10px;color:#a12b2b">仅公开教学影像，勿传真实患者数据</span>
       <button class="btn sm" id="reportBtn">生成阅片记录</button>
       <span class="spacer"></span>
       <span class="mono hint" id="bboxMeta">—</span>
@@ -117,6 +122,7 @@
 
   <aside class="panel">
     <div class="tabs" id="tabs">
+      <button data-tab="task" id="taskTab" hidden>课堂任务</button>
       <button data-tab="zone" class="on">分区所见</button>
       <button data-tab="system">系统阅片</button>
       <button data-tab="qa">问答</button>
@@ -151,8 +157,10 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="common.js?v=7"></script>
-<script src="locate.js?v=7"></script>
-<script src="clinic.js?v=7"></script>
+<script src="common.js?v=9"></script>
+<script src="classroom-core.js?v=9"></script>
+<script src="locate.js?v=9"></script>
+<script src="clinic.js?v=9"></script>
+<script src="agent-lite.js?v=1"></script>
 </body>
 </html>

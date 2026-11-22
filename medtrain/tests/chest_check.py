@@ -131,7 +131,15 @@ def main() -> None:
         page.set_input_files("#fileInput", str(foreign))
         page.wait_for_timeout(900)
         panel = page.inner_text("#panelBody")
-        check("陌生影像明确拒绝", "该影像未入库，不能定位或回答" in panel, panel[:200])
+        check("陌生影像进入通用定位", "该影像未入库：只提供通用分区定位" in panel, panel[:240])
+        check("陌生影像给 8 个通用分区", page.locator("[data-generic-zone]").count() == 8,
+              str(page.locator("[data-generic-zone]").count()))
+        page.locator("[data-generic-zone]").first.click()
+        page.wait_for_timeout(300)
+        generic = page.inner_text(".generic-result")
+        check("通用分区不下结论",
+              "不含该影像的库内标注" in generic and "不能据此判断有无异常" in generic,
+              generic[:300])
 
         # 拖框
         page.click('[data-case="CASE-001"]')
