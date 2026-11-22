@@ -216,9 +216,13 @@
     if (!h.ok) {
       ui.badge.className = "agent-badge err";
       ui.badge.textContent = "未启动";
-      ui.text.innerHTML = `本地 Agent 服务不可用。先在仓库根目录运行：<br>
-        <code>python3 yingzhi/serve/main.py --port 8800</code><br>
-        然后刷新本页重试。静态站本身不调用大模型。`;
+      ui.text.innerHTML = location.protocol === "https:"
+        ? `线上版不直连本地模型（浏览器会拦截 HTTPS 页面访问 127.0.0.1）。<br>
+           本地演示请打开 <code>http://127.0.0.1:8811</code>，并先运行：<br>
+           <code>python3 yingzhi/serve/main.py --port 8800</code>`
+        : `本地 Agent 服务不可用。先在仓库根目录运行：<br>
+           <code>python3 yingzhi/serve/main.py --port 8800</code><br>
+           然后刷新本页重试。静态站本身不调用大模型。`;
       ui.toggle.hidden = true;
       btn.disabled = false;
       btn.textContent = label;
