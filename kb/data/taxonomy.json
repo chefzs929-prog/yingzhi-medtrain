@@ -1,0 +1,53 @@
+{
+  "version": "2026-11-15",
+  "note": "一级为解剖部位，二级为病症/征象族（对应影像组）。每个影像组只归属一个部位，避免跨部位重复计数。",
+  "regions": [
+    {
+      "id": "REG-CHEST",
+      "name": "胸部",
+      "en": "Chest",
+      "order": 1,
+      "note": "肺、胸膜、纵隔与胸壁；含正常胸部与成像条件对照。",
+      "groups": [
+        "GRP-LUNG-CONSOLIDATION",
+        "GRP-LUNG-GGO",
+        "GRP-LUNG-NODULE",
+        "GRP-PLEURAL",
+        "GRP-CHEST-CT",
+        "GRP-NORMAL-CHEST"
+      ]
+    },
+    {
+      "id": "REG-HEAD-NECK",
+      "name": "头颈部",
+      "en": "Head and Neck",
+      "order": 2,
+      "note": "颅脑与颈部脏器；含正常头颅对照。",
+      "groups": ["GRP-HEAD", "GRP-THYROID", "GRP-NORMAL-HEAD"]
+    },
+    {
+      "id": "REG-BREAST",
+      "name": "乳腺",
+      "en": "Breast",
+      "order": 3,
+      "note": "乳腺钼靶与超声。",
+      "groups": ["GRP-BREAST"]
+    },
+    {
+      "id": "REG-ABDOMEN",
+      "name": "腹部",
+      "en": "Abdomen",
+      "order": 4,
+      "note": "肝、胆、胰、脾、肾等实质脏器。",
+      "groups": ["GRP-ABDOMEN"]
+    },
+    {
+      "id": "REG-MSK",
+      "name": "肌骨与脊柱",
+      "en": "Musculoskeletal and Spine",
+      "order": 5,
+      "note": "骨、关节与脊柱；公开影像待补，分类与接口已就位。",
+      "groups": ["GRP-MSJ"]
+    }
+  ]
+}

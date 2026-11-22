@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>组卷与自测 · 教学</title>
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="paper.css">
+<link rel="stylesheet" href="agent.css">
+</head>
+<body>
+
+<header class="bar" data-page="paper">
+  <div class="bar-extra">
+    <span class="bar-note">出卷 → 作答 → 汇总</span>
+    <span class="pill" id="bankPill">题库加载中…</span>
+  </div>
+</header>
+
+<div class="tabs" id="modeTabs">
+  <button data-m="build" class="on">① 组卷</button>
+  <button data-m="exam">② 作答</button>
+  <button data-m="report">③ 汇总</button>
+</div>
+
+<main id="main">
+
+  <section id="viewBuild" class="view">
+    <div class="col side">
+      <div class="card">
+        <h2>章节</h2>
+        <div id="chapterPick" class="chips"><span class="muted">加载中…</span></div>
+        <h2>题型</h2>
+        <div id="typePick" class="chips"></div>
+        <h2>题量</h2>
+        <div id="countPick" class="chips">
+          <button data-n="5">5</button>
+          <button data-n="10" class="on">10</button>
+          <button data-n="15">15</button>
+          <button data-n="20">20</button>
+        </div>
+        <input id="paperTitle" type="text" placeholder="卷名（可选，如：胸部影像 · 第 3 周）">
+        <button id="makeBtn" class="solid wide" disabled>生成卷子</button>
+        <p class="note" id="pickNote"></p>
+      </div>
+      <div class="card">
+        <h2>分发</h2>
+        <p class="note">
+          <b>演示</b>：生成后点「开始作答」，直接进考场，交卷即出成绩。<br>
+          <b>多学生</b>：下载卷子发给学生 → 学生导入作答 → 导出成绩交回 → 在这里导入汇总。
+        </p>
+        <div class="row">
+          <button id="startBtn" disabled>开始作答</button>
+          <button id="dlPaper" disabled>下载卷子</button>
+          <label class="filebtn">导入卷子<input id="importPaper" type="file" accept=".json,application/json" hidden></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="col grow">
+      <div class="card fill">
+        <h2>预览 <span id="pvCount" class="muted"></span></h2>
+        <div id="preview" class="empty">还没生成卷子。<br>左侧选章节、题型和题量，再点「生成卷子」。</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="viewExam" class="view" hidden>
+    <div class="examhead">
+      <b id="exTitle">—</b>
+      <span id="exProgress" class="mono">0 / 0</span>
+      <div class="spacer"></div>
+      <input id="exStudent" class="mini" type="text" placeholder="姓名（可选）">
+      <span id="exLive" class="muted"></span>
+      <button id="exQuit">退出</button>
+    </div>
+    <div class="exambody">
+      <div class="eximg" id="exImgWrap">
+        <div class="exframe" id="exFrame">
+          <img id="exImg" alt="">
+          <div id="exBox" class="exbox" hidden></div>
+        </div>
+        <div id="exNoImg" class="noimg" hidden>本题为体位规则题，无影像</div>
+      </div>
+      <div class="exq">
+        <div class="qmeta">
+          <span id="exType" class="tag"></span>
+          <span id="exCase" class="muted"></span>
+        </div>
+        <div id="exPrompt" class="qtext"></div>
+        <div id="exOpts" class="opts"></div>
+        <div id="exExp" class="exp" hidden></div>
+        <div class="row">
+          <button id="exPrev">上一题</button>
+          <button id="exNext" class="solid">下一题</button>
+          <button id="exSubmit" class="solid" hidden>交卷</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="viewReport" class="view">
+    <div id="repBox" class="empty">还没有成绩。<br>先组卷并完成一次作答。</div>
+  </section>
+
+</main>
+
+<script src="common.js"></script>
+<script src="agent.js"></script>
+<script src="paper.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+# RadioCheck 首页 · 3D 人体模型接入说明
+
+首页（`outputs/medtrain/index.html`）的「从人体部位进入」区域，已从 SVG 占位切换为 BodyParts3D 4.0 三维模型。
+点击任意部位 → 模型高亮该分区 → 右侧面板列出该部位真实词条与该部位公开影像，点缩略图直接看大图。
+
+## 1. 接入点：`body-model.js` 的适配器契约
+
+`medtrain/app/body-model.js` 早就预留了外部适配器入口，本次没有改动它的渲染逻辑，只新增了一个实现：
+
+```js
+window.YZ_BODY_MODEL_ADAPTER = {
+  name: "three-body",
+  mount(el, opts) -> handle
+};
+// handle 必须提供
+handle.highlight(regionId)   // 外部高亮
+handle.reset()               // 取消高亮
+handle.resize()              // 容器尺寸变化
+handle.dispose()             // 卸载
+```
+
+`opts` 由 `landing.js` 传入：`{ regions: [{id,name,count}], onSelect(id) }`。
+
+## 2. 实现文件
+
+| 文件 | 作用 |
+| --- | --- |
+| `medtrain/app/body-3d.js` | 适配器实现：three.js 场景、模型加载、拾取、高亮、尺寸自适应 |
+| `medtrain/app/vendor/` | three.js r160（three.module.js / OBJLoader / OrbitControls），本地化 |
+| `medtrain/app/models/` | 14 个 OBJ（13 个可点击单元 + 体表轮廓）+ manifest.json，约 13 MB |
+
+脚本顺序（`build.py` 生成 landing 时写入）：
+
+```html
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+...
+<script src="body-model.js"></script>
+<script src="body-3d.js"></script>
+<script src="landing.js"></script>
+```
+
+`body-3d.js` 用动态 `import()` 懒加载 three，所以页面其余部分不依赖 ES module。
+
+## 3. 交互
+
+| 操作 | 行为 |
+| --- | --- |
+| 悬停器官 | 该器官高亮 + 浮出「器官名 · 部位名」提示 |
+| 单击器官 | 选中所属部位：该部位器官提亮、其余压暗；右侧面板刷新 |
+| 拖动 / 滚轮 | 旋转 / 缩放（OrbitControls，限制俯仰角避免翻到脚下） |
+| 点击影像缩略图 | 灯箱放大，带标题与许可署名 |
+
+半透明外壳（颅骨、胸廓）不拦截拾取，射线优先命中内部实心器官，所以点胸部能点到心脏而不是肋骨。
+
+## 4. 兜底
+
+两层，保证 3D 挂了首页仍可用：
+
+1. **同步失败**（无 WebGL）：`mount` 直接抛错 → `body-model.js` 自动回落内置 SVG 部位图。
+2. **异步失败**（模型 404、模块加载失败）：适配器调用 `BodyModel.mountSvg(el, opts)` 手动回落，并在控制台留错误。
+
+为此给 `body-model.js` 补了一行导出：`mountSvg: svgMount`。这是唯一改动。
+
+## 5. 构建
+
+```bash
+python3 medtrain/build_data.py     # 知识数据 → data/kb.js + images/
+python3 medtrain/build.py          # 打包 app/ → outputs/medtrain（含 vendor/ 与 models/）
+```
+
+`build.py` 的改动：
+
+- `APP_FILES` 增加 `body-3d.js`
+- `copy_app()` 增加 `vendor/`、`models/` 两个目录的复制
+- landing 模板注入 importmap 与 `body-3d.js`
+
+## 6. 验证
+
+```bash
+cd outputs/medtrain && python3 -m http.server 8080
+python3 medtrain/tests/body3d_check.py http://127.0.0.1:8080/
+```
+
+自检覆盖：adapter 模式就绪、状态标签、点击胸部、面板出现 4 张影像、灯箱打开、`highlight/reset` 接口。
+
+当前结果：`PASS`（胸部 42 征象词条 / 52 公开病例 / 4 张影像）。
+
+## 7. 边界
+
+- **必须走 HTTP**。`file://` 下浏览器拦截 ES module，3D 会回落 SVG；README 已更新说明。
+- **首屏多 13 MB**。本地 localhost 约 3 秒；若部署到公网，建议给 `models/` 加 gzip 或改 glTF + Draco。
+- BodyParts3D 未收录甲状腺、乳腺、脾、喉，乳腺分区没有对应网格，但面板入口仍可用。
+- 模型是成年男性单一个体，仅供教学定位，**不做形态测量**。
+
+## 8. 与 `homepage/` 独立页的关系
+
+`homepage/` 是上一轮做的独立深色导航页（全屏 3D + 部位面板），可直接跳 `kb/web` 或 `kb` 服务。
+本轮的接入点是RadioCheck 主产品的 landing 页，两者复用同一套 `models/` 构建产物，但 UI 与跳转目标不同：
+
+- `homepage/` → 跳知识库（`?region=` 过滤）
+- `outputs/medtrain/index.html` → 就地展示该部位词条与影像，不跳页

@@ -1,0 +1,26 @@
+库,字段,类型,必填,示例,用途,打标方式,质检口径
+报告库,report_id,string,是,R-0231,回链整份报告与引用,文件命名规则,唯一且与源文件一一对应
+报告库,chunk_id,string,是,R-0231-F1,切片唯一标识,脚本生成,无重复无空值
+报告库,chunk_type,enum,是,conclusion / finding,分层召回,切片规则,仅允许两个取值
+报告库,modality,enum,是,CT / MR / US / DR,硬过滤,文件名+首行正则,抽检准确率≥95%
+报告库,body_part,string,是,甲状腺,硬过滤,正则+模型抽取,抽检准确率≥90%
+报告库,age_band,enum,否,30-39,过滤与去偏,由年龄换算,不得出现精确出生日期
+报告库,sex,enum,否,F / M,过滤,结构化字段,缺失留空不猜
+报告库,exam_year,int,是,2023,时效排序,日期截断,只保留年份
+报告库,conclusion_category,string,否,结节性甲状腺肿,聚合统计,模型抽取+人工抽检,抽检准确率≥85%
+报告库,finding_tags,list,否,低回声;微钙化,重排依据,模型抽取,抽检准确率≥85%
+报告库,negated,bool,否,true,防止反向证据被当正向使用,否定词规则,含否定词句子必须标注
+报告库,source_file,string,是,reports/R-0231.txt,溯源,脚本写入,路径真实存在
+报告库,deid_status,enum,是,verified,合规门禁,人工复核,未verified不得入库
+报告库,negation_scope,string,否,未见淋巴结异常,保留否定范围,人工+规则,抽检10份无截断
+指南库,doc_id,string,是,G-2023-THYROID,文档标识,命名规则,与版本年份绑定
+指南库,chunk_id,string,是,G-2023-THYROID-4.2,条款标识,章节号生成,与页码可对应
+指南库,doc_title,string,是,甲状腺结节影像分类与随访专家共识,引用展示,人工录入,与原文标题一致
+指南库,org,string,是,发布机构,权威性说明,人工录入,不得空缺
+指南库,version_year,int,是,2023,版本控制,人工录入,与封面一致
+指南库,section_path,string,是,4 随访策略 / 4.2 低危结节,判断适用条件,解析保留层级,不得只有条款正文
+指南库,rec_level,string,否,强推荐,推荐强度,原文抽取,无则留空不编造
+指南库,evidence_level,string,否,中等,证据强度,原文抽取,无则留空不编造
+指南库,page,int,是,12,引用可回溯,PDF页码,抽查可翻到
+指南库,url,string,否,公开链接,来源核验,人工录入,可访问
+指南库,status,enum,是,active / deprecated,版本过滤,人工标注,检索默认只取active

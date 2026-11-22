@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "purpose": "公开来源登记表。本知识库只做来源级引用，不复制受版权保护的全文。",
+    "rule": "每条来源记录入口链接、发布方与许可说明；正文条款以官方原文为准。",
+    "verified_at": "2026-11-15"
+  },
+  "sources": [
+    {
+      "id": "SRC-ACR",
+      "title": "ACR Reporting and Data Systems（TI-RADS / BI-RADS / LI-RADS / Lung-RADS / PI-RADS / O-RADS / CAD-RADS）",
+      "publisher": "American College of Radiology",
+      "url": "https://www.acr.org/",
+      "license_note": "标准文本版权归 ACR，仅链接引用，不转载全文。",
+      "access": "public",
+      "verified": "200",
+      "note": "各分类系统的具体版本与条目以 ACR 官方发布为准；本站只做要点摘要。"
+    },
+    {
+      "id": "SRC-RADIO",
+      "title": "Radiopaedia 影像学参考条目",
+      "publisher": "Radiopaedia.org",
+      "url": "https://radiopaedia.org/",
+      "license_note": "条目多为 CC BY-NC-SA，仅链接引用与自写摘要，不复制原文与图像。",
+      "access": "public",
+      "verified": "200",
+      "note": "适合作为征象定义与鉴别方向的二次参考。"
+    },
+    {
+      "id": "SRC-STATPEARLS",
+      "title": "StatPearls（NCBI Bookshelf）",
+      "publisher": "National Center for Biotechnology Information",
+      "url": "https://www.ncbi.nlm.nih.gov/books/",
+      "license_note": "CC BY 4.0，可引用并注明出处。",
+      "access": "public",
+      "verified": "200",
+      "note": "用于影像征象与检查方法的背景说明。"
+    },
+    {
+      "id": "SRC-WIKI",
+      "title": "Wikipedia 医学影像条目",
+      "publisher": "Wikimedia Foundation",
+      "url": "https://en.wikipedia.org/wiki/Ground-glass_opacity",
+      "license_note": "CC BY-SA 4.0，仅链接引用。",
+      "access": "public",
+      "verified": "200",
+      "note": "仅作通俗背景，不作为标准依据。"
+    },
+    {
+      "id": "SRC-FLEISCHNER",
+      "title": "Fleischner Society 胸部影像术语表（2018）",
+      "publisher": "Radiology / RSNA",
+      "url": "https://pubs.rsna.org/doi/10.1148/radiol.2017151718",
+      "license_note": "版权归 RSNA，仅链接引用，不转载。",
+      "access": "subscription",
+      "verified": "403-需订阅",
+      "note": "胸部 CT 术语（磨玻璃影、实变、网状影等）的权威定义来源。"
+    },
+    {
+      "id": "SRC-RSNA",
+      "title": "RadioGraphics / Radiology 影像教学文献",
+      "publisher": "Radiological Society of North America",
+      "url": "https://pubs.rsna.org/",
+      "license_note": "版权归 RSNA，仅链接引用。",
+      "access": "subscription",
+      "verified": "403-需订阅",
+      "note": "用于征象教学的二次参考。"
+    },
+    {
+      "id": "SRC-OPENI",
+      "title": "Open-i 开放获取影像检索",
+      "publisher": "U.S. National Library of Medicine",
+      "url": "https://openi.nlm.nih.gov/",
+      "license_note": "图像来自开放获取文献，逐图许可见来源页。",
+      "access": "public",
+      "verified": "200",
+      "note": "公开教学影像的检索入口，不作为诊断依据。"
+    },
+    {
+      "id": "SRC-TCIA",
+      "title": "The Cancer Imaging Archive",
+      "publisher": "National Cancer Institute",
+      "url": "https://www.cancerimagingarchive.net/",
+      "license_note": "各数据集许可不同，使用时须逐集核对。",
+      "access": "public",
+      "verified": "200",
+      "note": "去标识公开影像数据集入口。"
+    },
+    {
+      "id": "SRC-COMMONS",
+      "title": "Wikimedia Commons 医学影像",
+      "publisher": "Wikimedia Foundation",
+      "url": "https://commons.wikimedia.org/",
+      "license_note": "逐图标注 CC0 / CC BY / CC BY-SA / 公有领域，需署名。",
+      "access": "public",
+      "verified": "200",
+      "note": "本库图像来源；每张图在 ATTRIBUTION.md 记录作者与许可。"
+    },
+    {
+      "id": "SRC-WHO",
+      "title": "WHO 电离辐射健康影响与防护",
+      "publisher": "World Health Organization",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/ionizing-radiation-health-effects-and-protective-measures",
+      "license_note": "WHO 公开信息，仅链接引用。",
+      "access": "public",
+      "verified": "200",
+      "note": "用于检查方式与辐射相关的背景说明。"
+    },
+    {
+      "id": "SRC-ACRAC",
+      "title": "ACR Appropriateness Criteria",
+      "publisher": "American College of Radiology",
+      "url": "https://acsearch.acr.org/list",
+      "license_note": "版权归 ACR，仅链接引用。",
+      "access": "public",
+      "verified": "200",
+      "note": "检查方法适用性参考，不构成个体化建议。"
+    }
+  ]
+}

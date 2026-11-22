@@ -1,0 +1,50 @@
+[
+  {
+    "candidate": "cand-027.jpg",
+    "reason": "人物检查照片，含可识别人脸与身体，不属医学影像"
+  },
+  {
+    "candidate": "cand-032.jpg",
+    "reason": "图像边缘含年龄标记与检查日期，隐私风险，排除"
+  },
+  {
+    "candidate": "cand-011.jpg",
+    "reason": "窗位异常导致图像信息丢失，不适合教学对照"
+  },
+  {
+    "candidate": "cand-028.jpg",
+    "reason": "统计图表而非影像，不属于阅片素材"
+  },
+  {
+    "candidate": "_candidates2/cand-013",
+    "reason": "翻拍屏幕含检查日期与设备参数，隐私风险"
+  },
+  {
+    "candidate": "_candidates2/cand-033",
+    "reason": "图像含检查号、年龄标记与检查日期"
+  },
+  {
+    "candidate": "_candidates2/cand-035",
+    "reason": "工作站截图含检查日期与序列信息，且为颈椎非目标部位"
+  },
+  {
+    "candidate": "_candidates2/cand-039",
+    "reason": "工作站截图含检查日期与时间"
+  },
+  {
+    "candidate": "_candidates2/cand-040",
+    "reason": "图像含姓名缩写、编号与检查日期"
+  },
+  {
+    "candidate": "_candidates2/cand-044",
+    "reason": "全身 PET 研究对比图，与腹部组不符"
+  },
+  {
+    "candidate": "_candidates2/cand-026",
+    "reason": "放大位图像中设备结构占据大半画面，教学价值低"
+  },
+  {
+    "candidate": "_candidates2/cand-028",
+    "reason": "人物检查照片，含可识别人物"
+  }
+]

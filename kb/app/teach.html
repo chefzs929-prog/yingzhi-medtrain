@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分区图谱 · 按章节系统学</title>
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="teach.css">
+<link rel="stylesheet" href="agent.css">
+</head>
+<body>
+
+<header class="bar" data-page="teach">
+  <div class="bar-extra">
+    <span class="bar-note">按章节浏览 → 点分区看讲解 → 去工作台做单张溯源</span>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="rail">
+    <div class="rail-head">
+      <span>课程章节</span>
+      <b id="chCount">—</b>
+    </div>
+    <div id="chapters" class="chapters"><div class="empty-state"><span>加载中…</span></div></div>
+
+    <div class="rail-head sub">
+      <span id="caseHead">病例</span>
+      <input id="q" type="search" placeholder="筛选" autocomplete="off">
+    </div>
+    <div id="cases" class="cases"></div>
+
+    <div class="rail-progress">
+      <div class="pbar"><i id="pfill"></i></div>
+      <span id="ptext">0 / 120</span>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <div class="stage-head">
+      <div>
+        <h2 id="caseTitle">选择左侧病例开始</h2>
+        <div class="meta" id="caseMeta"></div>
+      </div>
+      <div class="badges" id="caseBadges"></div>
+    </div>
+
+    <div class="canvas" id="canvas">
+      <div class="frame" id="frame">
+        <img id="img" alt="影像" draggable="false">
+        <div class="overlay" id="overlay"></div>
+      </div>
+      <div class="empty-state" id="empty">
+        <div class="ico">◧</div>
+        <b>从左侧选一个病例</b>
+        <span>点击影像上的彩色分区，右侧会给出解剖边界与文献对照</span>
+      </div>
+      <div class="hint" id="hint"></div>
+    </div>
+
+    <div class="stage-foot">
+      <button class="btn" id="prev">← 上一例</button>
+      <button class="btn on" id="toggleRegion">分区显示</button>
+      <a class="btn solid" id="quizBtn" href="paper.html">去组卷自测 →</a>
+      <button class="btn" id="learnBtn">标记已学</button>
+      <span class="spacer"></span>
+      <span id="srcLine" class="src">—</span>
+      <button class="btn" id="next">下一例 →</button>
+    </div>
+  </main>
+
+  <aside class="lesson">
+    <div class="lesson-head">
+      <span class="kicker">讲解卡</span>
+      <span class="side-tag" id="sideTag">—</span>
+    </div>
+
+    <div class="lesson-body" id="lessonBody">
+      <div class="placeholder">
+        <b>选择一个分区</b>
+        <p>分区不是病灶检测结果，而是教学用的解剖范围。每条讲解都带来源摘录。</p>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      本工具仅用于教学与研究，不构成诊断意见，不能替代医师判断。
+    </div>
+  </aside>
+</div>
+
+<script src="common.js"></script>
+<script src="agent.js"></script>
+<script src="teach.js"></script>
+</body>
+</html>

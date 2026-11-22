@@ -1,0 +1,96 @@
+[
+ {
+  "id": "CASE-102",
+  "title": "Ga-68-Trivehexin vs FDG Non Small Cell Lung Cancer Brain Met",
+  "body_part": "胸部",
+  "modality": [
+   "CT"
+  ],
+  "status": "active",
+  "issues": [
+   {
+    "kind": "部位错配",
+    "detail": "说明像头颅，body_part=胸部"
+   }
+  ]
+ },
+ {
+  "id": "CASE-111",
+  "title": "US Navy 080922-N-2688M-004 Lead Mammography Technologist Car",
+  "body_part": "乳腺",
+  "modality": [
+   "CR"
+  ],
+  "status": "inactive",
+  "issues": [
+   {
+    "kind": "非影像素材",
+    "detail": "Technologist"
+   },
+   {
+    "kind": "模态错配",
+    "detail": "说明为超声，modality=CR"
+   }
+  ]
+ },
+ {
+  "id": "CASE-114",
+  "title": "20210609-RD-LSC-0070-Mammography Clips",
+  "body_part": "乳腺",
+  "modality": [
+   "CR"
+  ],
+  "status": "inactive",
+  "issues": [
+   {
+    "kind": "非影像素材",
+    "detail": "Healthcare System"
+   }
+  ]
+ },
+ {
+  "id": "CASE-125",
+  "title": "腹部公开影像 125",
+  "body_part": "腹部",
+  "modality": [
+   "CT"
+  ],
+  "status": "inactive",
+  "issues": [
+   {
+    "kind": "非影像素材",
+    "detail": "Cross section of a human liver"
+   }
+  ]
+ },
+ {
+  "id": "CASE-131",
+  "title": "乳腺公开影像 131",
+  "body_part": "乳腺",
+  "modality": [
+   "MG"
+  ],
+  "status": "inactive",
+  "issues": [
+   {
+    "kind": "非影像素材",
+    "detail": "Technologist"
+   }
+  ]
+ },
+ {
+  "id": "CASE-139",
+  "title": "乳腺公开影像 139",
+  "body_part": "乳腺",
+  "modality": [
+   "MG"
+  ],
+  "status": "inactive",
+  "issues": [
+   {
+    "kind": "非影像素材",
+    "detail": "Healthcare System"
+   }
+  ]
+ }
+]
