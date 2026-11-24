@@ -73,6 +73,33 @@ def cite(spans, kp_id):
     }
 
 
+def _bigrams(text: str) -> set:
+    text = "".join(text.split())
+    return {text[i:i + 2] for i in range(len(text) - 1)}
+
+
+def kp_relevance(kp_text: str, zone_text: str) -> int:
+    """用字符二元组重合数衡量条款与分区描述的相关性，中文无需分词。"""
+    if not kp_text or not zone_text:
+        return 0
+    return len(_bigrams(kp_text) & _bigrams(zone_text))
+
+
+def choose_kp(topic, zone_text: str):
+    """挑与该分区描述最相关的条款，返回 (kp_id, 重合度)。0 表示语料未覆盖。"""
+    kps = (topic or {}).get("key_points") or []
+    if not kps:
+        return None, 0
+    if not zone_text:
+        return kps[0]["id"], 0
+    best, best_score = kps[0], -1
+    for kp in kps:
+        sc = kp_relevance(kp.get("text", ""), zone_text)
+        if sc > best_score:
+            best, best_score = kp, sc
+    return best["id"], max(best_score, 0)
+
+
 def pick_kp(topic, sign_ids):
     """按征象匹配挑最相关的一条指南要点，匹配不到就取第一条。"""
     if not topic:
@@ -84,6 +111,16 @@ def pick_kp(topic, sign_ids):
     if sign_ids and "SIGN-002" in sign_ids and len(kps) >= 2:
         return kps[1]["id"]
     return kps[0]["id"]
+
+
+def _with_rel(citation, score: int):
+    """标注条款与分区描述的相关强度，0 分为语料未覆盖。"""
+    if citation is None:
+        return None
+    c = dict(citation)
+    c["relevance"] = "strong" if score >= 2 else "weak"
+    c["relevance_score"] = score
+    return c
 
 
 def main() -> None:
@@ -112,7 +149,7 @@ def main() -> None:
         # 1) 分区问：每个分区都生成，非异常区明确说清边界
         for z in zones:
             n += 1
-            kp_id = pick_kp(topic, z.get("sign_ids") or sign_ids)
+            kp_id, kp_score = choose_kp(topic, z.get("text") or "")
             st = z["status"]
             if st == "abnormal":
                 ans_text, conf = z["text"], ("high" if case.get("quality") != "limited" else "medium")
@@ -142,8 +179,11 @@ def main() -> None:
                     "case_title": case.get("title", ""),
                     "status": z["status"],
                 },
-                "citation": (cite(spans, kp_id) if kp_id else None) or (
-                    cite(spans, "GL-NOR-01") if z["status"] in ("normal", "limited") else None
+                "citation": _with_rel(
+                    (cite(spans, kp_id) if kp_id else None) or (
+                        cite(spans, "GL-NOR-01") if z["status"] in ("normal", "limited") else None
+                    ),
+                    kp_score,
                 ),
                 "basis": z.get("basis") or "库内逐区标注",
             })
@@ -187,7 +227,10 @@ def main() -> None:
                 "answer": ans,
                 "confidence": conf,
                 "region": _region_of(tz, case) or _whole_region(case),
-                "citation": cite(spans, kp_id) if kp_id else None,
+                "citation": _with_rel(
+                    cite(spans, kp_id) if kp_id else None,
+                    kp_relevance((topic_by_id.get(tid, {}).get("key_points") or [{}])[0].get("text", ""), ans),
+                ),
                 "basis": "库内逐区标注 + 指南要点",
             })
 

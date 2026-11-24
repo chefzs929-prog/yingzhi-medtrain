@@ -50,7 +50,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "公开来源说明"
     },
@@ -99,7 +101,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "公开来源说明"
     },
@@ -148,7 +152,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "公开来源说明"
     },
@@ -197,7 +203,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "公开来源说明"
     },
@@ -246,7 +254,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "公开来源说明"
     },
@@ -295,7 +305,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "公开来源说明"
     },
@@ -339,7 +351,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "公开来源说明"
     },
@@ -378,12 +392,14 @@
         "status": "normal"
       },
       "citation": {
-        "kp_id": "GL-NOR-01",
+        "kp_id": "GL-NOR-02",
         "topic_id": "NORMAL",
         "topic_cn": "正常胸片",
-        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
-        "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "quote": "「未见异常」与「未提及」不是一回事：前者是明确判读，后者是来源没有描述该区。",
+        "offset": 681,
+        "sha1": "38b3bfca3c0ef74b0bb896e6d2da7babb04ab631",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -439,7 +455,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -492,7 +510,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -544,7 +564,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -593,7 +615,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -642,7 +666,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -691,7 +717,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -743,7 +771,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -782,12 +812,14 @@
         "status": "normal"
       },
       "citation": {
-        "kp_id": "GL-NOR-01",
+        "kp_id": "GL-NOR-02",
         "topic_id": "NORMAL",
         "topic_cn": "正常胸片",
-        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
-        "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "quote": "「未见异常」与「未提及」不是一回事：前者是明确判读，后者是来源没有描述该区。",
+        "offset": 681,
+        "sha1": "38b3bfca3c0ef74b0bb896e6d2da7babb04ab631",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "公开来源说明"
     },
@@ -826,12 +858,14 @@
         "status": "normal"
       },
       "citation": {
-        "kp_id": "GL-NOR-01",
+        "kp_id": "GL-NOR-02",
         "topic_id": "NORMAL",
         "topic_cn": "正常胸片",
-        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
-        "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "quote": "「未见异常」与「未提及」不是一回事：前者是明确判读，后者是来源没有描述该区。",
+        "offset": 681,
+        "sha1": "38b3bfca3c0ef74b0bb896e6d2da7babb04ab631",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "公开来源说明"
     },
@@ -875,7 +909,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 4
       },
       "basis": "公开来源说明"
     },
@@ -931,7 +967,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -984,7 +1022,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -1036,7 +1076,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -1085,7 +1127,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -1134,7 +1178,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -1183,7 +1229,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -1235,7 +1283,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -1284,7 +1334,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -1333,7 +1385,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -1382,7 +1436,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -1431,7 +1487,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -1480,7 +1538,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -1529,7 +1589,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -1573,7 +1635,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -1617,7 +1681,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -1673,7 +1739,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -1726,7 +1794,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -1778,7 +1848,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -1827,7 +1899,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -1876,7 +1950,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -1925,7 +2001,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -1977,7 +2055,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -2021,12 +2101,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -2070,12 +2152,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -2119,12 +2203,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -2168,12 +2254,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -2217,12 +2305,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -2266,12 +2356,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -2310,12 +2402,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -2354,12 +2448,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -2415,7 +2511,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -2468,7 +2566,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -2520,7 +2620,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -2569,7 +2671,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -2618,7 +2722,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -2667,7 +2773,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -2719,7 +2827,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -2823,12 +2933,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -2872,12 +2984,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "原图箭头 + 公开说明"
     },
@@ -2921,12 +3035,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开说明 + 原图"
     },
@@ -2970,12 +3086,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -3019,12 +3137,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -3068,12 +3188,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -3112,12 +3234,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -3156,12 +3280,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -3217,7 +3343,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -3270,7 +3398,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -3322,7 +3452,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -3371,7 +3503,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -3420,7 +3554,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -3469,7 +3605,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -3521,7 +3659,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -3625,12 +3765,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -3674,12 +3816,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -3723,12 +3867,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -3772,12 +3918,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -3821,12 +3969,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -3870,12 +4020,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -3914,12 +4066,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -3958,12 +4112,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -4019,7 +4175,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -4072,7 +4230,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -4124,7 +4284,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -4173,7 +4335,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -4222,7 +4386,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -4271,7 +4437,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -4323,7 +4491,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -4422,12 +4592,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -4466,12 +4638,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -4510,12 +4684,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -4571,7 +4747,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -4624,7 +4802,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -4676,7 +4856,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "strong",
+        "relevance_score": 5
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -4725,7 +4907,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -4774,7 +4958,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -4823,7 +5009,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -4875,7 +5063,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -4979,12 +5169,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -5028,12 +5220,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -5077,12 +5271,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -5126,12 +5322,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -5175,12 +5373,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -5224,12 +5424,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -5268,12 +5470,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -5312,12 +5516,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -5373,7 +5579,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -5426,7 +5634,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -5478,7 +5688,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -5527,7 +5739,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -5576,7 +5790,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -5625,7 +5841,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -5677,7 +5895,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -5786,7 +6006,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -5835,7 +6057,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -5884,7 +6108,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -5933,7 +6159,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -5982,7 +6210,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -6031,7 +6261,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -6075,7 +6307,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -6119,7 +6353,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -6175,7 +6411,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -6228,7 +6466,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -6280,7 +6520,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -6329,7 +6571,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -6378,7 +6622,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -6427,7 +6673,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -6479,7 +6727,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -6588,7 +6838,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -6637,7 +6889,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -6686,7 +6940,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "strong",
+        "relevance_score": 6
       },
       "basis": "公开来源说明"
     },
@@ -6735,7 +6991,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -6784,7 +7042,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -6833,7 +7093,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "strong",
+        "relevance_score": 6
       },
       "basis": "公开来源说明"
     },
@@ -6877,7 +7139,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -6921,7 +7185,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -6977,7 +7243,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -7030,7 +7298,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -7082,7 +7352,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "strong",
+        "relevance_score": 7
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -7131,7 +7403,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -7180,7 +7454,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -7229,7 +7505,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 4
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -7281,7 +7559,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -7385,7 +7665,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -7429,7 +7711,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -7473,7 +7757,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "strong",
+        "relevance_score": 5
       },
       "basis": "原图箭头 + 公开说明"
     },
@@ -7529,7 +7815,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -7582,7 +7870,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -7634,7 +7924,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "strong",
+        "relevance_score": 7
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -7683,7 +7975,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -7732,7 +8026,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -7781,7 +8077,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -7833,7 +8131,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -7942,7 +8242,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -7991,7 +8293,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -8040,7 +8344,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -8089,7 +8395,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -8138,7 +8446,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -8187,7 +8497,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -8231,7 +8543,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -8275,7 +8589,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -8331,7 +8647,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -8384,7 +8702,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -8436,7 +8756,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -8485,7 +8807,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -8534,7 +8858,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -8583,7 +8909,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -8635,7 +8963,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -8684,7 +9014,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -8733,7 +9065,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -8782,7 +9116,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -8831,7 +9167,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -8880,7 +9218,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -8929,7 +9269,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -8973,7 +9315,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -9017,7 +9361,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -9073,7 +9419,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -9126,7 +9474,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -9178,7 +9528,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -9227,7 +9579,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -9276,7 +9630,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -9325,7 +9681,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -9377,7 +9735,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -9426,7 +9786,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "strong",
+        "relevance_score": 4
       },
       "basis": "原图标注"
     },
@@ -9475,7 +9837,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "strong",
+        "relevance_score": 4
       },
       "basis": "原图标注"
     },
@@ -9524,7 +9888,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "strong",
+        "relevance_score": 4
       },
       "basis": "原图标注"
     },
@@ -9568,12 +9934,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PTX-01",
+        "kp_id": "GL-PTX-02",
         "topic_id": "PNEUMOTHORAX",
         "topic_cn": "气胸",
-        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
-        "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "quote": "张力性气胸伴纵隔移位与膈肌低平属于急症，报告应立即提示临床。",
+        "offset": 488,
+        "sha1": "3000f224abf22c4fe5421678ed7b2d93f3e815b6",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -9617,12 +9985,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PTX-01",
+        "kp_id": "GL-PTX-02",
         "topic_id": "PNEUMOTHORAX",
         "topic_cn": "气胸",
-        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
-        "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "quote": "张力性气胸伴纵隔移位与膈肌低平属于急症，报告应立即提示临床。",
+        "offset": 488,
+        "sha1": "3000f224abf22c4fe5421678ed7b2d93f3e815b6",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -9666,12 +10036,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PTX-01",
+        "kp_id": "GL-PTX-02",
         "topic_id": "PNEUMOTHORAX",
         "topic_cn": "气胸",
-        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
-        "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "quote": "张力性气胸伴纵隔移位与膈肌低平属于急症，报告应立即提示临床。",
+        "offset": 488,
+        "sha1": "3000f224abf22c4fe5421678ed7b2d93f3e815b6",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -9715,7 +10087,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -9759,7 +10133,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -9815,7 +10191,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -9868,7 +10246,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -9920,7 +10300,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -9969,7 +10351,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "strong",
+        "relevance_score": 4
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -10018,7 +10402,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -10067,7 +10453,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -10119,7 +10507,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -10228,7 +10618,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -10277,7 +10669,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -10326,7 +10720,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -10375,7 +10771,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -10424,7 +10822,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -10473,7 +10873,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -10517,7 +10919,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -10561,7 +10965,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -10617,7 +11023,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -10670,7 +11078,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -10722,7 +11132,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -10771,7 +11183,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -10820,7 +11234,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -10869,7 +11285,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -10921,7 +11339,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -10970,7 +11390,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -11019,7 +11441,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -11068,7 +11492,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -11117,7 +11543,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -11166,7 +11594,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -11215,7 +11645,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -11259,7 +11691,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -11303,7 +11737,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -11359,7 +11795,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -11412,7 +11850,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -11464,7 +11904,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -11513,7 +11955,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -11562,7 +12006,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -11611,7 +12057,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -11663,7 +12111,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -11712,7 +12162,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -11761,7 +12213,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -11810,7 +12264,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -11859,7 +12315,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -11908,7 +12366,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -11957,7 +12417,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -12001,7 +12463,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "公开来源说明"
     },
@@ -12045,7 +12509,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -12101,7 +12567,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -12154,7 +12622,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -12206,7 +12676,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -12255,7 +12727,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -12304,7 +12778,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -12353,7 +12829,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -12405,7 +12883,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -12514,7 +12994,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -12563,7 +13045,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -12612,7 +13096,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -12661,7 +13147,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -12710,7 +13198,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -12759,7 +13249,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -12803,7 +13295,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -12847,7 +13341,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -12903,7 +13399,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -12956,7 +13454,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -13008,7 +13508,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -13057,7 +13559,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -13106,7 +13610,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -13155,7 +13661,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -13207,7 +13715,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -13311,12 +13821,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -13360,12 +13872,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "原图箭头 + 公开说明"
     },
@@ -13409,12 +13923,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-01",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开说明 + 原图"
     },
@@ -13458,12 +13974,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -13507,12 +14025,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -13556,12 +14076,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -13600,12 +14122,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -13644,12 +14168,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-PNE-02",
+        "kp_id": "GL-PNE-03",
         "topic_id": "PNEUMONIA",
         "topic_cn": "肺炎 / 肺实变",
-        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
-        "offset": 68,
-        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+        "quote": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。",
+        "offset": 118,
+        "sha1": "d576c48230c1e5cbab15af3c1f76934f05207552",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -13705,7 +14231,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -13758,7 +14286,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -13810,7 +14340,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -13859,7 +14391,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -13908,7 +14442,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -13957,7 +14493,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -14009,7 +14547,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -14113,12 +14653,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-TB-02",
+        "kp_id": "GL-TB-01",
         "topic_id": "TB",
         "topic_cn": "肺结核",
-        "quote": "影像提示活动性病变时，应建议痰涂片与分子检测，并按规范转诊。",
-        "offset": 580,
-        "sha1": "c74705940e11f98f08fe670e8412939bee293412"
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -14162,12 +14704,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-TB-02",
+        "kp_id": "GL-TB-01",
         "topic_id": "TB",
         "topic_cn": "肺结核",
-        "quote": "影像提示活动性病变时，应建议痰涂片与分子检测，并按规范转诊。",
-        "offset": 580,
-        "sha1": "c74705940e11f98f08fe670e8412939bee293412"
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -14211,12 +14755,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-TB-02",
+        "kp_id": "GL-TB-01",
         "topic_id": "TB",
         "topic_cn": "肺结核",
-        "quote": "影像提示活动性病变时，应建议痰涂片与分子检测，并按规范转诊。",
-        "offset": 580,
-        "sha1": "c74705940e11f98f08fe670e8412939bee293412"
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -14260,12 +14806,14 @@
         "status": "abnormal"
       },
       "citation": {
-        "kp_id": "GL-TB-02",
+        "kp_id": "GL-TB-01",
         "topic_id": "TB",
         "topic_cn": "肺结核",
-        "quote": "影像提示活动性病变时，应建议痰涂片与分子检测，并按规范转诊。",
-        "offset": 580,
-        "sha1": "c74705940e11f98f08fe670e8412939bee293412"
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -14309,12 +14857,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-TB-02",
+        "kp_id": "GL-TB-01",
         "topic_id": "TB",
         "topic_cn": "肺结核",
-        "quote": "影像提示活动性病变时，应建议痰涂片与分子检测，并按规范转诊。",
-        "offset": 580,
-        "sha1": "c74705940e11f98f08fe670e8412939bee293412"
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -14358,12 +14908,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-TB-02",
+        "kp_id": "GL-TB-01",
         "topic_id": "TB",
         "topic_cn": "肺结核",
-        "quote": "影像提示活动性病变时，应建议痰涂片与分子检测，并按规范转诊。",
-        "offset": 580,
-        "sha1": "c74705940e11f98f08fe670e8412939bee293412"
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -14402,12 +14954,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-TB-02",
+        "kp_id": "GL-TB-01",
         "topic_id": "TB",
         "topic_cn": "肺结核",
-        "quote": "影像提示活动性病变时，应建议痰涂片与分子检测，并按规范转诊。",
-        "offset": 580,
-        "sha1": "c74705940e11f98f08fe670e8412939bee293412"
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -14446,12 +15000,14 @@
         "status": "unmentioned"
       },
       "citation": {
-        "kp_id": "GL-TB-02",
+        "kp_id": "GL-TB-01",
         "topic_id": "TB",
         "topic_cn": "肺结核",
-        "quote": "影像提示活动性病变时，应建议痰涂片与分子检测，并按规范转诊。",
-        "offset": 580,
-        "sha1": "c74705940e11f98f08fe670e8412939bee293412"
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -14507,7 +15063,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -14560,7 +15118,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -14612,7 +15172,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -14661,7 +15223,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -14710,7 +15274,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -14759,7 +15325,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -14811,7 +15379,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -14920,7 +15490,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -14969,7 +15541,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -15018,7 +15592,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -15067,7 +15643,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -15116,7 +15694,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -15165,7 +15745,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "公开来源说明"
     },
@@ -15209,7 +15791,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -15253,7 +15837,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "公开来源说明"
     },
@@ -15309,7 +15895,9 @@
         "topic_cn": "肺炎 / 肺实变",
         "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
         "offset": 11,
-        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -15362,7 +15950,9 @@
         "topic_cn": "肺结节 / 粟粒样结节",
         "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
         "offset": 181,
-        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -15414,7 +16004,9 @@
         "topic_cn": "胸腔积液",
         "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
         "offset": 338,
-        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -15463,7 +16055,9 @@
         "topic_cn": "气胸",
         "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
         "offset": 451,
-        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad",
+        "relevance": "weak",
+        "relevance_score": 0
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -15512,7 +16106,9 @@
         "topic_cn": "肺结核",
         "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
         "offset": 538,
-        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c",
+        "relevance": "strong",
+        "relevance_score": 2
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -15561,7 +16157,9 @@
         "topic_cn": "正常胸片",
         "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
         "offset": 630,
-        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b",
+        "relevance": "weak",
+        "relevance_score": 1
       },
       "basis": "库内逐区标注 + 指南要点"
     },
@@ -15613,7 +16211,9 @@
         "topic_cn": "心影增大",
         "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
         "offset": 740,
-        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd",
+        "relevance": "strong",
+        "relevance_score": 3
       },
       "basis": "库内逐区标注 + 指南要点"
     },
