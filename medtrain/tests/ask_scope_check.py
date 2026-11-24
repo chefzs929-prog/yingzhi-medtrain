@@ -29,8 +29,10 @@ REFUSE = [
     ("需要吃什么药", "治疗 / 预后 / 操作建议"),
     ("要不要手术", "治疗 / 预后 / 操作建议"),
     ("肺癌能活多久", "治疗 / 预后 / 操作建议"),
+    ("严重吗", "治疗 / 预后 / 操作建议"),
     ("这个是不是癌", "诊断结论"),
     ("乳腺癌筛查", "非胸部部位"),
+    ("阑尾炎是什么", "非胸部部位"),
 ]
 
 ANSWER = [
@@ -38,6 +40,9 @@ ANSWER = [
     ("气胸和胸腔积液怎么区分", "胸腔积液"),
     ("右肺中野有什么问题", "右肺中野"),
 ]
+
+# P0-3：提问页必须能回答“X 是什么”，不能落到“没匹配到”。
+KNOW = ["磨玻璃影", "肺水肿", "纵隔增宽", "空洞", "钙化", "支气管扩张", "肺不张", "胸膜增厚"]
 
 rows: list[tuple[str, bool, str]] = []
 
@@ -75,6 +80,32 @@ def main() -> None:
             text = page.inner_text("#result")
             check(f"可答：{q}", "可以回答" in text and must in text,
                   text.replace("\n", " ")[:160])
+
+        for name in KNOW:
+            q = f"{name}是什么"
+            page.fill("#q", q)
+            page.click("#ask")
+            page.wait_for_timeout(450)
+            text = page.inner_text("#result")
+            check(f"知识库词条：{q}",
+                  "可以回答" in text and name in text and "没匹配到" not in text,
+                  text.replace("\n", " ")[:160])
+
+        page.fill("#q", "气胸在胸片上怎么找")
+        page.click("#ask")
+        page.wait_for_timeout(450)
+        text = page.inner_text("#result")
+        check("怎么找 → 征象解释，而不是“本片没有”",
+              "可以回答" in text and "胸膜腔内出现气体" in text and "本片没有气胸" not in text,
+              text.replace("\n", " ")[:160])
+
+        page.fill("#q", "气胸和胸腔积液怎么区分")
+        page.click("#ask")
+        page.wait_for_timeout(450)
+        text = page.inner_text("#result")
+        check("对比：两个不同实体，不自比自",
+              "并列对比" in text and "气胸" in text and "胸腔积液" in text and "气胸 vs 气胸" not in text,
+              text.replace("\n", " ")[:160])
 
         check("无 console / page error", not errors, "；".join(errors[:3]))
         browser.close()

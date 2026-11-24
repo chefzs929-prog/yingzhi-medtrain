@@ -37,7 +37,7 @@ run() {
 
 # ---------------------------------------------------------------- 1. 纯 Python 单测
 section "Python 单测（无需浏览器）"
-run python3 -m unittest kb.tests.test_kb kb.tests.test_region_api kb.tests.test_scope
+run python3 -m unittest kb.tests.test_kb kb.tests.test_region_api kb.tests.test_scope kb.tests.test_ask_citations
 run python3 yingzhi/serve/test_semantic.py
 run python3 yingzhi/serve/test_workflow.py
 run python3 yingzhi/serve/test_chest_scope.py

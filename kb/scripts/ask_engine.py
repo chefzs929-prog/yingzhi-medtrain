@@ -44,7 +44,7 @@ SCOPE_RULES = [
 ]
 NON_CHEST = ["甲状腺", "乳腺", "肝脏", "胆囊", "胰腺", "脾脏", "肾脏", "肾上腺",
              "盆腔", "子宫", "卵巢", "前列腺", "头颅", "大脑", "脊柱", "脊髓", "骨盆",
-             "髋关节", "膝关节", "踝关节", "肩关节", "腕关节", "肘关节"]
+             "髋关节", "膝关节", "踝关节", "肩关节", "腕关节", "肘关节", "腹部", "阑尾", "肠道"]
 CHEST_WORDS = ["胸", "肺", "心", "纵隔", "膈", "肋", "气胸", "实变", "积液"]
 TOO_BROAD = ["胸片", "片子", "影像", "图片", "看看", "这个"]
 SCOPE_SUGGESTIONS = ["气胸在胸片上怎么找", "实变和胸腔积液怎么区分", "这个分区标注的依据是什么"]
@@ -171,6 +171,212 @@ def classify(q, case_id, items):
     return top["kind"], ts, top
 
 
+LAB_INTENT_COMPARE = re.compile(r"区分|鉴别|区别|不同|vs|对比")
+LAB_INTENT_KNOW = re.compile(r"怎么找|如何识别|怎么识别|怎么看出|怎么看|是什么|什么是|定义|表现|长什么样|影像表现|胸片表现|x线表现|征象|特点")
+
+
+def _lab_entities(lab, q):
+    """按出现位置找库内实体；征象优先于疾病，同名去重。"""
+    pool = [("sign", s) for s in lab.get("signs", [])] + \
+           [("concept", c) for c in lab.get("concepts", [])]
+    hits, seen = [], set()
+    for kind, x in pool:
+        names = [x.get("name"), x.get("en")] + list(x.get("aliases") or [])
+        pos = -1
+        for n in names:
+            nn = norm(n)
+            if len(nn) < 2:
+                continue
+            i = q.find(nn)
+            if i >= 0 and (pos < 0 or i < pos):
+                pos = i
+        if pos < 0:
+            continue
+        key = norm(x.get("name"))
+        if key in seen:
+            continue
+        seen.add(key)
+        hits.append((pos, kind, x))
+    hits.sort(key=lambda t: t[0])
+    return [(k, x) for _, k, x in hits]
+
+
+def _lab_cases(lab, sign_ids, limit=6):
+    wanted = set(sign_ids or [])
+    out, seen, per = [], set(), {}
+    for c in lab.get("cases", []):
+        zones = [z for z in c.get("zones", []) if wanted & set(z.get("sign_ids") or [])]
+        for z in zones:
+            if per.get(c["id"], 0) >= 2:
+                continue
+            per[c["id"]] = per.get(c["id"], 0) + 1
+            key = (c["id"], z["id"])
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append((c, z))
+        if not zones and wanted & set(c.get("signs") or []):
+            z = next((x for x in c.get("zones", []) if x.get("status") == "abnormal"), None)
+            key = (c["id"], z["id"] if z else "none")
+            if key not in seen:
+                seen.add(key)
+                out.append((c, z))
+    return out[:limit]
+
+
+def _lab_sources(lab, sign_ids):
+    by_id = {s["id"]: s for s in lab.get("signs", [])}
+    out, seen = [], set()
+    for sid in sign_ids or []:
+        s = by_id.get(sid)
+        if not s:
+            continue
+        for src in s.get("sources") or []:
+            if not src or src.get("id") in seen:
+                continue
+            seen.add(src["id"])
+            out.append(src)
+    return out[:8]
+
+
+def _lab_modality_note(s):
+    m = s.get("modality") or []
+    if not m:
+        return ""
+    if any(x in ("CR", "X线", "DR") for x in m):
+        return ""
+    if "CT" in m:
+        return "该征象的定义主要来自 CT 术语；胸片上的可辨识度有限，需结合 CT 判断。"
+    return f"该征象的定义来自 {' / '.join(m)}；不是胸片征象，本工具只作术语对照。"
+
+
+def _lab_entity_view(s):
+    return {
+        "name": s.get("name", ""),
+        "appearance": s.get("appearance") or s.get("note") or "该词条暂无形态描述",
+        "pitfalls": list(s.get("pitfalls") or [])[:3],
+        "modality": list(s.get("modality") or []),
+    }
+
+
+def _lab_markdown(kind, conclusion, cases, sources, missing):
+    label = {"sign": "征象解释", "concept": "疾病解释", "compare": "对比"}.get(kind, "知识库")
+    lines = [f"**可以回答**　·　{label}", "", conclusion, ""]
+    if cases:
+        c, z = cases[0]
+        if z:
+            lines += [
+                "**影像区域**",
+                f"- 分区：{z.get('name', '')}（{z.get('id', '')}）",
+                f"- 病例：{c.get('id', '')}　{c.get('title', '')}",
+                f"- 影像：{c.get('image', '')}",
+                "",
+            ]
+    if sources:
+        lines.append("**文献来源**")
+        for s in sources:
+            lines.append(f"- {s.get('title', '')} — {s.get('publisher', '')} — {s.get('url', '')}")
+        lines.append("")
+    if missing:
+        lines.append("**边界**")
+        for m in missing:
+            lines.append(f"- {m}")
+        lines.append("")
+    return "\n".join(lines)
+
+
+def lab_answer(question, lab):
+    """把“X 是什么 / 怎么找 / A 和 B 怎么区分”接到学生实验室同一套词条上。"""
+    q = norm(question)
+    if not q or not lab:
+        return None
+    entities = _lab_entities(lab, q)
+    if LAB_INTENT_COMPARE.search(q):
+        if len(entities) < 2 or norm(entities[0][1].get("name")) == norm(entities[1][1].get("name")):
+            return None
+        (_, a), (_, b) = entities[0], entities[1]
+        av, bv = _lab_entity_view(a), _lab_entity_view(b)
+        ids = []
+        for x in (a, b):
+            for sid in (x.get("sign_ids") or [x.get("id")]):
+                if sid not in ids:
+                    ids.append(sid)
+        cases = _lab_cases(lab, ids, 6)
+        sources = _lab_sources(lab, ids)
+        missing = []
+        for v in (av, bv):
+            note = _lab_modality_note({"modality": v["modality"]})
+            if note:
+                missing.append(f"{v['name']}：{note}")
+        missing += [
+            "对比只并列知识库中的定义、位置与易错点，不是诊断路径。",
+            "同一病例可能同时挂两个征象；以该区逐区标注和原始出处为准。",
+        ]
+        conclusion = (
+            f"{av['name']}：{av['appearance']} {bv['name']}：{bv['appearance']} "
+            f"鉴别时不要只看一个征象：{av['name']} 的易错点——{'；'.join(av['pitfalls']) or '暂未列出'}；"
+            f"{bv['name']} 的易错点——{'；'.join(bv['pitfalls']) or '暂未列出'}。"
+        )
+        return {
+            "kind": "compare",
+            "conclusion": conclusion,
+            "cases": cases,
+            "sources": sources,
+            "missing": missing,
+            "markdown": _lab_markdown("compare", conclusion, cases, sources, missing),
+        }
+    if not LAB_INTENT_KNOW.search(q) or not entities:
+        return None
+    kind, x = entities[0]
+    if kind == "sign":
+        note = _lab_modality_note(x)
+        missing = [note] if note else []
+        cases = _lab_cases(lab, [x["id"]], 6)
+        if not cases:
+            missing.append("当前影像库中暂时没有直接标注该征象的分区，只能给出词条与文献。")
+        sources = _lab_sources(lab, [x["id"]])
+        if not sources:
+            missing.append("相关词条没有登记可引用的文献来源，因此不补造出处。")
+        conclusion = f"{x.get('name', '')}：{x.get('appearance') or '该词条暂无形态描述'}"
+        return {
+            "kind": "sign",
+            "conclusion": conclusion,
+            "cases": cases,
+            "sources": sources,
+            "missing": missing,
+            "markdown": _lab_markdown("sign", conclusion, cases, sources, missing),
+        }
+    by_id = {s["id"]: s for s in lab.get("signs", [])}
+    direct = [by_id[i] for i in (x.get("sign_ids") or []) if i in by_id]
+    related = [by_id[i] for i in (x.get("related_sign_ids") or []) if i in by_id]
+    ids = [s["id"] for s in direct] + [s["id"] for s in related if s["id"] not in {d["id"] for d in direct}]
+    names = [s["name"] for s in direct]
+    rel_names = [s["name"] for s in related]
+    missing = []
+    if not direct:
+        missing.append("该疾病在知识库中没有直接对应的征象，只有关联征象；关联只作参考，不作为直接依据。")
+    sources = _lab_sources(lab, ids)
+    if not sources:
+        missing.append("相关词条没有登记可引用的文献来源，因此不补造出处。")
+    conclusion = (
+        f"{x.get('name', '')} 在知识库中对应的征象：{'、'.join(names)}"
+        if names else f"{x.get('name', '')} 在知识库中没有直接对应的征象"
+    )
+    if rel_names:
+        conclusion += f"；可参考关联征象：{'、'.join(rel_names)}（仅作参考，不作为直接依据）"
+    if x.get("note"):
+        conclusion += f"。{x['note']}"
+    cases = _lab_cases(lab, ids, 6)
+    return {
+        "kind": "concept",
+        "conclusion": conclusion,
+        "cases": cases,
+        "sources": sources,
+        "missing": missing,
+        "markdown": _lab_markdown("concept", conclusion, cases, sources, missing),
+    }
+
+
 class Bank:
     def __init__(self, path):
         self.path = Path(path)
@@ -179,6 +385,13 @@ class Bank:
         self.items = data["items"]
         self.corpus = data.get("corpus", "")
         self.corpus_sha1 = data.get("corpus_sha1", "")
+        self._lab = None
+
+    def lab(self):
+        if self._lab is None:
+            p = self.path.parent / "student_lab.json"
+            self._lab = json.loads(p.read_text(encoding="utf8")) if p.exists() else {}
+        return self._lab
 
     def cases(self):
         seen = {}
@@ -208,6 +421,25 @@ class Bank:
 
     def answer(self, question, case_id=None):
         cid = self.resolve_case(question, case_id)
+        # “X 是什么 / 怎么找 / A 和 B 怎么区分”先走知识库词条，避免落到“本片没有 X”。
+        lab = lab_answer(question, self.lab())
+        if lab:
+            region = None
+            if lab["cases"]:
+                c, z = lab["cases"][0]
+                if z:
+                    region = {
+                        "zone_id": z.get("id", ""),
+                        "label": z.get("name", ""),
+                        "coords": z.get("coords"),
+                        "image": c.get("image", ""),
+                        "case_id": c.get("id", ""),
+                        "case_title": c.get("title", ""),
+                        "status": z.get("status", ""),
+                    }
+            item = {"qid": "LAB", "kind": lab["kind"], "region": region}
+            return {"status": "answer", "question": question, "case_id": cid,
+                    "score": 1.0, "item": item, "markdown": lab["markdown"]}
         kind, score, item = classify(question, cid, self.items)
         if kind == "unknown" or item is None:
             return {"status": "unknown", "question": question, "case_id": cid,
@@ -246,7 +478,17 @@ def render_answer(bank, item):
         lines.append("")
 
     cit = item.get("citation")
-    if cit:
+    if cit and cit.get("source") == "claim":
+        lines.append("**依据原文**")
+        lines.append("")
+        lines.append(f"> {cit.get('quote')}")
+        lines.append("")
+        lines.append(
+            f"— {cit.get('case_id')} · {cit.get('zone_name')}（{cit.get('zone_id')}）"
+            " · 库内逐区标注（无指南锚点）"
+        )
+        lines.append("")
+    elif cit:
         lines.append("**依据原文**")
         lines.append("")
         lines.append(f"> {cit.get('quote')}")
@@ -254,6 +496,11 @@ def render_answer(bank, item):
         lines.append(f"— {cit.get('topic_cn')} · `{cit.get('kp_id')}` · 第 {cit.get('offset')} 字起 · 校验 `{str(cit.get('sha1'))[:8]}`")
         lines.append("")
         lines.append(f"指南语料 {len(bank.corpus)} 字 · 全文校验 `{bank.corpus_sha1[:12]}` · 仅要点转述，非逐字引用")
+        lines.append("")
+    elif item.get("kind") == "zone":
+        lines.append("**依据原文**")
+        lines.append("")
+        lines.append("> 该分区只有库内逐区标注，没有可回溯的指南原文；请以影像区域为准，不要据此补造文献出处。")
         lines.append("")
 
     lines.append(f"**出处**：{item.get('basis') or '库内逐区标注'}　·　问题 {item.get('qid')}")

@@ -100,7 +100,7 @@ def write_redirects() -> None:
 
 
 def write_readme() -> None:
-    text = """# RadioCheck · 胸片阅片、病例题与课堂（v10）
+    text = """# RadioCheck · 胸片阅片、病例题与课堂（v10.4）
 
 对外保留一个首页、一个阅片工作台、一组执业医师大纲病例题、一个对比阅片页和一个课堂：
 

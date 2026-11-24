@@ -36,7 +36,8 @@ clang -fobjc-arc -O -isysroot "$SDK" -mmacosx-version-min=11.0 \
 echo "==> 组装 .app"
 cp "$SRC/Info.plist" "$APP/Contents/Info.plist"
 printf 'APPL????' > "$APP/Contents/PkgInfo"
-ditto "$SITE" "$APP/Contents/Resources/site"
+# _work/ 是历史调试页，不随桌面版分发。
+rsync -a --exclude '_work/' "$SITE/" "$APP/Contents/Resources/site/"
 
 echo "==> 生成图标"
 mkdir -p "$ICONSET"

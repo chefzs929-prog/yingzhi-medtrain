@@ -37,6 +37,9 @@ button{font-family:inherit}
 }
 @media (min-width:560px){ .app{min-height:calc(100vh - 48px); margin:24px auto; border-radius:28px; overflow:hidden} }
 
+/* 桌面端侧边导航：默认隐藏，宽屏才出现；移动端继续用底部 tabbar */
+.desk-nav{display:none}
+
 .large{padding:22px 20px 0}
 .large .kicker{font-size:11px;letter-spacing:.16em;color:var(--brand2);font-weight:700;margin:0 0 4px}
 .large h1{margin:0;font-size:33px;line-height:1.15;letter-spacing:-.024em;font-weight:750}
@@ -60,12 +63,57 @@ button{font-family:inherit}
 .inset{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
 .inset.quick{margin:10px 20px 0}
 .learn-cols{display:block}
-@media (min-width:1100px){
-  .app{max-width:1120px}
-  .learn-cols{display:grid;grid-template-columns:400px minmax(0,1fr);gap:0 26px;align-items:start;padding:0 6px}
+
+/* ===== 桌面端：左侧导航 + 更宽的内容区，与移动端底部 tabbar 区分 ===== */
+@media (min-width:900px){
+  .app{
+    max-width:1180px; display:grid; grid-template-columns:232px minmax(0,1fr);
+    grid-template-areas:"nav main"; align-items:start; padding-bottom:0; overflow:visible;
+  }
+  .panel{grid-area:main; min-width:0}
+  .app > .tabbar{display:none}
+
+  .desk-nav{
+    display:flex; flex-direction:column; grid-area:nav; position:sticky; top:24px;
+    height:calc(100vh - 48px); padding:26px 16px 22px; background:var(--surface);
+    border-right:1px solid var(--line); border-radius:28px 0 0 28px;
+  }
+  .dn-logo{display:flex; align-items:center; gap:10px; padding:0 8px 20px}
+  .dn-logo .m{width:38px; height:38px; border-radius:11px; display:grid; place-items:center;
+    background:linear-gradient(140deg,#0b4f55,#0e7c7b); color:#fff; font-weight:750; font-size:18px}
+  .dn-logo b{display:block; font-size:14px; letter-spacing:-.01em}
+  .dn-logo i{display:block; font-style:normal; font-size:9.5px; letter-spacing:.14em; color:var(--faint); margin-top:1px}
+  .dn-menu{display:grid; gap:4px}
+  .dn-menu button{display:flex; align-items:center; gap:10px; width:100%; border:0; background:transparent;
+    padding:10px 12px; border-radius:10px; font-size:13.5px; font-weight:600; color:var(--ink2); cursor:pointer; text-align:left}
+  .dn-menu button span{width:22px; text-align:center; color:var(--brand2); font-size:15px}
+  .dn-menu button:hover{background:#f1f8f6}
+  .dn-menu button.on{background:#e6f3f0; color:var(--brand)}
+  .dn-sep{height:1px; background:var(--line); margin:16px 8px}
+  .dn-title{font-size:10.5px; letter-spacing:.12em; color:var(--faint); font-weight:700; padding:0 12px; margin-bottom:6px}
+  .dn-link{display:block; padding:9px 12px; border-radius:9px; font-size:12.5px; color:var(--ink2)}
+  .dn-link:hover{background:#f1f8f6; color:var(--brand)}
+  .dn-foot{margin-top:auto; padding:14px 12px 0; font-size:10.5px; line-height:1.7; color:var(--faint)}
+
+  .large{padding:30px 38px 0}
+  .hero-card{margin:18px 38px 0}
+  .inset.quick{margin:10px 38px 0}
+  .group{margin:22px 38px 0}
+  .note{margin:16px 38px 0}
+  .disclaimer{margin:18px 38px 0}
+
+  .learn-cols{display:block; padding:0 24px}
   .lc-main .hero-card{margin:18px 14px 0}
   .lc-main .inset.quick{margin:10px 14px 0}
   .lc-side .group{margin:18px 14px 0 0}
+}
+
+/* 宽屏再把学习区拆成两栏；900–1100 之间保持单栏，避免右栏被挤扁 */
+@media (min-width:1100px){
+  .learn-cols{display:grid; grid-template-columns:minmax(0,420px) minmax(0,1fr); gap:0 26px; align-items:start}
+}
+@media (min-width:1280px){
+  .learn-cols{grid-template-columns:minmax(0,460px) minmax(0,1fr)}
 }
 .row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line);transition:background .15s}
 .row:last-child{border-bottom:0}
@@ -105,12 +153,30 @@ button{font-family:inherit}
 
 <div class="app">
 
+  <!-- 桌面端侧边导航（宽屏显示，移动端隐藏） -->
+  <aside class="desk-nav" aria-label="主导航">
+    <a class="dn-logo" href="index.html">
+      <span class="m">R</span>
+      <div><b>RadioCheck</b><i>REGION · CITATION · TRACE</i></div>
+    </a>
+    <nav class="dn-menu">
+      <button class="on" data-p="learn" onclick="go('learn')"><span>◎</span>学习</button>
+      <button data-p="class" onclick="go('class')"><span>▤</span>课堂</button>
+      <button data-p="me" onclick="go('me')"><span>☺</span>我的</button>
+    </nav>
+    <div class="dn-sep"></div>
+    <div class="dn-title">关于</div>
+    <a class="dn-link" href="read/methods.html">方法与边界</a>
+    <a class="dn-link" href="read/eval.html">软件评测说明</a>
+    <div class="dn-foot">非诊断用途<br>仅供医学影像教学与研究</div>
+  </aside>
+
   <!-- ========== 学习 ========== -->
   <section class="panel on" id="p-learn">
     <div class="large">
       <p class="kicker">赛道 B · 胸片阅片</p>
       <h1>学习</h1>
-      <p class="sub">21 例 CR 胸部 · 350 道自测题 · 逐区校正 · 非诊断用途</p>
+      <p class="sub">21 例 CR 胸部 · 350 道自测题（课堂内） · 逐区校正 · 非诊断用途</p>
     </div>
 
     <div class="learn-cols">
@@ -125,7 +191,6 @@ button{font-family:inherit}
 
     <div class="inset quick">
       <a class="row" href="read/ask.html"><span class="ico">✦</span><b>提问</b><span class="val">答案可回溯</span><span class="chev">›</span></a>
-      <a class="row" href="read/eval.html"><span class="ico">◇</span><b>评测</b><span class="val">可复现数字</span><span class="chev">›</span></a>
       <a class="row" href="read/clinic.html"><span class="ico">▣</span><b>分区精读工作台</b><span class="val">21 例 · PA 8 区</span><span class="chev">›</span></a>
       <a class="row" href="read/daily.html"><span class="ico">◷</span><b>今日查房</b><span class="val">按日期生成 · 一天一条</span><span class="chev">›</span></a>
     </div>
@@ -150,6 +215,7 @@ button{font-family:inherit}
       <div class="inset">
         <a class="row" href="#boundary" onclick="go('me')"><span class="ico">◎</span><b>四种状态怎么读</b><span class="val">异常 / 未见异常 / 未提及 / 受限</span><span class="chev">›</span></a>
         <a class="row" href="#boundary" onclick="go('me')"><span class="ico">⚖</span><b>能力边界</b><span class="val">看它做不到什么</span><span class="chev">›</span></a>
+        <a class="row" href="read/eval.html"><span class="ico">◇</span><b>软件评测说明</b><span class="val">内部评测 · 非临床性能</span><span class="chev">›</span></a>
       </div>
     </div>
     </div>
@@ -215,12 +281,14 @@ button{font-family:inherit}
     </div>
 
     <div class="note">
-      <b>库外影像怎么处理</b>：上传按 SHA-256 精确匹配库内影像。命中则进入逐区标注；<b>未命中不会伪装成 AI 定位</b>——只按胸片比例给通用解剖分区，并明确标注"不含该影像的标注、不判断有无异常"。本项目当前未接入视觉检测模型，不做病灶自动定位。
+      <b>库外影像怎么处理</b>：上传按 SHA-256 精确匹配库内影像。命中则进入逐区文本对照；<b>未命中不会伪装成 AI 定位</b>——只按胸片比例给通用解剖分区，并明确标注"不含该影像的标注、不判断有无异常"。本项目当前未接入视觉检测模型，不做病灶自动定位。
     </div>
 
     <div class="disclaimer">
       <b>非诊断用途</b>
       本系统仅用于医学影像教学与研究，不构成诊断意见，不提供治疗建议，不做分期。正式教学或对外发布前，逐区文本与题目解析须由医学人员逐条审核签字。
+      <br>
+      <b>内容来源</b>开发者不具备医学专业资质，<b>影像分区未进行人工标注</b>：分区范围按公开解剖分区规范与文献描述确定，逐区文本由文献 + AI 辅助整理，<b>尚未经影像科医师逐例复核</b>。阅片工作台提供「反馈」入口，收集分区与结论异议，作为专家复核输入。
     </div>
   </section>
 
@@ -237,7 +305,7 @@ function go(p){
   ["learn","class","me"].forEach(k=>{
     document.getElementById("p-"+k).classList.toggle("on", k===p);
   });
-  document.querySelectorAll(".tabbar button").forEach(b=>{
+  document.querySelectorAll("[data-p]").forEach(b=>{
     b.classList.toggle("on", b.dataset.p===p);
   });
   window.scrollTo({top:0, behavior:"instant"});

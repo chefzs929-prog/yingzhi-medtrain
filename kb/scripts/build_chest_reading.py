@@ -518,6 +518,13 @@ def main():
     ]
     chest_ids.sort()
 
+    # 同源裁切提示：同一张 Wikimedia 原图被裁成多例时，明确写出“不是独立病例”。
+    src_count = {}
+    for cid in chest_ids:
+        src = cases[cid].get("source_page", "")
+        if src:
+            src_count[src] = src_count.get(src, 0) + 1
+
     out_cases = []
     for cid in chest_ids:
         c = cases[cid]
@@ -546,6 +553,10 @@ def main():
             "enabled": cur.get("enabled", True),
             "disabled_reason": cur.get("disabled_reason", ""),
             "source_page": c.get("source_page", ""),
+            "source_note": (
+                "与同源病例共用同一张原图的不同裁切，不是独立病例。"
+                if src_count.get(c.get("source_page", ""), 0) > 1 else ""
+            ),
             "license": c.get("license", ""),
             "artist": c.get("artist", ""),
             "description_public": cur.get("description_public", c.get("description_public", "")),

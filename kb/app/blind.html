@@ -92,7 +92,7 @@ a{color:inherit;text-decoration:none}
     </div>
 
     <div class="stage" id="stage">
-      <div class="mask-box" id="loading"><b>正在加载病例</b>只读取库内逐区标注，不调用后端</div>
+      <div class="mask-box" id="loading"><b>正在加载病例</b>只读取库内逐区文本，不调用后端</div>
     </div>
 
     <div class="bar">
@@ -108,7 +108,7 @@ a{color:inherit;text-decoration:none}
     <div id="pbody">
       <div class="zlist" id="picked"></div>
     </div>
-    <div class="dis">非诊断用途 · 评分只对照库内逐区标注，不评价临床诊断能力。</div>
+    <div class="dis">非诊断用途 · 评分只对照库内逐区文本，不评价临床诊断能力。</div>
   </div>
 
 </div>
@@ -223,7 +223,7 @@ function renderPicked(){
         <div>
           <div class="zh">${z.name} · ${STATUS_CN[z.status]}</div>
           <div class="zt">${z.text || ""}</div>
-          <div class="zb">出处：${z.basis || "库内逐区标注"}</div>
+          <div class="zb">出处：${z.basis || "库内逐区文本"}</div>
         </div>
       </div>`).join("");
     return;

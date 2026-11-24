@@ -123,6 +123,49 @@ def _with_rel(citation, score: int):
     return c
 
 
+def claim_cite(case: dict, zone: dict) -> dict:
+    """病例逐区标注作为引用：没有指南锚点，但有明确的病例/分区/原文。"""
+    return {
+        "source": "claim",
+        "case_id": case.get("id", ""),
+        "case_title": case.get("title", ""),
+        "zone_id": zone.get("id", ""),
+        "zone_name": zone.get("name", ""),
+        "status": zone.get("status", ""),
+        "quote": zone.get("text") or "",
+        "relevance": "strong",
+        "relevance_score": 99,
+    }
+
+
+def assert_citation_consistency(items: list[dict]) -> None:
+    """引用必须支撑结论：说“不是/有”时不能引“正常报告怎么写”；正常分区不补指南锚点。"""
+    problems = []
+    for it in items:
+        if not it.get("answerable"):
+            continue
+        ans = it.get("answer") or ""
+        cit = it.get("citation")
+        if it.get("kind") == "zone":
+            st = (it.get("region") or {}).get("status")
+            if st in ("normal", "limited", "unmentioned") and cit is not None:
+                problems.append(f"{it['qid']} 正常/受限分区不应挂指南锚点（{cit.get('kp_id')}）")
+            if st == "abnormal":
+                ok = cit and (
+                    cit.get("source") == "claim"
+                    or (cit.get("kp_id") and cit.get("relevance") == "strong")
+                )
+                if not ok:
+                    problems.append(f"{it['qid']} 异常分区应引强相关条款或逐区标注，实际 {cit}")
+        if it.get("kind") == "topic":
+            if ans.startswith("不是") and cit and cit.get("source") != "claim":
+                problems.append(f"{it['qid']} 结论“不是”却引 {cit.get('kp_id')}")
+            if ans.startswith("有。") and cit and cit.get("source") != "claim":
+                problems.append(f"{it['qid']} 结论“有”却引 {cit.get('kp_id')}")
+    if problems:
+        raise SystemExit("引用一致性检查失败：\n- " + "\n- ".join(problems))
+
+
 def main() -> None:
     chest = json.loads(CHEST.read_text(encoding="utf8"))
     digest = json.loads(DIGEST.read_text(encoding="utf8"))
@@ -149,7 +192,13 @@ def main() -> None:
         # 1) 分区问：每个分区都生成，非异常区明确说清边界
         for z in zones:
             n += 1
-            kp_id, kp_score = choose_kp(topic, z.get("text") or "")
+            # 有征象的分区优先按征象选条款（SIGN-002 → 支气管充气征那条），比纯文本重合更准。
+            zone_signs = z.get("sign_ids") or []
+            if zone_signs:
+                kp_id = pick_kp(topic, zone_signs)
+                kp_score = 2 if kp_id else 0
+            else:
+                kp_id, kp_score = choose_kp(topic, z.get("text") or "")
             st = z["status"]
             if st == "abnormal":
                 ans_text, conf = z["text"], ("high" if case.get("quality") != "limited" else "medium")
@@ -179,11 +228,10 @@ def main() -> None:
                     "case_title": case.get("title", ""),
                     "status": z["status"],
                 },
-                "citation": _with_rel(
-                    (cite(spans, kp_id) if kp_id else None) or (
-                        cite(spans, "GL-NOR-01") if z["status"] in ("normal", "limited") else None
-                    ),
-                    kp_score,
+                "citation": (
+                    (_with_rel(cite(spans, kp_id), kp_score) if kp_id and kp_score >= 2
+                     else claim_cite(case, z))
+                    if z["status"] == "abnormal" else None
                 ),
                 "basis": z.get("basis") or "库内逐区标注",
             })
@@ -194,27 +242,37 @@ def main() -> None:
             kw = t.get("match_keywords") or []
             tz = [z for z in zones if _zone_hits_topic(z, t)]
             hit = any(z["status"] == "abnormal" for z in tz)
+            kp_id = (t.get("key_points") or [{}])[0].get("id")
+            kp_text = (t.get("key_points") or [{}])[0].get("text", "")
+            region_obj = _region_of(tz, case) or _whole_region(case)
             if tid == "NORMAL":
                 q = "这张片子是正常胸片吗？"
                 ab_all = [z for z in zones if z["status"] == "abnormal"]
                 if ab_all:
                     ans = f"不是。库内逐区标注在{_compact(ab_all)}记录了异常，原文为：{_join_texts(ab_all)}"
                     conf = "high"
+                    cite_obj = claim_cite(case, ab_all[0])
+                    region_obj = _region_of(ab_all, case) or region_obj
                 else:
                     ans = "库内逐区标注没有异常分区；但「没有标注异常」不等于影像完全正常，仍以原始报告与临床为准。"
                     conf = "medium"
+                    cite_obj = _with_rel(cite(spans, kp_id) if kp_id else None, kp_relevance(kp_text, ans))
             else:
                 q = f"这张片子有没有{t['topic_cn'].split(' / ')[0]}？"
                 if hit:
-                    ans = f"有。库内逐区标注在{_compact([z for z in tz if z['status'] == 'abnormal'])}记录了与「{t['topic_cn']}」相符的异常，原文为：{_join_texts(tz)}"
+                    ab_here = [z for z in tz if z["status"] == "abnormal"]
+                    ans = f"有。库内逐区标注在{_compact(ab_here)}记录了与「{t['topic_cn']}」相符的异常，原文为：{_join_texts(tz)}"
                     conf = "high"
+                    cite_obj = claim_cite(case, ab_here[0])
+                    region_obj = _region_of(ab_here, case) or region_obj
                 elif tz and all(z["status"] == "unmentioned" for z in tz):
                     ans = f"不能确认。公开来源没有逐区描述与「{t['topic_cn']}」相关的分区，本工具不作正常或异常的推断。"
                     conf = "low"
+                    cite_obj = None
                 else:
                     ans = f"库内逐区标注中，本片没有「{t['topic_cn']}」的明确描述。这表示来源未写，不等于排除。"
                     conf = "medium"
-            kp_id = (t.get("key_points") or [{}])[0].get("id")
+                    cite_obj = _with_rel(cite(spans, kp_id) if kp_id else None, kp_relevance(kp_text, ans))
             items.append({
                 "qid": f"A{n:04d}",
                 "kind": "topic",
@@ -226,11 +284,8 @@ def main() -> None:
                 "answerable": True,
                 "answer": ans,
                 "confidence": conf,
-                "region": _region_of(tz, case) or _whole_region(case),
-                "citation": _with_rel(
-                    cite(spans, kp_id) if kp_id else None,
-                    kp_relevance((topic_by_id.get(tid, {}).get("key_points") or [{}])[0].get("text", ""), ans),
-                ),
+                "region": region_obj,
+                "citation": cite_obj,
                 "basis": "库内逐区标注 + 指南要点",
             })
 
@@ -278,6 +333,8 @@ def main() -> None:
 
     for it in items:
         it.setdefault("answerable", True)
+
+    assert_citation_consistency(items)
 
     out = {
         "version": "0.1.0",

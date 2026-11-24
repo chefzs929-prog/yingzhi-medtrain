@@ -37,7 +37,7 @@ class ScopeReasonTest(unittest.TestCase):
                 self.assertTrue(ask_engine.scope_reason(q))
 
     def test_non_chest_is_out_of_scope(self):
-        for q in ["乳腺癌筛查", "头颅 CT 有没有出血", "膝关节退变"]:
+        for q in ["乳腺癌筛查", "头颅 CT 有没有出血", "膝关节退变", "阑尾炎是什么", "腹部超声"]:
             with self.subTest(q=q):
                 self.assertTrue(ask_engine.non_chest_reason(q) or ask_engine.scope_reason(q))
 
@@ -76,6 +76,19 @@ class BankScopeTest(unittest.TestCase):
         r = self.bank.answer("右肺中野有什么问题", "CASE-006")
         self.assertEqual(r["status"], "answer")
         self.assertIn("右肺中野", r["markdown"])
+
+    def test_abnormal_normal_question_cites_claim(self):
+        r = self.bank.answer("这张片子是正常胸片吗", "CASE-006")
+        self.assertEqual(r["status"], "answer")
+        self.assertIn("不是", r["markdown"])
+        self.assertIn("CASE-006 · 右肺中野", r["markdown"])
+        self.assertNotIn("GL-NOR-01", r["markdown"])
+
+    def test_normal_zone_has_no_guideline_anchor(self):
+        r = self.bank.answer("右肺上野有什么问题", "CASE-003")
+        self.assertEqual(r["status"], "answer")
+        self.assertIn("没有可回溯的指南原文", r["markdown"])
+        self.assertNotIn("GL-NOR-01", r["markdown"])
 
     def test_refusal_has_alternatives(self):
         r = self.bank.answer("气胸怎么治疗", "CASE-006")

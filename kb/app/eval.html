@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f6f4ef">
-<title>评测 · RadioCheck</title>
+<title>软件评测说明 · RadioCheck</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b4f55'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white' font-family='sans-serif'%3ER%3C/text%3E%3C/svg%3E">
 <style>
 :root{
@@ -85,7 +85,11 @@ table.t .bad{color:var(--bad);font-weight:650}
 
   <div class="top">
     <a class="back" href="../index.html">‹</a>
-    <div><div class="t">评测</div><div class="s">可复现的数字，不是口号</div></div>
+    <div><div class="t">软件评测说明</div><div class="s">可复现的数字，不是口号</div></div>
+  </div>
+
+  <div class="note" style="margin:0 0 14px">
+    <b>这是软件说明，不是学习功能。</b>本页记录检索、拒答与模型一致率的内部评测口径，用于说明能力边界；全部指标均为内部评测，不构成临床性能承诺。
   </div>
 
   <div class="hero" id="hero">
@@ -112,7 +116,7 @@ table.t .bad{color:var(--bad);font-weight:650}
 
   <div class="sec">
     <div class="sec-h">模型交叉检验 <span class="n" id="mdN">—</span></div>
-    <p class="sec-p">用 torchxrayvision DenseNet121 对同一批病例做整图级多标签预测，与库内人工逐区标注比对。这是<b>独立第三方视角</b>，不是分区级定位。</p>
+    <p class="sec-p">用 torchxrayvision DenseNet121 对同一批病例做整图级多标签预测，与库内逐区文本比对。这是<b>独立第三方视角</b>，不是分区级定位。<br><b>可复现性：</b>结果来自一次离线推理（需 `torch` + `torchxrayvision`）；当前演示机未安装 `torch`，本页只读已有结果，不能现场重跑。</p>
     <div class="rows" id="mdRows"></div>
     <div class="note" id="mdNote"></div>
   </div>
@@ -147,14 +151,19 @@ function render(r){
 
   const totalN = (dev.n||0) + (ho.n||0) + (fi.n||0);
   const totalOk = (dev.ok||0) + (ho.ok||0) + (fi.ok||0);
-  const rtAcc = totalN ? totalOk/totalN : null;
+  // 首屏只算 holdout + final：dev 是调参集，不能和留出集混在一起报一个更好看的数。
+  const evalN = (ho.n||0) + (fi.n||0);
+  const evalOk = (ho.ok||0) + (fi.ok||0);
+  const shownN = evalN || totalN;
+  const shownOk = evalN ? evalOk : totalOk;
+  const rtAcc = shownN ? shownOk/shownN : null;
 
   $("hero").innerHTML = `
-    <div class="stat ok"><div class="v">${rtAcc==null?"—":Math.round(rtAcc*100)}<small>%</small></div><div class="l">检索准确率<br><span style="color:var(--faint)">${totalOk}/${totalN}</span></div></div>
+    <div class="stat ok"><div class="v">${rtAcc==null?"—":Math.round(rtAcc*100)}<small>%</small></div><div class="l">检索准确率<br><span style="color:var(--faint)">${shownOk}/${shownN}${evalN?" · holdout+final":""}</span></div></div>
     <div class="stat ok"><div class="v">${pct(rf.recall)}</div><div class="l">拒答召回<br><span style="color:var(--faint)">漏拒 ${pct(rf.miss_rate)}</span></div></div>
     <div class="stat ${(md.strict_rate||0)>=0.6?"warn":""}"><div class="v">${pct(md.strict_rate)}</div><div class="l">模型严格一致<br><span style="color:var(--faint)">加权 ${pct(md.weighted_rate)}</span></div></div>`;
 
-  $("rtN").textContent = totalOk + " / " + totalN;
+  $("rtN").textContent = `${shownOk} / ${shownN}` + (evalN ? `（holdout+final；全部 ${totalOk}/${totalN}）` : "");
 
   const sets = [["dev","调参集",dev],["holdout","泛化集",ho],["final","留出集",fi]];
   $("rtTable").innerHTML = `
@@ -162,7 +171,8 @@ function render(r){
     ${sets.map(([k,label,b])=>{
       if(!b || !b.n) return "";
       const good = b.accuracy >= 0.9;
-      return `<tr><td>${label}</td><td class="num ${good?"good":"bad"}">${b.ok}/${b.n}</td><td class="num">${pct(b.accuracy)}</td><td style="font-size:11px;color:var(--faint)">${k}</td></tr>`;
+      const note = k === "dev" ? "调参集，不计入首屏" : "计入首屏";
+      return `<tr><td>${label}</td><td class="num ${good?"good":"bad"}">${b.ok}/${b.n}</td><td class="num">${pct(b.accuracy)}</td><td style="font-size:11px;color:var(--faint)">${k} · ${note}</td></tr>`;
     }).join("")}`;
 
   const agg = {};
@@ -179,7 +189,7 @@ function render(r){
       <span class="vv">${v.ok}/${v.n}</span></div>`;
   }).join("");
 
-  $("rtNote").innerHTML = `<b>注意：</b>三批共 ${totalN} 条问法全部由团队自建，且都在调参过程中查看过。因此上面的百分比是<b>「在已查看用例上的表现」</b>，不等于真实用户泛化能力。真正的泛化需要外部提问日志或第三方标注集。`;
+  $("rtNote").innerHTML = `<b>注意：</b>首屏只算 holdout + final；dev 是调参集，单独列在表里，不与留出集合并。三批共 ${totalN} 条问法全部由团队自建，且都在调参过程中查看过，因此百分比是<b>「在已查看用例上的表现」</b>，不等于真实用户泛化能力。真正的泛化需要外部提问日志或第三方标注集。`;
 
   $("rfN").textContent = "正 " + rf.positives + " · 负 " + rf.negatives;
   $("cm").innerHTML = `

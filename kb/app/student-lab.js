@@ -9,7 +9,7 @@
  *   - 只覆盖 21 例 CR 胸部；问答只在库内检索，不调用大模型。
  *   - 越界（诊断/治疗/预后/操作）、低置信、库外未命中一律拒答；不编造 id。
  *   - 文献引用到来源级 + 段落级摘要锚点；原文页码待补。
- *   - 自测题为库内逐区标注规则生成，不是考试真题。
+ *   - 自测题为库内逐区文本规则生成，不是考试真题。
  */
 (function () {
   "use strict";
@@ -43,7 +43,7 @@
   ];
   const NON_CHEST = ["甲状腺", "乳腺", "肝脏", "胆囊", "胰腺", "脾脏", "肾脏", "肾上腺",
     "盆腔", "子宫", "卵巢", "前列腺", "头颅", "大脑", "脊柱", "脊髓", "骨盆",
-    "髋关节", "膝关节", "踝关节", "肩关节", "腕关节", "肘关节"];
+    "髋关节", "膝关节", "踝关节", "肩关节", "腕关节", "肘关节", "腹部", "阑尾", "肠道"];
   const CHEST_WORDS = ["胸", "肺", "心", "纵隔", "膈", "肋", "气胸", "实变", "积液"];
   const TOO_BROAD = ["胸片", "片子", "影像", "图片", "看看", "这个"];
   const SCOPE_SUGGESTIONS = ["气胸在胸片上怎么找", "实变和胸腔积液怎么区分", "这个分区标注的依据是什么"];
@@ -340,7 +340,9 @@
   }
 
   function buildCompare(q, signs, rawQuery) {
-    const ids = signs.map((s) => s.id);
+    const idsOf = (s) => (s.sign_ids && s.sign_ids.length ? s.sign_ids : [s.id]);
+    const ids = [];
+    signs.forEach((s) => idsOf(s).forEach((id) => { if (!ids.includes(id)) ids.push(id); }));
     const seen = new Set();
     const casesOut = [];
     ids.forEach((id) => {
@@ -374,7 +376,7 @@
         `鉴别时不要只看一个征象：${a.name} 的易错点——${pitfalls(a)}；${b.name} 的易错点——${pitfalls(b)}。`,
       missing: [
         "对比只并列知识库中的定义、影像位置与易错点，不是诊断路径。",
-        "同一病例可能同时挂两个征象；以该区逐区标注和原始出处为准。",
+        "同一病例可能同时挂两个征象；以该区逐区文本和原始出处为准。",
       ],
     };
   }
@@ -408,14 +410,29 @@
         suggestions: SCOPE_SUGGESTIONS,
       };
     }
-    // “A 和 B 怎么区分”这类对比问法：并列两个库内征象，而不是只命中一个
+    // “A 和 B 怎么区分”这类对比问法：并列两个库内实体，而不是只命中一个或自己比自己。
     const comparePool = ((L.data && L.data.signs) || []).concat((L.data && L.data.concepts) || []);
-    const mentioned = comparePool.filter((s) => {
-      const names = [s.name, s.en].concat(s.aliases || []).map(norm).filter(Boolean);
-      return names.some((n) => n.length >= 2 && q.includes(n));
-    }).slice(0, 2);
-    if (mentioned.length === 2 && /区分|鉴别|区别|vs|和|与|还是|怎么/.test(q)) {
-      return buildCompare(q, mentioned, query);
+    const hits = [];
+    comparePool.forEach((s) => {
+      const names = [s.name, s.en].concat(s.aliases || []).map(norm).filter((n) => n.length >= 2);
+      let pos = -1;
+      names.forEach((n) => {
+        const i = q.indexOf(n);
+        if (i >= 0 && (pos < 0 || i < pos)) pos = i;
+      });
+      if (pos >= 0) hits.push({ s, pos });
+    });
+    hits.sort((a, b) => a.pos - b.pos);
+    const mentioned = [];
+    const seenName = new Set();
+    hits.forEach((h) => {
+      const key = norm(h.s.name);
+      if (seenName.has(key)) return;
+      seenName.add(key);
+      mentioned.push(h.s);
+    });
+    if (mentioned.length >= 2 && /区分|鉴别|区别|不同|vs|对比/.test(q)) {
+      return buildCompare(q, mentioned.slice(0, 2), query);
     }
     const signHits = topHits((L.data && L.data.signs) || [], scoreSign, q);
     const conceptHits = topHits((L.data && L.data.concepts) || [], scoreConcept, q);
@@ -514,7 +531,7 @@
         (c.zones || []).find((z) => z.status === "abnormal") || null;
       casesOut = [{ case: c, zone }];
       guidelines = /结节|随访|指南/.test(q) ? guidelinesForSigns(signIds) : [];
-      conclusion = `${c.id} · ${c.title}：${c.teaching_note || "按知识库逐区标注阅读。"}`;
+      conclusion = `${c.id} · ${c.title}：${c.teaching_note || "按知识库逐区文本阅读。"}`;
     }
 
     const sources = sourcesForSigns(signIds);
@@ -963,7 +980,7 @@
         <div class="${detail.statusOk ? "ok" : "bad"}"><b>${detail.statusOk ? "✓" : "×"} 判读</b><span>你选：${esc(statusLabel(L.coach.status))}；该区知识库状态：${esc(statusLabel(detail.expectedStatus))}</span></div>
         <div class="${(detail.signRatio || 0) >= 0.99 ? "ok" : "bad"}"><b>${(detail.signRatio || 0) >= 0.99 ? "✓" : "×"} 征象</b><span>你选：${esc((L.coach.signs || []).map(signName).join("、") || "未见明确征象")}；知识库：${esc(correctSigns)}</span></div>
       </div>
-      ${zz ? `<div class="lab-truth"><b>该区知识库所见</b><p>${esc(zz.text)}</p><span>依据：${esc(zz.basis || "知识库逐区标注")}</span></div>` : ""}
+      ${zz ? `<div class="lab-truth"><b>该区知识库所见</b><p>${esc(zz.text)}</p><span>依据：${esc(zz.basis || "知识库逐区文本")}</span></div>` : ""}
       <div class="lab-truth"><b>病例教学提示</b><p>${esc(c.teaching_note || "无")}</p><span>${esc(c.license || "")} · ${esc(c.artist || "")}</span></div>
       <div class="lab-actions"><button class="btn sm" data-lab-coach-hint>看方法提示</button>
         <button class="btn solid" data-lab-coach-reset>重练本例</button>

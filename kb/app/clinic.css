@@ -438,3 +438,40 @@ body.task-mode .queue-head span{color:#b45309}
 .generic-zones{display:flex;flex-wrap:wrap;gap:5px;margin:7px 0}
 .generic-zones .chip.on{background:var(--brand);color:#fff;border-color:var(--brand)}
 .generic-result{margin-top:7px;border-left:3px solid var(--warn)}
+
+/* ---------------- 反馈 / 专家复核入口 ---------------- */
+.rv-badge{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:99px;
+  background:var(--warn-soft);color:var(--warn);font-size:9.5px;font-weight:650;vertical-align:middle}
+.review-mask[hidden]{display:none}
+.review-mask{position:fixed;inset:0;background:rgba(8,20,27,.55);z-index:120;display:grid;place-items:center;padding:20px}
+.review-box{width:min(560px,94vw);max-height:88vh;background:var(--surface);border-radius:14px;
+  box-shadow:var(--shadow-lg);display:flex;flex-direction:column;overflow:hidden}
+.review-head{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:12px 16px;border-bottom:1px solid var(--line)}
+.review-head b{font-size:14px}
+.review-head span{font-size:10.5px;color:var(--warn);background:var(--warn-soft);
+  padding:1px 7px;border-radius:99px;margin-left:8px;font-weight:650}
+.review-body{flex:1;overflow:auto;padding:14px 16px 16px;font-size:12px;color:var(--ink-2)}
+.review-target{border:1px solid var(--line);background:var(--surface-2);border-radius:9px;
+  padding:9px 11px;margin-bottom:12px;font-size:11.5px;line-height:1.6}
+.review-target b{color:var(--ink)}
+.review-body label{display:block;font-size:11px;font-weight:650;color:var(--ink);margin:12px 0 5px}
+.review-body select,.review-body textarea,.review-body input{width:100%;box-sizing:border-box;
+  font-family:inherit;font-size:12px;color:var(--ink);background:#fff;border:1px solid var(--line);
+  border-radius:8px;padding:8px 10px;outline:none}
+.review-body textarea{min-height:88px;resize:vertical;line-height:1.65}
+.review-body select:focus,.review-body textarea:focus,.review-body input:focus{border-color:var(--brand);
+  box-shadow:0 0 0 3px var(--brand-soft)}
+.review-hint{margin-top:9px;font-size:10.5px;line-height:1.65;color:var(--faint)}
+.review-err{color:var(--warn);font-size:11px;margin-top:8px;display:none}
+.review-err.on{display:block}
+.review-actions{display:flex;align-items:center;gap:7px;margin-top:14px;flex-wrap:wrap}
+.review-actions .spacer{flex:1}
+.review-list{border-top:1px solid var(--line);margin-top:14px;padding-top:11px}
+.review-item{border:1px solid var(--line);border-radius:9px;padding:9px 11px;margin-bottom:8px;background:#fff}
+.review-item .rv-top{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--faint);margin-bottom:4px}
+.review-item .rv-top b{font-size:11.5px;color:var(--ink)}
+.review-item .rv-type{background:var(--warn-soft);color:var(--warn);border-radius:99px;
+  padding:1px 6px;font-weight:650}
+.review-item p{margin:0;font-size:11.5px;line-height:1.65;color:var(--ink-2);white-space:pre-wrap;word-break:break-word}
+.review-empty{font-size:11.5px;color:var(--faint);padding:8px 0}

@@ -111,8 +111,15 @@ def main() -> None:
             text = path.read_text(encoding="utf8")
         except Exception:
             continue
+        head = "\n".join(text.splitlines()[:6])
+        if "历史文档（数字已废弃）" in head:
+            continue
         for m in pat.finditer(text):
             line = text[:m.start()].count("\n") + 1
+            line_text = text.splitlines()[line - 1] if line - 1 < len(text.splitlines()) else ""
+            # 已经明确标注“已废弃/历史口径/旧文档”的行是说明，不是仍在使用的旧数字。
+            if any(w in line_text for w in ("已废弃", "历史口径", "旧文档", "不要再说")):
+                continue
             legacy.append((str(path.relative_to(ROOT)), line, m.group(0)))
 
     lines = [

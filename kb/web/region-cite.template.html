@@ -343,7 +343,7 @@ footer .sep{width:1px;height:11px;background:#22303f}
 <footer>
   <span>仅用于教学与研究，不构成诊断意见，不能替代医师判断。</span>
   <span class="sep"></span>
-  <span>分区为人工标注的解剖区域，非病灶检测结果。</span>
+  <span>分区为教学用解剖区域示意（文献+AI 辅助整理，非人工标注、非专家复核），非病灶检测结果。</span>
   <span class="sep"></span>
   <span>引用均带空间锚点与文献锚点，可逐条核验。</span>
 </footer>
@@ -810,7 +810,7 @@ function renderLocate(res){
   // 定位依据
   const row3 = el("div","lrow");
   row3.appendChild(el("span","k","定位依据"));
-  row3.appendChild(el("span","v", esc(d.atlas.name + " · 人工标注 · " + d.atlas.annotatedAt)));
+  row3.appendChild(el("span","v", esc(d.atlas.name + " · 文献+AI 整理（非人工标注） · " + d.atlas.annotatedAt)));
   w.appendChild(row3);
 
   // 覆盖度

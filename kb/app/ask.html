@@ -163,7 +163,7 @@ button,input{font-family:inherit}
     </div>
   </div>
 
-  <div class="dis">非诊断用途 · 答案来自库内逐区标注，指南为公开资料要点转述（非逐字引用）· 不提供诊断、分期、治疗与预后建议</div>
+  <div class="dis">非诊断用途 · 答案来自库内逐区文本（文献 + AI 辅助整理，未人工标注、未经医学专家逐例复核）· 指南为公开资料要点转述（非逐字引用）· 不提供诊断、分期、治疗与预后建议</div>
 
   <div class="foot">
     <a href="path.html">今日任务</a>
@@ -173,9 +173,11 @@ button,input{font-family:inherit}
 </div>
 
 <script src="ask-core.js"></script>
+<script src="qa-core.js"></script>
 <script>
 const URL_BANK = "../data/chest/ask_bank.json";
-let BANK = null, ITEMS = [], CORPUS = "", CASES = [], cur = null;
+const URL_LAB = "../data/lab/student_lab.json";
+let BANK = null, ITEMS = [], CORPUS = "", CASES = [], cur = null, LAB = null;
 // 分区标注覆盖肺野与膈下；问到骨骼/软组织/胸壁结构时，先说明范围，避免把“肺野正常”读成“没有骨折”。
 const NON_LUNG = /骨折|骨裂|肋骨|骨质|骨骼|软组织|胸壁|皮下|乳腺|甲状腺/;
 
@@ -218,7 +220,17 @@ function renderAnswer(item){
   }
 
   let citeHtml = "";
-  if(item.citation){
+  if(item.citation && item.citation.source === "claim"){
+    const c = item.citation;
+    citeHtml = `
+      <div class="sec">
+        <div class="sec-h">依据原文 <span class="mini">库内逐区标注</span></div>
+        <div class="cite">
+          <p class="q"><mark>${esc(c.quote)}</mark></p>
+          <div class="meta">${esc(c.case_id)} · ${esc(c.zone_name || "")}（<code>${esc(c.zone_id || "")}</code>） · 库内逐区标注，无指南锚点</div>
+        </div>
+      </div>`;
+  } else if(item.citation){
     const c = item.citation;
     const off = c.offset || 0;
     const quote = c.quote || "";
@@ -254,7 +266,7 @@ function renderAnswer(item){
       <p class="concl">${esc(item.answer)}</p>
       ${filmHtml}
       ${citeHtml}
-      <div class="src">出处：${esc(item.basis || "库内逐区标注")}　·　问题 ${esc(item.qid)}</div>
+      <div class="src">出处：${esc(item.basis || "库内逐区文本")}　·　问题 ${esc(item.qid)}</div>
     </div>`;
 }
 
@@ -280,6 +292,7 @@ function renderRefusal(item){
 
 function renderUnknown(query){
   const p = pool().filter(i=> i.answerable).slice(0,3);
+  const kb = ["磨玻璃影是什么", "气胸在胸片上怎么找", "气胸和胸腔积液怎么区分"];
   return `
     <div class="ans no">
       <div class="ans-h"><span class="tag no">没匹配到</span><span class="conf">当前病例库内无对应问答</span></div>
@@ -288,6 +301,7 @@ function renderUnknown(query){
       <div class="sug">
         <div class="sg-h">换个问法试试</div>
         ${p.map(i=>`<span class="sg-item" data-q="${esc(i.question)}">${esc(i.question)}</span>`).join("")}
+        ${kb.map(q=>`<span class="sg-item" data-q="${esc(q)}">${esc(q)}</span>`).join("")}
       </div>
     </div>`;
 }
@@ -339,6 +353,78 @@ function renderScopeRefusal(label){
     </div>`;
 }
 
+const KB_KIND = { sign: "征象解释", concept: "疾病解释", compare: "对比", guideline: "指南条款" };
+
+function kbEntityHtml(a){
+  if(a.kind === "compare"){
+    return `<div class="sec"><div class="sec-h">并列对比</div>` + (a.entities || []).map(v=>`
+      <div class="cite"><p class="q"><b>${esc(v.name)}</b>：${esc(v.appearance)}</p>
+        <div class="meta">易错点：${esc((v.pitfalls || []).join("；") || "暂未列出")}${v.modality && v.modality.length ? ` · 模态 ${esc(v.modality.join(" / "))}` : ""}</div></div>`).join("") + `</div>`;
+  }
+  const v = (a.entities || [])[0];
+  if(!v) return "";
+  return `<div class="sec"><div class="sec-h">词条</div>
+    <div class="cite"><p class="q"><b>${esc(v.name)}</b>：${esc(v.appearance)}</p>
+      <div class="meta">易错点：${esc((v.pitfalls || []).join("；") || "暂未列出")}${v.modality && v.modality.length ? ` · 模态 ${esc(v.modality.join(" / "))}` : ""}</div></div></div>`;
+}
+
+function kbSourcesHtml(a){
+  const list = a.sources || [];
+  if(!list.length) return "";
+  return `<div class="sec"><div class="sec-h">文献来源 <span class="mini">链接引用，不转载</span></div>` +
+    list.map(s=>`<div class="cite"><p class="q">${esc(s.title)}</p><div class="meta">${esc(s.publisher || "")}${s.year ? ` · ${esc(s.year)}` : ""}${s.url ? ` · <a href="${esc(s.url)}" target="_blank" rel="noopener">打开来源</a>` : ""}${s.license_note ? ` · ${esc(s.license_note)}` : ""}</div></div>`).join("") + `</div>`;
+}
+
+function kbGuideHtml(a){
+  const list = a.guidelines || [];
+  if(!list.length) return "";
+  return `<div class="sec"><div class="sec-h">指南条款 <span class="mini">要点转述</span></div>` +
+    list.map(g=>`<div class="cite"><p class="q">${esc(g.statement)}</p><div class="meta">${esc(g.standard_name || "")} · ${esc(g.category || "")}${g.conditions && g.conditions.length ? ` · 适用条件：${esc(g.conditions.join("；"))}` : ""}</div></div>`).join("") + `</div>`;
+}
+
+function kbCasesHtml(a){
+  const list = (a.cases || []).filter(e=> e.case);
+  if(!list.length) return "";
+  return `<div class="sec"><div class="sec-h">库内示例 <span class="mini">不是对当前片子的判断</span></div>` +
+    list.slice(0,6).map(e=>{
+      const z = e.zone;
+      return `<div class="cite"><p class="q">${esc(e.case.id)} · ${esc(e.case.title || "")}${z ? ` · ${esc(z.name)}（${esc(z.status_label || z.status || "")}）` : ""}</p>
+        ${z && z.text ? `<div class="meta">${esc(z.text)}</div>` : ""}
+        ${z ? `<div class="meta"><code>${esc(z.id)}</code>${z.coords ? ` · 位置框 [${z.coords.map(n=>Number(n).toFixed(2)).join(", ")}]` : ""}</div>` : ""}</div>`;
+    }).join("") + `</div>`;
+}
+
+function kbFilmHtml(a){
+  const ex = (a.cases || []).find(e=> e.zone && e.zone.coords && e.case && e.case.image);
+  if(!ex) return "";
+  const [l,t,w,h] = ex.zone.coords;
+  return `<div class="sec"><div class="sec-h">示例影像 <span class="mini">${esc(ex.case.id)} · ${esc(ex.zone.name)}</span></div>
+    <div class="film"><img src="../${esc(ex.case.image)}" alt="">
+      <div class="box" style="left:${l*100}%;top:${t*100}%;width:${w*100}%;height:${h*100}%" data-l="${esc(ex.zone.name)}"></div></div>
+    <div class="cap"><b>${esc(ex.zone.name)}</b> · ${esc(ex.zone.id)} · ${esc(ex.case.id)}　${esc(ex.case.title||"")}</div></div>`;
+}
+
+function kbMissingHtml(a){
+  const list = a.missing || [];
+  if(!list.length) return "";
+  return `<div class="sec"><div class="sec-h">边界说明</div><div class="cite"><p class="q">${list.map(esc).join("<br>")}</p></div></div>`;
+}
+
+function renderKnowledge(a){
+  return `
+    <div class="ans ok">
+      <div class="ans-h"><span class="tag ok">可以回答</span><span class="conf">${esc(KB_KIND[a.kind] || "知识库")}</span></div>
+      <p class="concl">${esc(a.conclusion)}</p>
+      <div class="src">这是库内词条解释，不是对当前片子的判断；要看当前片子，请直接问某个分区或“有没有 X”。</div>
+      ${kbFilmHtml(a)}
+      ${kbEntityHtml(a)}
+      ${kbCasesHtml(a)}
+      ${kbSourcesHtml(a)}
+      ${kbGuideHtml(a)}
+      ${kbMissingHtml(a)}
+    </div>`;
+}
+
 function ask(query){
   const q = String(query || "").trim();
   if(!q) return;
@@ -346,6 +432,20 @@ function ask(query){
   const scope = cur ? `<div style="font-size:12px;color:#8a94a6;margin:0 0 8px">检索范围：当前病例 ${cur}（答案只针对这张片子；换一例后答案会变）</div>` : "";
   if(BONE_JUDGE.test(q)){
     $("result").innerHTML = scope + boneRefusalHtml(q);
+    bindResult();
+    return;
+  }
+  // 范围门先于一切检索：治疗/诊断/非胸部/过宽问句不进知识库，也不进问答库。
+  const scopeLabel = AskCore.scopeReason(q) || AskCore.nonChestReason(q) || AskCore.tooBroadReason(q);
+  if(scopeLabel){
+    $("result").innerHTML = scope + renderScopeRefusal(scopeLabel);
+    bindResult();
+    return;
+  }
+  // “X 是什么 / 怎么找 / A 和 B 怎么区分”走知识库词条，而不是“本片有没有 X”。
+  const kb = (window.QACore && LAB) ? QACore.intentAnswer(LAB, q) : null;
+  if(kb){
+    $("result").innerHTML = renderKnowledge(kb);
     bindResult();
     return;
   }
@@ -393,10 +493,13 @@ function selectCase(c){
 }
 
 function boot(){
-  fetch(URL_BANK, {cache:"no-cache"})
-    .then(r=> r.json())
-    .then(d=>{
+  Promise.all([
+    fetch(URL_BANK, {cache:"no-cache"}).then(r=> r.json()),
+    fetch(URL_LAB, {cache:"no-cache"}).then(r=> r.json()).catch(()=> null),
+  ])
+    .then(([d, lab])=>{
       BANK = d;
+      LAB = lab;
       ITEMS = d.items || [];
       CORPUS = d.corpus || "";
       if(!ITEMS.length) throw new Error("empty");

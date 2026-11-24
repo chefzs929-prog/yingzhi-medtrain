@@ -306,7 +306,7 @@
       $("#srcLine").innerHTML = c.source_page
         ? `来源：<a href="${esc(c.source_page)}" target="_blank" rel="noopener">${esc(c.source_page.replace(/^https?:\/\//, "").slice(0, 82))}</a>`
         : "来源：—";
-      $("#licLine").textContent = `${c.license || "许可未标注"} · ${(c.artist || "作者未标注").slice(0, 60)}`;
+      $("#licLine").textContent = `${c.license || "许可未标注"} · ${(c.artist || "作者未标注").slice(0, 60)}${c.source_note ? " · " + c.source_note : ""}`;
       const zSel = currentZone();
       $("#bboxMeta").textContent = S.zoneId
         ? `分区 ${S.zoneId} · ${SIDE[zSel ? zSel.side : ""] || ""}${zSel ? `（${IMG_SIDE[zSel.side] || "—"}）` : ""}`
@@ -570,13 +570,17 @@
         </div>
         <div class="zc-text">${esc(z.text)}</div>
         <div class="zc-basis">依据：${esc(z.basis)} · 教学分区</div>
-        <details class="qa-tech"><summary>标注信息</summary><p>分区编号 ${esc(z.id)} · 位置框 [${z.coords.map((n) => n.toFixed(2)).join(", ")}]</p></details>
+        <details class="qa-tech"><summary>分区来源与审核状态</summary>
+          <p>分区编号 ${esc(z.id)} · 位置框 [${z.coords.map((n) => n.toFixed(2)).join(", ")}]</p>
+          <p>分区范围按公开胸片解剖分区规范与文献描述确定，逐区文本由 AI 辅助整理；<b>未经开发者人工标注，也未经影像科医师逐例复核</b>。</p>
+        </details>
         ${signChips}
       </div>
       ${z.status === "unmentioned" ? `<div class="hint-box">该分区为“来源未提及”，不是“正常”。</div>` : ""}
       <div class="sys-actions">
         <button class="btn sm" data-ask="${esc(`${z.name}有没有异常？`)}">问这个分区</button>
         <button class="btn sm" data-tab="qa">去问答</button>
+        <button class="btn sm" data-review="zone" data-review-id="${esc(z.id)}">反馈这个分区${reviewCount(c.id, z.id) ? `<span class="rv-badge">${reviewCount(c.id, z.id)}</span>` : ""}</button>
       </div>`;
   }
 
@@ -885,7 +889,9 @@
       ${caveats}
       <div class="sec-title">数据说明</div>
       <div class="src-block">
-        <p>分区框为教学分区，按解剖比例近似；未提及的分区不推断为正常。</p>
+        <p>分区框为教学分区，按公开解剖分区规范与文献描述确定范围，不是病灶分割；未提及的分区不推断为正常。</p>
+        <p>开发者不具备医学专业资质，<b>未对影像做人工标注</b>：分区与逐区文本由文献资料 + AI 辅助整理，<b>尚未经影像科医师逐例复核</b>。</p>
+        <button class="btn sm" data-review="case" data-review-id="${esc(c.id)}">反馈本病例${reviewCount(c.id, "") ? `<span class="rv-badge">${reviewCount(c.id, "")}</span>` : ""}</button>
       </div>
       <div class="sec-title">隐私与使用</div>
       <div class="src-block">
@@ -1082,7 +1088,7 @@
     } else if (!c.signs.length) {
       body.push("本片为正常胸片；已标注分区均未见明确异常。");
     } else {
-      body.push("没有逐区标注为异常的分区；系统所见见下方。");
+      body.push("没有逐区文本标为异常的分区；系统所见见下方。");
     }
     if (sysAb.length) body.push(`系统所见异常：${sysAb.map((x) => x.name + "（" + x.text + "）").join("；")}。`);
     if (un.length) body.push(`另有 ${un.length} 个分区原图注未逐区描述，不作正常/异常推断。`);
@@ -1205,7 +1211,8 @@
     L.push("六、边界与声明");
     L.push("  本记录仅整理影像表现与鉴别要点，不构成诊断意见，不替代临床决策。");
     L.push("  分区框为教学分区，不是病灶分割；未提及的分区不作正常或异常推断。");
-    L.push("  正式教学或对外发布前，须由具备资质的医学人员逐条审核。");
+    L.push("  分区与逐区文本由公开文献资料 + AI 辅助整理，未由开发者人工标注，尚未经影像科医师逐例复核。");
+    L.push("  正式教学或对外发布前，须由具备资质的医学人员逐条复核；页面「反馈」入口可提交异议。");
     return L.join("\n");
   }
 
@@ -1253,6 +1260,219 @@
     a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+
+  /* ---------------- 反馈 / 专家复核入口 ----------------
+   * 开发者不具备医学专业资质，分区未人工标注、未经专家复核。
+   * 反馈只做「收集 + 导出」：写入 localStorage，标记待专家复核，不自动改库内结论。
+   */
+  const REVIEW_KEY = "radiocheck.review.v1";
+  const REVIEW_STATUS = "待专家复核";
+  const REVIEW_TYPES = [
+    ["bbox", "分区框位置或范围不准"],
+    ["zone_name", "分区名称或解剖范围有误"],
+    ["zone_text", "分区所见与影像不符"],
+    ["cite", "出处或引用对不上"],
+    ["other", "其他问题"],
+  ];
+  const REVIEW_ROLES = ["学生", "教师", "影像科医师", "其他"];
+  let reviewCtx = null;
+  let reviewView = "form";
+
+  function loadReviews() {
+    try {
+      const a = JSON.parse(localStorage.getItem(REVIEW_KEY) || "[]");
+      return Array.isArray(a) ? a : [];
+    } catch (e) { return []; }
+  }
+
+  function saveReviews(list) {
+    try { localStorage.setItem(REVIEW_KEY, JSON.stringify(list.slice(-500))); }
+    catch (e) { toast("本机存储已满，反馈未能保存"); }
+  }
+
+  function reviewCount(caseId, zoneId) {
+    return loadReviews().filter((r) => r.case_id === caseId && (!zoneId || r.zone_id === zoneId)).length;
+  }
+
+  function reviewTypeLabel(v) {
+    const hit = REVIEW_TYPES.find((x) => x[0] === v);
+    return hit ? hit[1] : "其他问题";
+  }
+
+  function openReview(kind, id) {
+    const c = currentCase();
+    if (!c) return;
+    const z = kind === "zone" ? c.zones.find((x) => x.id === id) : null;
+    reviewCtx = {
+      kind,
+      caseId: c.id,
+      caseTitle: c.title,
+      zoneId: z ? z.id : "",
+      zoneName: z ? z.name : "",
+    };
+    reviewView = "form";
+    renderReview();
+    $("#reviewMask").hidden = false;
+    setTimeout(() => { const n = $("#rvNote"); if (n) n.focus(); }, 30);
+  }
+
+  function closeReview() {
+    $("#reviewMask").hidden = true;
+  }
+
+  function reviewItemHTML(r) {
+    return `<div class="review-item">
+      <div class="rv-top">
+        <span class="rv-type">${esc(reviewTypeLabel(r.type))}</span>
+        <b>${esc(r.case_id || "")}${r.zone_name ? " · " + esc(r.zone_name) : " · 整例"}</b>
+        <span style="margin-left:auto">${esc((r.at || "").replace("T", " ").slice(0, 16))}</span>
+      </div>
+      <p>${esc(r.note || "")}</p>
+      <div class="rv-top" style="margin:4px 0 0">
+        <span>${esc(r.role || "未填身份")}${r.contact ? " · " + esc(r.contact) : ""}</span>
+        <span style="margin-left:auto;color:var(--warn)">${esc(r.status || REVIEW_STATUS)}</span>
+      </div>
+    </div>`;
+  }
+
+  function renderReview() {
+    const box = $("#reviewBody");
+    if (!box) return;
+    const list = loadReviews();
+    if (reviewView === "list") {
+      $("#reviewTitle").textContent = "我的反馈";
+      box.innerHTML = `
+        <div class="review-target">共 <b>${list.length}</b> 条反馈，全部标记为「${REVIEW_STATUS}」。反馈只保存在当前浏览器，不上传服务器。</div>
+        ${list.length
+          ? list.slice().reverse().map(reviewItemHTML).join("")
+          : `<div class="review-empty">还没有提交过反馈。</div>`}
+        <div class="review-actions">
+          <button class="btn sm" id="rvExportJson">导出 JSON</button>
+          <button class="btn sm" id="rvExportCsv">导出 CSV</button>
+          <span class="spacer"></span>
+          <button class="btn sm" id="rvClear">清空</button>
+          <button class="btn sm primary" id="rvBack">返回</button>
+        </div>`;
+      return;
+    }
+    if (!reviewCtx) return;
+    $("#reviewTitle").textContent = "提交反馈";
+    const opts = REVIEW_TYPES.map(([v, t]) => `<option value="${v}">${esc(t)}</option>`).join("");
+    const roles = REVIEW_ROLES.map((r) => `<option>${esc(r)}</option>`).join("");
+    box.innerHTML = `
+      <div class="review-target">
+        <b>${esc(reviewCtx.caseTitle)}</b> · ${esc(reviewCtx.caseId)}
+        ${reviewCtx.zoneName
+          ? `<br>分区：<b>${esc(reviewCtx.zoneName)}</b>（${esc(reviewCtx.zoneId)}）`
+          : `<br>对象：整例（分区框与逐区文本）`}
+      </div>
+      <label for="rvType">问题类型</label>
+      <select id="rvType">${opts}</select>
+      <label for="rvNote">具体说明（必填，至少 5 个字）</label>
+      <textarea id="rvNote" placeholder="例：右侧肋膈角的分区框没有盖住实际肋膈角，建议下移约 1 个肋间隙；判断依据：……"></textarea>
+      <label for="rvRole">你的身份</label>
+      <select id="rvRole">${roles}</select>
+      <label for="rvContact">联系方式（选填，便于复核时回访）</label>
+      <input id="rvContact" placeholder="邮箱 / 微信 / 工号，可不填">
+      <div class="review-err" id="rvErr"></div>
+      <div class="review-hint">
+        提交后记为「${REVIEW_STATUS}」，<b>不会自动修改库内结论</b>；反馈只保存在本机浏览器，可导出后交给医学审核人。
+        分区与逐区文本由文献 + AI 辅助整理，未经开发者人工标注，也未经影像科医师逐例复核。
+      </div>
+      <div class="review-actions">
+        <button class="btn sm" id="rvMy">我的反馈（${list.length}）</button>
+        <span class="spacer"></span>
+        <button class="btn sm" id="rvCancel">取消</button>
+        <button class="btn sm primary" id="rvSubmit">提交反馈</button>
+      </div>`;
+  }
+
+  function submitReview() {
+    if (!reviewCtx) return;
+    const note = ($("#rvNote") && $("#rvNote").value || "").trim();
+    const err = $("#rvErr");
+    if (note.length < 5) {
+      if (err) { err.textContent = "请把问题写清楚（至少 5 个字），便于专家复核时定位。"; err.classList.add("on"); }
+      if ($("#rvNote")) $("#rvNote").focus();
+      return;
+    }
+    if (err) err.classList.remove("on");
+    const c = currentCase();
+    const rec = {
+      at: new Date().toISOString(),
+      case_id: reviewCtx.caseId,
+      case_title: reviewCtx.caseTitle,
+      zone_id: reviewCtx.zoneId,
+      zone_name: reviewCtx.zoneName,
+      kind: reviewCtx.kind,
+      type: ($("#rvType") || {}).value || "other",
+      role: ($("#rvRole") || {}).value || "",
+      contact: (($("#rvContact") || {}).value || "").trim(),
+      note,
+      status: REVIEW_STATUS,
+      page: "clinic",
+      quality: c ? c.quality : "",
+    };
+    const list = loadReviews();
+    list.push(rec);
+    saveReviews(list);
+    toast("已提交，标记为待专家复核");
+    reviewView = "list";
+    renderReview();
+    renderPanel();
+  }
+
+  function csvCell(v) {
+    const s = String(v == null ? "" : v);
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  }
+
+  function downloadText(name, text, mime) {
+    const blob = new Blob([text], { type: mime });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+  }
+
+  function exportReviews(fmt) {
+    const list = loadReviews();
+    if (!list.length) { toast("还没有反馈可以导出"); return; }
+    const stamp = new Date().toISOString().slice(0, 10);
+    if (fmt === "csv") {
+      const cols = ["at", "case_id", "case_title", "zone_id", "zone_name", "kind", "type", "role", "note", "contact", "status"];
+      const head = ["提交时间", "病例编号", "病例标题", "分区编号", "分区名称", "对象", "问题类型", "身份", "说明", "联系方式", "状态"];
+      const rows = list.map((r) => cols.map((k) => {
+        if (k === "type") return csvCell(reviewTypeLabel(r.type));
+        if (k === "kind") return csvCell(r.kind === "zone" ? "分区" : "整例");
+        return csvCell(r[k]);
+      }).join(","));
+      downloadText(`RadioCheck_反馈_${stamp}.csv`, "\ufeff" + head.join(",") + "\n" + rows.join("\n"), "text/csv;charset=utf-8");
+    } else {
+      const out = {
+        exported_at: new Date().toISOString(),
+        status: REVIEW_STATUS,
+        source: "RadioCheck clinic · 分区与结论反馈",
+        count: list.length,
+        items: list,
+      };
+      downloadText(`RadioCheck_反馈_${stamp}.json`, JSON.stringify(out, null, 2), "application/json;charset=utf-8");
+    }
+    toast(`已导出 ${list.length} 条反馈`);
+  }
+
+  function clearReviews() {
+    const n = loadReviews().length;
+    if (!n) { toast("没有反馈可清空"); return; }
+    if (!window.confirm(`确定清空本机保存的 ${n} 条反馈？清空后无法恢复，建议先导出。`)) return;
+    saveReviews([]);
+    renderReview();
+    renderPanel();
+    toast("已清空本机反馈");
   }
 
   /* ---------------- 上传 ---------------- */
@@ -1461,7 +1681,7 @@
       <div class="generic-zones">${zones.map((z) =>
         `<button class="chip ${u.genericZone === z ? "on" : ""}" data-generic-zone="${esc(z)}">${esc(z)}</button>`).join("")}</div>
       ${genericZoneHTML(u.genericZone)}
-      <p class="hint">手动分区只帮助定位解剖位置；没有知识库逐区标注时，本工具不对异常 / 正常作判断。</p>
+      <p class="hint">手动分区只帮助定位解剖位置；没有知识库逐区文本时，本工具不对异常 / 正常作判断。</p>
     </div>`;
   }
 
@@ -1696,6 +1916,9 @@
       const zone = e.target.closest("[data-zone]");
       if (zone) { selectZone(zone.dataset.zone); return; }
 
+      const rvBtn = e.target.closest("[data-review]");
+      if (rvBtn) { openReview(rvBtn.dataset.review, rvBtn.dataset.reviewId); return; }
+
       const askBtn = e.target.closest("[data-ask]");
       if (askBtn) {
         if (S.qaMode === "agent") runAgent(askBtn.dataset.ask);
@@ -1819,8 +2042,20 @@
       if (e.target.id === "reportMask") closeReport();
     });
 
+    $("#reviewMask").addEventListener("click", (e) => {
+      const t = e.target;
+      if (t.id === "reviewMask" || t.id === "reviewClose" || t.id === "rvCancel") { closeReview(); return; }
+      if (t.id === "rvSubmit") { submitReview(); return; }
+      if (t.id === "rvMy") { reviewView = "list"; renderReview(); return; }
+      if (t.id === "rvBack") { reviewView = "form"; renderReview(); return; }
+      if (t.id === "rvExportJson") { exportReviews("json"); return; }
+      if (t.id === "rvExportCsv") { exportReviews("csv"); return; }
+      if (t.id === "rvClear") { clearReviews(); return; }
+    });
+
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && S.reportOpen) closeReport();
+      if (e.key === "Escape" && !$("#reviewMask").hidden) closeReview();
       if (e.key === "Enter" && e.target && e.target.id === "qaInput") {
         e.preventDefault();
         ask(e.target.value);
