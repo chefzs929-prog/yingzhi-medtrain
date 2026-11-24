@@ -161,11 +161,12 @@ function render(){
 
   const svg = $("svg");
   svg.innerHTML = cur.zones.map((z,i)=>{
-    const [x1,y1,x2,y2] = z.coords;
+    // coords 是 [left, top, width, height]，单位是相对影像的比例（0-1）
+    const [l,t,w,h] = z.coords;
     return `<g>
-      <rect class="zone" data-i="${i}" x="${x1*100}" y="${y1*100}"
-            width="${(x2-x1)*100}" height="${(y2-y1)*100}" rx="0.8"></rect>
-      <text class="zlabel" x="${x1*100+1.2}" y="${y1*100+3}">${z.id}</text>
+      <rect class="zone" data-i="${i}" x="${l*100}" y="${t*100}"
+            width="${w*100}" height="${h*100}" rx="0.8"></rect>
+      <text class="zlabel" x="${l*100+1.2}" y="${t*100+3}">${z.id}</text>
     </g>`;
   }).join("");
 

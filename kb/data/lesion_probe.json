@@ -1,0 +1,1690 @@
+{
+  "version": "0.1.0",
+  "method": "symmetry_heterogeneity_v0.1",
+  "disclaimer": "经典图像处理启发式（对侧密度差 + 分区异质性），不是深度学习模型，不是概率，未经医学审核；仅用于教学演示中的辅助提示。",
+  "generated_from": "kb/data/chest_reading.json",
+  "cases": [
+    {
+      "case_id": "CASE-001",
+      "title": "正常后前位胸片",
+      "zones": [
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "normal",
+          "score": 0.2874,
+          "asym": 0.0857,
+          "hetero": 0.5827,
+          "rank": 1
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "normal",
+          "score": 0.2798,
+          "asym": 0.0857,
+          "hetero": 0.5351,
+          "rank": 2
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "normal",
+          "score": 0.2519,
+          "asym": 0.0,
+          "hetero": 0.6717,
+          "rank": 3
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "normal",
+          "score": 0.1847,
+          "asym": 0.0,
+          "hetero": 0.4926,
+          "rank": 4
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "normal",
+          "score": 0.1415,
+          "asym": 0.0029,
+          "hetero": 0.8438,
+          "rank": 5
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "normal",
+          "score": 0.1361,
+          "asym": 0.0029,
+          "hetero": 0.8104,
+          "rank": 6
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "normal",
+          "score": 0.1232,
+          "asym": 0.0133,
+          "hetero": 0.5811,
+          "rank": 7
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "normal",
+          "score": 0.1206,
+          "asym": 0.0133,
+          "hetero": 0.5647,
+          "rank": 8
+        }
+      ],
+      "disagreements": []
+    },
+    {
+      "case_id": "CASE-002",
+      "title": "正常侧位胸片",
+      "zones": [
+        {
+          "id": "MID",
+          "name": "肺门与中区",
+          "status": "normal",
+          "score": 0.2555,
+          "asym": 0.0,
+          "hetero": 0.6813,
+          "rank": 1
+        },
+        {
+          "id": "ANT",
+          "name": "胸骨后间隙",
+          "status": "normal",
+          "score": 0.248,
+          "asym": 0.0,
+          "hetero": 0.6613,
+          "rank": 2
+        },
+        {
+          "id": "POST",
+          "name": "后肺野与后肋膈角",
+          "status": "normal",
+          "score": 0.1519,
+          "asym": 0.0,
+          "hetero": 0.405,
+          "rank": 3
+        }
+      ],
+      "disagreements": []
+    },
+    {
+      "case_id": "CASE-003",
+      "title": "胸片解剖标注（欠吸气、轻度旋转）",
+      "zones": [
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "normal",
+          "score": 0.7317,
+          "asym": 0.2779,
+          "hetero": 0.6363,
+          "rank": 1
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "normal",
+          "score": 0.7192,
+          "asym": 0.2779,
+          "hetero": 0.5587,
+          "rank": 2
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "normal",
+          "score": 0.3833,
+          "asym": 0.1268,
+          "hetero": 0.5988,
+          "rank": 3
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "normal",
+          "score": 0.3766,
+          "asym": 0.1235,
+          "hetero": 0.6051,
+          "rank": 4
+        },
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "normal",
+          "score": 0.3518,
+          "asym": 0.1268,
+          "hetero": 0.4019,
+          "rank": 5
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "normal",
+          "score": 0.3517,
+          "asym": 0.1235,
+          "hetero": 0.4491,
+          "rank": 6
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "limited",
+          "score": 0.2375,
+          "asym": 0.0,
+          "hetero": 0.6332,
+          "rank": 7
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "normal",
+          "score": 0.1455,
+          "asym": 0.0,
+          "hetero": 0.3881,
+          "rank": 8
+        }
+      ],
+      "disagreements": [
+        {
+          "type": "algorithm_flags_normal",
+          "zone": "LML",
+          "zone_name": "左肺中野",
+          "score": 0.7317,
+          "label": "算法提示可疑，但人工标注为未见异常",
+          "handling": "不采纳算法结论，保留人工标注；记录为待复核"
+        },
+        {
+          "type": "algorithm_flags_normal",
+          "zone": "RML",
+          "zone_name": "右肺中野",
+          "score": 0.7192,
+          "label": "算法提示可疑，但人工标注为未见异常",
+          "handling": "不采纳算法结论，保留人工标注；记录为待复核"
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-005",
+      "title": "双肺气腔影伴肺不张（含中心静脉导管）",
+      "zones": [
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "abnormal",
+          "score": 0.8103,
+          "asym": 0.298,
+          "hetero": 0.8428,
+          "rank": 1
+        },
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "abnormal",
+          "score": 0.8068,
+          "asym": 0.298,
+          "hetero": 0.8212,
+          "rank": 2
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "abnormal",
+          "score": 0.2404,
+          "asym": 0.0566,
+          "hetero": 0.7012,
+          "rank": 3
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "abnormal",
+          "score": 0.2245,
+          "asym": 0.0566,
+          "hetero": 0.6015,
+          "rank": 4
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "abnormal",
+          "score": 0.1368,
+          "asym": 0.0043,
+          "hetero": 0.7938,
+          "rank": 5
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "abnormal",
+          "score": 0.1281,
+          "asym": 0.0043,
+          "hetero": 0.7395,
+          "rank": 6
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "unmentioned",
+          "score": 0.0678,
+          "asym": 0.0,
+          "hetero": 0.1808,
+          "rank": 7
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "unmentioned",
+          "score": 0.0676,
+          "asym": 0.0,
+          "hetero": 0.1803,
+          "rank": 8
+        }
+      ],
+      "disagreements": [
+        {
+          "type": "label_abnormal_low_score",
+          "zone": "RUL",
+          "zone_name": "右肺上野",
+          "score": 0.1368,
+          "label": "人工标注异常，但算法未提示",
+          "handling": "以人工标注为准；说明经典算法对低对比病变不敏感"
+        },
+        {
+          "type": "label_abnormal_low_score",
+          "zone": "LUL",
+          "zone_name": "左肺上野",
+          "score": 0.1281,
+          "label": "人工标注异常，但算法未提示",
+          "handling": "以人工标注为准；说明经典算法对低对比病变不敏感"
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-006",
+      "title": "大叶性肺炎（箭头标注）",
+      "zones": [
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "unmentioned",
+          "score": 0.2235,
+          "asym": 0.0,
+          "hetero": 0.5961,
+          "rank": 1
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "unmentioned",
+          "score": 0.1825,
+          "asym": 0.0195,
+          "hetero": 0.8647,
+          "rank": 2
+        },
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "unmentioned",
+          "score": 0.1805,
+          "asym": 0.0363,
+          "hetero": 0.6145,
+          "rank": 3
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "unmentioned",
+          "score": 0.1763,
+          "asym": 0.0175,
+          "hetero": 0.8538,
+          "rank": 4
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "abnormal",
+          "score": 0.176,
+          "asym": 0.0363,
+          "hetero": 0.5864,
+          "rank": 5
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "unmentioned",
+          "score": 0.1752,
+          "asym": 0.0195,
+          "hetero": 0.8195,
+          "rank": 6
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "abnormal",
+          "score": 0.1218,
+          "asym": 0.0175,
+          "hetero": 0.5131,
+          "rank": 7
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "unmentioned",
+          "score": 0.0244,
+          "asym": 0.0,
+          "hetero": 0.0651,
+          "rank": 8
+        }
+      ],
+      "disagreements": [
+        {
+          "type": "label_abnormal_low_score",
+          "zone": "RLL",
+          "zone_name": "右肺下野",
+          "score": 0.176,
+          "label": "人工标注异常，但算法未提示",
+          "handling": "以人工标注为准；说明经典算法对低对比病变不敏感"
+        },
+        {
+          "type": "label_abnormal_low_score",
+          "zone": "RML",
+          "zone_name": "右肺中野",
+          "score": 0.1218,
+          "label": "人工标注异常，但算法未提示",
+          "handling": "以人工标注为准；说明经典算法对低对比病变不敏感"
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-007",
+      "title": "下肺野气腔影（正位）",
+      "zones": [
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "unmentioned",
+          "score": 0.2631,
+          "asym": 0.0528,
+          "hetero": 0.8957,
+          "rank": 1
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "unmentioned",
+          "score": 0.2548,
+          "asym": 0.0528,
+          "hetero": 0.8439,
+          "rank": 2
+        },
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "abnormal",
+          "score": 0.2379,
+          "asym": 0.0599,
+          "hetero": 0.6385,
+          "rank": 3
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "abnormal",
+          "score": 0.2128,
+          "asym": 0.0599,
+          "hetero": 0.4816,
+          "rank": 4
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "unmentioned",
+          "score": 0.2027,
+          "asym": 0.0482,
+          "hetero": 0.5842,
+          "rank": 5
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "unmentioned",
+          "score": 0.1918,
+          "asym": 0.0,
+          "hetero": 0.5114,
+          "rank": 6
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "unmentioned",
+          "score": 0.188,
+          "asym": 0.0482,
+          "hetero": 0.4925,
+          "rank": 7
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "unmentioned",
+          "score": 0.0665,
+          "asym": 0.0,
+          "hetero": 0.1772,
+          "rank": 8
+        }
+      ],
+      "disagreements": []
+    },
+    {
+      "case_id": "CASE-008",
+      "title": "下肺野气腔影（侧位）",
+      "zones": [
+        {
+          "id": "ANT",
+          "name": "胸骨后间隙",
+          "status": "unmentioned",
+          "score": 0.3056,
+          "asym": 0.0,
+          "hetero": 0.8148,
+          "rank": 1
+        },
+        {
+          "id": "POST",
+          "name": "后肺野与后肋膈角",
+          "status": "abnormal",
+          "score": 0.2102,
+          "asym": 0.0,
+          "hetero": 0.5606,
+          "rank": 2
+        },
+        {
+          "id": "MID",
+          "name": "肺门与中区",
+          "status": "unmentioned",
+          "score": 0.1748,
+          "asym": 0.0,
+          "hetero": 0.4662,
+          "rank": 3
+        }
+      ],
+      "disagreements": []
+    },
+    {
+      "case_id": "CASE-015",
+      "title": "右中上肺野气腔影（正位）",
+      "zones": [
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "unmentioned",
+          "score": 0.7671,
+          "asym": 0.4488,
+          "hetero": 0.5441,
+          "rank": 1
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "unmentioned",
+          "score": 0.7457,
+          "asym": 0.4488,
+          "hetero": 0.4103,
+          "rank": 2
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "abnormal",
+          "score": 0.3275,
+          "asym": 0.0847,
+          "hetero": 0.8474,
+          "rank": 3
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "unmentioned",
+          "score": 0.3101,
+          "asym": 0.0847,
+          "hetero": 0.7388,
+          "rank": 4
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "unmentioned",
+          "score": 0.278,
+          "asym": 0.0677,
+          "hetero": 0.7781,
+          "rank": 5
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "abnormal",
+          "score": 0.2285,
+          "asym": 0.0677,
+          "hetero": 0.4689,
+          "rank": 6
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "unmentioned",
+          "score": 0.1906,
+          "asym": 0.0,
+          "hetero": 0.5084,
+          "rank": 7
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "unmentioned",
+          "score": 0.0318,
+          "asym": 0.0,
+          "hetero": 0.0847,
+          "rank": 8
+        }
+      ],
+      "disagreements": []
+    },
+    {
+      "case_id": "CASE-016",
+      "title": "双肺弥漫粟粒样结节",
+      "zones": [
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "abnormal",
+          "score": 0.3777,
+          "asym": 0.0995,
+          "hetero": 0.9508,
+          "rank": 1
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "abnormal",
+          "score": 0.2772,
+          "asym": 0.0995,
+          "hetero": 0.3227,
+          "rank": 2
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "unmentioned",
+          "score": 0.2441,
+          "asym": 0.0,
+          "hetero": 0.6509,
+          "rank": 3
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "abnormal",
+          "score": 0.2048,
+          "asym": 0.0442,
+          "hetero": 0.6541,
+          "rank": 4
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "abnormal",
+          "score": 0.1743,
+          "asym": 0.0442,
+          "hetero": 0.4633,
+          "rank": 5
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "abnormal",
+          "score": 0.1625,
+          "asym": 0.0218,
+          "hetero": 0.7069,
+          "rank": 6
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "abnormal",
+          "score": 0.1472,
+          "asym": 0.0218,
+          "hetero": 0.6111,
+          "rank": 7
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "unmentioned",
+          "score": 0.0391,
+          "asym": 0.0,
+          "hetero": 0.1043,
+          "rank": 8
+        }
+      ],
+      "disagreements": [
+        {
+          "type": "label_abnormal_low_score",
+          "zone": "RUL",
+          "zone_name": "右肺上野",
+          "score": 0.1743,
+          "label": "人工标注异常，但算法未提示",
+          "handling": "以人工标注为准；说明经典算法对低对比病变不敏感"
+        },
+        {
+          "type": "label_abnormal_low_score",
+          "zone": "LML",
+          "zone_name": "左肺中野",
+          "score": 0.1625,
+          "label": "人工标注异常，但算法未提示",
+          "handling": "以人工标注为准；说明经典算法对低对比病变不敏感"
+        },
+        {
+          "type": "label_abnormal_low_score",
+          "zone": "RML",
+          "zone_name": "右肺中野",
+          "score": 0.1472,
+          "label": "人工标注异常，但算法未提示",
+          "handling": "以人工标注为准；说明经典算法对低对比病变不敏感"
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-017",
+      "title": "双侧下肺野模糊伴肋膈角变钝",
+      "zones": [
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "abnormal",
+          "score": 0.662,
+          "asym": 0.2159,
+          "hetero": 1.0798,
+          "rank": 1
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "abnormal",
+          "score": 0.5667,
+          "asym": 0.2159,
+          "hetero": 0.4842,
+          "rank": 2
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "unmentioned",
+          "score": 0.3076,
+          "asym": 0.0949,
+          "hetero": 0.5783,
+          "rank": 3
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "unmentioned",
+          "score": 0.2951,
+          "asym": 0.0949,
+          "hetero": 0.5005,
+          "rank": 4
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "unmentioned",
+          "score": 0.2085,
+          "asym": 0.0,
+          "hetero": 0.556,
+          "rank": 5
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "unmentioned",
+          "score": 0.171,
+          "asym": 0.0,
+          "hetero": 0.4559,
+          "rank": 6
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "unmentioned",
+          "score": 0.1028,
+          "asym": 0.0026,
+          "hetero": 0.6052,
+          "rank": 7
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "unmentioned",
+          "score": 0.0692,
+          "asym": 0.0026,
+          "hetero": 0.3949,
+          "rank": 8
+        }
+      ],
+      "disagreements": []
+    },
+    {
+      "case_id": "CASE-018",
+      "title": "侧位胸片：后肋膈角变钝（箭头）",
+      "zones": [
+        {
+          "id": "MID",
+          "name": "肺门与中区",
+          "status": "unmentioned",
+          "score": 0.2528,
+          "asym": 0.0,
+          "hetero": 0.6741,
+          "rank": 1
+        },
+        {
+          "id": "POST",
+          "name": "后肺野与后肋膈角",
+          "status": "abnormal",
+          "score": 0.1912,
+          "asym": 0.0,
+          "hetero": 0.5098,
+          "rank": 2
+        },
+        {
+          "id": "ANT",
+          "name": "胸骨后间隙",
+          "status": "unmentioned",
+          "score": 0.104,
+          "asym": 0.0,
+          "hetero": 0.2773,
+          "rank": 3
+        }
+      ],
+      "disagreements": []
+    },
+    {
+      "case_id": "CASE-033",
+      "title": "胸部正位 X 线（解剖标注版）",
+      "zones": [
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "normal",
+          "score": 0.5598,
+          "asym": 0.1498,
+          "hetero": 1.3772,
+          "rank": 1
+        },
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "normal",
+          "score": 0.5429,
+          "asym": 0.1498,
+          "hetero": 1.271,
+          "rank": 2
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "normal",
+          "score": 0.3005,
+          "asym": 0.0,
+          "hetero": 0.8012,
+          "rank": 3
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "normal",
+          "score": 0.2507,
+          "asym": 0.0555,
+          "hetero": 0.7808,
+          "rank": 4
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "normal",
+          "score": 0.1933,
+          "asym": 0.0555,
+          "hetero": 0.4216,
+          "rank": 5
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "normal",
+          "score": 0.0939,
+          "asym": 0.0143,
+          "hetero": 0.3837,
+          "rank": 6
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "normal",
+          "score": 0.0756,
+          "asym": 0.0143,
+          "hetero": 0.2692,
+          "rank": 7
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "normal",
+          "score": 0.0565,
+          "asym": 0.0,
+          "hetero": 0.1506,
+          "rank": 8
+        }
+      ],
+      "disagreements": [
+        {
+          "type": "algorithm_flags_normal",
+          "zone": "RLL",
+          "zone_name": "右肺下野",
+          "score": 0.5598,
+          "label": "算法提示可疑，但人工标注为未见异常",
+          "handling": "不采纳算法结论，保留人工标注；记录为待复核"
+        },
+        {
+          "type": "algorithm_flags_normal",
+          "zone": "LLL",
+          "zone_name": "左肺下野",
+          "score": 0.5429,
+          "label": "算法提示可疑，但人工标注为未见异常",
+          "handling": "不采纳算法结论，保留人工标注；记录为待复核"
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-034",
+      "title": "胸部正位 X 线",
+      "zones": [
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "normal",
+          "score": 0.2994,
+          "asym": 0.0672,
+          "hetero": 0.9189,
+          "rank": 1
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "normal",
+          "score": 0.2834,
+          "asym": 0.0672,
+          "hetero": 0.8191,
+          "rank": 2
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "normal",
+          "score": 0.2594,
+          "asym": 0.0,
+          "hetero": 0.6918,
+          "rank": 3
+        },
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "normal",
+          "score": 0.2332,
+          "asym": 0.0572,
+          "hetero": 0.6469,
+          "rank": 4
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "normal",
+          "score": 0.2261,
+          "asym": 0.0558,
+          "hetero": 0.6229,
+          "rank": 5
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "normal",
+          "score": 0.2257,
+          "asym": 0.0572,
+          "hetero": 0.5999,
+          "rank": 6
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "normal",
+          "score": 0.2206,
+          "asym": 0.0558,
+          "hetero": 0.5884,
+          "rank": 7
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "normal",
+          "score": 0.1268,
+          "asym": 0.0,
+          "hetero": 0.3381,
+          "rank": 8
+        }
+      ],
+      "disagreements": []
+    },
+    {
+      "case_id": "CASE-036",
+      "title": "气胸（胸片，标注版）",
+      "zones": [
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "unmentioned",
+          "score": 0.4025,
+          "asym": 0.1082,
+          "hetero": 0.9833,
+          "rank": 1
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "abnormal",
+          "score": 0.3569,
+          "asym": 0.1082,
+          "hetero": 0.6986,
+          "rank": 2
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "unmentioned",
+          "score": 0.2448,
+          "asym": 0.0,
+          "hetero": 0.6528,
+          "rank": 3
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "unmentioned",
+          "score": 0.2064,
+          "asym": 0.0,
+          "hetero": 0.5503,
+          "rank": 4
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "unmentioned",
+          "score": 0.1889,
+          "asym": 0.0412,
+          "hetero": 0.5962,
+          "rank": 5
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "abnormal",
+          "score": 0.1801,
+          "asym": 0.0412,
+          "hetero": 0.5412,
+          "rank": 6
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "abnormal",
+          "score": 0.1382,
+          "asym": 0.0062,
+          "hetero": 0.7759,
+          "rank": 7
+        },
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "unmentioned",
+          "score": 0.1336,
+          "asym": 0.0062,
+          "hetero": 0.7467,
+          "rank": 8
+        }
+      ],
+      "disagreements": [
+        {
+          "type": "label_abnormal_low_score",
+          "zone": "RLL",
+          "zone_name": "右肺下野",
+          "score": 0.1382,
+          "label": "人工标注异常，但算法未提示",
+          "handling": "以人工标注为准；说明经典算法对低对比病变不敏感"
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-041",
+      "title": "胸大肌影（胸片）",
+      "zones": [
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "normal",
+          "score": 0.3563,
+          "asym": 0.0927,
+          "hetero": 0.9142,
+          "rank": 1
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "normal",
+          "score": 0.3416,
+          "asym": 0.0927,
+          "hetero": 0.8219,
+          "rank": 2
+        },
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "normal",
+          "score": 0.2795,
+          "asym": 0.0733,
+          "hetero": 0.7087,
+          "rank": 3
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "normal",
+          "score": 0.2727,
+          "asym": 0.0875,
+          "hetero": 0.465,
+          "rank": 4
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "normal",
+          "score": 0.272,
+          "asym": 0.0875,
+          "hetero": 0.4605,
+          "rank": 5
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "normal",
+          "score": 0.2419,
+          "asym": 0.0,
+          "hetero": 0.6449,
+          "rank": 6
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "normal",
+          "score": 0.239,
+          "asym": 0.0733,
+          "hetero": 0.4558,
+          "rank": 7
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "normal",
+          "score": 0.2245,
+          "asym": 0.0,
+          "hetero": 0.5988,
+          "rank": 8
+        }
+      ],
+      "disagreements": []
+    },
+    {
+      "case_id": "CASE-047",
+      "title": "胸部后前位 X 线",
+      "zones": [
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "normal",
+          "score": 0.2991,
+          "asym": 0.0893,
+          "hetero": 0.6047,
+          "rank": 1
+        },
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "normal",
+          "score": 0.2985,
+          "asym": 0.0893,
+          "hetero": 0.6008,
+          "rank": 2
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "normal",
+          "score": 0.2351,
+          "asym": 0.0,
+          "hetero": 0.6269,
+          "rank": 3
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "normal",
+          "score": 0.1569,
+          "asym": 0.0281,
+          "hetero": 0.5823,
+          "rank": 4
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "normal",
+          "score": 0.1476,
+          "asym": 0.0076,
+          "hetero": 0.8146,
+          "rank": 5
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "normal",
+          "score": 0.1418,
+          "asym": 0.0281,
+          "hetero": 0.488,
+          "rank": 6
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "normal",
+          "score": 0.1403,
+          "asym": 0.0076,
+          "hetero": 0.7693,
+          "rank": 7
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "normal",
+          "score": 0.0765,
+          "asym": 0.0,
+          "hetero": 0.2039,
+          "rank": 8
+        }
+      ],
+      "disagreements": []
+    },
+    {
+      "case_id": "CASE-153",
+      "title": "胸部 X 线",
+      "zones": [
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "abnormal",
+          "score": 0.3237,
+          "asym": 0.0793,
+          "hetero": 0.8993,
+          "rank": 1
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "abnormal",
+          "score": 0.2436,
+          "asym": 0.0793,
+          "hetero": 0.3988,
+          "rank": 2
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "unmentioned",
+          "score": 0.221,
+          "asym": 0.0627,
+          "hetero": 0.4923,
+          "rank": 3
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "unmentioned",
+          "score": 0.208,
+          "asym": 0.0627,
+          "hetero": 0.4111,
+          "rank": 4
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "unmentioned",
+          "score": 0.2067,
+          "asym": 0.0387,
+          "hetero": 0.744,
+          "rank": 5
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "unmentioned",
+          "score": 0.1961,
+          "asym": 0.0387,
+          "hetero": 0.6782,
+          "rank": 6
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "abnormal",
+          "score": 0.1756,
+          "asym": 0.0,
+          "hetero": 0.4683,
+          "rank": 7
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "unmentioned",
+          "score": 0.1146,
+          "asym": 0.0,
+          "hetero": 0.3057,
+          "rank": 8
+        }
+      ],
+      "disagreements": [
+        {
+          "type": "label_abnormal_low_score",
+          "zone": "MED",
+          "zone_name": "纵隔与心影",
+          "score": 0.1756,
+          "label": "人工标注异常，但算法未提示",
+          "handling": "以人工标注为准；说明经典算法对低对比病变不敏感"
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-162",
+      "title": "胸部 X 线",
+      "zones": [
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "abnormal",
+          "score": 0.2282,
+          "asym": 0.0588,
+          "hetero": 0.5931,
+          "rank": 1
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "abnormal",
+          "score": 0.2098,
+          "asym": 0.056,
+          "hetero": 0.5184,
+          "rank": 2
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "abnormal",
+          "score": 0.2067,
+          "asym": 0.056,
+          "hetero": 0.4987,
+          "rank": 3
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "abnormal",
+          "score": 0.2014,
+          "asym": 0.0401,
+          "hetero": 0.6906,
+          "rank": 4
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "abnormal",
+          "score": 0.1904,
+          "asym": 0.0588,
+          "hetero": 0.3569,
+          "rank": 5
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "unmentioned",
+          "score": 0.1632,
+          "asym": 0.0,
+          "hetero": 0.4352,
+          "rank": 6
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "abnormal",
+          "score": 0.1348,
+          "asym": 0.0401,
+          "hetero": 0.2746,
+          "rank": 7
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "unmentioned",
+          "score": 0.0383,
+          "asym": 0.0,
+          "hetero": 0.1021,
+          "rank": 8
+        }
+      ],
+      "disagreements": [
+        {
+          "type": "label_abnormal_low_score",
+          "zone": "RML",
+          "zone_name": "右肺中野",
+          "score": 0.1348,
+          "label": "人工标注异常，但算法未提示",
+          "handling": "以人工标注为准；说明经典算法对低对比病变不敏感"
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-202",
+      "title": "大叶性肺炎（胸片，红箭头）",
+      "zones": [
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "unmentioned",
+          "score": 0.2234,
+          "asym": 0.0,
+          "hetero": 0.5958,
+          "rank": 1
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "unmentioned",
+          "score": 0.1836,
+          "asym": 0.0201,
+          "hetero": 0.8635,
+          "rank": 2
+        },
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "unmentioned",
+          "score": 0.1806,
+          "asym": 0.0361,
+          "hetero": 0.6165,
+          "rank": 3
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "unmentioned",
+          "score": 0.1765,
+          "asym": 0.0201,
+          "hetero": 0.819,
+          "rank": 4
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "abnormal",
+          "score": 0.1754,
+          "asym": 0.0361,
+          "hetero": 0.5845,
+          "rank": 5
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "unmentioned",
+          "score": 0.1732,
+          "asym": 0.0164,
+          "hetero": 0.8511,
+          "rank": 6
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "abnormal",
+          "score": 0.1179,
+          "asym": 0.0164,
+          "hetero": 0.5052,
+          "rank": 7
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "unmentioned",
+          "score": 0.025,
+          "asym": 0.0,
+          "hetero": 0.0667,
+          "rank": 8
+        }
+      ],
+      "disagreements": [
+        {
+          "type": "label_abnormal_low_score",
+          "zone": "RLL",
+          "zone_name": "右肺下野",
+          "score": 0.1754,
+          "label": "人工标注异常，但算法未提示",
+          "handling": "以人工标注为准；说明经典算法对低对比病变不敏感"
+        },
+        {
+          "type": "label_abnormal_low_score",
+          "zone": "RML",
+          "zone_name": "右肺中野",
+          "score": 0.1179,
+          "label": "人工标注异常，但算法未提示",
+          "handling": "以人工标注为准；说明经典算法对低对比病变不敏感"
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-203",
+      "title": "肺结核（胸片，历史影像）",
+      "zones": [
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "unmentioned",
+          "score": 0.1748,
+          "asym": 0.0503,
+          "hetero": 0.3803,
+          "rank": 1
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "abnormal",
+          "score": 0.1666,
+          "asym": 0.0123,
+          "hetero": 0.8668,
+          "rank": 2
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "unmentioned",
+          "score": 0.1465,
+          "asym": 0.0503,
+          "hetero": 0.2032,
+          "rank": 3
+        },
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "abnormal",
+          "score": 0.1395,
+          "asym": 0.0123,
+          "hetero": 0.6974,
+          "rank": 4
+        },
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "unmentioned",
+          "score": 0.118,
+          "asym": 0.0183,
+          "hetero": 0.4787,
+          "rank": 5
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "unmentioned",
+          "score": 0.0932,
+          "asym": 0.0183,
+          "hetero": 0.3236,
+          "rank": 6
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "unmentioned",
+          "score": 0.0329,
+          "asym": 0.0,
+          "hetero": 0.0878,
+          "rank": 7
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "unmentioned",
+          "score": 0.0255,
+          "asym": 0.0,
+          "hetero": 0.0681,
+          "rank": 8
+        }
+      ],
+      "disagreements": [
+        {
+          "type": "label_abnormal_low_score",
+          "zone": "LUL",
+          "zone_name": "左肺上野",
+          "score": 0.1666,
+          "label": "人工标注异常，但算法未提示",
+          "handling": "以人工标注为准；说明经典算法对低对比病变不敏感"
+        },
+        {
+          "type": "label_abnormal_low_score",
+          "zone": "RUL",
+          "zone_name": "右肺上野",
+          "score": 0.1395,
+          "label": "人工标注异常，但算法未提示",
+          "handling": "以人工标注为准；说明经典算法对低对比病变不敏感"
+        }
+      ]
+    },
+    {
+      "case_id": "CASE-204",
+      "title": "结节病：双肺结节（胸片）",
+      "zones": [
+        {
+          "id": "RUL",
+          "name": "右肺上野",
+          "status": "abnormal",
+          "score": 0.4207,
+          "asym": 0.1184,
+          "hetero": 0.9519,
+          "rank": 1
+        },
+        {
+          "id": "LUL",
+          "name": "左肺上野",
+          "status": "abnormal",
+          "score": 0.3869,
+          "asym": 0.1184,
+          "hetero": 0.7406,
+          "rank": 2
+        },
+        {
+          "id": "LLL",
+          "name": "左肺下野",
+          "status": "abnormal",
+          "score": 0.3032,
+          "asym": 0.0857,
+          "hetero": 0.6802,
+          "rank": 3
+        },
+        {
+          "id": "MED",
+          "name": "纵隔与心影",
+          "status": "unmentioned",
+          "score": 0.2786,
+          "asym": 0.0,
+          "hetero": 0.7429,
+          "rank": 4
+        },
+        {
+          "id": "RLL",
+          "name": "右肺下野",
+          "status": "abnormal",
+          "score": 0.2634,
+          "asym": 0.0857,
+          "hetero": 0.4316,
+          "rank": 5
+        },
+        {
+          "id": "RML",
+          "name": "右肺中野",
+          "status": "abnormal",
+          "score": 0.2009,
+          "asym": 0.0525,
+          "hetero": 0.5123,
+          "rank": 6
+        },
+        {
+          "id": "LML",
+          "name": "左肺中野",
+          "status": "abnormal",
+          "score": 0.1832,
+          "asym": 0.0525,
+          "hetero": 0.4021,
+          "rank": 7
+        },
+        {
+          "id": "SUB",
+          "name": "膈下",
+          "status": "unmentioned",
+          "score": 0.1253,
+          "asym": 0.0,
+          "hetero": 0.3342,
+          "rank": 8
+        }
+      ],
+      "disagreements": []
+    }
+  ],
+  "summary": {
+    "cases": 21,
+    "disagreements": 18
+  }
+}

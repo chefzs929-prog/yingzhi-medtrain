@@ -231,6 +231,7 @@ def build_reading() -> None:
     for script in ("kb/scripts/build_chest_reading.py",
                    "kb/scripts/build_exam_cases.py",
                    "kb/scripts/build_student_lab.py",
+                   "kb/scripts/build_lesion_probe.py",
                    "kb/scripts/build_teach_pages.py"):
         subprocess.run([sys.executable, str(ROOT / script)], check=True, cwd=str(ROOT))
 
