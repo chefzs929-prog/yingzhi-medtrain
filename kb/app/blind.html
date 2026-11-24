@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2f7f6">
+<title>盲测模式 · RadioCheck</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b4f55'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white' font-family='sans-serif'%3ER%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f2f7f6; --surface:#fff; --ink:#0f2029; --ink2:#2a4350;
+  --muted:#5f7784; --faint:#8ba0ab; --line:#e3eeeb;
+  --brand:#0b4f55; --brand2:#0e7c7b;
+  --ok:#147a5b; --warn:#a9690b; --bad:#b23b3b; --grey:#7c8f99;
+  --r:14px; --shadow:0 1px 2px rgba(16,35,46,.05),0 14px 36px -30px rgba(11,79,85,.5);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  margin:0; background:#e9f1ef; color:var(--ink);
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px; margin:0 auto; padding:20px 18px 40px}
+@media(min-width:900px){ .wrap{display:grid; grid-template-columns:1.25fr 1fr; gap:22px; align-items:start} }
+
+.top{display:flex; align-items:center; gap:10px; margin-bottom:14px}
+.back{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid var(--line);display:grid;place-items:center;font-size:17px;color:var(--brand)}
+.top .t{font-size:15px;font-weight:700}
+.top .s{font-size:11.5px;color:var(--faint)}
+.timer{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;color:var(--brand);background:#e9f4f1;padding:4px 11px;border-radius:99px}
+
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow)}
+.stage{position:relative;border-radius:var(--r);overflow:hidden;background:#0b0f16;min-height:260px}
+.stage img{display:block;width:100%;height:auto}
+.stage svg{position:absolute;inset:0;width:100%;height:100%}
+.zone{fill:rgba(255,255,255,.03);stroke:rgba(255,255,255,.55);stroke-width:.45;stroke-dasharray:1.4 1.2;cursor:pointer;transition:.15s}
+.zone:hover{fill:rgba(255,255,255,.10)}
+.zone.picked{fill:rgba(178,59,59,.22);stroke:#ff8b8b;stroke-width:.9;stroke-dasharray:none}
+.zone.abnormal{fill:rgba(178,59,59,.26);stroke:#ff7b7b;stroke-width:.9;stroke-dasharray:none}
+.zone.normal{fill:rgba(20,122,91,.20);stroke:#5fd0a5;stroke-width:.8;stroke-dasharray:none}
+.zone.unmentioned{fill:rgba(169,105,11,.20);stroke:#e3b05a;stroke-width:.8;stroke-dasharray:none}
+.zone.limited{fill:rgba(124,143,153,.20);stroke:#a9bcc4;stroke-width:.8;stroke-dasharray:none}
+.zlabel{font-size:2.1px;fill:#e8f2ef;opacity:.85;pointer-events:none}
+.hint{position:absolute;left:10px;bottom:8px;font-size:10.5px;color:#cfd9d6;background:rgba(11,15,22,.62);padding:2px 8px;border-radius:6px}
+
+.bar{display:flex;gap:8px;margin-top:12px}
+.bar button{
+  flex:1;height:44px;border-radius:12px;border:1px solid var(--line);background:#fff;
+  color:var(--ink2);font-size:14px;font-weight:650;cursor:pointer;font-family:inherit;
+}
+.bar button.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.bar button:disabled{opacity:.45;cursor:not-allowed}
+
+.panel{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;margin-top:14px}
+@media(min-width:900px){ .panel{margin-top:0} }
+.panel h2{margin:0 0 4px;font-size:16px}
+.panel .lead{margin:0 0 12px;font-size:12.5px;color:var(--muted);line-height:1.7}
+.score{display:flex;align-items:baseline;gap:6px;margin:2px 0 12px}
+.score b{font-size:34px;letter-spacing:-.03em;color:var(--brand);font-variant-numeric:tabular-nums}
+.score span{font-size:12px;color:var(--faint)}
+
+.zlist{display:grid;gap:7px}
+.zrow{display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border-radius:10px;background:#fafdfc;border:1px solid var(--line)}
+.zrow .dot{width:7px;height:7px;border-radius:50%;margin-top:7px;flex:0 0 auto}
+.d-abn{background:var(--bad)} .d-nor{background:var(--ok)} .d-unm{background:var(--warn)} .d-lim{background:var(--grey)}
+.zrow .zh{font-size:12.5px;font-weight:650}
+.zrow .zt{font-size:12px;color:var(--muted);margin-top:1px;line-height:1.6}
+.zrow .zb{font-size:10.5px;color:var(--faint);margin-top:3px}
+
+.mask-box{text-align:center;padding:26px 10px;color:var(--muted);font-size:13px}
+.mask-box b{display:block;color:var(--ink2);font-size:15px;margin-bottom:4px}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;margin-bottom:8px}
+.t-blind{color:var(--brand);background:#e9f4f1}
+.t-done{color:var(--ok);background:#eef8f4}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:var(--muted)}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:1px}
+.dis{margin-top:14px;font-size:11px;color:var(--bad);background:#fdf6f6;border:1px solid #f3dcdc;border-radius:10px;padding:10px 12px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div>
+    <div class="top">
+      <a class="back" href="clinic.html">‹</a>
+      <div>
+        <div class="t">盲测模式</div>
+        <div class="s" id="sub">标注已隐藏 · 先判断，再揭晓</div>
+      </div>
+      <div class="timer" id="timer">--:--</div>
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="mask-box" id="loading"><b>正在加载病例</b>只读取库内逐区标注，不调用后端</div>
+    </div>
+
+    <div class="bar">
+      <button id="btnPrev">换一例</button>
+      <button class="primary" id="btnSubmit">提交判断</button>
+    </div>
+  </div>
+
+  <div class="panel" id="panel">
+    <span class="tag t-blind" id="tag">盲测中</span>
+    <h2 id="ptitle">请先看片，不要看答案</h2>
+    <p class="lead" id="plead">在影像上点出你认为「有异常」的分区，可以多选。提交后会揭晓每区的真实状态与出处。</p>
+    <div id="pbody">
+      <div class="zlist" id="picked"></div>
+    </div>
+    <div class="dis">非诊断用途 · 评分只对照库内逐区标注，不评价临床诊断能力。</div>
+  </div>
+
+</div>
+
+<script>
+const DATA_URL = "../data/chest/chest_reading.json";
+const STATUS_CN = { abnormal:"异常", normal:"未见异常", unmentioned:"未提及", limited:"判读受限" };
+const STATUS_CLS = { abnormal:"d-abn", normal:"d-nor", unmentioned:"d-unm", limited:"d-lim" };
+
+let CASES = [];
+let cur = null;
+let picked = new Set();
+let revealed = false;
+let timerId = null, left = 180;
+
+function $(id){ return document.getElementById(id); }
+
+function startTimer(){
+  clearInterval(timerId);
+  left = 180;
+  const tick = ()=>{
+    const m = String(Math.floor(left/60)).padStart(2,"0");
+    const s = String(left%60).padStart(2,"0");
+    $("timer").textContent = m + ":" + s;
+    if(left-- <= 0){ clearInterval(timerId); $("timer").textContent = "00:00"; }
+  };
+  tick();
+  timerId = setInterval(tick, 1000);
+}
+
+function pickCase(){
+  const pool = CASES.filter(c=>c.enabled !== false);
+  let next = pool[Math.floor(Math.random()*pool.length)];
+  if(pool.length > 1 && cur && next.id === cur.id){
+    next = pool[(pool.indexOf(next)+1) % pool.length];
+  }
+  cur = next;
+  picked.clear();
+  revealed = false;
+  render();
+  startTimer();
+}
+
+function render(){
+  const stage = $("stage");
+  stage.innerHTML = `
+    <img alt="" src="../${cur.image}" onerror="this.style.display='none'">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" id="svg"></svg>
+    <div class="hint">点击分区进行选择 · 教学分区，非病灶分割</div>`;
+
+  const svg = $("svg");
+  svg.innerHTML = cur.zones.map((z,i)=>{
+    const [x1,y1,x2,y2] = z.coords;
+    return `<g>
+      <rect class="zone" data-i="${i}" x="${x1*100}" y="${y1*100}"
+            width="${(x2-x1)*100}" height="${(y2-y1)*100}" rx="0.8"></rect>
+      <text class="zlabel" x="${x1*100+1.2}" y="${y1*100+3}">${z.id}</text>
+    </g>`;
+  }).join("");
+
+  svg.querySelectorAll(".zone").forEach(el=>{
+    el.onclick = ()=>{
+      if(revealed) return;
+      const i = +el.dataset.i;
+      if(picked.has(i)) picked.delete(i); else picked.add(i);
+      syncZones();
+      renderPicked();
+    };
+  });
+  syncZones();
+  renderPicked();
+  renderHead();
+}
+
+function syncZones(){
+  const svg = $("svg");
+  if(!svg) return;
+  svg.querySelectorAll(".zone").forEach(el=>{
+    const i = +el.dataset.i;
+    el.classList.remove("picked","abnormal","normal","unmentioned","limited");
+    if(revealed){
+      el.classList.add(cur.zones[i].status);
+    } else if(picked.has(i)){
+      el.classList.add("picked");
+    }
+  });
+}
+
+function renderHead(){
+  $("tag").className = "tag " + (revealed ? "t-done" : "t-blind");
+  $("tag").textContent = revealed ? "已揭晓" : "盲测中";
+  $("sub").textContent = revealed
+    ? "答案已显示 · 可换一例继续"
+    : "标注已隐藏 · 先判断，再揭晓";
+  $("ptitle").textContent = revealed ? "揭晓结果" : "请先看片，不要看答案";
+  $("plead").textContent = revealed
+    ? "下面按分区列出真实状态与出处。注意「未提及」不等于「正常」。"
+    : "在影像上点出你认为「有异常」的分区，可以多选。提交后会揭晓每区的真实状态与出处。";
+  $("btnSubmit").disabled = revealed;
+  $("btnSubmit").textContent = revealed ? "已提交" : "提交判断";
+}
+
+function renderPicked(){
+  const box = $("picked");
+  if(revealed){
+    box.innerHTML = cur.zones.map(z=>`
+      <div class="zrow">
+        <span class="dot ${STATUS_CLS[z.status]}"></span>
+        <div>
+          <div class="zh">${z.name} · ${STATUS_CN[z.status]}</div>
+          <div class="zt">${z.text || ""}</div>
+          <div class="zb">出处：${z.basis || "库内逐区标注"}</div>
+        </div>
+      </div>`).join("");
+    return;
+  }
+  if(!picked.size){
+    box.innerHTML = `<div class="zrow"><span class="dot d-unm"></span><div><div class="zh">尚未选择</div><div class="zt">在左侧影像上点分区</div></div></div>`;
+    return;
+  }
+  box.innerHTML = [...picked].map(i=>{
+    const z = cur.zones[i];
+    return `<div class="zrow"><span class="dot d-abn"></span><div><div class="zh">已选：${z.name}</div><div class="zt">提交后与库内标注比对</div></div></div>`;
+  }).join("");
+}
+
+function submit(){
+  if(revealed || !cur) return;
+  revealed = true;
+  clearInterval(timerId);
+
+  const truth = new Set(cur.zones.map((z,i)=> z.status === "abnormal" ? i : -1).filter(i=>i>=0));
+  const hit = [...picked].filter(i=>truth.has(i)).length;
+  const miss = [...truth].filter(i=>!picked.has(i)).length;
+  const falsePos = [...picked].filter(i=>!truth.has(i)).length;
+
+  const denom = Math.max(truth.size, 1);
+  let score = Math.round(100 * hit / denom);
+  if(truth.size === 0 && picked.size === 0) score = 100;
+  if(falsePos) score = Math.max(0, score - falsePos * 10);
+
+  $("ptitle").textContent = `得分 ${score}`;
+  $("plead").textContent = truth.size
+    ? `应报异常 ${truth.size} 区 · 命中 ${hit} · 漏报 ${miss} · 误报 ${falsePos}`
+    : `本例库内没有标记为异常的分区 · 你选了 ${picked.size} 区`;
+
+  syncZones();
+  renderHead();
+  $("ptitle").textContent = `得分 ${score}`;
+  $("plead").textContent = truth.size
+    ? `应报异常 ${truth.size} 区 · 命中 ${hit} · 漏报 ${miss} · 误报 ${falsePos}`
+    : `本例库内没有标记为异常的分区 · 你选了 ${picked.size} 区`;
+  renderPicked();
+}
+
+function boot(){
+  fetch(DATA_URL, { cache:"no-cache" })
+    .then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })
+    .then(d=>{
+      CASES = (d.cases || []).filter(c=> c.zones && c.zones.length);
+      if(!CASES.length) throw new Error("no cases");
+      pickCase();
+    })
+    .catch(e=>{
+      $("stage").innerHTML = `<div class="mask-box"><b>病例数据未加载</b>请通过构建后的站点访问（read/blind.html），或检查 data/chest/chest_reading.json</div>`;
+      console.error(e);
+    });
+}
+
+$("btnSubmit").onclick = submit;
+$("btnPrev").onclick = ()=>{ if(cur) pickCase(); };
+boot();
+</script>
+</body>
+</html>

@@ -85,6 +85,7 @@ def main() -> None:
     shutil.copy2(SRC / "compare.html", OUT / "compare.html")
     shutil.copy2(SRC / "classroom.html", OUT / "classroom.html")
     shutil.copy2(SRC / "qc.html", OUT / "qc.html")
+    shutil.copy2(SRC / "blind.html", OUT / "blind.html")
 
     # 旧四页与 read 入口全部收敛到 clinic
     for page in LEGACY_PAGES:
