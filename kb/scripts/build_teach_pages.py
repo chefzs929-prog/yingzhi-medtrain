@@ -101,6 +101,12 @@ def main() -> None:
     shutil.copy2(chest, dst)
     data = json.loads(chest.read_text(encoding="utf8"))
 
+    # 预生成的交叉检验数据（传统算法 + 深度模型），缺失不阻断构建
+    for extra in ("lesion_probe.json", "model_probe.json"):
+        p = ROOT / "kb/data" / extra
+        if p.exists():
+            shutil.copy2(p, dst.parent / extra)
+
     # 只复制数据实际引用的胸片，不搬 120 例全库影像
     copied = 0
     for case in data["cases"]:

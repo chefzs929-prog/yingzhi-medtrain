@@ -77,6 +77,13 @@ button{font-family:inherit}
 .alert{border-radius:11px;padding:11px 13px;font-size:12.5px;line-height:1.75;margin-bottom:9px;border:1px solid}
 .a-warn{background:#fffbf2;border-color:#f0dfbd;color:#7a5209}
 .a-bad{background:#fdf6f6;border-color:#f3dcdc;color:#8f3030}
+.a-ok{background:#f0faf6;border-color:#cfe9df;color:#0f5c45}
+.mrow2{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;border-bottom:1px dashed var(--line)}
+.mrow2:last-child{border-bottom:0}
+.mrow2 .lb{flex:0 0 96px;color:var(--ink2);font-weight:600}
+.mrow2 .mb{flex:1;height:5px;border-radius:99px;background:#eef3f1;overflow:hidden}
+.mrow2 .mb i{display:block;height:100%;background:#0e7c7b}
+.mrow2 .sc{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--muted);font-size:11.5px}
 .alert b{display:block;margin-bottom:3px;font-size:12.5px}
 .alert .h{font-size:11.5px;color:var(--muted);margin-top:5px}
 
@@ -127,7 +134,10 @@ button{font-family:inherit}
 
     <div class="tabp" id="t-x">
       <div class="head"><h2>交叉检验</h2><span class="q" id="x-q"></span></div>
-      <p class="txt" style="margin-top:0">用一套经典图像算法（对侧密度差 + 分区异质性）独立算一遍，只看它和人工标注是否对得上。<b>它不下结论</b>。</p>
+
+      <div id="model-block"></div>
+
+      <p class="txt" style="margin-top:0">再加一路传统图像算法（对侧密度差 + 分区异质性）做第二重对照。<b>两路都不下结论</b>，只回答「有没有和人工标注互相打脸」。</p>
       <div class="zrows" id="x-list"></div>
       <div class="note" id="x-note"></div>
     </div>
@@ -146,11 +156,12 @@ button{font-family:inherit}
 <script>
 const URL_READ = "../data/chest/chest_reading.json";
 const URL_PROBE = "../data/chest/lesion_probe.json";
+const URL_MODEL = "../data/chest/model_probe.json";
 
 const ST_CN = { abnormal:"异常", normal:"未见异常", unmentioned:"未提及", limited:"判读受限" };
 const ST_COLOR = { abnormal:"#b23b3b", normal:"#147a5b", unmentioned:"#a9690b", limited:"#7c8f99" };
 
-let CASES = [], PROBE = {}, idx = 0, sel = null, tab = "ev";
+let CASES = [], PROBE = {}, MODEL = {}, MODEL_METHOD = "", idx = 0, sel = null, tab = "ev";
 
 function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
 function $(id){ return document.getElementById(id); }
@@ -231,10 +242,41 @@ function renderEvidence(){
   });
 }
 
+function renderModel(){
+  const c = curCase();
+  const m = MODEL[c.id];
+  const box = $("model-block");
+  if(!m){
+    box.innerHTML = `<div class="alert a-warn"><b>本例没有模型结果</b>深度模型只对已入库病例预生成；缺失时不影响人工标注与证据强度。</div>`;
+    return;
+  }
+  const map = {
+    consistent: ["a-ok", "与人工标注一致"],
+    conflict:   ["a-bad", "与人工标注冲突"],
+    partial:    ["a-warn", "部分吻合"],
+    silent:     ["a-warn", "模型未提示（可能漏检）"]
+  };
+  const pair = map[m.verdict] || ["a-warn", m.verdict];
+  const rows = (m.top || []).slice(0,5).map(t=>`
+    <div class="mrow2">
+      <span class="lb">${esc(t.label_cn)}</span>
+      <span class="mb"><i style="width:${Math.round((t.score||0)*100)}%"></i></span>
+      <span class="sc">${(t.score||0).toFixed(2)}</span>
+    </div>`).join("");
+  box.innerHTML = `
+    <div class="alert ${pair[0]}">
+      <b>${esc(pair[1])}</b>
+      ${esc(m.note || "")}
+      <div class="h">模型：${esc(MODEL_METHOD)} · 整图级多标签，不是分区定位，不是诊断</div>
+    </div>
+    <div style="margin:0 0 14px">${rows}</div>`;
+}
+
 function renderCross(){
   const c = curCase();
   const p = probeOf(c.id);
-  $("x-q").textContent = p ? p.method : "无结果";
+  $("x-q").textContent = "两路独立方法";
+  renderModel();
   if(!p){
     $("x-list").innerHTML = `<div class="zrow"><span class="dot" style="background:#7c8f99"></span><span class="nm">本例没有交叉检验结果</span></div>`;
     $("x-note").textContent = "";
@@ -292,11 +334,16 @@ function renderAll(){
 function boot(){
   Promise.all([
     fetch(URL_READ, {cache:"no-cache"}).then(r=>r.json()),
-    fetch(URL_PROBE, {cache:"no-cache"}).then(r=>r.json()).catch(()=>null)
-  ]).then(([read, probe])=>{
+    fetch(URL_PROBE, {cache:"no-cache"}).then(r=>r.json()).catch(()=>null),
+    fetch(URL_MODEL, {cache:"no-cache"}).then(r=>r.json()).catch(()=>null)
+  ]).then(([read, probe, model])=>{
     CASES = (read.cases || []).filter(c=> c.enabled !== false && c.zones && c.zones.length);
     if(probe && probe.cases){
       probe.cases.forEach(c=>{ PROBE[c.case_id] = c; });
+    }
+    if(model && model.cases){
+      MODEL_METHOD = model.method || "";
+      model.cases.forEach(c=>{ MODEL[c.case_id] = c; });
     }
     idx = 0;
     renderAll();
