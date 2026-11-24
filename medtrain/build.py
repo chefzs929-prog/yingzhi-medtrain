@@ -234,6 +234,7 @@ def build_reading() -> None:
                    "kb/scripts/build_lesion_probe.py",
                    "kb/scripts/build_dual_source.py",
                    "kb/scripts/build_drill_bank.py",
+                   "kb/scripts/build_ask_bank.py",
                    "kb/scripts/build_review_queue.py",
                    "kb/scripts/build_teach_pages.py"):
         subprocess.run([sys.executable, str(ROOT / script)], check=True, cwd=str(ROOT))

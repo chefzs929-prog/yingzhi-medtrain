@@ -1,0 +1,7164 @@
+{
+  "version": "0.1.0",
+  "notice": "答案文本来自库内逐区标注；指南引用带字符 offset 与 sha1，可复算；拒答为规则判定。",
+  "corpus": "【肺炎 / 肺实变】\n[GL-PNE-01] 影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。\n[GL-PNE-02] 实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。\n[GL-PNE-03] 影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。\n\n【肺结节 / 粟粒样结节】\n[GL-NOD-01] 结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。\n[GL-NOD-02] 直径 6-8 mm 的实性结节，低危人群通常建议 6-12 个月复查胸部 CT。\n[GL-NOD-03] 持续存在的纯磨玻璃结节需要按随访策略评估，不能仅凭单次影像判断性质。\n\n【胸腔积液】\n[GL-EFF-01] 立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。\n[GL-EFF-02] 卧位片因液体铺展，可表现为患侧肺野弥漫性密度增高，容易与实变混淆，报告须交代体位。\n\n【气胸】\n[GL-PTX-01] 诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。\n[GL-PTX-02] 张力性气胸伴纵隔移位与膈肌低平属于急症，报告应立即提示临床。\n\n【肺结核】\n[GL-TB-01] 继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。\n[GL-TB-02] 影像提示活动性病变时，应建议痰涂片与分子检测，并按规范转诊。\n\n【正常胸片】\n[GL-NOR-01] 正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。\n[GL-NOR-02] 「未见异常」与「未提及」不是一回事：前者是明确判读，后者是来源没有描述该区。\n\n【心影增大】\n[GL-CMG-01] 正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。\n[GL-CMG-02] 床旁前后位片会放大心影，判断增大时需谨慎，必要时建议超声心动图。\n\n",
+  "corpus_sha1": "6f3f83c1a00749fd9dd268c7fdbb71f1b2dbcd59",
+  "corpus_length": 839,
+  "items": [
+    {
+      "qid": "A0001",
+      "kind": "topic",
+      "case_id": "CASE-001",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0002",
+      "kind": "topic",
+      "case_id": "CASE-001",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0003",
+      "kind": "topic",
+      "case_id": "CASE-001",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0004",
+      "kind": "topic",
+      "case_id": "CASE-001",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0005",
+      "kind": "topic",
+      "case_id": "CASE-001",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0006",
+      "kind": "topic",
+      "case_id": "CASE-001",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注没有异常分区；但「没有标注异常」不等于影像完全正常，仍以原始报告与临床为准。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0007",
+      "kind": "topic",
+      "case_id": "CASE-001",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0008",
+      "kind": "topic",
+      "case_id": "CASE-002",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0009",
+      "kind": "topic",
+      "case_id": "CASE-002",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0010",
+      "kind": "topic",
+      "case_id": "CASE-002",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0011",
+      "kind": "topic",
+      "case_id": "CASE-002",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0012",
+      "kind": "topic",
+      "case_id": "CASE-002",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0013",
+      "kind": "topic",
+      "case_id": "CASE-002",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注没有异常分区；但「没有标注异常」不等于影像完全正常，仍以原始报告与临床为准。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0014",
+      "kind": "topic",
+      "case_id": "CASE-002",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0015",
+      "kind": "topic",
+      "case_id": "CASE-003",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0016",
+      "kind": "topic",
+      "case_id": "CASE-003",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0017",
+      "kind": "topic",
+      "case_id": "CASE-003",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0018",
+      "kind": "topic",
+      "case_id": "CASE-003",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0019",
+      "kind": "topic",
+      "case_id": "CASE-003",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0020",
+      "kind": "topic",
+      "case_id": "CASE-003",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注没有异常分区；但「没有标注异常」不等于影像完全正常，仍以原始报告与临床为准。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0021",
+      "kind": "topic",
+      "case_id": "CASE-003",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0022",
+      "kind": "zone",
+      "case_id": "CASE-005",
+      "topic_id": "PNEUMONIA",
+      "question": "右肺上野有什么问题？",
+      "keywords": [
+        "右肺上野",
+        "RUL",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺气腔影，伴肺不张；公开说明未逐区定位。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-005.jpg",
+        "case_id": "CASE-005",
+        "case_title": "双肺气腔影伴肺不张（含中心静脉导管）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0023",
+      "kind": "zone",
+      "case_id": "CASE-005",
+      "topic_id": "PNEUMONIA",
+      "question": "右肺中野有什么问题？",
+      "keywords": [
+        "右肺中野",
+        "RML",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺气腔影，伴肺不张；公开说明未逐区定位。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RML",
+        "label": "右肺中野",
+        "coords": [
+          0.06,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-005.jpg",
+        "case_id": "CASE-005",
+        "case_title": "双肺气腔影伴肺不张（含中心静脉导管）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0024",
+      "kind": "zone",
+      "case_id": "CASE-005",
+      "topic_id": "PNEUMONIA",
+      "question": "右肺下野有什么问题？",
+      "keywords": [
+        "右肺下野",
+        "RLL",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺气腔影，伴肺不张；公开说明未逐区定位。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-005.jpg",
+        "case_id": "CASE-005",
+        "case_title": "双肺气腔影伴肺不张（含中心静脉导管）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0025",
+      "kind": "zone",
+      "case_id": "CASE-005",
+      "topic_id": "PNEUMONIA",
+      "question": "左肺上野有什么问题？",
+      "keywords": [
+        "左肺上野",
+        "LUL",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺气腔影，伴肺不张；公开说明未逐区定位。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LUL",
+        "label": "左肺上野",
+        "coords": [
+          0.64,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-005.jpg",
+        "case_id": "CASE-005",
+        "case_title": "双肺气腔影伴肺不张（含中心静脉导管）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0026",
+      "kind": "zone",
+      "case_id": "CASE-005",
+      "topic_id": "PNEUMONIA",
+      "question": "左肺中野有什么问题？",
+      "keywords": [
+        "左肺中野",
+        "LML",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺气腔影，伴肺不张；公开说明未逐区定位。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LML",
+        "label": "左肺中野",
+        "coords": [
+          0.64,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-005.jpg",
+        "case_id": "CASE-005",
+        "case_title": "双肺气腔影伴肺不张（含中心静脉导管）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0027",
+      "kind": "zone",
+      "case_id": "CASE-005",
+      "topic_id": "PNEUMONIA",
+      "question": "左肺下野有什么问题？",
+      "keywords": [
+        "左肺下野",
+        "LLL",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺气腔影，伴肺不张；公开说明未逐区定位。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LLL",
+        "label": "左肺下野",
+        "coords": [
+          0.64,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-005.jpg",
+        "case_id": "CASE-005",
+        "case_title": "双肺气腔影伴肺不张（含中心静脉导管）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0028",
+      "kind": "topic",
+      "case_id": "CASE-005",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "有。库内逐区标注在6个分区（右肺上野、右肺中野等）记录了与「肺炎 / 肺实变」相符的异常，原文为：双肺气腔影，伴肺不张；公开说明未逐区定位。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-005.jpg",
+        "case_id": "CASE-005",
+        "case_title": "双肺气腔影伴肺不张（含中心静脉导管）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0029",
+      "kind": "topic",
+      "case_id": "CASE-005",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0030",
+      "kind": "topic",
+      "case_id": "CASE-005",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0031",
+      "kind": "topic",
+      "case_id": "CASE-005",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0032",
+      "kind": "topic",
+      "case_id": "CASE-005",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0033",
+      "kind": "topic",
+      "case_id": "CASE-005",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "不是。库内逐区标注在6个分区（右肺上野、右肺中野等）记录了异常，原文为：双肺气腔影，伴肺不张；公开说明未逐区定位。",
+      "confidence": "high",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0034",
+      "kind": "topic",
+      "case_id": "CASE-005",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0035",
+      "kind": "overview",
+      "case_id": "CASE-005",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子主要异常是什么？",
+      "keywords": [
+        "主要异常",
+        "怎么",
+        "整体",
+        "概括",
+        "小结",
+        "什么病",
+        "看出什么"
+      ],
+      "answerable": true,
+      "answer": "双肺气腔影伴肺不张（含中心静脉导管）。库内标注的异常分区为右肺上野、右肺中野、右肺下野。其中右肺上野：双肺气腔影，伴肺不张；公开说明未逐区定位。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-005.jpg",
+        "case_id": "CASE-005",
+        "case_title": "双肺气腔影伴肺不张（含中心静脉导管）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "库内逐区标注"
+    },
+    {
+      "qid": "A0036",
+      "kind": "zone",
+      "case_id": "CASE-006",
+      "topic_id": "PNEUMONIA",
+      "question": "右肺中野有什么问题？",
+      "keywords": [
+        "右肺中野",
+        "RML",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "右肺中野大片实变，红箭头指向病灶边缘。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RML",
+        "label": "右肺中野",
+        "coords": [
+          0.06,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-006.jpg",
+        "case_id": "CASE-006",
+        "case_title": "大叶性肺炎（箭头标注）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "原图箭头 + 公开说明"
+    },
+    {
+      "qid": "A0037",
+      "kind": "zone",
+      "case_id": "CASE-006",
+      "topic_id": "PNEUMONIA",
+      "question": "右肺下野有什么问题？",
+      "keywords": [
+        "右肺下野",
+        "RLL",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "右肺下野可见实变影向下延伸。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-006.jpg",
+        "case_id": "CASE-006",
+        "case_title": "大叶性肺炎（箭头标注）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "公开说明 + 原图"
+    },
+    {
+      "qid": "A0038",
+      "kind": "topic",
+      "case_id": "CASE-006",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "有。库内逐区标注在右肺中野、右肺下野记录了与「肺炎 / 肺实变」相符的异常，原文为：右肺中野大片实变，红箭头指向病灶边缘；右肺下野可见实变影向下延伸。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RML",
+        "label": "右肺中野",
+        "coords": [
+          0.06,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-006.jpg",
+        "case_id": "CASE-006",
+        "case_title": "大叶性肺炎（箭头标注）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0039",
+      "kind": "topic",
+      "case_id": "CASE-006",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0040",
+      "kind": "topic",
+      "case_id": "CASE-006",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0041",
+      "kind": "topic",
+      "case_id": "CASE-006",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0042",
+      "kind": "topic",
+      "case_id": "CASE-006",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0043",
+      "kind": "topic",
+      "case_id": "CASE-006",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "不是。库内逐区标注在右肺中野、右肺下野记录了异常，原文为：右肺中野大片实变，红箭头指向病灶边缘；右肺下野可见实变影向下延伸。",
+      "confidence": "high",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0044",
+      "kind": "topic",
+      "case_id": "CASE-006",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0045",
+      "kind": "overview",
+      "case_id": "CASE-006",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子主要异常是什么？",
+      "keywords": [
+        "主要异常",
+        "怎么",
+        "整体",
+        "概括",
+        "小结",
+        "什么病",
+        "看出什么"
+      ],
+      "answerable": true,
+      "answer": "大叶性肺炎（箭头标注）。库内标注的异常分区为右肺中野、右肺下野。其中右肺中野：右肺中野大片实变，红箭头指向病灶边缘。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RML",
+        "label": "右肺中野",
+        "coords": [
+          0.06,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-006.jpg",
+        "case_id": "CASE-006",
+        "case_title": "大叶性肺炎（箭头标注）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "库内逐区标注"
+    },
+    {
+      "qid": "A0046",
+      "kind": "zone",
+      "case_id": "CASE-007",
+      "topic_id": "PNEUMONIA",
+      "question": "右肺下野有什么问题？",
+      "keywords": [
+        "右肺下野",
+        "RLL",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双侧下肺野气腔影，密度增高。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-007.jpg",
+        "case_id": "CASE-007",
+        "case_title": "下肺野气腔影（正位）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0047",
+      "kind": "zone",
+      "case_id": "CASE-007",
+      "topic_id": "PNEUMONIA",
+      "question": "左肺下野有什么问题？",
+      "keywords": [
+        "左肺下野",
+        "LLL",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双侧下肺野气腔影，密度增高。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LLL",
+        "label": "左肺下野",
+        "coords": [
+          0.64,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-007.jpg",
+        "case_id": "CASE-007",
+        "case_title": "下肺野气腔影（正位）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0048",
+      "kind": "topic",
+      "case_id": "CASE-007",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "有。库内逐区标注在右肺下野、左肺下野记录了与「肺炎 / 肺实变」相符的异常，原文为：双侧下肺野气腔影，密度增高。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-007.jpg",
+        "case_id": "CASE-007",
+        "case_title": "下肺野气腔影（正位）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0049",
+      "kind": "topic",
+      "case_id": "CASE-007",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0050",
+      "kind": "topic",
+      "case_id": "CASE-007",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0051",
+      "kind": "topic",
+      "case_id": "CASE-007",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0052",
+      "kind": "topic",
+      "case_id": "CASE-007",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0053",
+      "kind": "topic",
+      "case_id": "CASE-007",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "不是。库内逐区标注在右肺下野、左肺下野记录了异常，原文为：双侧下肺野气腔影，密度增高。",
+      "confidence": "high",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0054",
+      "kind": "topic",
+      "case_id": "CASE-007",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0055",
+      "kind": "overview",
+      "case_id": "CASE-007",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子主要异常是什么？",
+      "keywords": [
+        "主要异常",
+        "怎么",
+        "整体",
+        "概括",
+        "小结",
+        "什么病",
+        "看出什么"
+      ],
+      "answerable": true,
+      "answer": "下肺野气腔影（正位）。库内标注的异常分区为右肺下野、左肺下野。其中右肺下野：双侧下肺野气腔影，密度增高。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-007.jpg",
+        "case_id": "CASE-007",
+        "case_title": "下肺野气腔影（正位）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "库内逐区标注"
+    },
+    {
+      "qid": "A0056",
+      "kind": "zone",
+      "case_id": "CASE-008",
+      "topic_id": "PNEUMONIA",
+      "question": "后肺野与后肋膈角有什么问题？",
+      "keywords": [
+        "后肺野与后肋膈角",
+        "POST",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "侧位片示下肺野/后部气腔影。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "POST",
+        "label": "后肺野与后肋膈角",
+        "coords": [
+          0.68,
+          0.1,
+          0.28,
+          0.8
+        ],
+        "image": "images/case-008.jpg",
+        "case_id": "CASE-008",
+        "case_title": "下肺野气腔影（侧位）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0057",
+      "kind": "topic",
+      "case_id": "CASE-008",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "有。库内逐区标注在后肺野与后肋膈角记录了与「肺炎 / 肺实变」相符的异常，原文为：侧位片示下肺野/后部气腔影。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "POST",
+        "label": "后肺野与后肋膈角",
+        "coords": [
+          0.68,
+          0.1,
+          0.28,
+          0.8
+        ],
+        "image": "images/case-008.jpg",
+        "case_id": "CASE-008",
+        "case_title": "下肺野气腔影（侧位）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0058",
+      "kind": "topic",
+      "case_id": "CASE-008",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0059",
+      "kind": "topic",
+      "case_id": "CASE-008",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "有。库内逐区标注在后肺野与后肋膈角记录了与「胸腔积液」相符的异常，原文为：侧位片示下肺野/后部气腔影。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "POST",
+        "label": "后肺野与后肋膈角",
+        "coords": [
+          0.68,
+          0.1,
+          0.28,
+          0.8
+        ],
+        "image": "images/case-008.jpg",
+        "case_id": "CASE-008",
+        "case_title": "下肺野气腔影（侧位）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0060",
+      "kind": "topic",
+      "case_id": "CASE-008",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0061",
+      "kind": "topic",
+      "case_id": "CASE-008",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0062",
+      "kind": "topic",
+      "case_id": "CASE-008",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "不是。库内逐区标注在后肺野与后肋膈角记录了异常，原文为：侧位片示下肺野/后部气腔影。",
+      "confidence": "high",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0063",
+      "kind": "topic",
+      "case_id": "CASE-008",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0064",
+      "kind": "overview",
+      "case_id": "CASE-008",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子主要异常是什么？",
+      "keywords": [
+        "主要异常",
+        "怎么",
+        "整体",
+        "概括",
+        "小结",
+        "什么病",
+        "看出什么"
+      ],
+      "answerable": true,
+      "answer": "下肺野气腔影（侧位）。库内标注的异常分区为后肺野与后肋膈角。其中后肺野与后肋膈角：侧位片示下肺野/后部气腔影。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "POST",
+        "label": "后肺野与后肋膈角",
+        "coords": [
+          0.68,
+          0.1,
+          0.28,
+          0.8
+        ],
+        "image": "images/case-008.jpg",
+        "case_id": "CASE-008",
+        "case_title": "下肺野气腔影（侧位）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "库内逐区标注"
+    },
+    {
+      "qid": "A0065",
+      "kind": "zone",
+      "case_id": "CASE-015",
+      "topic_id": "PNEUMONIA",
+      "question": "右肺上野有什么问题？",
+      "keywords": [
+        "右肺上野",
+        "RUL",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "右中上肺野斑片状密度增高。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-015.jpg",
+        "case_id": "CASE-015",
+        "case_title": "右中上肺野气腔影（正位）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0066",
+      "kind": "zone",
+      "case_id": "CASE-015",
+      "topic_id": "PNEUMONIA",
+      "question": "右肺中野有什么问题？",
+      "keywords": [
+        "右肺中野",
+        "RML",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "右中上肺野斑片状密度增高。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RML",
+        "label": "右肺中野",
+        "coords": [
+          0.06,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-015.jpg",
+        "case_id": "CASE-015",
+        "case_title": "右中上肺野气腔影（正位）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0067",
+      "kind": "topic",
+      "case_id": "CASE-015",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0068",
+      "kind": "topic",
+      "case_id": "CASE-015",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0069",
+      "kind": "topic",
+      "case_id": "CASE-015",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0070",
+      "kind": "topic",
+      "case_id": "CASE-015",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0071",
+      "kind": "topic",
+      "case_id": "CASE-015",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0072",
+      "kind": "topic",
+      "case_id": "CASE-015",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "不是。库内逐区标注在右肺上野、右肺中野记录了异常，原文为：右中上肺野斑片状密度增高。",
+      "confidence": "high",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0073",
+      "kind": "topic",
+      "case_id": "CASE-015",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0074",
+      "kind": "overview",
+      "case_id": "CASE-015",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子主要异常是什么？",
+      "keywords": [
+        "主要异常",
+        "怎么",
+        "整体",
+        "概括",
+        "小结",
+        "什么病",
+        "看出什么"
+      ],
+      "answerable": true,
+      "answer": "右中上肺野气腔影（正位）。库内标注的异常分区为右肺上野、右肺中野。其中右肺上野：右中上肺野斑片状密度增高。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-015.jpg",
+        "case_id": "CASE-015",
+        "case_title": "右中上肺野气腔影（正位）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "库内逐区标注"
+    },
+    {
+      "qid": "A0075",
+      "kind": "zone",
+      "case_id": "CASE-016",
+      "topic_id": "NODULE",
+      "question": "右肺上野有什么问题？",
+      "keywords": [
+        "右肺上野",
+        "RUL",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫粟粒样细小结节。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-016.jpg",
+        "case_id": "CASE-016",
+        "case_title": "双肺弥漫粟粒样结节",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0076",
+      "kind": "zone",
+      "case_id": "CASE-016",
+      "topic_id": "NODULE",
+      "question": "右肺中野有什么问题？",
+      "keywords": [
+        "右肺中野",
+        "RML",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫粟粒样细小结节。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RML",
+        "label": "右肺中野",
+        "coords": [
+          0.06,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-016.jpg",
+        "case_id": "CASE-016",
+        "case_title": "双肺弥漫粟粒样结节",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0077",
+      "kind": "zone",
+      "case_id": "CASE-016",
+      "topic_id": "NODULE",
+      "question": "右肺下野有什么问题？",
+      "keywords": [
+        "右肺下野",
+        "RLL",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫粟粒样细小结节。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-016.jpg",
+        "case_id": "CASE-016",
+        "case_title": "双肺弥漫粟粒样结节",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0078",
+      "kind": "zone",
+      "case_id": "CASE-016",
+      "topic_id": "NODULE",
+      "question": "左肺上野有什么问题？",
+      "keywords": [
+        "左肺上野",
+        "LUL",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫粟粒样细小结节。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LUL",
+        "label": "左肺上野",
+        "coords": [
+          0.64,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-016.jpg",
+        "case_id": "CASE-016",
+        "case_title": "双肺弥漫粟粒样结节",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0079",
+      "kind": "zone",
+      "case_id": "CASE-016",
+      "topic_id": "NODULE",
+      "question": "左肺中野有什么问题？",
+      "keywords": [
+        "左肺中野",
+        "LML",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫粟粒样细小结节。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LML",
+        "label": "左肺中野",
+        "coords": [
+          0.64,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-016.jpg",
+        "case_id": "CASE-016",
+        "case_title": "双肺弥漫粟粒样结节",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0080",
+      "kind": "zone",
+      "case_id": "CASE-016",
+      "topic_id": "NODULE",
+      "question": "左肺下野有什么问题？",
+      "keywords": [
+        "左肺下野",
+        "LLL",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫粟粒样细小结节。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LLL",
+        "label": "左肺下野",
+        "coords": [
+          0.64,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-016.jpg",
+        "case_id": "CASE-016",
+        "case_title": "双肺弥漫粟粒样结节",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0081",
+      "kind": "topic",
+      "case_id": "CASE-016",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0082",
+      "kind": "topic",
+      "case_id": "CASE-016",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "有。库内逐区标注在6个分区（右肺上野、右肺中野等）记录了与「肺结节 / 粟粒样结节」相符的异常，原文为：双肺弥漫粟粒样细小结节。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-016.jpg",
+        "case_id": "CASE-016",
+        "case_title": "双肺弥漫粟粒样结节",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0083",
+      "kind": "topic",
+      "case_id": "CASE-016",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0084",
+      "kind": "topic",
+      "case_id": "CASE-016",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0085",
+      "kind": "topic",
+      "case_id": "CASE-016",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0086",
+      "kind": "topic",
+      "case_id": "CASE-016",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "不是。库内逐区标注在6个分区（右肺上野、右肺中野等）记录了异常，原文为：双肺弥漫粟粒样细小结节。",
+      "confidence": "high",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0087",
+      "kind": "topic",
+      "case_id": "CASE-016",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0088",
+      "kind": "overview",
+      "case_id": "CASE-016",
+      "topic_id": "NODULE",
+      "question": "这张片子主要异常是什么？",
+      "keywords": [
+        "主要异常",
+        "怎么",
+        "整体",
+        "概括",
+        "小结",
+        "什么病",
+        "看出什么"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫粟粒样结节。库内标注的异常分区为右肺上野、右肺中野、右肺下野。其中右肺上野：双肺弥漫粟粒样细小结节。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-016.jpg",
+        "case_id": "CASE-016",
+        "case_title": "双肺弥漫粟粒样结节",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注"
+    },
+    {
+      "qid": "A0089",
+      "kind": "zone",
+      "case_id": "CASE-017",
+      "topic_id": "EFFUSION",
+      "question": "右肺下野有什么问题？",
+      "keywords": [
+        "右肺下野",
+        "RLL",
+        "胸腔积液",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双侧下肺野密度增高，肋膈角变钝。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-017.jpg",
+        "case_id": "CASE-017",
+        "case_title": "双侧下肺野模糊伴肋膈角变钝",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0090",
+      "kind": "zone",
+      "case_id": "CASE-017",
+      "topic_id": "EFFUSION",
+      "question": "左肺下野有什么问题？",
+      "keywords": [
+        "左肺下野",
+        "LLL",
+        "胸腔积液",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双侧下肺野密度增高，肋膈角变钝。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LLL",
+        "label": "左肺下野",
+        "coords": [
+          0.64,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-017.jpg",
+        "case_id": "CASE-017",
+        "case_title": "双侧下肺野模糊伴肋膈角变钝",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0091",
+      "kind": "topic",
+      "case_id": "CASE-017",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0092",
+      "kind": "topic",
+      "case_id": "CASE-017",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0093",
+      "kind": "topic",
+      "case_id": "CASE-017",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "有。库内逐区标注在右肺下野、左肺下野记录了与「胸腔积液」相符的异常，原文为：双侧下肺野密度增高，肋膈角变钝。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-017.jpg",
+        "case_id": "CASE-017",
+        "case_title": "双侧下肺野模糊伴肋膈角变钝",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0094",
+      "kind": "topic",
+      "case_id": "CASE-017",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0095",
+      "kind": "topic",
+      "case_id": "CASE-017",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0096",
+      "kind": "topic",
+      "case_id": "CASE-017",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "不是。库内逐区标注在右肺下野、左肺下野记录了异常，原文为：双侧下肺野密度增高，肋膈角变钝。",
+      "confidence": "high",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0097",
+      "kind": "topic",
+      "case_id": "CASE-017",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0098",
+      "kind": "overview",
+      "case_id": "CASE-017",
+      "topic_id": "EFFUSION",
+      "question": "这张片子主要异常是什么？",
+      "keywords": [
+        "主要异常",
+        "怎么",
+        "整体",
+        "概括",
+        "小结",
+        "什么病",
+        "看出什么"
+      ],
+      "answerable": true,
+      "answer": "双侧下肺野模糊伴肋膈角变钝。库内标注的异常分区为右肺下野、左肺下野。其中右肺下野：双侧下肺野密度增高，肋膈角变钝。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-017.jpg",
+        "case_id": "CASE-017",
+        "case_title": "双侧下肺野模糊伴肋膈角变钝",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注"
+    },
+    {
+      "qid": "A0099",
+      "kind": "zone",
+      "case_id": "CASE-018",
+      "topic_id": "EFFUSION",
+      "question": "后肺野与后肋膈角有什么问题？",
+      "keywords": [
+        "后肺野与后肋膈角",
+        "POST",
+        "胸腔积液",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "后肋膈角变钝，可见液体分布；箭头为原图标注。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "POST",
+        "label": "后肺野与后肋膈角",
+        "coords": [
+          0.68,
+          0.1,
+          0.28,
+          0.8
+        ],
+        "image": "images/case-018.png",
+        "case_id": "CASE-018",
+        "case_title": "侧位胸片：后肋膈角变钝（箭头）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "原图箭头 + 公开说明"
+    },
+    {
+      "qid": "A0100",
+      "kind": "topic",
+      "case_id": "CASE-018",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0101",
+      "kind": "topic",
+      "case_id": "CASE-018",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0102",
+      "kind": "topic",
+      "case_id": "CASE-018",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "有。库内逐区标注在后肺野与后肋膈角记录了与「胸腔积液」相符的异常，原文为：后肋膈角变钝，可见液体分布；箭头为原图标注。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "POST",
+        "label": "后肺野与后肋膈角",
+        "coords": [
+          0.68,
+          0.1,
+          0.28,
+          0.8
+        ],
+        "image": "images/case-018.png",
+        "case_id": "CASE-018",
+        "case_title": "侧位胸片：后肋膈角变钝（箭头）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0103",
+      "kind": "topic",
+      "case_id": "CASE-018",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0104",
+      "kind": "topic",
+      "case_id": "CASE-018",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0105",
+      "kind": "topic",
+      "case_id": "CASE-018",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "不是。库内逐区标注在后肺野与后肋膈角记录了异常，原文为：后肋膈角变钝，可见液体分布；箭头为原图标注。",
+      "confidence": "high",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0106",
+      "kind": "topic",
+      "case_id": "CASE-018",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0107",
+      "kind": "overview",
+      "case_id": "CASE-018",
+      "topic_id": "EFFUSION",
+      "question": "这张片子主要异常是什么？",
+      "keywords": [
+        "主要异常",
+        "怎么",
+        "整体",
+        "概括",
+        "小结",
+        "什么病",
+        "看出什么"
+      ],
+      "answerable": true,
+      "answer": "侧位胸片：后肋膈角变钝（箭头）。库内标注的异常分区为后肺野与后肋膈角。其中后肺野与后肋膈角：后肋膈角变钝，可见液体分布；箭头为原图标注。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "POST",
+        "label": "后肺野与后肋膈角",
+        "coords": [
+          0.68,
+          0.1,
+          0.28,
+          0.8
+        ],
+        "image": "images/case-018.png",
+        "case_id": "CASE-018",
+        "case_title": "侧位胸片：后肋膈角变钝（箭头）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注"
+    },
+    {
+      "qid": "A0108",
+      "kind": "topic",
+      "case_id": "CASE-033",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0109",
+      "kind": "topic",
+      "case_id": "CASE-033",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0110",
+      "kind": "topic",
+      "case_id": "CASE-033",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0111",
+      "kind": "topic",
+      "case_id": "CASE-033",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0112",
+      "kind": "topic",
+      "case_id": "CASE-033",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0113",
+      "kind": "topic",
+      "case_id": "CASE-033",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注没有异常分区；但「没有标注异常」不等于影像完全正常，仍以原始报告与临床为准。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0114",
+      "kind": "topic",
+      "case_id": "CASE-033",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0115",
+      "kind": "topic",
+      "case_id": "CASE-034",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0116",
+      "kind": "topic",
+      "case_id": "CASE-034",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0117",
+      "kind": "topic",
+      "case_id": "CASE-034",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0118",
+      "kind": "topic",
+      "case_id": "CASE-034",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0119",
+      "kind": "topic",
+      "case_id": "CASE-034",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0120",
+      "kind": "topic",
+      "case_id": "CASE-034",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注没有异常分区；但「没有标注异常」不等于影像完全正常，仍以原始报告与临床为准。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0121",
+      "kind": "topic",
+      "case_id": "CASE-034",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0122",
+      "kind": "zone",
+      "case_id": "CASE-036",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "右肺上野有什么问题？",
+      "keywords": [
+        "右肺上野",
+        "RUL",
+        "气胸",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "右侧胸腔可见气胸，右肺压缩，肺纹理消失（原图标注 Pneumothorax / Collapsed right lung）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-036.jpg",
+        "case_id": "CASE-036",
+        "case_title": "气胸（胸片，标注版）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "原图标注"
+    },
+    {
+      "qid": "A0123",
+      "kind": "zone",
+      "case_id": "CASE-036",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "右肺中野有什么问题？",
+      "keywords": [
+        "右肺中野",
+        "RML",
+        "气胸",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "右侧胸腔可见气胸，右肺压缩，肺纹理消失（原图标注 Pneumothorax / Collapsed right lung）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RML",
+        "label": "右肺中野",
+        "coords": [
+          0.06,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-036.jpg",
+        "case_id": "CASE-036",
+        "case_title": "气胸（胸片，标注版）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "原图标注"
+    },
+    {
+      "qid": "A0124",
+      "kind": "zone",
+      "case_id": "CASE-036",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "右肺下野有什么问题？",
+      "keywords": [
+        "右肺下野",
+        "RLL",
+        "气胸",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "右侧胸腔可见气胸，右肺压缩，肺纹理消失（原图标注 Pneumothorax / Collapsed right lung）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-036.jpg",
+        "case_id": "CASE-036",
+        "case_title": "气胸（胸片，标注版）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "原图标注"
+    },
+    {
+      "qid": "A0125",
+      "kind": "topic",
+      "case_id": "CASE-036",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0126",
+      "kind": "topic",
+      "case_id": "CASE-036",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0127",
+      "kind": "topic",
+      "case_id": "CASE-036",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0128",
+      "kind": "topic",
+      "case_id": "CASE-036",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "有。库内逐区标注在3个分区（右肺上野、右肺中野等）记录了与「气胸」相符的异常，原文为：右侧胸腔可见气胸，右肺压缩，肺纹理消失（原图标注 Pneumothorax / Collapsed right lung）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-036.jpg",
+        "case_id": "CASE-036",
+        "case_title": "气胸（胸片，标注版）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0129",
+      "kind": "topic",
+      "case_id": "CASE-036",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0130",
+      "kind": "topic",
+      "case_id": "CASE-036",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "不是。库内逐区标注在3个分区（右肺上野、右肺中野等）记录了异常，原文为：右侧胸腔可见气胸，右肺压缩，肺纹理消失（原图标注 Pneumothorax / Collapsed right lung）。",
+      "confidence": "high",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0131",
+      "kind": "topic",
+      "case_id": "CASE-036",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0132",
+      "kind": "overview",
+      "case_id": "CASE-036",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子主要异常是什么？",
+      "keywords": [
+        "主要异常",
+        "怎么",
+        "整体",
+        "概括",
+        "小结",
+        "什么病",
+        "看出什么"
+      ],
+      "answerable": true,
+      "answer": "气胸（胸片，标注版）。库内标注的异常分区为右肺上野、右肺中野、右肺下野。其中右肺上野：右侧胸腔可见气胸，右肺压缩，肺纹理消失（原图标注 Pneumothorax / Collapsed right lung）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-036.jpg",
+        "case_id": "CASE-036",
+        "case_title": "气胸（胸片，标注版）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注"
+    },
+    {
+      "qid": "A0133",
+      "kind": "topic",
+      "case_id": "CASE-041",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0134",
+      "kind": "topic",
+      "case_id": "CASE-041",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0135",
+      "kind": "topic",
+      "case_id": "CASE-041",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0136",
+      "kind": "topic",
+      "case_id": "CASE-041",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0137",
+      "kind": "topic",
+      "case_id": "CASE-041",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0138",
+      "kind": "topic",
+      "case_id": "CASE-041",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注没有异常分区；但「没有标注异常」不等于影像完全正常，仍以原始报告与临床为准。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0139",
+      "kind": "topic",
+      "case_id": "CASE-041",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0140",
+      "kind": "topic",
+      "case_id": "CASE-047",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0141",
+      "kind": "topic",
+      "case_id": "CASE-047",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0142",
+      "kind": "topic",
+      "case_id": "CASE-047",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0143",
+      "kind": "topic",
+      "case_id": "CASE-047",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0144",
+      "kind": "topic",
+      "case_id": "CASE-047",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0145",
+      "kind": "topic",
+      "case_id": "CASE-047",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注没有异常分区；但「没有标注异常」不等于影像完全正常，仍以原始报告与临床为准。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0146",
+      "kind": "topic",
+      "case_id": "CASE-047",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0147",
+      "kind": "zone",
+      "case_id": "CASE-153",
+      "topic_id": "CARDIOMEGALY",
+      "question": "右肺下野有什么问题？",
+      "keywords": [
+        "右肺下野",
+        "RLL",
+        "心影增大",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "下肺野可见 Kerley B 线，肺血管影增粗（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-153.jpg",
+        "case_id": "CASE-153",
+        "case_title": "胸部 X 线",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0148",
+      "kind": "zone",
+      "case_id": "CASE-153",
+      "topic_id": "CARDIOMEGALY",
+      "question": "左肺下野有什么问题？",
+      "keywords": [
+        "左肺下野",
+        "LLL",
+        "心影增大",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "下肺野可见 Kerley B 线，肺血管影增粗（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LLL",
+        "label": "左肺下野",
+        "coords": [
+          0.64,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-153.jpg",
+        "case_id": "CASE-153",
+        "case_title": "胸部 X 线",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0149",
+      "kind": "zone",
+      "case_id": "CASE-153",
+      "topic_id": "CARDIOMEGALY",
+      "question": "纵隔与心影有什么问题？",
+      "keywords": [
+        "纵隔与心影",
+        "MED",
+        "心影增大",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "心影增大（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "MED",
+        "label": "纵隔与心影",
+        "coords": [
+          0.36,
+          0.08,
+          0.28,
+          0.74
+        ],
+        "image": "images/case-153.jpg",
+        "case_id": "CASE-153",
+        "case_title": "胸部 X 线",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0150",
+      "kind": "topic",
+      "case_id": "CASE-153",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0151",
+      "kind": "topic",
+      "case_id": "CASE-153",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0152",
+      "kind": "topic",
+      "case_id": "CASE-153",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0153",
+      "kind": "topic",
+      "case_id": "CASE-153",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0154",
+      "kind": "topic",
+      "case_id": "CASE-153",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0155",
+      "kind": "topic",
+      "case_id": "CASE-153",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "不是。库内逐区标注在3个分区（右肺下野、左肺下野等）记录了异常，原文为：下肺野可见 Kerley B 线，肺血管影增粗（公开说明）；心影增大（公开说明）。",
+      "confidence": "high",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0156",
+      "kind": "topic",
+      "case_id": "CASE-153",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "有。库内逐区标注在纵隔与心影记录了与「心影增大」相符的异常，原文为：心影增大（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "MED",
+        "label": "纵隔与心影",
+        "coords": [
+          0.36,
+          0.08,
+          0.28,
+          0.74
+        ],
+        "image": "images/case-153.jpg",
+        "case_id": "CASE-153",
+        "case_title": "胸部 X 线",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0157",
+      "kind": "overview",
+      "case_id": "CASE-153",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子主要异常是什么？",
+      "keywords": [
+        "主要异常",
+        "怎么",
+        "整体",
+        "概括",
+        "小结",
+        "什么病",
+        "看出什么"
+      ],
+      "answerable": true,
+      "answer": "胸部 X 线。库内标注的异常分区为右肺下野、左肺下野、纵隔与心影。其中右肺下野：下肺野可见 Kerley B 线，肺血管影增粗（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-153.jpg",
+        "case_id": "CASE-153",
+        "case_title": "胸部 X 线",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注"
+    },
+    {
+      "qid": "A0158",
+      "kind": "zone",
+      "case_id": "CASE-162",
+      "topic_id": "NODULE",
+      "question": "右肺上野有什么问题？",
+      "keywords": [
+        "右肺上野",
+        "RUL",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫网结节影（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-162.jpg",
+        "case_id": "CASE-162",
+        "case_title": "胸部 X 线",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0159",
+      "kind": "zone",
+      "case_id": "CASE-162",
+      "topic_id": "NODULE",
+      "question": "右肺中野有什么问题？",
+      "keywords": [
+        "右肺中野",
+        "RML",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫网结节影（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RML",
+        "label": "右肺中野",
+        "coords": [
+          0.06,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-162.jpg",
+        "case_id": "CASE-162",
+        "case_title": "胸部 X 线",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0160",
+      "kind": "zone",
+      "case_id": "CASE-162",
+      "topic_id": "NODULE",
+      "question": "右肺下野有什么问题？",
+      "keywords": [
+        "右肺下野",
+        "RLL",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫网结节影（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-162.jpg",
+        "case_id": "CASE-162",
+        "case_title": "胸部 X 线",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0161",
+      "kind": "zone",
+      "case_id": "CASE-162",
+      "topic_id": "NODULE",
+      "question": "左肺上野有什么问题？",
+      "keywords": [
+        "左肺上野",
+        "LUL",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫网结节影（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LUL",
+        "label": "左肺上野",
+        "coords": [
+          0.64,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-162.jpg",
+        "case_id": "CASE-162",
+        "case_title": "胸部 X 线",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0162",
+      "kind": "zone",
+      "case_id": "CASE-162",
+      "topic_id": "NODULE",
+      "question": "左肺中野有什么问题？",
+      "keywords": [
+        "左肺中野",
+        "LML",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫网结节影（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LML",
+        "label": "左肺中野",
+        "coords": [
+          0.64,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-162.jpg",
+        "case_id": "CASE-162",
+        "case_title": "胸部 X 线",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0163",
+      "kind": "zone",
+      "case_id": "CASE-162",
+      "topic_id": "NODULE",
+      "question": "左肺下野有什么问题？",
+      "keywords": [
+        "左肺下野",
+        "LLL",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫网结节影（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LLL",
+        "label": "左肺下野",
+        "coords": [
+          0.64,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-162.jpg",
+        "case_id": "CASE-162",
+        "case_title": "胸部 X 线",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0164",
+      "kind": "topic",
+      "case_id": "CASE-162",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0165",
+      "kind": "topic",
+      "case_id": "CASE-162",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "有。库内逐区标注在6个分区（右肺上野、右肺中野等）记录了与「肺结节 / 粟粒样结节」相符的异常，原文为：双肺弥漫网结节影（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-162.jpg",
+        "case_id": "CASE-162",
+        "case_title": "胸部 X 线",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0166",
+      "kind": "topic",
+      "case_id": "CASE-162",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0167",
+      "kind": "topic",
+      "case_id": "CASE-162",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0168",
+      "kind": "topic",
+      "case_id": "CASE-162",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0169",
+      "kind": "topic",
+      "case_id": "CASE-162",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "不是。库内逐区标注在6个分区（右肺上野、右肺中野等）记录了异常，原文为：双肺弥漫网结节影（公开说明）。",
+      "confidence": "high",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0170",
+      "kind": "topic",
+      "case_id": "CASE-162",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0171",
+      "kind": "overview",
+      "case_id": "CASE-162",
+      "topic_id": "NODULE",
+      "question": "这张片子主要异常是什么？",
+      "keywords": [
+        "主要异常",
+        "怎么",
+        "整体",
+        "概括",
+        "小结",
+        "什么病",
+        "看出什么"
+      ],
+      "answerable": true,
+      "answer": "胸部 X 线。库内标注的异常分区为右肺上野、右肺中野、右肺下野。其中右肺上野：双肺弥漫网结节影（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-162.jpg",
+        "case_id": "CASE-162",
+        "case_title": "胸部 X 线",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注"
+    },
+    {
+      "qid": "A0172",
+      "kind": "zone",
+      "case_id": "CASE-202",
+      "topic_id": "PNEUMONIA",
+      "question": "右肺中野有什么问题？",
+      "keywords": [
+        "右肺中野",
+        "RML",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "右肺中野大片实变，红箭头指向病灶边缘。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RML",
+        "label": "右肺中野",
+        "coords": [
+          0.06,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-202.jpg",
+        "case_id": "CASE-202",
+        "case_title": "大叶性肺炎（胸片，红箭头）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "原图箭头 + 公开说明"
+    },
+    {
+      "qid": "A0173",
+      "kind": "zone",
+      "case_id": "CASE-202",
+      "topic_id": "PNEUMONIA",
+      "question": "右肺下野有什么问题？",
+      "keywords": [
+        "右肺下野",
+        "RLL",
+        "肺炎 / 肺实变",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "右肺下野可见实变影向下延伸。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-202.jpg",
+        "case_id": "CASE-202",
+        "case_title": "大叶性肺炎（胸片，红箭头）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "公开说明 + 原图"
+    },
+    {
+      "qid": "A0174",
+      "kind": "topic",
+      "case_id": "CASE-202",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "有。库内逐区标注在右肺中野、右肺下野记录了与「肺炎 / 肺实变」相符的异常，原文为：右肺中野大片实变，红箭头指向病灶边缘；右肺下野可见实变影向下延伸。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RML",
+        "label": "右肺中野",
+        "coords": [
+          0.06,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-202.jpg",
+        "case_id": "CASE-202",
+        "case_title": "大叶性肺炎（胸片，红箭头）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0175",
+      "kind": "topic",
+      "case_id": "CASE-202",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结节 / 粟粒样结节」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0176",
+      "kind": "topic",
+      "case_id": "CASE-202",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0177",
+      "kind": "topic",
+      "case_id": "CASE-202",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0178",
+      "kind": "topic",
+      "case_id": "CASE-202",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0179",
+      "kind": "topic",
+      "case_id": "CASE-202",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "不是。库内逐区标注在右肺中野、右肺下野记录了异常，原文为：右肺中野大片实变，红箭头指向病灶边缘；右肺下野可见实变影向下延伸。",
+      "confidence": "high",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0180",
+      "kind": "topic",
+      "case_id": "CASE-202",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0181",
+      "kind": "overview",
+      "case_id": "CASE-202",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子主要异常是什么？",
+      "keywords": [
+        "主要异常",
+        "怎么",
+        "整体",
+        "概括",
+        "小结",
+        "什么病",
+        "看出什么"
+      ],
+      "answerable": true,
+      "answer": "大叶性肺炎（胸片，红箭头）。库内标注的异常分区为右肺中野、右肺下野。其中右肺中野：右肺中野大片实变，红箭头指向病灶边缘。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RML",
+        "label": "右肺中野",
+        "coords": [
+          0.06,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-202.jpg",
+        "case_id": "CASE-202",
+        "case_title": "大叶性肺炎（胸片，红箭头）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-PNE-02",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。",
+        "offset": 68,
+        "sha1": "f25ddcf08d83e51ee686156c674efae98379a691"
+      },
+      "basis": "库内逐区标注"
+    },
+    {
+      "qid": "A0182",
+      "kind": "zone",
+      "case_id": "CASE-203",
+      "topic_id": "TB",
+      "question": "右肺上野有什么问题？",
+      "keywords": [
+        "右肺上野",
+        "RUL",
+        "肺结核",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺上野斑片状、结节状密度增高（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-203.jpg",
+        "case_id": "CASE-203",
+        "case_title": "肺结核（胸片，历史影像）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-TB-02",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "影像提示活动性病变时，应建议痰涂片与分子检测，并按规范转诊。",
+        "offset": 580,
+        "sha1": "c74705940e11f98f08fe670e8412939bee293412"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0183",
+      "kind": "zone",
+      "case_id": "CASE-203",
+      "topic_id": "TB",
+      "question": "左肺上野有什么问题？",
+      "keywords": [
+        "左肺上野",
+        "LUL",
+        "肺结核",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺上野斑片状、结节状密度增高（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LUL",
+        "label": "左肺上野",
+        "coords": [
+          0.64,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-203.jpg",
+        "case_id": "CASE-203",
+        "case_title": "肺结核（胸片，历史影像）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-TB-02",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "影像提示活动性病变时，应建议痰涂片与分子检测，并按规范转诊。",
+        "offset": 580,
+        "sha1": "c74705940e11f98f08fe670e8412939bee293412"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0184",
+      "kind": "topic",
+      "case_id": "CASE-203",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0185",
+      "kind": "topic",
+      "case_id": "CASE-203",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "有。库内逐区标注在右肺上野、左肺上野记录了与「肺结节 / 粟粒样结节」相符的异常，原文为：双肺上野斑片状、结节状密度增高（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-203.jpg",
+        "case_id": "CASE-203",
+        "case_title": "肺结核（胸片，历史影像）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0186",
+      "kind": "topic",
+      "case_id": "CASE-203",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0187",
+      "kind": "topic",
+      "case_id": "CASE-203",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0188",
+      "kind": "topic",
+      "case_id": "CASE-203",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0189",
+      "kind": "topic",
+      "case_id": "CASE-203",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "不是。库内逐区标注在右肺上野、左肺上野记录了异常，原文为：双肺上野斑片状、结节状密度增高（公开说明）。",
+      "confidence": "high",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0190",
+      "kind": "topic",
+      "case_id": "CASE-203",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0191",
+      "kind": "overview",
+      "case_id": "CASE-203",
+      "topic_id": "TB",
+      "question": "这张片子主要异常是什么？",
+      "keywords": [
+        "主要异常",
+        "怎么",
+        "整体",
+        "概括",
+        "小结",
+        "什么病",
+        "看出什么"
+      ],
+      "answerable": true,
+      "answer": "肺结核（胸片，历史影像）。库内标注的异常分区为右肺上野、左肺上野。其中右肺上野：双肺上野斑片状、结节状密度增高（公开说明）。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-203.jpg",
+        "case_id": "CASE-203",
+        "case_title": "肺结核（胸片，历史影像）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-TB-02",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "影像提示活动性病变时，应建议痰涂片与分子检测，并按规范转诊。",
+        "offset": 580,
+        "sha1": "c74705940e11f98f08fe670e8412939bee293412"
+      },
+      "basis": "库内逐区标注"
+    },
+    {
+      "qid": "A0192",
+      "kind": "zone",
+      "case_id": "CASE-204",
+      "topic_id": "NODULE",
+      "question": "右肺上野有什么问题？",
+      "keywords": [
+        "右肺上野",
+        "RUL",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫小结节影，以中上野为著。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-204.jpg",
+        "case_id": "CASE-204",
+        "case_title": "结节病：双肺结节（胸片）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0193",
+      "kind": "zone",
+      "case_id": "CASE-204",
+      "topic_id": "NODULE",
+      "question": "右肺中野有什么问题？",
+      "keywords": [
+        "右肺中野",
+        "RML",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫小结节影，以中上野为著。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RML",
+        "label": "右肺中野",
+        "coords": [
+          0.06,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-204.jpg",
+        "case_id": "CASE-204",
+        "case_title": "结节病：双肺结节（胸片）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0194",
+      "kind": "zone",
+      "case_id": "CASE-204",
+      "topic_id": "NODULE",
+      "question": "右肺下野有什么问题？",
+      "keywords": [
+        "右肺下野",
+        "RLL",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫小结节影，以中上野为著。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RLL",
+        "label": "右肺下野",
+        "coords": [
+          0.06,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-204.jpg",
+        "case_id": "CASE-204",
+        "case_title": "结节病：双肺结节（胸片）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0195",
+      "kind": "zone",
+      "case_id": "CASE-204",
+      "topic_id": "NODULE",
+      "question": "左肺上野有什么问题？",
+      "keywords": [
+        "左肺上野",
+        "LUL",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫小结节影，以中上野为著。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LUL",
+        "label": "左肺上野",
+        "coords": [
+          0.64,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-204.jpg",
+        "case_id": "CASE-204",
+        "case_title": "结节病：双肺结节（胸片）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0196",
+      "kind": "zone",
+      "case_id": "CASE-204",
+      "topic_id": "NODULE",
+      "question": "左肺中野有什么问题？",
+      "keywords": [
+        "左肺中野",
+        "LML",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫小结节影，以中上野为著。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LML",
+        "label": "左肺中野",
+        "coords": [
+          0.64,
+          0.33,
+          0.3,
+          0.24
+        ],
+        "image": "images/case-204.jpg",
+        "case_id": "CASE-204",
+        "case_title": "结节病：双肺结节（胸片）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0197",
+      "kind": "zone",
+      "case_id": "CASE-204",
+      "topic_id": "NODULE",
+      "question": "左肺下野有什么问题？",
+      "keywords": [
+        "左肺下野",
+        "LLL",
+        "肺结节 / 粟粒样结节",
+        "有什么",
+        "问题",
+        "异常"
+      ],
+      "answerable": true,
+      "answer": "双肺弥漫小结节影，以中上野为著。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "LLL",
+        "label": "左肺下野",
+        "coords": [
+          0.64,
+          0.57,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-204.jpg",
+        "case_id": "CASE-204",
+        "case_title": "结节病：双肺结节（胸片）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "公开来源说明"
+    },
+    {
+      "qid": "A0198",
+      "kind": "topic",
+      "case_id": "CASE-204",
+      "topic_id": "PNEUMONIA",
+      "question": "这张片子有没有肺炎？",
+      "keywords": [
+        "肺炎 / 肺实变",
+        "PNEUMONIA",
+        "肺炎",
+        "实变",
+        "气腔影",
+        "浸润",
+        "感染",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺炎 / 肺实变」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PNE-01",
+        "topic_id": "PNEUMONIA",
+        "topic_cn": "肺炎 / 肺实变",
+        "quote": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。",
+        "offset": 11,
+        "sha1": "ef7983165b64d45b43ec0bfb56d72ea73fd6d26e"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0199",
+      "kind": "topic",
+      "case_id": "CASE-204",
+      "topic_id": "NODULE",
+      "question": "这张片子有没有肺结节？",
+      "keywords": [
+        "肺结节 / 粟粒样结节",
+        "NODULE",
+        "结节",
+        "粟粒",
+        "结节病",
+        "肉芽肿",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "有。库内逐区标注在6个分区（右肺上野、右肺中野等）记录了与「肺结节 / 粟粒样结节」相符的异常，原文为：双肺弥漫小结节影，以中上野为著。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-204.jpg",
+        "case_id": "CASE-204",
+        "case_title": "结节病：双肺结节（胸片）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0200",
+      "kind": "topic",
+      "case_id": "CASE-204",
+      "topic_id": "EFFUSION",
+      "question": "这张片子有没有胸腔积液？",
+      "keywords": [
+        "胸腔积液",
+        "EFFUSION",
+        "积液",
+        "肋膈角",
+        "胸水",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「胸腔积液」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-EFF-01",
+        "topic_id": "EFFUSION",
+        "topic_cn": "胸腔积液",
+        "quote": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。",
+        "offset": 338,
+        "sha1": "a726ca028720566aa84c3e1998d458316c26cea0"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0201",
+      "kind": "topic",
+      "case_id": "CASE-204",
+      "topic_id": "PNEUMOTHORAX",
+      "question": "这张片子有没有气胸？",
+      "keywords": [
+        "气胸",
+        "PNEUMOTHORAX",
+        "气胸",
+        "胸膜线",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「气胸」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-PTX-01",
+        "topic_id": "PNEUMOTHORAX",
+        "topic_cn": "气胸",
+        "quote": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。",
+        "offset": 451,
+        "sha1": "26002110810f862daea51b6110e1d029a60b49ad"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0202",
+      "kind": "topic",
+      "case_id": "CASE-204",
+      "topic_id": "TB",
+      "question": "这张片子有没有肺结核？",
+      "keywords": [
+        "肺结核",
+        "TB",
+        "结核",
+        "肺痨",
+        "空洞",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「肺结核」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-TB-01",
+        "topic_id": "TB",
+        "topic_cn": "肺结核",
+        "quote": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。",
+        "offset": 538,
+        "sha1": "647cf899fc98fc15daf2d4cb04b18c3166b5b28c"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0203",
+      "kind": "topic",
+      "case_id": "CASE-204",
+      "topic_id": "NORMAL",
+      "question": "这张片子是正常胸片吗？",
+      "keywords": [
+        "正常胸片",
+        "NORMAL",
+        "正常",
+        "未见异常",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "不是。库内逐区标注在6个分区（右肺上野、右肺中野等）记录了异常，原文为：双肺弥漫小结节影，以中上野为著。",
+      "confidence": "high",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-NOR-01",
+        "topic_id": "NORMAL",
+        "topic_cn": "正常胸片",
+        "quote": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。",
+        "offset": 630,
+        "sha1": "18e879756ab24df4fc3a4317dc263d45e720736b"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0204",
+      "kind": "topic",
+      "case_id": "CASE-204",
+      "topic_id": "CARDIOMEGALY",
+      "question": "这张片子有没有心影增大？",
+      "keywords": [
+        "心影增大",
+        "CARDIOMEGALY",
+        "心影增大",
+        "心脏增大",
+        "心胸比",
+        "有没有",
+        "吗",
+        "有吗"
+      ],
+      "answerable": true,
+      "answer": "库内逐区标注中，本片没有「心影增大」的明确描述。这表示来源未写，不等于排除。",
+      "confidence": "medium",
+      "region": null,
+      "citation": {
+        "kp_id": "GL-CMG-01",
+        "topic_id": "CARDIOMEGALY",
+        "topic_cn": "心影增大",
+        "quote": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。",
+        "offset": 740,
+        "sha1": "575dc6bba7b1f1edf445a1a42b66615627ffd1fd"
+      },
+      "basis": "库内逐区标注 + 指南要点"
+    },
+    {
+      "qid": "A0205",
+      "kind": "overview",
+      "case_id": "CASE-204",
+      "topic_id": "NODULE",
+      "question": "这张片子主要异常是什么？",
+      "keywords": [
+        "主要异常",
+        "怎么",
+        "整体",
+        "概括",
+        "小结",
+        "什么病",
+        "看出什么"
+      ],
+      "answerable": true,
+      "answer": "结节病：双肺结节（胸片）。库内标注的异常分区为右肺上野、右肺中野、右肺下野。其中右肺上野：双肺弥漫小结节影，以中上野为著。",
+      "confidence": "high",
+      "region": {
+        "zone_id": "RUL",
+        "label": "右肺上野",
+        "coords": [
+          0.06,
+          0.08,
+          0.3,
+          0.25
+        ],
+        "image": "images/case-204.jpg",
+        "case_id": "CASE-204",
+        "case_title": "结节病：双肺结节（胸片）",
+        "status": "abnormal"
+      },
+      "citation": {
+        "kp_id": "GL-NOD-01",
+        "topic_id": "NODULE",
+        "topic_cn": "肺结节 / 粟粒样结节",
+        "quote": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。",
+        "offset": 181,
+        "sha1": "52a2f0b67bb51b3593d49367c4ea05bb13d7d8db"
+      },
+      "basis": "库内逐区标注"
+    },
+    {
+      "qid": "R0001",
+      "kind": "refusal",
+      "case_id": null,
+      "topic_id": "",
+      "question": "这张片子是不是肺癌？",
+      "keywords": [
+        "这张片子是不",
+        "这张片子是不是肺癌"
+      ],
+      "answerable": false,
+      "refusal": {
+        "type": "out_of_scope_diagnosis",
+        "type_cn": "超出诊断范围",
+        "reason": "库内是教学分区标注，不包含病理或恶性诊断依据。仅凭胸片分区描述不能判断良恶性，需要病理、增强 CT 或多学科会诊。",
+        "suggestion": "可以问：这张片子有没有结节？结节的部位和大小来源是怎么描述的？"
+      }
+    },
+    {
+      "qid": "R0002",
+      "kind": "refusal",
+      "case_id": null,
+      "topic_id": "",
+      "question": "病灶是早期还是晚期？",
+      "keywords": [
+        "病灶是早期还",
+        "病灶是早期还是晚期"
+      ],
+      "answerable": false,
+      "refusal": {
+        "type": "out_of_scope_diagnosis",
+        "type_cn": "超出分期范围",
+        "reason": "分期依赖 TNM 系统、影像分期与病理结果，本工具只做分区阅片描述，不做分期。",
+        "suggestion": "可以问：这张片子主要异常是什么？"
+      }
+    },
+    {
+      "qid": "R0003",
+      "kind": "refusal",
+      "case_id": null,
+      "topic_id": "",
+      "question": "需要做手术吗？",
+      "keywords": [
+        "需要做手术吗",
+        "需要做手术吗"
+      ],
+      "answerable": false,
+      "refusal": {
+        "type": "out_of_scope_treatment",
+        "type_cn": "超出治疗建议范围",
+        "reason": "治疗决策需要结合临床、实验室与患者整体情况，本工具不提供治疗建议。",
+        "suggestion": "可以问：这份报告缺哪些要素？"
+      }
+    },
+    {
+      "qid": "R0004",
+      "kind": "refusal",
+      "case_id": null,
+      "topic_id": "",
+      "question": "帮我写一份正式诊断报告",
+      "keywords": [
+        "帮我写一份正",
+        "帮我写一份正式诊断报告"
+      ],
+      "answerable": false,
+      "refusal": {
+        "type": "out_of_scope_report",
+        "type_cn": "超出报告签发范围",
+        "reason": "本工具输出的是教学分区所见与出处，不是可直接签发的诊断报告，也没有经过医师审核。",
+        "suggestion": "可以看：报告—指南双源对照，它只提示离规范报告还差哪几项。"
+      }
+    },
+    {
+      "qid": "R0005",
+      "kind": "refusal",
+      "case_id": null,
+      "topic_id": "",
+      "question": "这个病人预后怎么样？",
+      "keywords": [
+        "这个病人预后",
+        "这个病人预后怎么样"
+      ],
+      "answerable": false,
+      "refusal": {
+        "type": "out_of_scope_prognosis",
+        "type_cn": "超出预后判断范围",
+        "reason": "预后需要纵向随访数据与临床资料，单张胸片的分区描述不足以支撑预后判断。",
+        "suggestion": "可以问：这张片子有没有胸腔积液？"
+      }
+    },
+    {
+      "qid": "R0006",
+      "kind": "refusal",
+      "case_id": null,
+      "topic_id": "",
+      "question": "右肺上野有没有骨折？",
+      "keywords": [
+        "右肺上野有没",
+        "右肺上野有没有骨折"
+      ],
+      "answerable": false,
+      "refusal": {
+        "type": "out_of_scope_topic",
+        "type_cn": "超出覆盖主题",
+        "reason": "本工具的分区标注针对肺野、心影、纵隔、膈肌等胸部 X 线教学分区，不包含肋骨骨折的系统判读。",
+        "suggestion": "可以问：右肺上野有什么问题？"
+      }
+    },
+    {
+      "qid": "R0007",
+      "kind": "refusal",
+      "case_id": null,
+      "topic_id": "",
+      "question": "胸腔积液大概有多少毫升？",
+      "keywords": [
+        "胸腔积液大概",
+        "胸腔积液大概有多少毫升"
+      ],
+      "answerable": false,
+      "refusal": {
+        "type": "out_of_scope_quantify",
+        "type_cn": "超出定量范围",
+        "reason": "胸片只能提示积液的存在与大致范围，精确容量需要超声或 CT 评估，本工具不做容量估算。",
+        "suggestion": "可以问：这张片子有没有胸腔积液？"
+      }
+    },
+    {
+      "qid": "R0008",
+      "kind": "refusal",
+      "case_id": null,
+      "topic_id": "",
+      "question": "这张片子是肺炎还是肺结核？",
+      "keywords": [
+        "这张片子是肺",
+        "这张片子是肺炎还是肺结核"
+      ],
+      "answerable": false,
+      "refusal": {
+        "type": "out_of_scope_differential",
+        "type_cn": "不做鉴别结论",
+        "reason": "可以分别告诉你两种病变在库内的描述，但不下「二者之一」的鉴别结论——鉴别需要临床、实验室与随访。",
+        "suggestion": "可以分别问：有没有肺炎？有没有结核？"
+      }
+    }
+  ],
+  "summary": {
+    "total": 213,
+    "answerable": 205,
+    "refusal": 8,
+    "cases": 21
+  }
+}

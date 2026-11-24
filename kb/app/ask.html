@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ef">
+<title>提问 · RadioCheck</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b4f55'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white' font-family='sans-serif'%3ER%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f6f4ef; --surface:#fff; --ink:#111a20; --ink2:#2b3a44;
+  --muted:#5d6f7a; --faint:#93a3ab; --line:#e7e3da;
+  --brand:#0b4f55; --brand2:#0e7c7b;
+  --ok:#147a5b; --okbg:#f0faf6; --okln:#cfe9df;
+  --no:#a33b2b; --nobg:#fdf3f0; --nolnn:#f2d8cf;
+  --r:16px; --shadow:0 1px 2px rgba(16,35,46,.05),0 16px 40px -34px rgba(11,79,85,.55);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#eae7e0;color:var(--ink);
+  font:15px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input{font-family:inherit}
+.app{max-width:600px;margin:0 auto;min-height:100vh;background:var(--bg);padding:16px 16px 40px}
+@media(min-width:640px){.app{min-height:calc(100vh - 40px);margin:20px auto;border-radius:28px;box-shadow:0 34px 90px -60px rgba(11,79,85,.7)}}
+
+.top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.back{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid var(--line);display:grid;place-items:center;font-size:17px;color:var(--brand)}
+.top .t{font-size:16px;font-weight:700;letter-spacing:-.01em}
+.top .s{font-size:11.5px;color:var(--faint)}
+
+.casebar{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 12px;margin-bottom:12px}
+.casebar .cid{font-size:10.5px;font-weight:700;color:var(--brand2);background:#e9f4f1;padding:2px 7px;border-radius:6px;flex:0 0 auto}
+.casebar .ct{font-size:12.5px;color:var(--ink2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.casebar button{border:1px solid var(--line);background:#faf9f6;color:var(--muted);font-size:11.5px;padding:4px 10px;border-radius:99px;cursor:pointer;flex:0 0 auto}
+
+.askbox{display:flex;gap:8px;margin-bottom:10px}
+.askbox input{flex:1;height:46px;border-radius:13px;border:1px solid var(--line);background:#fff;padding:0 14px;font-size:14px;color:var(--ink);outline:none;box-shadow:var(--shadow)}
+.askbox input:focus{border-color:#b9d7d0}
+.askbox button{width:60px;height:46px;border-radius:13px;border:0;background:var(--brand);color:#fff;font-size:14px;font-weight:650;cursor:pointer}
+.askbox button:disabled{opacity:.5}
+
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.chip{border:1px solid var(--line);background:#fff;color:var(--ink2);font-size:11.5px;padding:6px 11px;border-radius:99px;cursor:pointer;line-height:1.3}
+.chip:hover{border-color:#b9d7d0;background:#f7fdfb}
+
+.ans{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:16px;border:1px solid var(--line);animation:pop .22s ease}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.ans.ok{border-color:var(--okln)}
+.ans.no{border-color:var(--nolnn)}
+.ans-h{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.tag{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:99px}
+.tag.ok{background:var(--okbg);color:var(--ok)}
+.tag.no{background:var(--nobg);color:var(--no)}
+.conf{font-size:11px;color:var(--faint)}
+.concl{font-size:15.5px;line-height:1.75;font-weight:600;color:var(--ink);margin:0 0 4px}
+.reason{font-size:13px;line-height:1.8;color:var(--ink2);margin:8px 0 0}
+
+.sec{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.sec-h{font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--faint);margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.sec-h .mini{font-weight:500;letter-spacing:0;color:var(--brand2);background:#eef7f5;padding:1px 7px;border-radius:99px;font-size:10px}
+
+.film{position:relative;border-radius:11px;overflow:hidden;background:#0b0f16;line-height:0}
+.film img{display:block;width:100%;height:auto}
+.film .box{position:absolute;border:2px solid #ff5a4f;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.35),inset 0 0 0 1px rgba(255,255,255,.5);pointer-events:none}
+.film .box::after{content:attr(data-l);position:absolute;left:0;top:-19px;font-size:10px;font-weight:700;color:#fff;background:#ff5a4f;padding:1px 6px;border-radius:3px;white-space:nowrap;line-height:1.5}
+.cap{font-size:11.5px;color:var(--muted);margin-top:8px}
+.cap b{color:var(--ink2)}
+
+.cite{border:1px solid var(--line);border-radius:11px;background:#fbfaf7;padding:11px 12px;cursor:pointer}
+.cite .q{font-size:13px;line-height:1.8;color:var(--ink2);margin:0;font-style:normal}
+.cite .q mark{background:#fff3c4;padding:0 2px;border-radius:2px}
+.cite .meta{font-size:10.5px;color:var(--faint);margin-top:7px;line-height:1.6}
+.cite .meta code{background:#eee9df;padding:0 4px;border-radius:3px}
+.cite .full{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.cite.open .full{display:block}
+.cite .full pre{margin:0;font-size:11.5px;line-height:1.9;color:var(--muted);white-space:pre-wrap;word-break:break-all;font-family:inherit}
+.cite .full pre mark{background:#fff3c4;color:var(--ink);padding:0 1px}
+
+.sug{margin-top:14px;background:#f6fbf9;border:1px solid #dcece7;border-radius:11px;padding:10px 12px;font-size:12.5px;color:#0f5c45;line-height:1.8}
+.sug .sg-h{font-size:10.5px;font-weight:700;letter-spacing:.05em;color:#5d8d7c;margin-bottom:3px}
+.sug .sg-item{display:block;margin-top:4px;color:var(--brand2);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+
+.src{margin-top:12px;font-size:11px;color:var(--faint);line-height:1.7}
+.empty{background:#fff;border:1px dashed var(--line);border-radius:var(--r);padding:22px 16px;text-align:center;color:var(--faint);font-size:12.5px;line-height:1.8}
+
+.dis{margin-top:18px;font-size:11px;color:var(--no);background:var(--nobg);border:1px solid var(--nolnn);border-radius:10px;padding:9px 11px;line-height:1.7}
+
+.foot{display:flex;gap:8px;margin-top:16px}
+.foot a{flex:1;text-align:center;height:40px;line-height:40px;border-radius:11px;background:#fff;border:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="top">
+    <a class="back" href="../index.html">‹</a>
+    <div><div class="t">提问</div><div class="s">答案可回溯到影像区域与原文</div></div>
+  </div>
+
+  <div class="casebar">
+    <span class="cid" id="cid">—</span>
+    <span class="ct" id="ct">加载中…</span>
+    <button id="shuffle">换一例</button>
+  </div>
+
+  <div class="askbox">
+    <input id="q" placeholder="例如：右肺中野有什么问题？" autocomplete="off">
+    <button id="ask">问</button>
+  </div>
+
+  <div class="chips" id="chips"></div>
+
+  <div id="result"><div class="empty">先选一个问题，或直接输入。<br>能答的会给出影像区域与原文；不能答的会说明为什么。</div></div>
+
+  <div class="dis">非诊断用途 · 答案来自库内逐区标注，指南为公开资料要点转述（非逐字引用）· 不提供诊断、分期、治疗与预后建议</div>
+
+  <div class="foot">
+    <a href="path.html">今日任务</a>
+    <a href="evidence.html">看证据</a>
+    <a href="drill.html">去练习</a>
+  </div>
+</div>
+
+<script>
+const URL_BANK = "../data/chest/ask_bank.json";
+const STOP = new Set(["有没有","什么","这张","片子","问题","吗","有吗","吗？","怎样","怎么"]);
+
+let BANK = null, ITEMS = [], CORPUS = "", CASES = [], cur = null;
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
+function norm(s){ return String(s||"").replace(/[，。？！、；：\s"'“”‘’]/g,"").toLowerCase(); }
+
+function bigrams(s){
+  const r = [];
+  for(let i=0;i<s.length-1;i++) r.push(s.slice(i,i+2));
+  return r;
+}
+function dice(a,b){
+  const A = bigrams(a), B = bigrams(b);
+  if(!A.length || !B.length) return 0;
+  const m = new Map();
+  A.forEach(x=> m.set(x,(m.get(x)||0)+1));
+  let hit = 0;
+  B.forEach(x=>{ const c = m.get(x)||0; if(c>0){ hit++; m.set(x,c-1); } });
+  return 2*hit/(A.length+B.length);
+}
+
+function scoreOf(query, item){
+  const nq = norm(query);
+  const text = norm(item.question + " " + (item.keywords||[]).join(" "));
+  let s = dice(nq, text);
+  (item.keywords||[]).forEach(k=>{
+    const nk = norm(k);
+    if(nk.length >= 2 && !STOP.has(nk) && nq.includes(nk)) s += 0.18;
+  });
+  if(item.region && item.region.label){
+    const nl = norm(item.region.label);
+    if(nl && nq.includes(nl)) s += 0.28;
+  }
+  return s;
+}
+
+function pool(){
+  return ITEMS.filter(it=> it.case_id === null || it.case_id === cur);
+}
+
+function best(query){
+  const p = pool();
+  let top = null, ts = 0;
+  p.forEach(it=>{
+    const s = scoreOf(query, it);
+    if(s > ts){ ts = s; top = it; }
+  });
+  return { item: top, score: ts };
+}
+
+function renderChips(){
+  const p = pool();
+  const pick = (kind)=>{
+    const c = p.filter(i=> i.kind === kind && i.answerable);
+    return c.length ? c[0] : null;
+  };
+  const zone = p.filter(i=> i.kind === "zone")[0] || null;
+  const topic = pick("topic");
+  const ov = pick("overview");
+  const ref = ITEMS.find(i=> !i.answerable);
+  const list = [zone, topic, ov, ref].filter(Boolean).slice(0,4);
+  $("chips").innerHTML = list.map(i=>`<button class="chip" data-q="${esc(i.question)}">${esc(i.question)}</button>`).join("");
+  $("chips").querySelectorAll(".chip").forEach(b=> b.onclick = ()=> ask(b.dataset.q));
+}
+
+function renderAnswer(item){
+  const region = item.region;
+  let filmHtml = "";
+  if(region && region.image && region.coords){
+    const [l,t,w,h] = region.coords;
+    filmHtml = `
+      <div class="sec">
+        <div class="sec-h">影像区域 <span class="mini">点击图片可切换病例</span></div>
+        <div class="film">
+          <img src="../${esc(region.image)}" alt="" onerror="this.parentNode.innerHTML='<div style='padding:18px;color:#8ba0ab;font-size:12px'>影像未加载</div>'">
+          <div class="box" style="left:${l*100}%;top:${t*100}%;width:${w*100}%;height:${h*100}%" data-l="${esc(region.label)}"></div>
+        </div>
+        <div class="cap"><b>${esc(region.label)}</b> · ${esc(region.zone_id)} · ${esc(region.case_id)}　${esc(region.case_title||"")}</div>
+      </div>`;
+  }
+
+  let citeHtml = "";
+  if(item.citation){
+    const c = item.citation;
+    const off = c.offset || 0;
+    const quote = c.quote || "";
+    const from = Math.max(0, off - 50);
+    const to = Math.min(CORPUS.length, off + quote.length + 50);
+    const ctx = CORPUS.slice(from, to);
+    const pre = CORPUS.slice(from, off);
+    const post = CORPUS.slice(off + quote.length, to);
+    citeHtml = `
+      <div class="sec">
+        <div class="sec-h">依据原文 <span class="mini">点开看上下文</span></div>
+        <div class="cite" data-open="0">
+          <p class="q"><mark>${esc(quote)}</mark></p>
+          <div class="meta">${esc(c.topic_cn)} · <code>${esc(c.kp_id)}</code> · 第 <b>${off}</b> 字起 · 校验 <code>${esc(c.sha1.slice(0,8))}</code></div>
+          <div class="full"><pre>${esc(pre)}<mark>${esc(quote)}</mark>${esc(post)}</pre>
+            <div class="meta">指南语料 ${CORPUS.length} 字 · 全文校验 ${esc(BANK.corpus_sha1.slice(0,12))} · 仅要点转述，非逐字引用</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  const conf = item.confidence === "high" ? "高" : (item.confidence === "low" ? "低（来源未描述）" : "中");
+  return `
+    <div class="ans ok">
+      <div class="ans-h"><span class="tag ok">可以回答</span><span class="conf">置信度 ${conf}</span></div>
+      <p class="concl">${esc(item.answer)}</p>
+      ${filmHtml}
+      ${citeHtml}
+      <div class="src">出处：${esc(item.basis || "库内逐区标注")}　·　问题 ${esc(item.qid)}</div>
+    </div>`;
+}
+
+function renderRefusal(item){
+  const r = item.refusal;
+  const p = pool();
+  const sugItem = p.filter(i=> i.answerable && i.kind !== "refusal")[0];
+  return `
+    <div class="ans no">
+      <div class="ans-h"><span class="tag no">不能回答</span><span class="conf">${esc(r.type_cn)}</span></div>
+      <p class="concl">这个我不能答。</p>
+      <p class="reason">${esc(r.reason)}</p>
+      <div class="sug">
+        <div class="sg-h">你可以问</div>
+        <div>${esc(r.suggestion || (sugItem ? sugItem.question : "换一种问法"))}</div>
+      </div>
+    </div>`;
+}
+
+function renderUnknown(query){
+  const p = pool().filter(i=> i.answerable).slice(0,3);
+  return `
+    <div class="ans no">
+      <div class="ans-h"><span class="tag no">没匹配到</span><span class="conf">当前病例库内无对应问答</span></div>
+      <p class="concl">我没理解这个问题。</p>
+      <p class="reason">我只会回答与当前病例相关、且库内有据可依的问题。与其编一个答案，不如直接说没对上。</p>
+      <div class="sug">
+        <div class="sg-h">换个问法试试</div>
+        ${p.map(i=>`<span class="sg-item" data-q="${esc(i.question)}">${esc(i.question)}</span>`).join("")}
+      </div>
+    </div>`;
+}
+
+function ask(query){
+  const q = String(query || "").trim();
+  if(!q) return;
+  $("q").value = q;
+  const { item, score } = best(q);
+  const threshold = (item && !item.answerable) ? 0.25 : 0.32;
+  if(!item || score < threshold){
+    $("result").innerHTML = renderUnknown(q);
+  } else if(item.answerable){
+    $("result").innerHTML = renderAnswer(item);
+  } else {
+    $("result").innerHTML = renderRefusal(item);
+  }
+  bindResult();
+}
+
+function bindResult(){
+  document.querySelectorAll(".cite").forEach(c=>{
+    c.onclick = ()=> c.classList.toggle("open");
+  });
+  document.querySelectorAll(".sg-item").forEach(e=>{
+    e.onclick = ()=> ask(e.dataset.q);
+  });
+}
+
+function pickCase(id){
+  const cs = CASES;
+  if(!cs.length) return null;
+  if(id){ const f = cs.find(c=> c.id === id); if(f) return f; }
+  return cs[Math.floor(Math.random()*cs.length)];
+}
+
+function selectCase(c){
+  cur = c ? c.id : null;
+  $("cid").textContent = c ? c.id : "—";
+  $("ct").textContent = c ? c.title : "—";
+  renderChips();
+}
+
+function boot(){
+  fetch(URL_BANK, {cache:"no-cache"})
+    .then(r=> r.json())
+    .then(d=>{
+      BANK = d;
+      ITEMS = d.items || [];
+      CORPUS = d.corpus || "";
+      if(!ITEMS.length) throw new Error("empty");
+      const map = {};
+      ITEMS.forEach(it=>{
+        if(!it.case_id) return;
+        if(!map[it.case_id]) map[it.case_id] = { id: it.case_id, title: "", n: 0 };
+        map[it.case_id].n++;
+        if(!map[it.case_id].title && it.region) map[it.case_id].title = it.region.case_title || "";
+      });
+      CASES = Object.values(map);
+      const want = new URLSearchParams(location.search).get("case");
+      selectCase(pickCase(want));
+    })
+    .catch(e=>{
+      $("result").innerHTML = `<div class="empty">问答库未加载：请通过构建后的站点访问 read/ask.html</div>`;
+      console.error(e);
+    });
+}
+
+$("ask").onclick = ()=> ask($("q").value);
+$("q").addEventListener("keydown", e=>{ if(e.key === "Enter") ask($("q").value); });
+$("shuffle").onclick = ()=>{
+  let next = pickCase(null);
+  if(CASES.length > 1){ while(next && cur && next.id === cur.id) next = pickCase(null); }
+  selectCase(next);
+  $("result").innerHTML = `<div class="empty">已换一例。现在可以问这张片子。</div>`;
+};
+boot();
+</script>
+</body>
+</html>
