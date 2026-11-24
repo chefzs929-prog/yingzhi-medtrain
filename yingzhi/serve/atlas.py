@@ -24,6 +24,40 @@ CROSS_GAP = 0.08
 SECOND_MIN = 0.20
 MIN_CASES_OK = 3
 
+# ---- 胸片专项门控 ----
+# 本产品只做胸部 X 线（CR/DX/XR/DR/RF）阅片。库内还有乳腺、头颅、腰椎、
+# 腹部 CT、超声等模板，它们是历史数据，不在产品路径上使用：
+# 套用错误部位的模板会把「乳腺 MLO」说成「右肺上野」，这是反馈里最严重的问题。
+CHEST_ATLAS_IDS = ("ATLAS-CHEST-PA-6", "ATLAS-CHEST-LAT-4")
+CHEST_MODALITIES = ("CR", "DX", "XR", "DR", "RF")
+CHEST_BODY_PARTS = ("胸部", "胸", "肺", "chest", "thorax", "lung", "thoracic")
+CHEST_VIEWS = ("PA", "AP", "LAT", "LL", "RL", "侧位", "正位", "后前位", "前后位")
+
+
+def chest_gate(modality=None, body_part=None, view=None):
+    """判断这次请求是不是胸片。返回 (state, reason)。
+
+    state:
+      "chest"    明确是胸片（X 线 + 胸部）
+      "not_chest" 明确不是胸片（其他模态或其他部位），必须拒绝，不套模板
+      "unknown"   没给足信息，不拒绝，但调用方要标注「按胸片默认处理」
+    """
+    mod = str(modality or "").upper().strip()
+    part = str(body_part or "").strip().lower()
+    vw = str(view or "").upper().strip()
+
+    if mod and mod not in CHEST_MODALITIES:
+        return "not_chest", "检查类型 %s 不是胸片（本产品只做 CR/DR 等胸部 X 线）" % mod
+    if part and not any(p in part for p in CHEST_BODY_PARTS):
+        return "not_chest", "部位「%s」不是胸部（本产品只做胸片）" % body_part
+    if vw and vw not in CHEST_VIEWS:
+        return "not_chest", "投照位 %s 不是胸片体位" % vw
+    if mod and part:
+        return "chest", ""
+    if mod or part:
+        return "chest", ""
+    return "unknown", "未提供检查类型与部位，按胸片默认处理"
+
 
 def _area(b):
     return max(0.0, b[2]) * max(0.0, b[3])
@@ -58,9 +92,11 @@ class AtlasTemplates:
         self.atlases = self.data.get("atlases") or {}
 
     # ---------- 选模板 ----------
-    def list_atlases(self):
+    def list_atlases(self, only=None):
         out = []
         for aid, a in sorted(self.atlases.items()):
+            if only is not None and aid not in only:
+                continue
             out.append({
                 "id": aid,
                 "name": a.get("name"),
@@ -73,8 +109,11 @@ class AtlasTemplates:
             })
         return out
 
-    def match(self, modality=None, body_part=None, view=None):
-        """按检查类型/部位/投照位打分选模板。没给条件就返回 None，不猜。"""
+    def match(self, modality=None, body_part=None, view=None, allow_ids=None):
+        """按检查类型/部位/投照位打分选模板。没给条件就返回 None，不猜。
+
+        allow_ids 限定候选模板（胸片专项只允许胸部 X 线模板）。
+        """
         if not (modality or body_part or view):
             return None
         want_mod = (modality or "").upper().strip()
@@ -83,14 +122,22 @@ class AtlasTemplates:
 
         best = None
         for aid, a in self.atlases.items():
+            if allow_ids is not None and aid not in allow_ids:
+                continue
             score = 0.0
             mods = [str(m).upper() for m in (a.get("modality") or [])]
             if want_mod and any(want_mod == m or want_mod in m for m in mods):
                 score += 3.0
-            if want_part and want_part == (a.get("body_part") or ""):
-                score += 2.0
-            elif want_part and want_part in (a.get("body_part") or ""):
-                score += 1.0
+            a_part = a.get("body_part") or ""
+            if want_part and a_part:
+                if want_part == a_part:
+                    score += 2.0
+                elif want_part in a_part or a_part in want_part:
+                    score += 1.0
+                else:
+                    # 部位明确不符就直接排除。否则「头颅 CR 侧位」会靠模态分
+                    # 命中「胸片侧位四区」——这正是错配的来源。
+                    continue
             if want_view and want_view == (a.get("view") or "").upper():
                 score += 2.0
             if score <= 0:

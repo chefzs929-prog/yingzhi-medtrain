@@ -239,6 +239,27 @@ class RegionKB:
                     "regions": [self._region_card(x) for x in hit[:5]],
                 }
         if top["coverage"] < MIN_COVER and top["purity"] < 0.8:
+            # 窄条分区（纵隔、脑室中线等）的内框覆盖率天然偏低，
+            # 容易被相邻大分区抢走。这里用框中心点兜底：
+            # 中心落在哪个分区，就优先认回哪个；中心也不在任何分区内，
+            # 才返回 uncovered（不推断）。
+            cx = b[0] + b[2] / 2.0
+            cy = b[1] + b[3] / 2.0
+            containing = []
+            for x in scored:
+                rc = x["region"]["coords"]
+                rb = [rc[0], rc[1], max(0.0, rc[2] - rc[0]), max(0.0, rc[3] - rc[1])]
+                if rb[0] <= cx <= rb[0] + rb[2] and rb[1] <= cy <= rb[1] + rb[3]:
+                    containing.append(x)
+            if containing:
+                containing.sort(key=lambda x: x["purity"], reverse=True)
+                return {
+                    "status": "single",
+                    "bbox": b,
+                    "primary": self._region_card(containing[0]),
+                    "secondary": None,
+                    "mode": "center",
+                }
             return {"status": "uncovered", "message": "该图未标注此区域，本工具不对未标注区域作推断", "bbox": b}
         if second and (top["score"] - second["score"]) < CROSS_GAP and second["coverage"] > SECOND_MIN:
             return {

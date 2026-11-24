@@ -21,7 +21,7 @@
     { id: 'exam', label: '病例题', href: 'exam.html', hint: '大纲胸部 10 例 · 主诉 + 胸片' },
     { id: 'compare', label: '对比阅片', href: 'compare.html', hint: '拖动两张影像 · 相似表征鉴别' },
     { id: 'classroom', label: '课堂', href: 'classroom.html', hint: '作业 · 问答 · 陪练 · 自测 · 互助小组' },
-    { id: 'home', label: '方法与边界', href: '../index.html#method', hint: '范围、数据与声明' },
+    { id: 'home', label: '方法与边界', href: 'methods.html', hint: '范围、数据与声明' },
   ];
 
   function barHTML(page) {

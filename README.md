@@ -15,7 +15,7 @@
 
 | 入口 | 说明 |
 | --- | --- |
-| `index.html` | 唯一门面：一句话定位、四种状态；首页直接分「课堂（教师 / 学生）」与「阅片学习（阅片 / 对比 / 病例题）」两条主路径，并写明能力边界 |
+| `index.html` | 学习入口（移动端卡片布局）：按「课堂（教师 / 学生）」与「阅片学习（阅片 / 对比 / 病例题）」两条主路径分流，并写明能力边界。桌面端由 `read/clinic.html` 作为主工作台 |
 | `read/clinic.html` | 阅片工作台：21 例 CR 胸部逐区阅片；支持课堂任务模式 |
 | `read/exam.html` | 病例题：执业医师大纲胸部 10 例，主诉 + 查体 + 胸片，5 选 1 |
 | `read/compare.html` | 对比阅片：任意两张影像拖到两侧，同高对齐 / 并排 / 叠加擦除 / 同步缩放 |
@@ -287,11 +287,22 @@ open outputs/desktop/RadioCheck.app
 python3 kb/scripts/selfcheck_chest_reading.py   # 胸片数据规则 183 项
 python3 kb/scripts/selfcheck_exam_cases.py      # 病例题数据规则 238 项
 python3 kb/scripts/selfcheck_student_lab.py     # 学生实验室数据规则 20 项
-python3 medtrain/tests/chest_check.py           # 工作台端到端 35 项（需先起 8811 端口）
-python3 medtrain/tests/exam_check.py            # 病例题 + 对比阅片端到端 51 项（同上）
-python3 medtrain/tests/classroom_check.py       # 课堂端到端 33 项（同上）
-python3 medtrain/tests/student_lab_check.py     # 问答 / 陪练 / 自测 / 小组 52 项（同上）
+python3 medtrain/tests/chest_check.py           # 工作台端到端 37 项（需先起 8811 端口）
+python3 medtrain/tests/exam_check.py            # 病例题 + 对比阅片端到端 62 项（同上）
+python3 medtrain/tests/classroom_check.py       # 课堂端到端 39 项（同上）
+python3 medtrain/tests/student_lab_check.py     # 问答 / 陪练 / 自测 / 小组 58 项（同上）
+python3 medtrain/tests/ask_scope_check.py       # 提问页范围拒答 12 项（治疗/预后/非胸部）
 python3 medtrain/tests/site_check.py            # 全站入口 41 项（同上）
+
+# 平台链路：语义检索 + 本地五步工作流（不需要浏览器）
+python3 -m unittest kb.tests.test_scope        # 范围拒答 8 项（与提问页/技能共用口径）
+python3 yingzhi/serve/test_semantic.py          # 语义检索 10 项（别名/词序/口语改写）
+python3 yingzhi/serve/test_workflow.py          # 工作流 11 项（五步齐全、当前病例置顶、引用自证）
+python3 yingzhi/serve/test_chest_scope.py       # 胸片专项门控 8 项（拒绝 MG/MR/US/CT 与非胸部部位）
+
+# 一条命令跑完全部验收（单测 + 构建 + 拒答集 + 全站 41 项）
+bash scripts/verify_all.sh
+bash scripts/verify_all.sh                      # 一键跑全部；YZ_SKIP_BROWSER=1 只跑纯 Python
 
 # 第一优先：证据与质控
 python3 kb/scripts/audit_citations.py           # 引用一致性审计 -> docs/引用一致性审计_2026-11-23.md
@@ -315,6 +326,11 @@ python3 medtrain/tests/forum_zone_check.py      # 帖子关联分区/征象 + �
 - 学生实验室数据：`outputs/medtrain/student_lab_selfcheck.md`
 - 问答 / 陪练 / 自测 / 小组：`outputs/medtrain/student_lab_check.md`
 - 全站入口：`outputs/medtrain/site_check.md`
+- 语义检索 / 工作流：`GET /api/health` 的 `honesty.semantic_search` 与 `honesty.real_workflow`；
+  单次运行的完整五步在 `yingzhi/run/{run_id}/workflow.json`。
+  带 `case_id + zone_id` 时，工作流会把**当前病例的逐区原文置顶**（`claim` 纳入证据、其他病例的 claim/case 不进入证据区），
+  Agent 的 E1 必须引用当前病例，不再出现“问 CASE-006、引 CASE-202”。
+- 提问页范围拒答：`outputs/medtrain/ask_scope_check.md`（治疗/预后/操作/非胸部一律拒答）
 - 引用审计：`docs/引用一致性审计_2026-11-23.md`
 - 双 AI 预标注：`docs/双AI预标注报告_2026-11-23.md`
 - 第四态 SOP：`docs/第四态抽检_SOP.md`
@@ -339,6 +355,7 @@ python3 medtrain/tests/forum_zone_check.py      # 帖子关联分区/征象 + �
 
 ## 明确不做
 
+- **非胸片影像**（胸部 CT、乳腺 MG、腰椎 MRI、头颅 CT、超声等）：后端 `chest_gate()` 直接返回 `unsupported_modality`，不套用胸片模板，见 [反思与未来拓展方向](docs/反思与未来拓展方向.md)；
 - 非胸片泛化、DICOM、病灶检测与分割；
 - 腹部、泌尿系、长骨骨折与颅脑 CT 的病例题（本版只做胸部 X 线）；
 - 诊断、分期、治疗或预后判断；
@@ -347,6 +364,8 @@ python3 medtrain/tests/forum_zone_check.py      # 帖子关联分区/征象 + �
 
 ## 文档
 
+- [赛前基础说明.md](docs/赛前基础说明.md) —— 从零搭建：真实时间线、最短跑通命令、技术选型取舍、目录地图、当前边界
+- [反思与未来拓展方向.md](docs/反思与未来拓展方向.md) —— 已发生的错配与根因、为什么只做胸片、分阶段拓展与上线硬门槛
 - [执业医师胸片病例题_2026-11-22.md](docs/执业医师胸片病例题_2026-11-22.md)
 - [胸片阅片_重规划_2026-11-20.md](docs/胸片阅片_重规划_2026-11-20.md)
 - [胸片阅片_验收_2026-11-20.md](docs/胸片阅片_验收_2026-11-20.md)

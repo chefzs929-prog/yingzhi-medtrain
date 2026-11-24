@@ -13,15 +13,18 @@
 (function () {
   "use strict";
 
-  const STATIC_PORTS = new Set(["8811", "8080", "8000", "3000", "4173", "5500", "5501"]);
   const LOCAL_DEFAULT = "http://127.0.0.1:8800";
   const LS_BASE = "radiocheck.agent.base";
   const LS_BASE_LEGACY = "yzApiBase";
   const localHost = /^(127\.0\.0\.1|localhost|\[::1\])$/i.test(location.hostname);
-  const localPage = location.protocol === "file:" || localHost;
-  const staticHost = localPage
-    || STATIC_PORTS.has(location.port)
-    || /(^|\.)github\.io$/i.test(location.hostname);
+  const hostedStatic = /(^|\.)github\.io$|(^|\.)githubusercontent\.com$/i.test(location.hostname);
+  // main.py 托管时注入；有它就直接同源，不再猜 8800。
+  const dynamicHint = (() => {
+    try {
+      const m = document.querySelector('meta[name="rc-api"]');
+      return !!(m && m.getAttribute("content") === "same-origin");
+    } catch (e) { return false; }
+  })();
   const CONV_KEY = "radiocheck.agent.conversation.";
   let healthCache = null;
   let healthAt = 0;
@@ -46,8 +49,20 @@
   }
 
   function defaultBase() {
-    // 纯静态托管或本地页面：默认连本机 8800；其他情况先走同源。
-    return staticHost ? LOCAL_DEFAULT : "";
+    // file:// 没有同源可用，只能连本机 8800；
+    // main.py 托管（有 meta）直接同源；其余本地静态页退回 8800。
+    if (location.protocol === "file:") return LOCAL_DEFAULT;
+    if (dynamicHint) return "";
+    if (localHost && !hostedStatic) return LOCAL_DEFAULT;
+    return "";
+  }
+
+  function candidateBases() {
+    if (BASE) return [BASE];
+    const list = [];
+    if (dynamicHint || !localHost) list.push(""); // 同源优先
+    if (localHost && !hostedStatic) list.push(LOCAL_DEFAULT);
+    return Array.from(new Set(list));
   }
 
   let BASE = normBase(window.RC_AGENT_BASE) || readQueryBase() || readSavedBase() || defaultBase();
@@ -89,10 +104,11 @@
     return { signal: ctrl.signal, clear: () => clearTimeout(timer) };
   }
 
-  function classifyProbeError(e) {
+  function classifyProbeError(e, base) {
     const msg = String((e && e.message) || e || "");
-    if (!BASE) return "unconfigured";
-    if (location.protocol === "https:" && /^http:\/\//i.test(BASE)) return "mixed-content";
+    const b = base == null ? BASE : base;
+    if (!b && location.protocol === "file:") return "unconfigured";
+    if (location.protocol === "https:" && /^http:\/\//i.test(b)) return "mixed-content";
     if (e && e.name === "AbortError") return "timeout";
     if (/failed to fetch|networkerror|load failed|http/i.test(msg)) return "network";
     return "unknown";
@@ -110,43 +126,53 @@
   async function probe(force) {
     const now = Date.now();
     if (!force && healthCache && now - healthAt < 30000) return healthCache;
-    if (!BASE && location.protocol === "file:") {
+    if (!BASE && (location.protocol === "file:" || hostedStatic)) {
       healthCache = { ok: false, base: BASE, reason: "unconfigured", error: REASON_TEXT.unconfigured };
       healthAt = Date.now();
       return healthCache;
     }
-    const t = timeoutSignal(1800);
-    try {
-      const r = await fetch(BASE + "/api/health", { signal: t.signal, cache: "no-store" });
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      const j = await r.json();
-      healthCache = {
-        ok: !!j.ok,
-        base: BASE,
-        agent: !!j.agent_ready,
-        llm: !!(j.llm_route && j.llm_route.ready),
-        reason: j.ok ? "" : (j.fallback_reason || "degraded"),
-        raw: j,
-      };
-    } catch (e) {
-      const reason = classifyProbeError(e);
-      healthCache = {
-        ok: false,
-        base: BASE,
-        reason,
-        error: String((e && e.message) || e),
-        text: REASON_TEXT[reason] || REASON_TEXT.unknown,
-      };
-    } finally {
-      t.clear();
+    const tried = candidateBases();
+    let last = null;
+    for (const base of tried) {
+      const t = timeoutSignal(base ? 1800 : 900);
+      try {
+        const r = await fetch(base + "/api/health", { signal: t.signal, cache: "no-store" });
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        const j = await r.json();
+        // 同源命中就固定同源；否则记住退回的地址，后续 /api/ask 才不会再猜。
+        BASE = base;
+        healthCache = {
+          ok: !!j.ok,
+          base: BASE,
+          agent: !!j.agent_ready,
+          llm: !!(j.llm_route && j.llm_route.ready),
+          reason: j.ok ? "" : (j.fallback_reason || "degraded"),
+          raw: j,
+        };
+        healthAt = Date.now();
+        return healthCache;
+      } catch (e) {
+        last = { e, base };
+      } finally {
+        t.clear();
+      }
     }
+    const reason = classifyProbeError(last && last.e, last && last.base);
+    healthCache = {
+      ok: false,
+      base: BASE,
+      reason,
+      error: String((last && last.e && last.e.message) || last && last.e || ""),
+      text: REASON_TEXT[reason] || REASON_TEXT.unknown,
+    };
     healthAt = Date.now();
     return healthCache;
   }
 
   async function ask(payload, handlers) {
     handlers = handlers || {};
-    if (!BASE) {
+    // BASE 为空是合法的“同源”；只有 file:// 或 GitHub Pages 且没有显式地址才算未配置。
+    if (!BASE && (location.protocol === "file:" || hostedStatic)) {
       const err = new Error(REASON_TEXT.unconfigured);
       err.code = "unconfigured";
       throw err;

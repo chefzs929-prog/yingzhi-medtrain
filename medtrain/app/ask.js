@@ -19,6 +19,9 @@
     regionId: null,
     showBoxes: true,
     upload: null,
+    vision: null,          // 上传影像的视觉定位结果（/api/vision/region）
+    uploadMeta: { modality: "", body_part: "", view: "" },
+    useCenter: false,      // 无视觉模型时，用户显式同意用中心参考框
     result: null,
     selftest: null,
     guideId: "",
@@ -545,10 +548,169 @@
     };
   }
 
+  /* ---------- 上传影像：视觉定位 → 模板分区 → 双引用 ---------- */
+
+  function locateStatusLabel(st) {
+    return ({ single: "单分区", cross: "跨分区", uncovered: "未覆盖",
+      too_small: "框过小", too_large: "框过大", no_atlas: "无模板" })[st] || (st || "");
+  }
+
+  function locateUpload() {
+    const up = AS.upload;
+    if (!up || !up.dataUrl) return Promise.resolve();
+    const base = (YZ.apiBase ? YZ.apiBase() : "");
+    const body = { image: up.dataUrl };
+    const m = AS.uploadMeta || {};
+    if (m.modality) body.modality = m.modality;
+    if (m.body_part) body.body_part = m.body_part;
+    if (m.view) body.view = m.view;
+    if (AS.useCenter) body.use_center = true;
+    AS.vision = { status: "locating" };
+    YZ.render();
+    return fetch(base + "/api/vision/region", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }).then((r) => r.json()).then((d) => {
+      AS.vision = Object.assign({ status: d && d.ok ? "ok" : "fail" }, d || {});
+    }).catch(() => {
+      AS.vision = {
+        status: "offline", ok: false, reason: "api_unreachable",
+        message: "未连接动态服务 /api/vision/region。请用 python3 yingzhi/serve/main.py --site outputs/medtrain 启动后再上传。",
+      };
+    }).then(() => { runNow(); });
+  }
+
+  function uploadAnswer(st) {
+    const v = st.vision || null;
+    const up = st.upload || {};
+    const question = st.question || "";
+
+    if (SCOPE_RE.test(question)) {
+      return refuse("scope", "越出教学对照范围",
+        "这个问题要求诊断、良恶性判断或治疗决策。本应用只做「影像表现 ↔ 文献条款」的对照，不输出诊断结论，也不替代临床决策。",
+        ["可改问：该分区有哪些影像表现？", "可改问：库内条款对这类表现怎么表述？"]);
+    }
+
+    if (!v || v.status === "locating") {
+      const r = refuse("locating", "正在定位上传影像",
+        "已把影像送到视觉定位服务：先识别检查类型、部位与投照位，再匹配分区模板。",
+        ["定位完成后会自动显示分区与 bbox。"]);
+      r.status = "partial";
+      return r;
+    }
+
+    if (v.reason === "api_unreachable") {
+      return refuse("api-offline", "未连接视觉定位服务", v.message || "",
+        ["静态预览（如 8811 端口）没有 /api；演示请启动动态服务。",
+         "或点「用中心参考框」在无视觉模型时做模板定位。"]);
+    }
+
+    if (v.ok === false) {
+      const vis = v.vision || {};
+      if (v.reason === "no_atlas_match") {
+        return refuse("no-atlas", "未匹配到支持的分区模板",
+          `视觉识别为「${vis.modality || "未知检查"} · ${vis.body_part || "未知部位"}」，当前只有 CR 胸片（及部分 CT）的分区模板；不套用其他部位模板，避免错配。`,
+          ["可在下方指定检查类型 / 部位 / 投照位后重试。",
+           "或改用左侧已标注病例，查看人工分区。"]);
+      }
+      if (v.reason === "needs_bbox") {
+        return refuse("needs-bbox", "需要病灶框才能定位",
+          v.message || "视觉模型未给出可用病灶框。",
+          ["可在下方点「用中心参考框」做模板定位（结果仅供参考）。",
+           "或在影像上手动框选病灶后重试。"]);
+      }
+      return refuse("vision-fail", "视觉定位失败", v.message || v.vision_error || "",
+        ["可重试，或改用左侧已标注病例。"]);
+    }
+
+    const loc = v.locate || {};
+    const status = loc.status;
+    if (status !== "single" && status !== "cross") {
+      return refuse("no-region", "该位置不在模板分区内",
+        `模板定位状态：${locateStatusLabel(status)}${loc.message ? " · " + loc.message : ""}。按规则不对未覆盖区域作推断。`,
+        ["可换一个更明确的病灶框，或改用已标注病例。"]);
+    }
+
+    const vis = v.vision || {};
+    const findings = vis.findings || [];
+    const text = `${st.report || ""} ${question} ${findings.join(" ")}`.trim();
+    const signals = detectSignals(text);
+
+    const bp = (v.atlas && v.atlas.body_part) || vis.body_part || "胸部";
+    const pseudoCase = { body_part: bp, title: up.name || "上传影像" };
+    let doc = null;
+    let alt = [];
+    if (signals.length) {
+      const d = pickDoc(pseudoCase, null, signals, text, st.guideId);
+      doc = d.doc;
+      alt = d.alt || [];
+    }
+    if (!doc && signals.length) {
+      const s0 = signals[0].sign;
+      doc = {
+        kind: "sign", id: s0.id, title: "征象词条 · " + s0.name, version: "",
+        locator: s0.id + " / 影像表现", excerpt: s0.appearance || "",
+        url: "", hash: "", conditions: [], action: "", degraded: true,
+      };
+    }
+
+    const reg = (loc.primary && loc.primary.region) || loc.region || {};
+    const bbox = v.bbox || reg.coords || [];
+    const spatial = {
+      region_id: reg.id || (reg.name_en ? ((v.atlas && v.atlas.id) || "ATLAS") + "/" + reg.name_en : ""),
+      region_name: reg.name || "", name: reg.name || "",
+      bbox, atlas_id: (v.atlas && v.atlas.id) || "",
+      atlas_label: (v.atlas && v.atlas.name) || "",
+      image_side: reg.image_side, patient_side: reg.patient_side,
+      annotator: v.vision_used ? "视觉模型 + 模板推断（非人工）" : "模板推断（非人工）",
+      note: "上传影像没有人工标注，分区由模板几何推断",
+      kind: "template", link_id: "", source: "atlas_template",
+      locate_status: status, vision_used: !!v.vision_used,
+    };
+
+    const notes = [
+      "影像侧是模板推断，不是人工标注；演示或教学使用前须人工复核。",
+      "上传影像没有库内分区结论，因此不含「分区结论」引用。",
+    ];
+    if (v.warning) notes.push(v.warning);
+    if (!doc) notes.push("文献侧没有命中可引用条款；按双引用规则不输出结论。");
+
+    const fmtBox = (a) => (a || []).map((n) => Number(n).toFixed(2)).join(", ");
+    const answer = doc ? [
+      `上传影像经${v.vision_used ? "视觉识别 + " : ""}模板推断定位到「${spatial.name}」（${spatial.region_id}，bbox [${fmtBox(bbox)}]），定位状态 ${locateStatusLabel(status)}。`,
+      `文献侧 ${doc.title}${doc.locator ? " · " + doc.locator : ""}：${doc.excerpt}`,
+      "本条只做影像区域定位与文献段落对照：上传影像无人工分区结论，不作征象判断，不构成诊断。",
+    ].join("\n") : "";
+
+    return {
+      status: doc ? "partial" : "refuse",
+      reason: doc ? "upload-template" : "no-doc",
+      title: doc ? "上传影像 · 模板定位 + 文献对照" : "上传影像已定位，文献侧无可引用段落",
+      detail: "影像侧来自 atlas 模板推断（非人工标注）；文献侧来自库内条款或征象词条。",
+      signals, region: null, claim: null, spatial, doc, alt,
+      coverage: {
+        image: true, region: true, claim: false, doc: !!doc,
+        guideline: !!(doc && doc.kind === "guideline"), verify: true,
+      },
+      missing: [], notes, answer, case: null, sig: null,
+      trace: [
+        "上传影像",
+        "模板 " + (spatial.atlas_id || "未匹配"),
+        "分区 " + (spatial.region_id || "未覆盖") + " · " + locateStatusLabel(status),
+        doc ? "文献 " + (doc.id || doc.title) : "文献 缺失",
+      ],
+    };
+  }
+
   function run(state) {
     const st = Object.assign({}, AS, state || {});
     const text = `${st.report || ""} ${st.question || ""}`.trim();
     const tf = flat(text);
+
+    // 上传影像走「视觉定位 → 模板分区 → 双引用」独立链路：
+    // 即使没有文字，也先把图上位置定出来，再决定文献侧能否挂上。
+    if (st.upload) return uploadAnswer(st);
 
     if (!text) {
       // 只点了分区、没写文字：给分区定位 + 文献段落，而不是一句「没有输入」。
@@ -575,17 +737,6 @@
         [
           names.length ? `「${c0.title}」可对照的征象：${names.join("、")}` : "可换用库内词条，例如：磨玻璃影 / 实变 / 胸腔积液 / 毛玻璃结节",
           "或直接点选一个分区，查看该分区的定位与文献段落。",
-        ]
-      );
-    }
-
-    if (st.upload) {
-      return refuse(
-        "no-region", "影像侧缺少可定位的分区",
-        "上传的影像没有经过人工分区标注，系统无法给出 bbox 与分区 id。按双引用规则，缺少影像侧引用时不输出结论。",
-        [
-          `文献侧已检索到 ${Math.min(signals.length, 3)} 条征象线索，但没有影像区域可挂，故不合并成回答。`,
-          "可改用左侧病例库中已标注的公开影像；上传影像仅作浏览，不参与引用。",
         ]
       );
     }
@@ -730,7 +881,7 @@
   const STATUS_LABEL = { answer: "可答", partial: "部分可答", refuse: "拒答" };
 
   function caseLabel() {
-    if (AS.upload) return "已上传影像（不参与引用）";
+    if (AS.upload) return AS.vision && AS.vision.ok ? "已上传影像 · 模板定位" : "已上传影像";
     if (AS.caseId === "auto") {
       const c = currentCase();
       return c ? `自动匹配 · ${c.id} · ${c.title}` : "自动匹配（按报告/问题）";
@@ -873,13 +1024,21 @@
   function stageHTML() {
     const c = currentCase();
     if (AS.upload) {
+      const v = AS.vision || {};
+      const loc = v.locate || {};
+      const reg = (loc.primary && loc.primary.region) || {};
+      const bb = reg.coords || v.bbox || null;
+      const okBox = bb && (loc.status === "single" || loc.status === "cross");
+      const box = okBox ? `<div class="ask-box on" style="left:${bb[0] * 100}%;top:${bb[1] * 100}%;width:${bb[2] * 100}%;height:${bb[3] * 100}%"><span class="ab-n">1</span><span class="ab-t">${h(reg.name || "模板框")}</span></div>` : "";
+      const tag = v.status === "locating" ? "视觉定位中…"
+        : (v.ok && okBox ? `${(v.atlas && v.atlas.name) || ""} · ${locateStatusLabel(loc.status)} · ${v.vision_used ? "视觉+模板" : "模板推断"}`
+          : "未定位到分区");
       return `<div class="ask-stage upload">
-        <img src="${h(AS.upload.dataUrl || "")}" alt="上传影像" ${AS.upload.dataUrl ? "" : 'style="display:none"'}>
-        <div class="ask-nobox">
-          ${icon("alert", 18)}
-          <b>未标注分区</b>
-          <span>上传影像不参与引用：没有人工分区，就没有 bbox 与分区 id。</span>
+        <div class="ask-media">
+          <img src="${h(AS.upload.dataUrl || "")}" alt="上传影像" data-fit="1" ${AS.upload.dataUrl ? "" : 'style="display:none"'}>
+          <div class="ask-boxes">${box}</div>
         </div>
+        <div class="ask-stage-tag">${h(tag)}</div>
       </div>`;
     }
     if (!c) return `<div class="ask-stage empty">未选择病例</div>`;
@@ -909,7 +1068,24 @@
 
   function regionCardHTML() {
     const r = AS.result && AS.result.region;
-    if (AS.upload) return `<div class="ask-rcard warn"><b>无分区引用</b><span>上传影像缺少人工标注，影像侧引用不可用。</span></div>`;
+    if (AS.upload) {
+      const v = AS.vision || {};
+      if (v.status === "locating") {
+        return `<div class="ask-rcard"><b>正在定位</b><span>视觉识别检查类型与部位，再匹配分区模板。</span></div>`;
+      }
+      const loc = v.locate || {};
+      const reg = (loc.primary && loc.primary.region) || {};
+      if (v.ok && reg.name) {
+        const bb = (v.bbox || reg.coords || []).map((n) => Number(n).toFixed(2)).join(", ");
+        return `<div class="ask-rcard ok">
+          <div class="arc-h"><b>${h(reg.name || "")}</b><span class="mono">${h(reg.id)}</span></div>
+          <div class="arc-meta">${h((v.atlas && v.atlas.name) || "")} · bbox [${h(bb)}] · ${v.vision_used ? "视觉 + 模板推断" : "模板推断"}（非人工）</div>
+          <div class="arc-note">上传影像没有人工标注；分区由模板几何推断，演示或教学前须人工复核。</div>
+          <div class="arc-signs"><span class="chip warn">${h(locateStatusLabel(loc.status))}</span>${(v.vision && v.vision.modality) ? `<span class="chip">${h(v.vision.modality)}</span>` : ""}</div>
+        </div>`;
+      }
+      return `<div class="ask-rcard warn"><b>未定位到分区</b><span>${h(v.message || "未匹配到分区模板；可指定检查类型/部位后重试。")}</span></div>`;
+    }
     if (!r) {
       const c = currentCase();
       const n = c ? regionsOf(c.id).length : 0;
@@ -1083,7 +1259,25 @@
             <input id="askFile" type="file" accept="image/*" hidden>
             ${AS.upload ? `<button class="btn ghost sm" data-ask="clear-upload">清除上传</button>` : ""}
           </div>
-          ${AS.upload ? `<div class="ask-upload-tip">已上传：${h(AS.upload.name)} · 不参与引用</div>` : ""}
+          ${AS.upload ? `<div class="ask-upload-tip">已上传：${h(AS.upload.name)} · ${AS.vision && AS.vision.status === "locating" ? "视觉定位中…" : (AS.vision && AS.vision.ok ? "已定位（模板推断）" : "未定位")}</div>` : ""}
+          ${AS.upload ? `<div class="ask-row ask-meta">
+            <select class="ask-sel" data-ask-meta="modality" aria-label="检查类型">
+              <option value="">检查类型</option>
+              ${["CR", "CT", "MR", "US", "MG"].map((m) => `<option value="${m}" ${AS.uploadMeta.modality === m ? "selected" : ""}>${m}</option>`).join("")}
+            </select>
+            <select class="ask-sel" data-ask-meta="body_part" aria-label="部位">
+              <option value="">部位</option>
+              ${["胸部", "头颈", "腹部", "骨关节", "乳腺", "甲状腺"].map((b) => `<option value="${b}" ${AS.uploadMeta.body_part === b ? "selected" : ""}>${b}</option>`).join("")}
+            </select>
+            <select class="ask-sel" data-ask-meta="view" aria-label="投照位">
+              <option value="">投照位</option>
+              ${["PA", "AP", "LAT", "CT-AXIAL", "MR", "US", "MLO"].map((vv) => `<option value="${vv}" ${AS.uploadMeta.view === vv ? "selected" : ""}>${vv}</option>`).join("")}
+            </select>
+          </div>
+          <div class="ask-row">
+            <button class="btn ghost sm" data-ask="use-center">${AS.useCenter ? "已启用中心参考框" : "用中心参考框"}</button>
+            <button class="btn ghost sm" data-ask="re-locate">重新定位</button>
+          </div>` : ""}
 
           <label class="ask-lb" for="askReport">报告 / 指南文档</label>
           <textarea id="askReport" class="ask-ta" rows="5" placeholder="粘贴影像报告、指南段落或教学描述。例如：右肺中野透亮度均匀，未见明确结节。">${h(AS.report)}</textarea>
@@ -1353,7 +1547,15 @@
       }
       case "toggle-boxes": AS.showBoxes = !AS.showBoxes; YZ.render(); break;
       case "clear-upload":
-        AS.upload = null; AS.caseId = "auto"; AS.regionId = null; AS.result = null; YZ.render(); break;
+        AS.upload = null; AS.vision = null; AS.useCenter = false;
+        AS.caseId = "auto"; AS.regionId = null; AS.result = null; YZ.render(); break;
+      case "use-center":
+        AS.useCenter = !AS.useCenter;
+        if (AS.upload) locateUpload(); else YZ.render();
+        break;
+      case "re-locate":
+        if (AS.upload) locateUpload(); else YZ.render();
+        break;
       case "demo-report": {
         const c = currentCase();
         AS.report = c ? (c.description_public || c.teaching_note || "") : "右肺上野见磨玻璃样密度增高影。";
@@ -1412,9 +1614,15 @@
         AS.upload = { name: f.name, dataUrl };
         AS.caseId = null;
         AS.regionId = null;
-        runNow();
+        AS.vision = { status: "locating" };
+        AS.result = null;
+        await locateUpload();
       } catch (err) { toast("影像读取失败"); }
       e.target.value = "";
+    }
+    if (e.target.dataset && e.target.dataset.askMeta) {
+      AS.uploadMeta[e.target.dataset.askMeta] = e.target.value;
+      if (AS.upload) await locateUpload();
     }
     if (e.target.id === "askDoc" && e.target.files && e.target.files[0]) {
       const f = e.target.files[0];

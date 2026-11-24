@@ -15,19 +15,24 @@
     (window.RC_API_BASE != null ? window.RC_API_BASE : (params ? params.get("api") : "")) || ""
   ).replace(/\/$/, "");
   const CACHE_KEY = "radiocheck.kbapi.v1";
-  const SKIP_PORTS = new Set(["8811", "8899", "8080", "8000", "3000", "4173", "5500", "5501"]);
   const SKIP_HOSTS = /(^|\.)github\.io$|(^|\.)githubusercontent\.com$/i;
+  // main.py 托管 HTML 时会注入这个 meta；有它才代表“这个端口真的有 /api”。
+  // 不再用硬编码端口判断静态站，换 8800/8801/8899 任意端口都能同源命中。
+  const dynamicHint = (() => {
+    try {
+      const m = document.querySelector('meta[name="rc-api"]');
+      return !!(m && m.getAttribute("content") === "same-origin");
+    } catch (e) { return false; }
+  })();
   let resolved = null;
   let probing = null;
 
-  // 纯静态托管（验收用的 8811、GitHub Pages、file://）不探测后端，
+  // 纯静态托管（http.server、GitHub Pages、file://）不探测后端，
   // 避免每个页面都产生一条 404 控制台错误；需要时用 ?api=... 显式指定。
   function canProbe() {
     if (explicit) return true;
-    if (location.protocol === "file:") return false;
-    if (SKIP_HOSTS.test(location.hostname)) return false;
-    if (SKIP_PORTS.has(location.port)) return false;
-    return true;
+    if (dynamicHint) return true;
+    return false;
   }
 
   function readCache() {

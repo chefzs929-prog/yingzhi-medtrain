@@ -66,6 +66,10 @@ def main() -> None:
         check("影像已加载", page.eval_on_selector("#img", "e=>e.complete && e.naturalWidth>0"))
         check("首页/工作台无 console error", not errors, str(errors[:3]))
         check("首页/工作台无 4xx", not bad, str(bad[:3]))
+        # 每页检查完就清空：否则首页的一个 4xx 会一路污染后面所有页面，
+        # 出现「3 项红」却分不清是哪一页的问题。
+        errors.clear()
+        bad.clear()
 
         # 病例题
         page.goto(BASE + "read/exam.html", wait_until="networkidle")
@@ -80,6 +84,8 @@ def main() -> None:
         check("病例题影像已加载", page.eval_on_selector("#img", "e=>e.complete && e.naturalWidth>0"))
         check("病例题无 console error", not errors, str(errors[:3]))
         check("病例题无 4xx", not bad, str(bad[:3]))
+        errors.clear()
+        bad.clear()
 
         # 对比阅片
         page.goto(BASE + "read/compare.html", wait_until="networkidle")
@@ -94,6 +100,8 @@ def main() -> None:
               page.eval_on_selector("#rightImg", "e=>e.complete && e.naturalWidth>0"))
         check("对比阅片无 console error", not errors, str(errors[:3]))
         check("对比阅片无 4xx", not bad, str(bad[:3]))
+        errors.clear()
+        bad.clear()
 
         # 课堂页
         page.goto(BASE + "read/classroom.html", wait_until="networkidle")
@@ -108,6 +116,8 @@ def main() -> None:
               page.request.get(BASE + "data/lab/student_lab.json").status == 200)
         check("课堂页无 console error", not errors, str(errors[:3]))
         check("课堂页无 4xx", not bad, str(bad[:3]))
+        errors.clear()
+        bad.clear()
 
         # 旧入口全部跳转
         legacy = [

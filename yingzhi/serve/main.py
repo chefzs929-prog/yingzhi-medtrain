@@ -38,6 +38,8 @@ import atlas as atlas_mod  # noqa: E402
 import litsearch  # noqa: E402
 import segment as segment_mod  # noqa: E402
 import kb_api  # noqa: E402
+import semantic as semantic_mod  # noqa: E402
+import workflow as workflow_mod  # noqa: E402
 VISION_PROMPT = """你在做影像教学标注，不是诊断。只回答三件事：
 1. 这张图属于什么检查类型、什么部位、什么投照位/层面；
 2. 病灶或可疑区域的归一化外接框；
@@ -669,10 +671,26 @@ def make_followups(cites, grounding, image_match):
     return seen[:3]
 
 
-def build_trace(run_id, request, result, degraded, reason):
+def _workflow_span(workflow):
+    """把真实执行过的五步编排转成 trace span；没跑过就如实标 unavailable。"""
+    if not workflow:
+        return {"stage": "workflow", "skill": None, "status": "unavailable", "ms": 0}
+    return {
+        "stage": "workflow",
+        "skill": "local.orchestrator",
+        "status": "completed" if workflow.get("ok") else "warning",
+        "ms": int(workflow.get("total_ms") or 0),
+        "workflow_id": workflow.get("workflow_id"),
+        "version": workflow.get("version"),
+        "steps": workflow.get("steps") or [],
+    }
+
+
+def build_trace(run_id, request, result, degraded, reason, workflow=None):
     result = result or {}
     spans = []
     tools = []
+    wf_span = _workflow_span(workflow)
     if degraded:
         spans = [
             {"stage": "guard", "skill": "local_rules", "status": "degraded", "ms": 0},
@@ -680,7 +698,7 @@ def build_trace(run_id, request, result, degraded, reason):
             # 标 completed 会让前端把降级链路显示成正常链路。
             {"stage": "kb_retrieve", "skill": "local_keyword", "status": "degraded", "ms": 1},
             {"stage": "skill_invoke", "skill": None, "status": "unavailable", "ms": 0},
-            {"stage": "workflow", "skill": None, "status": "unavailable", "ms": 0},
+            wf_span,
             {"stage": "agent_generate", "skill": "local_template", "status": "degraded", "ms": 0},
         ]
     else:
@@ -741,7 +759,7 @@ def build_trace(run_id, request, result, degraded, reason):
              "command": (commands[0][:160] if commands else None)},
             {"stage": "skill_invoke", "skill": ",".join(skill_names) or "none",
              "status": "completed" if skill_names else "unavailable", "ms": skill_ms},
-            {"stage": "workflow", "skill": None, "status": "unavailable", "ms": 0},
+            wf_span,
             {"stage": "agent_generate", "skill": result.get("model"),
              "status": "completed", "ms": result.get("generate_ms", 0)},
         ]
@@ -756,7 +774,7 @@ def build_trace(run_id, request, result, degraded, reason):
                  "hits": kb_hits, "hit": kb_hits > 0,
                  "command": "in-memory: signs / concepts / claims"},
                 {"stage": "skill_invoke", "skill": None, "status": "skipped", "ms": 0},
-                {"stage": "workflow", "skill": None, "status": "skipped", "ms": 0},
+                wf_span,
                 {"stage": "agent_generate", "skill": td.get("model") or result.get("model"),
                  "status": "completed", "ms": td.get("generate_ms", 0)},
             ]
@@ -1063,6 +1081,20 @@ class Handler(BaseHTTPRequestHandler):
             body = path.read_bytes()
         except OSError:
             return self.send_json(404, {"error": "not found"})
+        # 动态服务给 HTML 注入同源标记：前端据此直接走同源 /api，
+        # 不再依赖硬编码端口（8800/8811/8899），换端口也不会连错。
+        if path.suffix.lower() == ".html":
+            try:
+                text = body.decode("utf-8")
+                if "rc-api" not in text and "<head>" in text:
+                    text = text.replace(
+                        "<head>",
+                        '<head>\n<meta name="rc-api" content="same-origin">',
+                        1,
+                    )
+                    body = text.encode("utf-8")
+            except Exception:
+                pass
         return self.send_bytes(200, body, kb_api.content_type(path), cache)
 
     def api_kb(self, path: str, parsed) -> bool:
@@ -1098,10 +1130,34 @@ class Handler(BaseHTTPRequestHandler):
         if sub == "search":
             qs = urllib.parse.parse_qs(parsed.query)
             q = (qs.get("q") or [""])[0]
+            mode = (qs.get("mode") or ["keyword"])[0].lower()
             try:
                 limit = int((qs.get("limit") or ["12"])[0])
             except ValueError:
                 limit = 12
+            if mode in ("semantic", "hybrid"):
+                try:
+                    sem = semantic_mod.get_index().search(q, top_k=limit)
+                except Exception as exc:
+                    self.send_json(200, {"ok": False, "mode": mode, "query": q,
+                                         "count": 0, "items": [],
+                                         "error": str(exc)[:160]})
+                    return True
+                if mode == "semantic":
+                    self.send_json(200, sem)
+                    return True
+                # hybrid：语义结果在前，关键词结果只补语义漏掉的条目。
+                merged = list(sem.get("items") or [])
+                seen = {it["id"] for it in merged}
+                for it in (kb_api.search(q, limit).get("items") or []):
+                    if it["id"] not in seen:
+                        it = dict(it)
+                        it["via"] = "keyword"
+                        merged.append(it)
+                        seen.add(it["id"])
+                sem.update({"mode": "hybrid", "count": len(merged), "items": merged[:limit]})
+                self.send_json(200, sem)
+                return True
             self.send_json(200, kb_api.search(q, limit))
             return True
 
@@ -1186,6 +1242,12 @@ class Handler(BaseHTTPRequestHandler):
 
         if path == "/api/health":
             ensure_gateway()  # DeepWorks 重启后端口会变，健康检查时顺便自愈
+            try:
+                sem_stats = semantic_mod.get_index().stats()
+                sem_ok = True
+            except Exception as exc:
+                sem_stats = {"error": str(exc)[:160]}
+                sem_ok = False
             return self.send_json(200, {
                 "ok": STATE["gateway"] is not None,
                 "entry": "deepworks-opencode-server",
@@ -1203,21 +1265,40 @@ class Handler(BaseHTTPRequestHandler):
                 "honesty": {
                     "real_llm": bool(STATE["agent_ready"] or STATE["persona_injected"]),
                     "real_skill": bool(STATE.get("skill_ready")),
-                    "real_workflow": False,
-                    "semantic_search": False,
+                    # 每次 /api/ask 都真实执行 parse→retrieve→locate→compose→audit，
+                    # 结果写进 trace.json 的 workflow span，可回放（见 workflow.py）。
+                    "real_workflow": True,
+                    "workflow_kind": "local_orchestrator",
+                    # 平台可视化工作流仍需人工在 DeepWorks 界面创建；
+                    # 本地五步编排是另一条已落地的链路，两者分开报，不混为一谈。
+                    "platform_workflow": False,
+                    # 本地稀疏向量检索（TF-IDF + 余弦），不是 grep，也不是神经网络 embedding。
+                    "semantic_search": sem_ok,
+                    "semantic_search_kind": "tfidf-char-ngram-cosine",
                     "multiturn_memory": False,
                     "bounded_multiturn": True,
                     "agent_interface": True,
                     "citation_audit": True,
                     "trace_evidence": True,
                     "notes": [
-                        "semantic_search=false：当前是词典归一化 + 关键词 grep，不是向量检索",
+                        "semantic_search=true：本地 TF-IDF 稀疏向量 + 余弦相似度（语义检索），"
+                        "支持别名/口语改写；不是神经网络 embedding，也不联网",
+                        "real_workflow=true：本地五步编排（parse/retrieve/locate/compose/audit），"
+                        "每次问答真实执行并写入 trace.json，可 GET /api/trace/{run_id} 回放",
+                        "platform_workflow=false：DeepWorks 界面可视化工作流仍需人工创建"
+                        "（见 docs/工作流配置单.md）；本地编排与平台工作流是两条链路，分开报",
                         "multiturn_memory=false：没有跨会话长期记忆；仅在 10 分钟 TTL 内按 conversation_id 复用 session",
                         "bounded_multiturn=true：有界多轮，超时或换 conversation_id 即重开，避免上下文无限累积",
                         "agent_interface=true：POST /api/ask 支持 mode=auto|agent|llm，GET /api/agent/capabilities 可探测",
-                        "real_workflow=false：工作流未创建，trace 里标 unavailable",
                         "citation_audit=true：回答中的 id 会回查知识库，编造会被标出",
                     ],
+                },
+                # 语义索引的实时体检：文档数、特征数、构建耗时都来自真实索引对象。
+                "semantic": sem_stats,
+                "workflow": {
+                    "version": workflow_mod.WORKFLOW_VERSION,
+                    "steps": list(workflow_mod.STEPS),
+                    "endpoint": "GET /api/trace/{run_id} → spans[stage=workflow]",
                 },
             })
 
@@ -1256,6 +1337,19 @@ class Handler(BaseHTTPRequestHandler):
                     "source": "atlas_template",
                     "note": "陌生影像用通用模板推断，不是人工标注",
                 },
+                "workflow": {
+                    "enabled": True,
+                    "kind": "local_orchestrator",
+                    "version": workflow_mod.WORKFLOW_VERSION,
+                    "steps": list(workflow_mod.STEPS),
+                    "replay": "GET /api/trace/{run_id}",
+                },
+                "semantic_search": {
+                    "enabled": True,
+                    "kind": "tfidf-char-ngram-cosine",
+                    "endpoint": "GET /api/kb/search?q=...&mode=semantic|hybrid",
+                    "note": "本地稀疏向量检索，不联网、不加载模型权重",
+                },
                 "agent": {
                     "name": (STATE.get("args").agent if STATE.get("args") else None),
                     "ready": bool(STATE.get("agent_ready")),
@@ -1284,8 +1378,9 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json(200, {
                 "ok": True,
                 "source": "atlas_template",
-                "note": "陌生影像用通用模板推断，不是人工标注",
-                "atlases": T.list_atlases(),
+                "scope": "chest_xray_only",
+                "note": "只提供胸片分区模板；其他部位模板不在产品路径上",
+                "atlases": T.list_atlases(only=atlas_mod.CHEST_ATLAS_IDS),
             })
 
         if path.startswith("/api/trace/"):
@@ -1376,26 +1471,55 @@ class Handler(BaseHTTPRequestHandler):
             except Exception as exc:
                 vision_error = str(exc)[:160]
 
+        # ---- 胸片专项门控：不是胸片就明确拒绝，绝不套其他部位模板 ----
+        def unsupported(why):
+            return self.send_json(200, {
+                "ok": False,
+                "reason": "unsupported_modality",
+                "scope": "chest_xray_only",
+                "message": ("本产品只做胸片（CR/DR 等胸部 X 线）阅片，暂不支持：%s。"
+                            "其他影像的阅片方向写在站内「方法与边界」。" % why),
+                "vision": vision,
+                "vision_error": vision_error,
+                "atlases": T.list_atlases(only=atlas_mod.CHEST_ATLAS_IDS),
+            })
+
+        if atlas_id and atlas_id not in atlas_mod.CHEST_ATLAS_IDS:
+            return unsupported("指定的分区模板 %s 不是胸片模板" % atlas_id)
+
         atlas = T.atlases.get(atlas_id) if atlas_id else None
         matched = None
+        assumed_chest = False
         if atlas is None:
             src = vision or {}
-            matched = T.match(
-                src.get("modality") or body.get("modality"),
-                src.get("body_part") or body.get("body_part"),
-                src.get("view") or body.get("view"),
-            )
+            v_mod = src.get("modality") or body.get("modality")
+            v_part = src.get("body_part") or body.get("body_part")
+            v_view = src.get("view") or body.get("view")
+            state, why = atlas_mod.chest_gate(v_mod, v_part, v_view)
+            if state == "not_chest":
+                return unsupported(why)
+            assumed_chest = (state == "unknown")
+            matched = T.match(v_mod, v_part, v_view,
+                              allow_ids=atlas_mod.CHEST_ATLAS_IDS)
             if matched:
                 atlas = matched["atlas"]
+            elif assumed_chest:
+                # 没有任何检查信息时，按胸片默认模板处理（前端会显示
+                # assumed_chest 提示）。侧位投照位才选侧位模板。
+                default_id = ("ATLAS-CHEST-LAT-4"
+                              if v_view in ("LAT", "LL", "RL", "侧位")
+                              else "ATLAS-CHEST-PA-6")
+                atlas = T.atlases.get(default_id)
 
         if atlas is None:
             return self.send_json(200, {
                 "ok": False,
                 "reason": "no_atlas_match",
-                "message": "没有匹配到分区模板：请指定 atlas_id，或提供检查类型/部位/投照位",
+                "scope": "chest_xray_only",
+                "message": "没有匹配到胸片分区模板：请确认这是胸部 X 线片，或指定 atlas_id",
                 "vision": vision,
                 "vision_error": vision_error,
-                "atlases": T.list_atlases(),
+                "atlases": T.list_atlases(only=atlas_mod.CHEST_ATLAS_IDS),
             })
 
         atlas_card = {
@@ -1423,14 +1547,17 @@ class Handler(BaseHTTPRequestHandler):
             bbox_source = "vision_scaled"
             warning = "视觉框过大，已按中心等比缩小到可定位范围"
         if not bbox:
-            if vision:
-                # 模型看图后认为没有明确病灶（常见于正常片），不给框。
+            if vision or body.get("use_center"):
+                # 模型看图后认为没有明确病灶（常见于正常片），不给框；
+                # 或演示环境没有视觉模型，用户显式同意用中心参考框。
                 # 此时用全肺野参考框继续定位，但必须标明这是参考框，不是病灶框。
                 # 模板定位有面积上限（>0.30 直接判 too_large），所以参考框取
                 # 图像中心 30%×30%，只用于给出一个可解释的参照分区。
                 bbox = [0.35, 0.35, 0.30, 0.30]
                 bbox_source = "fallback_center"
-                warning = "视觉模型未给出病灶框（可能未见明确病灶），已用图像中心参考框定位；分区结果仅供参考"
+                warning = ("视觉模型未给出病灶框（可能未见明确病灶），已用图像中心参考框定位；分区结果仅供参考"
+                           if vision else
+                           "未使用视觉模型：按图像中心参考框做模板定位；分区结果仅供参考，需人工复核")
             else:
                 return self.send_json(200, {
                     "ok": False,
@@ -1456,9 +1583,13 @@ class Handler(BaseHTTPRequestHandler):
             "locate": located,
             "bbox": bbox,
             "bbox_source": bbox_source,
-            "warning": warning,
+            "warning": (("未识别检查类型，按胸片默认模板处理；若这张不是胸片请勿采信。" + (" " + warning if warning else ""))
+                        if assumed_chest else warning),
             "vision": vision,
+            "vision_used": bool(vision),
             "vision_error": vision_error,
+            "scope": "chest_xray_only",
+            "assumed_chest": assumed_chest,
             "honesty": {
                 "template_inference": True,
                 "human_annotated": False,
@@ -1736,6 +1867,37 @@ class Handler(BaseHTTPRequestHandler):
             emit("delta", {"text": out})
             return res, out, cs
 
+        # 本地五步工作流：先真实检索、定位、组证据，再交给 agent / 直连模型。
+        # 这是 trace 里 workflow span 的数据来源，不是装饰性占位。
+        wf = None
+        try:
+            wf = workflow_mod.run(
+                query,
+                case_id=(body.get("case_id") or (context or {}).get("case_id")),
+                zone_id=(body.get("zone_id") or (context or {}).get("zone_id")),
+                bbox=body.get("bbox"),
+                modality=(context or {}).get("检查类型") or (context or {}).get("modality"),
+                body_part=(context or {}).get("部位"),
+                view=(context or {}).get("体位"),
+                top_k=6,
+            )
+            emit("trace", {
+                "stage": "workflow", "skill": "local.orchestrator",
+                "status": "completed" if wf.get("ok") else "warning",
+                "ms": wf.get("total_ms", 0),
+                "workflow_id": wf.get("workflow_id"),
+                "steps": [s.get("step") for s in wf.get("steps") or []],
+            })
+            # 证据摘要并入页面上下文：直连模型与 agent 都能读到同一份。
+            if wf.get("context"):
+                context = {**(context or {}), **wf["context"]}
+        except Exception as exc:
+            wf = {"ok": False, "steps": [], "hint": "", "context": {},
+                  "evidence": [], "total_ms": 0, "error": str(exc)[:160]}
+            emit("trace", {"stage": "workflow", "skill": "local.orchestrator",
+                           "status": "error", "ms": 0,
+                           "detail": str(exc)[:120]})
+
         try:
             if gateway is not None:
                 # 影像问答拆成两段：视觉只负责“这是哪一例、框在哪”，
@@ -1781,31 +1943,47 @@ class Handler(BaseHTTPRequestHandler):
                 # 技能必须真实调用，否则 trace 里的 skill_invoke 只能标 unavailable。
                 # 实测：不显式要求时 agent 会直接 bash grep，跳过 skill 工具。
                 hint = "1) 先调用 skill 工具，参数 name 为 retrieve-sign（加载检索规范）"
-                concept = suggest_concept(query)
-                term = suggest_term(query)
-                if concept:
-                    # 疾病名不是征象名：先查概念拿到 sign_ids，再回查词条。
-                    # 少了这一步，「肺水肿的征象」会直接判未命中。
-                    row = concept[1]
-                    sign_ids = list(row.get("sign_ids") or [])
-                    related = list(row.get("related_sign_ids") or [])
-                    hint += ('\n2) 概念检索：grep -m 3 \'"name": "%s"\' %s/concepts.jsonl'
-                             % (row.get("name"), DATA_DIR))
-                    if sign_ids:
-                        hint += ('\n3) 回查征象（直接证据）：grep -m 8 -E \'%s\' %s/signs.jsonl'
-                                 % ("|".join(sign_ids), DATA_DIR))
-                    if related:
-                        hint += ('\n4) 关联征象（人工补充，正文作为相关征象提一句）：grep -m 8 -E \'%s\' %s/signs.jsonl'
-                                 % ("|".join(related), DATA_DIR))
-                    hint += ("\n概念命中的 sign_ids 要在正文讲清楚，出处统一放最后一行；"
-                             "related_sign_ids 作为相关征象提一句。")
+                wf_hint = (wf or {}).get("hint") or ""
+                wf_evidence = (wf or {}).get("evidence") or []
+                if wf_hint and wf_evidence:
+                    # 本地语义检索已经命中：直接把证据交给 agent，
+                    # 不再让它用 grep 从零重复检索（那是旧链路最慢的一步）。
+                    hint += "\n" + wf_hint
+                    concept = suggest_concept(query)
+                    if concept:
+                        row = concept[1]
+                        sign_ids = list(row.get("sign_ids") or [])[:10]
+                        if sign_ids:
+                            hint += ("\n补充：概念「%s」的直接征象 id 为 %s；"
+                                     "需要展开正文时用 read 打开 %s/signs.jsonl 对应行，"
+                                     "不要全库 grep。"
+                                     % (row.get("name"), "、".join(sign_ids), DATA_DIR))
                 else:
-                    keyword = term[0] if term else extract_keyword(query)
-                    if keyword:
-                        hint += '\n2) 再执行：grep -m 5 "%s" %s/signs.jsonl' % (keyword, DATA_DIR)
-                    hint += ("\n3) 若词条未命中，再查概念：grep -m 3 '\"name\": \"%s\"' %s/concepts.jsonl"
-                             % (keyword or "", DATA_DIR))
-                    hint += "\n四步都未命中时直接用标准影像学知识回答，不写 id，也不说明“没有检索到”。"
+                    concept = suggest_concept(query)
+                    term = suggest_term(query)
+                    if concept:
+                        # 疾病名不是征象名：先查概念拿到 sign_ids，再回查词条。
+                        # 少了这一步，「肺水肿的征象」会直接判未命中。
+                        row = concept[1]
+                        sign_ids = list(row.get("sign_ids") or [])
+                        related = list(row.get("related_sign_ids") or [])
+                        hint += ('\n2) 概念检索：grep -m 3 \'"name": "%s"\' %s/concepts.jsonl'
+                                 % (row.get("name"), DATA_DIR))
+                        if sign_ids:
+                            hint += ('\n3) 回查征象（直接证据）：grep -m 8 -E \'%s\' %s/signs.jsonl'
+                                     % ("|".join(sign_ids), DATA_DIR))
+                        if related:
+                            hint += ('\n4) 关联征象（人工补充，正文作为相关征象提一句）：grep -m 8 -E \'%s\' %s/signs.jsonl'
+                                     % ("|".join(related), DATA_DIR))
+                        hint += ("\n概念命中的 sign_ids 要在正文讲清楚，出处统一放最后一行；"
+                                 "related_sign_ids 作为相关征象提一句。")
+                    else:
+                        keyword = term[0] if term else extract_keyword(query)
+                        if keyword:
+                            hint += '\n2) 再执行：grep -m 5 "%s" %s/signs.jsonl' % (keyword, DATA_DIR)
+                        hint += ("\n3) 若词条未命中，再查概念：grep -m 3 '\"name\": \"%s\"' %s/concepts.jsonl"
+                                 % (keyword or "", DATA_DIR))
+                        hint += "\n四步都未命中时直接用标准影像学知识回答，不写 id，也不说明“没有检索到”。"
                 result = gateway.ask(session_id, query, emit, context=context, hint=hint)
                 text = result.get("text") or ""
                 # agent 的引用写在正文里；这里把真实存在的 id 提成 citation 事件，
@@ -1902,8 +2080,11 @@ class Handler(BaseHTTPRequestHandler):
 
         t_persist = time.time()
         persist_ms = 0
-        trace = build_trace(run_id, request, result, degraded, reason)
+        trace = build_trace(run_id, request, result, degraded, reason, workflow=wf)
         save_run(run_id, "trace.json", trace)
+        # 工作流单独落盘：trace 里只放摘要，完整证据链留在这里供回放。
+        if wf:
+            save_run(run_id, "workflow.json", wf)
         save_run(run_id, "answer.json", {"run_id": run_id, "text": text,
                                          "citations": cites, "literature": lit_items,
                                          "degraded": degraded})
@@ -1937,6 +2118,14 @@ class Handler(BaseHTTPRequestHandler):
             "first_token_ms": trace["summary"]["first_token_ms"],
             "total_ms": trace["summary"]["total_ms"],
             "trace_url": "/api/trace/%s" % run_id,
+            # 本地五步工作流：run_id 可回放，steps 让前端能画出真实链路。
+            "workflow": {
+                "id": (wf or {}).get("workflow_id"),
+                "ok": bool((wf or {}).get("ok")),
+                "steps": [s.get("step") for s in (wf or {}).get("steps") or []],
+                "evidence": len((wf or {}).get("evidence") or []),
+                "total_ms": (wf or {}).get("total_ms"),
+            },
             # 引用自证结果直接带给前端：非空就必须显示警示，不允许静默通过
             "cited": trace["citation_audit"]["cited"],
             "unverified_citations": trace["citation_audit"]["unverified"],

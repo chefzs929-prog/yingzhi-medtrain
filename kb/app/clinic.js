@@ -252,6 +252,8 @@
   /* ---------------- 渲染：影像 ---------------- */
 
   function renderViewer() {
+    const up = S.upload;
+    if (up && up.generic && up.url) { renderUploadViewer(up); return; }
     const c = currentCase();
     if (!c) return;
     const reveal = !S.task || quizSubmitted(c.id);
@@ -331,6 +333,49 @@
         ? `已选择 ${S.quiz.zoneNone ? "未见明确异常分区" : S.quiz.zoneIds.length + " 个分区"} · 到右栏完成判读与征象`
         : "点影像分区作答（可多选），或到右栏课堂任务")
       : (S.zoneId ? `已选：${currentZone().name}` : "");
+    applyZoom();
+    syncTaskChrome();
+  }
+
+  function renderUploadViewer(up) {
+    const v = up.vision || {};
+    const loc = v.locate || {};
+    const reg = (loc.primary && loc.primary.region) || {};
+    const revealed = !!reg.name && !up.needsConfirm;
+    $("#caseId").textContent = "上传影像";
+    $("#casePose").textContent = v.vision_used ? "胸片 · 视觉定位" : "胸片 · 模板定位";
+    $("#caseTitle").textContent = up.name || "上传影像";
+    $("#caseMeta").textContent = up.locating ? "视觉定位中…"
+      : (up.needsConfirm ? "未确认影像类型 · 暂不做分区判断"
+        : (revealed ? `${reg.name} · ${loc.status || ""} · 模板推断（非人工）`
+          : (up.notChest ? "非胸片：本产品暂不支持" : "未定位到分区")));
+    $("#caseQuality").textContent = "非人工标注";
+    const src = $("#caseSource");
+    src.style.display = "none";
+
+    const img = $("#img");
+    const zones = $("#zones");
+    const empty = $("#stageEmpty");
+    empty.hidden = false;
+    empty.innerHTML = `<b>正在载入上传影像…</b>`;
+    img.onload = () => { empty.hidden = true; fitStage(); };
+    img.onerror = () => { empty.hidden = false; empty.innerHTML = `<b>影像无法显示</b><span>文件可能不是浏览器可解码的图片。</span>`; };
+    img.src = up.url;
+    if (img.complete && img.naturalWidth) { empty.hidden = true; fitStage(); }
+
+    const bb = reg.coords || up.bbox;
+    zones.innerHTML = (revealed && bb)
+      ? `<div class="zone on" style="left:${(bb[0] * 100).toFixed(2)}%;top:${(bb[1] * 100).toFixed(2)}%;width:${(bb[2] * 100).toFixed(2)}%;height:${(bb[3] * 100).toFixed(2)}%"><span class="zl">${esc(reg.name)}</span></div>`
+      : "";
+
+    $("#srcLine").textContent = "上传影像：仅在浏览器内显示，不上传服务器、不落盘";
+    $("#licLine").textContent = "非诊断用途 · 请勿上传真实患者影像";
+    $("#bboxMeta").textContent = revealed ? `模板分区 ${reg.name}（非人工）` : "未定位到分区";
+    $("#step2").classList.remove("on");
+    $("#step3").classList.remove("on");
+    $("#chainHint").textContent = revealed ? "上传影像已定位；到右栏「出处」查看双引用" : "";
+    const legend = $("#legend");
+    if (legend) legend.style.display = "none";
     applyZoom();
     syncTaskChrome();
   }
@@ -691,6 +736,8 @@
     s = s.replace(/^(依据|缺失|边界|结论)\s*[:：]\s*/, "");
     s = s.replace(/库内/g, "知识库");
     if (!keepIds) s = s.replace(/(?:SIGN|CASE|CLM|SL|REG|GL|GRP|STD|ATLAS)-[A-Za-z0-9-]+/g, "");
+    // 去掉 id 后会留下空的 [] 或 [][]；不要让用户看到这种占位符。
+    s = s.replace(/\[\s*\]/g, "");
     s = s.replace(/(?:sha256|para_id|bbox)\s*[:：=]?\s*[A-Za-z0-9_\-\[\],. ]+/gi, "");
     s = s.replace(/库内命中/g, "知识库中找到");
     s = s.replace(/弱命中/g, "匹配度较低");
@@ -811,21 +858,7 @@
   }
 
   function sourceTabHTML(c) {
-    const upload = S.upload
-      ? (S.upload.ok
-        ? `<div class="src-block"><b>上传匹配成功</b><p>${esc(S.upload.name)} → ${esc(S.upload.caseId)}（文件指纹匹配）。</p></div>`
-        : `<div class="upload-alert">
-            <b>该影像未入库：只提供通用分区定位</b>
-            <p>文件：${esc(S.upload.name)} · ${(S.upload.size / 1024).toFixed(0)} KB<br>
-            文件指纹：${esc(S.upload.hash ? "已计算" : "浏览器不支持，未能计算")}<br>
-            图片只在当前浏览器内存中显示，不上传服务器、不落盘。请勿上传真实患者影像。</p>
-            ${S.upload.url ? `<img class="upload-preview" src="${esc(S.upload.url)}" alt="上传影像预览">` : ""}
-            <div class="generic-zones">${["右肺上野", "右肺中野", "右肺下野", "左肺上野", "左肺中野", "左肺下野", "纵隔与心影", "膈下"].map((z) =>
-              `<button class="chip ${S.upload.genericZone === z ? "on" : ""}" data-generic-zone="${esc(z)}">${esc(z)}</button>`).join("")}</div>
-            ${genericZoneHTML(S.upload.genericZone)}
-            <p class="hint">通用分区只帮助定位解剖位置；没有知识库逐区标注时，本工具不对异常 / 正常作判断。</p>
-          </div>`)
-      : "";
+    const upload = uploadHTML(S.upload);
     const signs = c.signs.length
       ? `<div class="chips">${c.signs.map((id) => {
         const s = signOf(id);
@@ -1260,12 +1293,176 @@
     } else {
       S.upload = {
         ok: false, generic: true, name: file.name, size: file.size, hash, url,
-        genericZone: "",
+        genericZone: "", vision: null, doc: null, locating: true,
       };
       S.tab = "source";
-      renderPanel();
-      toast("该影像未入库：只提供通用分区定位，不下结论");
+      render();
+      locateUploadVision(S.upload);
+      toast("该影像未入库：先做胸片模板定位，不下结论");
     }
+  }
+
+  /* ---------- 上传影像：胸片专项视觉定位 → 模板分区 → 双引用 ---------- */
+
+  // 只认胸部 X 线：CT/MR/US/MG 一律不算胸片，避免「胸部 CT 也套胸片分区」。
+  const CHEST_MODALITY = /^(CR|DX|XR|DR|RF)$/i;
+  const CHEST_PART = /胸|肺|chest|thorax|lung/i;
+
+  function isChestVision(v) {
+    const vis = (v && v.vision) || {};
+    const mod = String(vis.modality || "").toUpperCase();
+    const part = String(vis.body_part || "");
+    // 视觉模型明确说了不是胸片 → 拒绝；没说（null）→ 按胸片默认处理，后端会标 assumed_chest。
+    if (mod && !CHEST_MODALITY.test(mod)) return false;
+    if (part && !CHEST_PART.test(part)) return false;
+    return true;
+  }
+
+  async function locateUploadVision(u, confirmChest) {
+    if (!u || !u.url) return;
+    u.locating = true;
+    u.vision = null;
+    u.doc = null;
+    u.notChest = false;
+    u.needsConfirm = false;
+    render();
+    const base = (window.RCKB && RCKB.base) ? RCKB.base() : "";
+    const live = !!(window.RCKB && RCKB.isLive && RCKB.isLive());
+    // 纯静态站没有 /api：直接给降级提示，不要发 POST 让服务器回 501。
+    // 只有显式 ?api= 或同源已探测到动态服务时才发请求。
+    if (!live && !base) {
+      u.locating = false;
+      u.vision = {
+        ok: false, reason: "api_unreachable",
+        message: "未连接动态服务（静态预览没有 /api）；可先用下方手动分区做解剖定位。",
+      };
+      render();
+      return;
+    }
+    const payload = { image: u.url, use_center: true };
+    // 只有用户点过「我确认这是胸部 X 线片」才补检查类型；
+    // 否则不伪造元数据，交给后端标记 assumed_chest，前端据此不输出分区结论。
+    if (confirmChest) {
+      payload.modality = "CR";
+      payload.body_part = "胸部";
+      payload.view = "PA";
+    }
+    try {
+      const r = await fetch((base || "") + "/api/vision/region", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      u.vision = await r.json();
+    } catch (e) {
+      u.vision = {
+        ok: false, reason: "api_unreachable",
+        message: "未连接动态服务（静态预览没有 /api）；可先用下方手动分区做解剖定位。",
+      };
+    }
+    u.locating = false;
+    const v = u.vision || {};
+    // 未识别影像类型（assumed_chest）且用户未确认：不给分区结论，先问一句。
+    // 这是「胸片专项」的硬边界：离线无视觉模型时不能把任意图片当胸片分区。
+    if (v.ok && v.assumed_chest && !confirmChest) {
+      u.needsConfirm = true;
+      u.zone = "";
+      u.bbox = null;
+      u.doc = null;
+    } else if (v.ok && !isChestVision(v)) {
+      u.notChest = true;
+    } else if (v.ok) {
+      const loc = v.locate || {};
+      const reg = (loc.primary && loc.primary.region) || {};
+      u.zone = reg.name || "";
+      u.bbox = reg.coords || v.bbox || null;
+      const findings = ((v.vision || {}).findings || []).join(" ");
+      const q = ["胸部", reg.name, findings].filter(Boolean).join(" ");
+      let doc = null;
+      try {
+        const rr = await fetch((base || "") + "/api/kb/search?q=" + encodeURIComponent(q) + "&mode=semantic&limit=12");
+        const d = await rr.json();
+        doc = (d.items || []).find((x) => x.kind === "guideline") || null;
+      } catch (e) { doc = null; }
+      if (!doc) {
+        const sid = (reg.sign_ids || [])[0];
+        if (sid) {
+          try {
+            const rr = await fetch((base || "") + "/api/kb/sign/" + encodeURIComponent(sid));
+            const d = await rr.json();
+            const sg = d.sign || {};
+            const para = (d.paragraphs || [])[0] || {};
+            doc = {
+              kind: "sign", id: sg.id || sid, title: sg.name || sid,
+              snippet: para.text || sg.appearance || "",
+              source_url: para.source_url || "", candidate: true,
+            };
+          } catch (e) { doc = null; }
+        }
+      }
+      u.doc = doc;
+    }
+    render();
+  }
+
+  function uploadHTML(u) {
+    if (!u) return "";
+    if (u.ok) {
+      return `<div class="src-block"><b>上传匹配成功</b><p>${esc(u.name)} → ${esc(u.caseId)}（文件指纹匹配）。</p></div>`;
+    }
+    const v = u.vision || {};
+    const vis = v.vision || {};
+    const loc = v.locate || {};
+    const reg = (loc.primary && loc.primary.region) || {};
+    let state = "";
+    if (u.locating) {
+      state = `<div class="src-block"><b>视觉定位中…</b><p>先识别检查类型、部位与投照位，再匹配胸片分区模板。</p></div>`;
+    } else if (u.needsConfirm) {
+      state = `<div class="upload-alert"><b>未确认影像类型 · 暂不做分区判断</b>
+        <p>本产品只做<b>胸片（胸部 X 线，CR/DR）</b>。当前没有视觉模型，无法确认这张是不是胸片，因此不输出分区结论，也不套用任何模板。</p>
+        <p class="hint">${v.vision_used ? "" : "当前没有视觉模型，所以无法自动识别检查类型；这一步只能由你确认。"}</p>
+        <button class="btn sm primary" data-act="confirm-chest">我确认这是胸部 X 线片，继续定位</button>
+        <p class="hint">如果不是胸片，请不要点击；其他影像的拓展计划见《反思与未来拓展方向》。</p>
+      </div>`;
+    } else if (v.ok && reg.name) {
+      const bb = (reg.coords || v.bbox || []).map((n) => Number(n).toFixed(2)).join(", ");
+      const doc = u.doc;
+      state = `<div class="src-block generic-result">
+        <b>胸片模板分区 · ${esc(reg.name)}</b>
+        <p>${v.vision_used
+          ? `视觉识别 ${esc(vis.modality || "CR")} · ${esc(vis.body_part || "胸部")} · 投照位 ${esc(vis.view || "—")}`
+          : "未使用视觉模型 · 按胸片默认模板 CR / 胸部 / PA 定位"} · 定位状态 ${esc(loc.status || "")}</p>
+        <p>bbox [${esc(bb)}] · 由 atlas 模板几何推断，<b>不是人工标注</b>；演示或教学前须人工复核。</p>
+        ${v.vision_used ? "" : `<p class="hint">没有视觉模型时无法判断检查类型；如果这张不是胸片，请勿使用该分区结果。</p>`}
+        ${(vis.findings || []).length ? `<p>视觉所见：${esc((vis.findings || []).join("；"))}</p>` : ""}
+        <div class="src-block"><b>影像侧引用</b><p>${esc(reg.name)}（模板推断，非人工；${esc((v.atlas || {}).name || "胸片模板")}）</p></div>
+        <div class="src-block"><b>文献侧引用${doc && doc.candidate ? " · 该分区候选征象词条（非本片所见）" : ""}</b>${doc
+          ? `<p>${esc(doc.title)} · ${esc(doc.id)}</p><p>${esc(doc.snippet || "")}</p>${doc.source_url && doc.source_url.indexOf("kb://") !== 0 ? `<a href="${esc(doc.source_url)}" target="_blank" rel="noopener">打开出处 ↗</a>` : ""}`
+          : `<p>未命中可引用条款；按双引用规则不输出结论。</p>`}</div>
+        <p class="hint">上传胸片没有库内分区结论，因此不含「分区结论」引用；只做定位与文献对照，不构成诊断。</p>
+      </div>`;
+    } else if (v.ok && !reg.name) {
+      state = `<div class="src-block"><b>未定位到胸片分区</b><p>${esc(loc.message || "该位置不在胸片模板分区内，按规则不作推断。")}</p></div>`;
+    } else if (u.notChest || v.reason === "unsupported_modality" || v.reason === "no_atlas_match") {
+      state = `<div class="upload-alert"><b>本产品是胸片专项，暂不支持这张影像</b>
+        <p>${v.message ? esc(v.message) : `视觉识别为「${esc(vis.modality || "未知检查")} · ${esc(vis.body_part || "未知部位")}」。`}<b>不套用其他部位的分区模板</b>，避免出现「乳腺片套胸片分区」这类错配。</p>
+        <p>其他影像的阅片能力与拓展计划，见《反思与未来拓展方向》。</p></div>`;
+    } else {
+      state = `<div class="src-block"><b>未连接视觉定位服务</b><p>${esc(v.message || "静态预览没有 /api；演示请启动动态服务。")}</p></div>`;
+    }
+    const zones = ["右肺上野", "右肺中野", "右肺下野", "左肺上野", "左肺中野", "左肺下野", "纵隔与心影", "膈下"];
+    return `<div class="upload-alert">
+      <b>上传影像 · 胸片专项</b>
+      <p>文件：${esc(u.name)} · ${(u.size / 1024).toFixed(0)} KB<br>
+      文件指纹：${esc(u.hash ? "已计算" : "浏览器不支持，未能计算")}<br>
+      图片只在当前浏览器内存中显示，不上传服务器、不落盘。请勿上传真实患者影像。</p>
+      ${u.url ? `<img class="upload-preview" src="${esc(u.url)}" alt="上传影像预览">` : ""}
+      ${state}
+      <div class="generic-zones">${zones.map((z) =>
+        `<button class="chip ${u.genericZone === z ? "on" : ""}" data-generic-zone="${esc(z)}">${esc(z)}</button>`).join("")}</div>
+      ${genericZoneHTML(u.genericZone)}
+      <p class="hint">手动分区只帮助定位解剖位置；没有知识库逐区标注时，本工具不对异常 / 正常作判断。</p>
+    </div>`;
   }
 
   function genericZoneHTML(zone) {
@@ -1419,6 +1616,14 @@
         if (S.upload && S.upload.generic) {
           S.upload.genericZone = genericZone.dataset.genericZone;
           renderPanel();
+        }
+        return;
+      }
+      const confirmChest = e.target.closest('[data-act="confirm-chest"]');
+      if (confirmChest) {
+        if (S.upload) {
+          S.upload.confirmedChest = true;
+          locateUploadVision(S.upload, true);
         }
         return;
       }

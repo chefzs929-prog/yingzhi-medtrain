@@ -309,6 +309,36 @@ function scopeNoteHtml(q){
   return `<div class="scopenote"><b>范围提示</b><span>分区标注覆盖肺野、心影与纵隔轮廓、膈面与肋膈角、膈下（胃泡与肝影上部）；骨骼、软组织与胸壁结构不在标注范围内。下面的内容只是该区标注所见，不能用来判断骨折或软组织异常。</span></div>`;
 }
 
+const SCOPE_REASON_TEXT = {
+  "治疗 / 预后 / 操作建议": "治疗、用药、手术、引流、住院与预后判断需要结合临床、实验室与患者整体情况；本工具只转述影像教学标注，不提供这类建议。",
+  "非胸部部位": "本工具只做胸部 X 线（CR/DR）教学，不跨部位回答；其他部位的分区与征象不在库内。",
+  "问句过于宽泛": "问句里没有具体的征象、疾病或分区；请给出具体对象，才能回到库内证据。",
+  "诊断结论": "仅凭胸片分区描述不能下诊断或良恶性结论；需要病理、增强 CT 或多学科会诊。",
+  "分期判断": "分期需要病理与系统影像资料，单张胸片不足以判断。",
+  "病因判断": "病原学判断需要实验室、痰检与培养，影像只能描述表现。",
+  "检查方式（本工具只判胸片）": "本工具的数据与标注全部是胸部 X 线正侧位片，不包含 CT、MRI、超声或核医学影像。",
+  "患者隐私": "不提供患者身份信息，也不推断拍摄医院。",
+  "准确性保证": "不能保证 100% 准确；库内是教学标注，不是临床性能承诺。",
+  "非医学任务": "本工具只回答胸部 X 线的教学问题，不处理代码、翻译或文书任务。",
+  "就诊指引": "就诊科室与挂号指引需要结合临床，本工具不提供。",
+  "特殊人群与放射防护": "儿童、孕妇的检查选择与辐射防护属于临床决策，本工具不提供。",
+  "骨骼与关节系统": "分区标注只覆盖肺野、心影与纵隔轮廓、膈面与肋膈角、膈下；骨骼与关节不在范围内。",
+};
+
+function renderScopeRefusal(label){
+  const sug = (window.AskCore && AskCore.SCOPE_SUGGESTIONS) || [];
+  return `
+    <div class="ans no">
+      <div class="ans-h"><span class="tag no">不能回答</span><span class="conf">${esc(label)}</span></div>
+      <p class="concl">这个我不能答。</p>
+      <p class="reason">${esc(SCOPE_REASON_TEXT[label] || "该问题超出本工具的能力范围。")}</p>
+      <div class="sug">
+        <div class="sg-h">你可以问</div>
+        ${sug.map(i=>`<span class="sg-item" data-q="${esc(i)}">${esc(i)}</span>`).join(" ")}
+      </div>
+    </div>`;
+}
+
 function ask(query){
   const q = String(query || "").trim();
   if(!q) return;
@@ -323,7 +353,7 @@ function ask(query){
   if(res.kind === "unknown"){
     $("result").innerHTML = scope + renderUnknown(q);
   } else if(res.kind === "refusal"){
-    $("result").innerHTML = scope + renderRefusal(res.item);
+    $("result").innerHTML = scope + (res.scope ? renderScopeRefusal(res.scope) : renderRefusal(res.item));
   } else {
     $("result").innerHTML = scope + scopeNoteHtml(q) + renderAnswer(res.item);
   }

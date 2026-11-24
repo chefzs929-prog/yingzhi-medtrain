@@ -308,6 +308,10 @@
     if (!s) return "未运行";
     const parts = [];
     if (s.skill && s.skill !== "none") parts.push(s.skill);
+    // 工作流 span 带真实 steps：前端直接显示「5 步」，不用点开 trace 才知道跑没跑。
+    if (s.stage === "workflow" && Array.isArray(s.steps) && s.steps.length) {
+      parts.push(`${s.steps.length} 步`);
+    }
     // 命中数优先于状态词：completed 但 0 行，是「跑过了但没查到」，不是成功检索
     if (s.hits != null) parts.push(s.hits > 0 ? `命中 ${s.hits} 行` : "未命中");
     if (s.ms != null) parts.push(`${s.ms} ms`);

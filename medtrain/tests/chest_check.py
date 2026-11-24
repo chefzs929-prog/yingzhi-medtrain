@@ -131,7 +131,11 @@ def main() -> None:
         page.set_input_files("#fileInput", str(foreign))
         page.wait_for_timeout(900)
         panel = page.inner_text("#panelBody")
-        check("陌生影像进入通用定位", "该影像未入库：只提供通用分区定位" in panel, panel[:240])
+        # 静态站：未连接动态服务；动态站无视觉模型：先确认影像类型。
+        # 两种都必须给 8 个通用分区，且不下异常结论。
+        check("陌生影像进入通用定位",
+              ("未连接视觉定位服务" in panel) or ("未确认影像类型" in panel),
+              panel[:240])
         check("陌生影像给 8 个通用分区", page.locator("[data-generic-zone]").count() == 8,
               str(page.locator("[data-generic-zone]").count()))
         page.locator("[data-generic-zone]").first.click()

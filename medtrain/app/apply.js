@@ -123,12 +123,12 @@
       <table class="table"><thead><tr><th>平台能力</th><th>本作品中的位置</th><th>证据</th></tr></thead><tbody>
         <tr><td>知识库</td><td>征象 / 指南 / 病例三库 + 双引用元数据</td><td>kb-import 导入包、kb.js 构建产物</td></tr>
         <tr><td>技能</td><td>征象抽取、双线对齐、演练判分、引用审计</td><td>本应用的四条链路 + 可复现测试</td></tr>
-        <tr><td>工作流</td><td>学 → 迁 → 练 → 用；教师布置 → 学生完成 → 错题讲评</td><td>角色任务流、作业与记录</td></tr>
+        <tr><td>工作流</td><td>本地五步编排：解析 → 语义检索 → 分区定位 → 组证据 → 引用自证；另有教学任务流（学 → 迁 → 练 → 用）</td><td><code>workflow.py</code> + <code>workflow.json</code> + 8 项单测；<code>/api/health</code> 报 <code>real_workflow=true</code></td></tr>
         <tr><td>Agent</td><td>把检索、对齐、计分结果汇总成一句可核对回答</td><td>双线判断卡、交班摘要</td></tr>
         <tr><td>多模态</td><td>公开影像 + 人工分区框；不接诊断模型</td><td>${c.regions} 个分区锚点</td></tr>
         <tr><td>多端外壳</td><td>同一引擎按角色与设备分发 7 个入口</td><td>app.html + 6 个版本入口</td></tr>
       </tbody></table>
-      <p class="tiny muted" style="margin-top:8px">当前交付为可离线运行的交互原型；DeepWorks 内的知识库导入、技能与工作流配置见交付附件。</p>
+      <p class="tiny muted" style="margin-top:8px">语义检索与五步工作流已在本地服务真实执行：<code>/api/health</code> 可核验 <code>semantic_search=true</code>、<code>real_workflow=true</code>，每次问答的完整链路见 <code>/api/trace/{run_id}</code> 与 <code>workflow.json</code>；DeepWorks 内的知识库导入与技能配置见交付附件。</p>
     </div>`;
   }
 

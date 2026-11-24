@@ -96,6 +96,7 @@ def main() -> None:
     shutil.copy2(SRC / "evidence.html", OUT / "evidence.html")
     shutil.copy2(SRC / "daily.html", OUT / "daily.html")
     shutil.copy2(SRC / "daily-core.js", OUT / "daily-core.js")
+    shutil.copy2(SRC / "methods.html", OUT / "methods.html")
 
     # 旧四页与 read 入口全部收敛到 clinic
     for page in LEGACY_PAGES:

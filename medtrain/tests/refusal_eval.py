@@ -159,6 +159,10 @@ def main() -> None:
     print(f"wrote {OUT_JSON.relative_to(ROOT)}")
     if errors:
         print("console errors:", errors[:3])
+    # 有失败就必须让调用方（scripts/verify_all.sh、CI）看到非零退出码，
+    # 否则「拒答回归」红了也会被当成通过。
+    if passed != total:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
