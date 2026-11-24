@@ -17,6 +17,8 @@ __pycache__/
 # 演示/赛制原始文件（体积大，与代码无关）
 *.pptx
 *.docx
+# 例外：项目说明书正式版需随仓库归档（v10.3 起）
+!outputs/项目说明书_正式版_*.docx
 
 # 站点构建产物：发布在 gh-pages 分支，不重复进 main
 outputs/medtrain/
