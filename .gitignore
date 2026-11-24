@@ -57,3 +57,5 @@ opencode.jsonc.previous-good
 # 桌面打包产物（重新生成即可）
 desktop/build/
 outputs/daily/.state.json
+desktop/win-dist/
+outputs/*.zip
