@@ -6,6 +6,7 @@
 - 每条结果都带 source 链接与许可说明；
 - 检索失败时返回空结果，由上层给出边界话术。
 """
+from __future__ import annotations
 import json
 import math
 import re
@@ -17,6 +18,14 @@ import sign_links
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 INDEX = ROOT / "index" / "index.json"
+
+
+def _built_at() -> str | None:
+    p = INDEX.parent / "built_at.txt"
+    try:
+        return p.read_text(encoding="utf8").strip()
+    except OSError:
+        return None
 
 STOP = set("的 了 是 在 有 和 与 及 或 等 中 见 可见 表现 影像 图像 检查 显示 出现 情况 部位".split())
 
@@ -128,9 +137,10 @@ def build():
         for t in set(toks):
             df[t] += 1
 
+    # 时间戳单独落盘，避免每次重建都让 index.json 产生无意义 diff
+    stamp = __import__("datetime").datetime.now().isoformat(timespec="seconds")
     index = {
         "groups": groups,
-        "built_at": __import__("datetime").datetime.now().isoformat(timespec="seconds"),
         "N": len(docs),
         "avgdl": sum(d["_len"] for d in docs) / max(1, len(docs)),
         "df": dict(df),
@@ -138,6 +148,7 @@ def build():
     }
     INDEX.parent.mkdir(exist_ok=True)
     INDEX.write_text(json.dumps(index, ensure_ascii=False), encoding="utf8")
+    (INDEX.parent / "built_at.txt").write_text(stamp, encoding="utf8")
     return index
 
 
@@ -606,7 +617,7 @@ class KB:
             "linked_images": len(self.links_by_image),
             "linked_regions": sum(len(x.get("regions", [])) for x in self.link_rows),
             "linked_quotes": len({x["quote"] for x in self.link_rows}),
-            "built_at": self.index.get("built_at"),
+            "built_at": _built_at(),
         }
 
 

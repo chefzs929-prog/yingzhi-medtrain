@@ -59,3 +59,5 @@ desktop/build/
 outputs/daily/.state.json
 desktop/win-dist/
 outputs/*.zip
+kb/index/built_at.txt
+desktop/.cache/
