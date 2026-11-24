@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0b4f55">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="apple-touch-icon" href="../icons/apple-touch-icon-180.png">
-<link rel="stylesheet" href="base.css?v=10">
+<link rel="stylesheet" href="base.css?v=11">
 <link rel="stylesheet" href="exam.css?v=1">
 </head>
 <body class="exam-body">
@@ -15,14 +15,13 @@
 <header class="bar" data-page="exam">
   <div class="bar-extra">
     <span class="quest-badge">病例题 · 大纲胸部 10 例</span>
-    <span class="bar-note">先主诉，后阅片；每题 5 选 1</span>
     <span class="spacer"></span>
     <a class="btn sm" href="compare.html">对比阅片</a>
     <a class="btn sm" href="clinic.html">逐区阅片</a>
   </div>
 </header>
 
-<div class="global-disclaimer"><b>非诊断用途</b><span>仅用于医学影像教学与研究，不构成诊断意见，不替代临床决策；题目与解析只代表库内教学标注。</span></div>
+<div class="global-disclaimer"><b>非诊断用途</b><span>仅供医学影像教学与研究</span></div>
 
 <div class="exam-shell">
   <aside class="syllabus" aria-label="考试大纲">
@@ -38,7 +37,6 @@
       <div class="empty-state"><b>正在载入大纲…</b></div>
     </div>
     <div class="syl-foot">
-      <p><b>只做胸部平片。</b>腹部、泌尿系、长骨骨折与颅脑 CT 不在本页；不把胸片结论外推到其他部位。</p>
       <details>
         <summary>题源与边界</summary>
         <div id="sourceBox" class="src-box"></div>
@@ -68,7 +66,6 @@
       <section class="vignette card" aria-label="病例摘要">
         <div class="vg-head">
           <span class="vg-k">病例摘要</span>
-          <span class="vg-hint">先读主诉，再看影像</span>
         </div>
         <div class="vg-body" id="vignette">
           <div class="empty-state"><b>正在载入…</b></div>
@@ -134,21 +131,17 @@
       <button class="btn sm" id="randomBtn">随机一题</button>
       <button class="btn sm ghost" id="resetBtn">清空记录</button>
     </div>
-    <div class="sheet-note">
-      <b>怎么用</b>
-      <p>先读主诉与查体，在影像上按“气道 → 肺野 → 肺门 → 心影 → 膈与肋膈角 → 骨骼”顺序扫一遍，再选项。</p>
-      <p>提交后看“影像所见 / 易错点 / 对比”，最后用对比阅片把相似病放在一起看。</p>
-    </div>
     <a class="sheet-compare" href="compare.html">
       <span>打开对比阅片</span>
-      <b>拖动两张影像 → 并排 / 擦除</b>
+      <b>并排 / 擦除对比</b>
     </a>
   </aside>
 </div>
 
 <div id="yzToast" role="status" aria-live="polite"></div>
 
-<script src="common.js?v=10"></script>
+<script src="common.js?v=11"></script>
+<script src="kb-api.js?v=1"></script>
 <script src="exam.js?v=1"></script>
 </body>
 </html>

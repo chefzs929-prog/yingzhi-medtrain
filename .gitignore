@@ -39,3 +39,12 @@ outputs/precision-eval/_work/*.png
 .env
 yingzhi/serve/.env
 yingzhi/replay/
+
+# 课堂同步数据（含学生信息，不提交）
+data/
+
+# 演示视频（体积大，本地留存）
+outputs/*.mp4
+
+# opencode 配置备份
+opencode.jsonc.previous-good

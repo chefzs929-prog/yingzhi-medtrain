@@ -61,13 +61,16 @@
     query: "",
     qa: [],
     qaDraft: "",
+    qaMode: "kb",
+    agent: { messages: [], draft: "", running: false },
     upload: null,
     showZones: true,
     zoom: 1,
     reportOpen: false,
     task: null,
     quiz: {
-      zoneId: "",
+      zoneIds: [],
+      zoneNone: false,
       status: "",
       signs: [],
       signsTouched: false,
@@ -275,9 +278,9 @@
     };
     img.onerror = () => {
       empty.hidden = false;
-      empty.innerHTML = `<b>影像未找到</b><span>${esc(c.image)} · 请确认 outputs/medtrain/images 下存在该文件。</span>`;
+      empty.innerHTML = `<b>影像未找到</b><span>请确认知识库影像目录可访问。</span>`;
     };
-    img.src = "../" + c.image;
+    img.src = window.RCKB ? window.RCKB.imageUrl(c.image) : "../" + c.image;
     if (img.complete && img.naturalWidth) {
       empty.hidden = true;
       fitStage();
@@ -285,7 +288,7 @@
 
     zones.innerHTML = c.zones.map((z) => {
       const on = S.task && !reveal
-        ? (z.id === S.quiz.zoneId ? " on" : "")
+        ? (!S.quiz.zoneNone && S.quiz.zoneIds.includes(z.id) ? " on" : "")
         : (z.id === S.zoneId ? " on" : "");
       const hide = S.showZones ? "" : " hide";
       const statusClass = reveal ? z.status : "quiz";
@@ -305,18 +308,25 @@
     } else {
       $("#srcLine").textContent = "考核模式 · 提交后显示来源";
       $("#licLine").textContent = "提交后显示许可与作者";
-      $("#bboxMeta").textContent = S.quiz.zoneId ? "已选择分区 · 提交后揭示状态" : "请选择异常分区";
+      $("#bboxMeta").textContent = S.quiz.zoneNone
+        ? "已选择：未见明确异常分区 · 提交后揭示状态"
+        : (S.quiz.zoneIds.length
+          ? `已选择 ${S.quiz.zoneIds.length} 个分区 · 提交后揭示状态`
+          : "请选择异常分区（可多选）");
     }
 
     const legend = $("#legend");
     if (legend) legend.style.display = reveal ? "" : "none";
     const zt = $("#zoneToggle");
     if (zt) zt.classList.toggle("on", S.showZones);
-    $("#step2").classList.toggle("on", S.task ? !!S.quiz.zoneId : !!S.zoneId);
+    const quizZonePicked = S.quiz.zoneNone || S.quiz.zoneIds.length > 0;
+    $("#step2").classList.toggle("on", S.task ? quizZonePicked : !!S.zoneId);
     $("#step3").classList.toggle("on", S.task ? reveal : !!S.zoneId);
     $("#chainHint").textContent = S.task && !reveal
-      ? (S.quiz.zoneId ? "已选择分区 · 到右栏完成判读与征象" : "点影像分区作答，或到右栏课堂任务")
-      : (S.zoneId ? `已选：${currentZone().name} · 右栏显示所见与出处` : "点影像上的彩色分区，或直接提问");
+      ? (quizZonePicked
+        ? `已选择 ${S.quiz.zoneNone ? "未见明确异常分区" : S.quiz.zoneIds.length + " 个分区"} · 到右栏完成判读与征象`
+        : "点影像分区作答（可多选），或到右栏课堂任务")
+      : (S.zoneId ? `已选：${currentZone().name}` : "");
     applyZoom();
     syncTaskChrome();
   }
@@ -396,9 +406,12 @@
       const d = attempt.detail || {};
       const score = attempt.score;
       const allDone = taskDoneCount() >= total;
-      const answeredZone = d.answeredZoneId === "none"
+      const answeredIds = Array.isArray(d.answeredZoneIds) && d.answeredZoneIds.length
+        ? d.answeredZoneIds
+        : (d.answeredZoneId && d.answeredZoneId !== "none" ? [d.answeredZoneId] : []);
+      const answeredZone = d.answeredZoneNone || d.answeredZoneId === "none" || !answeredIds.length
         ? "未见明确异常分区"
-        : ((c.zones.find((z) => z.id === d.answeredZoneId) || {}).name || d.answeredZoneId || "—");
+        : zoneNames(c, answeredIds);
       const correctZone = zoneNames(c, d.correctZoneIds);
       return `<div class="task-quiz-head">
           <div class="tq-kicker">课堂任务 · 第 ${idx}/${total} 例 · 已提交</div>
@@ -409,7 +422,7 @@
           <div class="qr-top">
             <div class="qr-score">${score}<span>/100</span></div>
             <div class="qr-lines">
-              <div class="${d.zoneOk ? "ok" : "bad"}"><b>定位</b><span>${d.zonePoints || 0}/40 · ${d.zoneOk ? "正确" : "错误"}</span></div>
+              <div class="${d.zoneOk ? "ok" : "bad"}"><b>定位</b><span>${d.zonePoints || 0}/40 · ${d.zoneOk ? "正确" : (d.zonePoints ? "部分正确" : "错误")}</span></div>
               <div class="${d.statusOk ? "ok" : "bad"}"><b>判读</b><span>${d.statusPoints || 0}/30 · ${d.statusOk ? "正确" : "错误"}</span></div>
               <div class="${d.signRatio >= 0.8 ? "ok" : "bad"}"><b>征象</b><span>${d.signPoints || 0}/30 · ${Math.round((d.signRatio || 0) * 100)}%</span></div>
             </div>
@@ -417,7 +430,7 @@
           <div class="qr-answer">
             <p><b>你的作答：</b>${esc(answeredZone)} · ${esc(statusLabel(d.answeredStatus))} · ${esc(signNames(d.answeredSigns) || "未见明确征象")}</p>
             <p><b>正确答案：</b>${esc(correctZone)} · ${esc(statusLabel(d.expectedStatus))} · ${esc(signNames(d.expectedSigns) || "无明确征象")}</p>
-            <p class="qr-note">定位题接受该病例任一异常分区；判读题按你选择分区的真实状态判分；征象题按命中数减错选计分。</p>
+            <p class="qr-note">定位题按选中的异常分区计分：选全得分，漏选、错选都会扣分；判读题按你选择分区的共同状态判分；征象题按命中数减错选计分。</p>
           </div>
           <div class="sys-actions">
             <button class="btn sm primary" data-quiz-next>${allDone ? "全部完成，返回课堂" : "下一例"}</button>
@@ -429,13 +442,14 @@
 
     const opts = window.RCClass ? window.RCClass.signOptions(c) : { options: c.signs.slice() };
     const zoneOpts = c.zones.map((z) =>
-      `<button class="qopt ${S.quiz.zoneId === z.id ? "on" : ""}" data-quiz-zone="${esc(z.id)}">${esc(z.name)}</button>`).join("");
+      `<button class="qopt ${!S.quiz.zoneNone && S.quiz.zoneIds.includes(z.id) ? "on" : ""}" data-quiz-zone="${esc(z.id)}">${esc(z.name)}</button>`).join("");
     const statusOpts = Object.keys(STATUS).map((k) =>
       `<button class="qopt ${S.quiz.status === k ? "on" : ""}" data-quiz-status="${k}">${esc(STATUS[k])}</button>`).join("");
     const signOpts = opts.options.map((id) =>
       `<button class="qopt sign ${S.quiz.signs.includes(id) ? "on" : ""}" data-quiz-sign="${esc(id)}">${esc((signOf(id) || {}).name || id)}</button>`).join("");
     const noneOn = S.quiz.signsTouched && !S.quiz.signs.length ? " on" : "";
-    const canSubmit = !!S.quiz.zoneId && !!S.quiz.status && S.quiz.signsTouched;
+    const zonePicked = S.quiz.zoneNone || S.quiz.zoneIds.length > 0;
+    const canSubmit = zonePicked && !!S.quiz.status && S.quiz.signsTouched;
 
     return `<div class="task-quiz-head">
         <div class="tq-kicker">课堂任务 · 第 ${idx}/${total} 例 · ${esc(S.task.student.name)}</div>
@@ -443,17 +457,20 @@
         <p>病例标题、分区颜色与出处暂时隐藏。先自己读片，提交后再对照。</p>
       </div>
       <div class="quiz-q">
-        <div class="quiz-qh"><b>1</b><span>异常所见主要位于哪个分区？</span><em>40 分</em></div>
+        <div class="quiz-qh"><b>1</b><span>异常所见主要位于哪些分区？</span><em>40 分 · 可多选</em></div>
         <div class="quiz-opts">${zoneOpts}
-          <button class="qopt ${S.quiz.zoneId === "none" ? "on" : ""}" data-quiz-zone="none">未见明确异常分区</button>
+          <button class="qopt ${S.quiz.zoneNone ? "on" : ""}" data-quiz-zone="none">未见明确异常分区</button>
         </div>
       </div>
       <div class="quiz-q">
-        <div class="quiz-qh"><b>2</b><span>${S.quiz.zoneId === "none" ? "本病例整体最符合哪种状态？" : "你选择的分区是什么状态？"}</span><em>30 分</em></div>
+        <div class="quiz-qh"><b>2</b><span>${S.quiz.zoneNone
+          ? "本病例整体最符合哪种状态？"
+          : (S.quiz.zoneIds.length > 1 ? "这些分区整体是什么状态？" : "你选择的分区是什么状态？")}</span><em>30 分</em></div>
         <div class="quiz-opts">${statusOpts}</div>
+        ${S.quiz.zoneIds.length > 1 ? `<p class="quiz-hint" style="margin-top:6px">多选分区按共同状态作答；如果状态不一致，请只选异常分区。</p>` : ""}
       </div>
       <div class="quiz-q">
-        <div class="quiz-qh"><b>3</b><span>本病例公开标注的征象是？</span><em>30 分 · 可多选</em></div>
+        <div class="quiz-qh"><b>3</b><span>本病例标注的征象是？</span><em>30 分 · 可多选</em></div>
         <div class="quiz-opts">${signOpts}
           <button class="qopt sign${noneOn}" data-quiz-sign="none">未见明确征象</button>
         </div>
@@ -482,15 +499,11 @@
     if (!z) {
       const chips = ab.length
         ? `<div class="chips">${ab.map((x) => `<button class="chip ab" data-zone="${esc(x.id)}">${esc(x.name)} · ${esc(statusLabel(x.status))}</button>`).join("")}</div>`
-        : `<div class="hint-box">本病例没有标注为异常的分区。你可以点任意分区，查看“未见异常”的依据。</div>`;
+        : `<div class="hint-box">本病例没有标注为异常的分区。</div>`;
       return `${head}
-        <div class="sec-title">从哪看起</div>
+        <div class="sec-title">分区速览</div>
         ${chips}
-        <div class="hint-box">
-          <b>怎么用：</b>点影像上的彩色分区 → 右栏显示该分区的所见、状态与依据。
-          青绿=未见异常，琥珀=异常，灰虚线=公开来源未提及，蓝色=判读受限。
-        </div>
-        ${un.length ? `<div class="hint-box"><b>未提及 ${un.length} 区：</b>公开来源没有逐区描述，本工具不把“未提及”写成“正常”。</div>` : ""}`;
+        ${un.length ? `<div class="hint-box"><b>未提及 ${un.length} 区：</b>原图注未逐区描述，不作推断。</div>` : ""}`;
     }
 
     const signs = (z.sign_ids || []).map((id) => signOf(id)).filter(Boolean);
@@ -507,13 +520,11 @@
           <span class="badge ${z.status}">${esc(statusLabel(z.status))}</span>
         </div>
         <div class="zc-text">${esc(z.text)}</div>
-        <div class="zc-basis">依据：${esc(z.basis)} · 分区 ${esc(z.id)} · bbox [${z.coords.map((n) => n.toFixed(2)).join(", ")}]</div>
+        <div class="zc-basis">依据：${esc(z.basis)} · 教学分区</div>
+        <details class="qa-tech"><summary>标注信息</summary><p>分区编号 ${esc(z.id)} · 位置框 [${z.coords.map((n) => n.toFixed(2)).join(", ")}]</p></details>
         ${signChips}
       </div>
-      <div class="hint-box">
-        <b>边界：</b>${esc(z.note || "教学分区，按解剖比例近似，不是病灶分割。")}
-        ${z.status === "unmentioned" ? " 该分区为“来源未提及”，不是“正常”。" : ""}
-      </div>
+      ${z.status === "unmentioned" ? `<div class="hint-box">该分区为“来源未提及”，不是“正常”。</div>` : ""}
       <div class="sys-actions">
         <button class="btn sm" data-ask="${esc(`${z.name}有没有异常？`)}">问这个分区</button>
         <button class="btn sm" data-tab="qa">去问答</button>
@@ -530,11 +541,8 @@
       </div>
     </div>`).join("");
     const ab = c.system.filter((x) => x.status === "abnormal").length;
-    return `<div class="sec-title">系统阅片顺序</div>
-      <div class="hint-box" style="margin-top:0">
-        按“气管与纵隔 → 肺野 → 肺门 → 心影 → 膈肌与肋膈角 → 骨骼与软组织 → 导管与植入物”排列。
-        本病例系统所见：<b>${ab ? `${ab} 项异常` : "未见明确异常项"}</b>。
-      </div>
+    return `<div class="sec-title">系统阅片</div>
+      <div class="sys-sum">${ab ? `${ab} 项异常` : "未见明确异常"}</div>
       <div style="margin-top:10px">${rows}</div>
       <div class="sys-actions">
         <button class="btn sm" id="reportBtn2">生成阅片记录</button>
@@ -552,41 +560,237 @@
       "有没有胸腔积液？",
       `${zoneName}有没有异常？`,
     ];
+    const mode = S.qaMode === "agent" ? "agent" : "kb";
+    return `<div class="qa-mode" role="tablist" aria-label="问答方式">
+        <button data-qa-mode="kb" role="tab" aria-selected="${mode === "kb"}" class="${mode === "kb" ? "on" : ""}">知识库检索</button>
+        <button data-qa-mode="agent" role="tab" aria-selected="${mode === "agent"}" class="${mode === "agent" ? "on" : ""}">智能问答</button>
+      </div>
+      ${mode === "agent" ? qaAgentHTML(c, presets) : qaKbHTML(c, presets)}`;
+  }
+
+  function qaKbHTML(c, presets) {
     const log = S.qa.length
       ? S.qa.map((m) => m.role === "user"
         ? `<div class="qa-msg user">${esc(m.text)}</div>`
-        : qaAnswerHTML(m.answer, m.agent)).join("")
-      : `<div class="hint-box">
-          <b>只答当前病例：</b>${esc(c.id)} · ${esc(c.title)}。
-          可以问分区（右肺上野）、征象（气胸/积液/结节）或“这张片怎么读”。
-          本页不回答诊断、治疗、分期与预后。
-        </div>`;
+        : qaAnswerHTML(m.answer)).join("")
+      : `<div class="hint-box">只回答当前病例：${esc(c.id)} · ${esc(c.title)}</div>`;
     return `<div class="qa-log" id="qaLog">${log}</div>
       <div class="qa-presets">${presets.map((p) => `<button data-ask="${esc(p)}">${esc(p)}</button>`).join("")}</div>
       <div class="qa-input">
         <input id="qaInput" value="${esc(S.qaDraft)}" placeholder="问这张胸片：右肺上野有没有异常？" autocomplete="off">
-        <button class="btn sm primary" id="qaSend">发送</button>
+        <button class="btn sm primary" id="qaSend">查知识库</button>
       </div>`;
   }
 
-  function qaAnswerHTML(a, agent) {
+  function qaAgentHTML(c, presets) {
+    const log = S.agent.messages.length
+      ? S.agent.messages.map(qaAgentMessageHTML).join("")
+      : `<div class="hint-box">让 Agent 解释当前病例：${esc(c.id)} · ${esc(c.title)}</div>`;
+    return `<div class="qa-log" id="qaAgentLog">${log}</div>
+      <div class="qa-presets">${presets.map((p) => `<button data-ask="${esc(p)}">${esc(p)}</button>`).join("")}</div>
+      <div class="qa-input">
+        <input id="qaAgentInput" value="${esc(S.agent.draft)}" placeholder="问这张胸片，例如：右肺上野为什么标注为异常？" autocomplete="off" ${S.agent.running ? "disabled" : ""}>
+        <button class="btn sm primary" id="qaAgentSend" ${S.agent.running ? "disabled" : ""}>${S.agent.running ? "解释中…" : "问 Agent"}</button>
+      </div>`;
+  }
+
+  function qaAgentMessageHTML(m) {
+    if (m.role === "user") return `<div class="qa-msg user">${esc(m.text)}</div>`;
+    if (m.status === "error") {
+      const connBtn = (window.RCAgent && window.RCAgent.connButtonHTML) ? window.RCAgent.connButtonHTML() : "";
+      return `<div class="qa-msg bot refuse agent">
+        <div class="qa-title">智能解释暂时不可用</div>
+        <div class="qa-body">
+          <p>${esc(m.error || "请稍后再试。")}</p>
+          <p>你仍然可以用“知识库检索”查看当前病例的标注与出处。</p>
+          ${connBtn}
+        </div>
+        ${m.detail ? `<details class="qa-tech"><summary>技术信息</summary><p>${esc(m.detail)}</p></details>` : ""}
+      </div>`;
+    }
+    const sec = m.sections || splitAgent(m.text || "");
+    // 新版回答是「首段结论 + 若干自然段」。没有「结论：」标记时 splitAgent 会把整段放进
+    // conclusion，因此按行拆成独立段落渲染，否则 <p> 里的换行会被 HTML 折叠成一整块。
+    const paras = sec.conclusion.concat(sec.other).map((x) => naturalize(x)).filter(Boolean);
+    const conclusion = paras[0] || (m.status === "running" ? "正在生成…" : "本轮没有返回可读的解释。");
+    const extra = paras.slice(1);
+    const evidence = sec.evidence.map((x) => naturalize(x, true)).filter(Boolean);
+    const missing = sec.missing.map(naturalize).filter(Boolean);
+    const boundary = sec.boundary.map(naturalize).filter(Boolean);
+    const cites = (m.cites || []).map((x) => agentCiteHTML(x, m.done));
+    const evidenceBlock = (evidence.length || cites.length)
+      ? `<details class="qa-more"><summary>依据与出处${cites.length ? ` · ${cites.length} 条` : ""}</summary>
+          ${evidence.length ? `<div class="qa-evidence">${evidence.map((x) => `<p>${esc(x)}</p>`).join("")}</div>` : ""}
+          ${cites.length ? `<div class="qa-cites">${cites.join("")}</div>` : ""}
+        </details>`
+      : "";
+    const noteBlock = (missing.length || boundary.length)
+      ? `<details class="qa-more"><summary>还需要注意</summary>
+          ${missing.length ? `<ul>${missing.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+          ${boundary.length ? `<p class="qa-boundary">${esc(boundary.join(" "))}</p>` : ""}
+        </details>`
+      : "";
+    const tech = m.done ? `<details class="qa-tech"><summary>技术信息</summary><p>${esc(techSummary(m.done))}</p></details>` : "";
+    return `<div class="qa-msg bot agent ${m.status === "running" ? "running" : ""}">
+      <div class="qa-title">智能解释${m.status === "running" ? `<span class="qa-running">正在生成</span>` : ""}</div>
+      <div class="qa-body"><p class="qa-conclusion">${esc(conclusion)}</p>${extra.map((x) => `<p>${esc(x)}</p>`).join("")}</div>
+      ${evidenceBlock}
+      ${noteBlock}
+      ${tech}
+    </div>`;
+  }
+
+  function agentCiteHTML(c, done) {
+    const label = c.type === "sign" ? "文献来源"
+      : c.type === "case" ? "病例来源"
+        : c.type === "guideline" ? "指南条款"
+          : c.type === "region" ? "影像位置" : "知识库条目";
+    const bad = !!(done && done.unverified_citations && done.unverified_citations.includes(c.id));
+    const url = c.source_url
+      ? `<a href="${esc(c.source_url)}" target="_blank" rel="noopener">查看来源 ↗</a>` : "";
+    const kindLabel = { sign: "征象解释", case: "病例", guideline: "指南条款", region: "影像位置", claim: "结论条目" }[c.type] || "";
+    return `<div class="cite ${bad ? "bad" : ""}">
+      <b>${esc(label)}${c.title ? " · " + esc(c.title) : ""}</b>
+      ${kindLabel ? `<span>${esc(kindLabel)}</span>` : ""}
+      ${url}
+      ${c.id ? `<code class="qa-cite-id">${esc(c.id)}</code>` : ""}
+      ${bad ? `<em>未在知识库中校验</em>` : ""}
+    </div>`;
+  }
+
+  function splitAgent(text) {
+    const out = { conclusion: [], evidence: [], missing: [], boundary: [], other: [] };
+    const map = { "结论": "conclusion", "依据": "evidence", "缺失": "missing", "边界": "boundary", "参考": "evidence", "说明": "evidence" };
+    let cur = "other";
+    String(text || "").split(/\n+/).forEach((line) => {
+      const m = line.match(/^(结论|依据|缺失|边界|参考|说明)\s*[:：]\s*(.*)$/);
+      if (m) {
+        cur = map[m[1]] || "other";
+        if (m[2].trim()) out[cur].push(m[2].trim());
+      } else if (line.trim()) {
+        out[cur].push(line.trim());
+      }
+    });
+    if (!out.conclusion.length && out.other.length) {
+      // 新版回答不强制「结论：」前缀：没有标记时整段就是结论，other 清空，
+      // 避免渲染时既当结论又当补充段重复显示。
+      out.conclusion = out.other.slice();
+      out.other = [];
+    }
+    return out;
+  }
+
+  function naturalize(text, keepIds) {
+    let s = String(text == null ? "" : text);
+    s = s.replace(/【通识补充·非库内证据】/g, "补充说明：");
+    s = s.replace(/【通识补充】/g, "补充说明：");
+    s = s.replace(/^(依据|缺失|边界|结论)\s*[:：]\s*/, "");
+    s = s.replace(/库内/g, "知识库");
+    if (!keepIds) s = s.replace(/(?:SIGN|CASE|CLM|SL|REG|GL|GRP|STD|ATLAS)-[A-Za-z0-9-]+/g, "");
+    s = s.replace(/(?:sha256|para_id|bbox)\s*[:：=]?\s*[A-Za-z0-9_\-\[\],. ]+/gi, "");
+    s = s.replace(/库内命中/g, "知识库中找到");
+    s = s.replace(/弱命中/g, "匹配度较低");
+    s = s.replace(/双引用链/g, "证据链");
+    s = s.replace(/\bE1\b/g, "影像位置");
+    s = s.replace(/\bL[12]\b/g, "文献来源");
+    s = s.replace(/\s{2,}/g, " ").replace(/\s+([，。；：])/g, "$1");
+    s = s.replace(/[，、；：]\s*。/g, "。").replace(/[（(]\s*[)）]/g, "");
+    s = s.replace(/^[，、；：。]+/, "").replace(/[，、；：]+$/, "");
+    return s.trim();
+  }
+
+  function techSummary(done) {
+    const parts = [];
+    if (done.served_by) {
+      parts.push(done.served_by === "agent" ? "智能解释"
+        : done.served_by === "fallback" ? "简化回答" : done.served_by);
+    }
+    if (done.degraded) parts.push("本次为降级回答");
+    if (done.total_ms != null) parts.push(`${done.total_ms} ms`);
+    if (done.run_id) parts.push(`运行 ${done.run_id}`);
+    return parts.join(" · ") || "已完成";
+  }
+
+  function friendlyAgentError(e) {
+    const msg = String((e && e.message) || e || "");
+    const code = e && e.code;
+    if (code === "unconfigured") return "线上页面还没有连接 Agent 服务。点下方“连接设置”填写已部署的服务地址后即可使用。";
+    if (code === "mixed-content") return "当前是 HTTPS 页面，不能连接 http:// 地址。请在“连接设置”里换成 HTTPS 的 Agent 地址。";
+    if (code === "timeout" || /超时|timeout|abort/i.test(msg)) return "这次解释用时较长，已停止等待。可以稍后重试，或改用知识库检索。";
+    if (code === "network" || /无法连接|failed to fetch|networkerror|http/i.test(msg)) return "智能解释服务暂时没有响应。请检查“连接设置”里的地址，或稍后再试。";
+    return "这次没有拿到可用的解释。可以稍后重试，或改用知识库检索。";
+  }
+
+  function buildAgentQuery(c, z, sign, text) {
+    const parts = [`【胸片阅片】病例 ${c.id} · ${c.title}（${c.pose_label}）`];
+    if (z) parts.push(`分区 ${z.name}（${z.id}），状态 ${statusLabel(z.status)}，所见：${z.text}`);
+    if (sign) parts.push(`征象 ${sign.name}（${sign.id}）：${sign.appearance}`);
+    parts.push(`问题：${text}`);
+    parts.push("要求：像上级医师带教一样直接讲影像表现与鉴别要点，不诊断、不治疗、不判分、不编造引用；不要写来源说明、缺失、边界或免责声明，出处只在最后一行。");
+    return parts.join("。");
+  }
+
+  async function runAgent(q) {
+    const text = String(q || "").trim();
+    if (!text || S.agent.running) return;
+    const c = currentCase();
+    if (!c) return;
+    const z = detectZone(text, c);
+    const sign = detectSign(text);
+    const user = { role: "user", text };
+    const bot = { role: "bot", text: "", status: "running", sections: null, cites: [], done: null, error: "" };
+    S.agent.messages.push(user, bot);
+    S.agent.draft = "";
+    S.agent.running = true;
+    S.qaMode = "agent";
+    S.tab = "qa";
+    renderPanel();
+    const query = buildAgentQuery(c, z, sign, text);
+    try {
+      if (!window.RCAgent) throw new Error("智能解释服务未加载");
+      const out = await window.RCAgent.ask({
+        query,
+        surface: "clinic",
+        context: { case_id: c.id, zone_id: z ? z.id : "" },
+      }, {
+        onEvent: (kind, data, snapshot) => {
+          if (kind !== "delta") return;
+          bot.text = snapshot.text;
+          bot.sections = splitAgent(bot.text);
+          const last = $("#qaAgentLog .qa-msg.bot.agent:last-child .qa-conclusion");
+          if (last) last.textContent = naturalize(bot.sections.conclusion.join("\n")) || "正在生成…";
+        },
+      });
+      bot.text = out.text;
+      bot.sections = splitAgent(out.text);
+      bot.cites = out.cites || [];
+      bot.done = out.done || null;
+      bot.status = "done";
+    } catch (e) {
+      bot.status = "error";
+      bot.error = friendlyAgentError(e);
+      bot.detail = String((e && e.message) || e || "");
+    } finally {
+      S.agent.running = false;
+      renderPanel();
+      requestAnimationFrame(() => {
+        const log = $("#qaAgentLog");
+        if (log) log.scrollIntoView({ block: "end", behavior: "smooth" });
+      });
+    }
+  }
+
+  function qaAnswerHTML(a) {
     const cls = a.status === "refuse" ? "refuse" : (a.status === "partial" ? "partial" : "");
     const body = (a.body || []).map((p) => `<p>${esc(p)}</p>`).join("");
     const bullets = (a.bullets && a.bullets.length)
       ? `<ul>${a.bullets.map((b) => `<li>${esc(b)}</li>`).join("")}</ul>` : "";
     const cites = (a.cites && a.cites.length)
-      ? `<div class="qa-cites">${a.cites.map(citeHTML).join("")}</div>` : "";
-    const agentBtn = (agent && a.status !== "refuse")
-      ? `<div class="qa-agent"><button class="btn sm" data-agent-ask data-agent-surface="clinic"
-          data-agent-case="${esc(agent.case_id || "")}" data-agent-zone="${esc(agent.zone_id || "")}"
-          data-agent-evidence="${esc(agent.evidence || "")}"
-          data-agent-query="${esc(`请解释上面的库内回答：“${agent.query}”。只引用库内证据，不诊断、不治疗、不判分、不补造引用。`)}">问 Agent 解释</button></div>`
-      : "";
+      ? `<details class="qa-more" open><summary>依据与出处</summary><div class="qa-cites">${a.cites.map(citeHTML).join("")}</div></details>` : "";
     return `<div class="qa-msg bot ${cls}">
       <div class="qa-title">${esc(a.title || "回答")}</div>
       <div class="qa-body">${body}${bullets}</div>
       ${cites}
-      ${agentBtn}
     </div>`;
   }
 
@@ -605,17 +809,17 @@
   function sourceTabHTML(c) {
     const upload = S.upload
       ? (S.upload.ok
-        ? `<div class="src-block"><b>上传匹配成功</b><p>${esc(S.upload.name)} → ${esc(S.upload.caseId)}（SHA-256 精确匹配）。</p></div>`
+        ? `<div class="src-block"><b>上传匹配成功</b><p>${esc(S.upload.name)} → ${esc(S.upload.caseId)}（文件指纹匹配）。</p></div>`
         : `<div class="upload-alert">
             <b>该影像未入库：只提供通用分区定位</b>
             <p>文件：${esc(S.upload.name)} · ${(S.upload.size / 1024).toFixed(0)} KB<br>
-            SHA-256：${esc(S.upload.hash || "浏览器不支持，未能计算")}<br>
+            文件指纹：${esc(S.upload.hash ? "已计算" : "浏览器不支持，未能计算")}<br>
             图片只在当前浏览器内存中显示，不上传服务器、不落盘。请勿上传真实患者影像。</p>
             ${S.upload.url ? `<img class="upload-preview" src="${esc(S.upload.url)}" alt="上传影像预览">` : ""}
             <div class="generic-zones">${["右肺上野", "右肺中野", "右肺下野", "左肺上野", "左肺中野", "左肺下野", "纵隔与心影", "膈下"].map((z) =>
               `<button class="chip ${S.upload.genericZone === z ? "on" : ""}" data-generic-zone="${esc(z)}">${esc(z)}</button>`).join("")}</div>
             ${genericZoneHTML(S.upload.genericZone)}
-            <p class="hint">通用分区只帮助定位解剖位置；没有库内逐区标注时，本工具不对异常/正常作判断。</p>
+            <p class="hint">通用分区只帮助定位解剖位置；没有知识库逐区标注时，本工具不对异常 / 正常作判断。</p>
           </div>`)
       : "";
     const signs = c.signs.length
@@ -638,22 +842,22 @@
         <p>许可：${esc(c.license || "未标注")} · 作者：${esc(c.artist || "未标注")}</p>
         ${c.source_page ? `<a href="${esc(c.source_page)}" target="_blank" rel="noopener">打开来源页 ↗</a>` : ""}
       </div>
-      <div class="sec-title">征象词条</div>
+      <div class="sec-title">征象解释</div>
       ${signs}
       ${teaching}
       ${caveats}
-      <div class="sec-title">数据方法</div>
+      <div class="sec-title">数据说明</div>
       <div class="src-block">
-        <p>逐区结构化校正（AI 辅助，待医学人员审核）；状态四值：异常 / 未见异常 / 来源未提及 / 判读受限。</p>
-        <p>分区框是教学分区，按解剖比例近似，不是病灶分割。未提及的分区不推断为正常。</p>
-        <p class="mono">SHA-256 ${esc((c.sha256 || "").slice(0, 16))}…</p>
+        <p>分区框为教学分区，按解剖比例近似；未提及的分区不推断为正常。</p>
       </div>
-      <div class="sec-title">运行方式</div>
+      <div class="sec-title">隐私与使用</div>
       <div class="src-block">
-        <p><b>静态演示层：</b>本页只读 <span class="mono">data/chest/chest_reading.json</span>，不调用后端；上传只做 SHA-256 精确匹配。</p>
-        <p><b>DeepWorks：</b>知识库与技能配置见 <span class="mono">docs/Agent接入指南.md</span>；本地服务可用时再叠加 Agent 问答。</p>
-        <p>这样现场断网也能逐条复现；不把静态兜底伪装成模型输出。</p>
-      </div>`;
+        <p>上传影像只在当前浏览器内显示，不上传服务器、不落盘。请勿上传真实患者影像。</p>
+      </div>
+      <details class="qa-tech"><summary>技术信息</summary>
+        <p>影像指纹 ${esc((c.sha256 || "").slice(0, 16))}… · 数据接口 /api/kb/chest</p>
+        <p>智能问答需要本地 Agent 服务；服务不可用时，知识库检索仍可正常使用。</p>
+      </details>`;
   }
 
   /* ---------------- 问答引擎 ---------------- */
@@ -713,7 +917,7 @@
     return {
       title: "分区标注",
       name: z.name,
-      detail: `${statusLabel(z.status)} · 依据：${z.basis} · bbox [${z.coords.map((n) => n.toFixed(2)).join(", ")}]`,
+      detail: `${statusLabel(z.status)} · 依据：${z.basis}`,
     };
   }
 
@@ -728,7 +932,7 @@
     if ((s.pitfalls || []).length) parts.push("易错点：" + s.pitfalls.join("；"));
     if (srcs.length) parts.push("参考：" + srcs.map((x) => x.title).join("、"));
     return {
-      title: "征象词条",
+      title: "征象解释",
       name: `${s.name} · ${s.en || ""}`,
       detail: s.appearance || "",
       extra: parts.join(" ｜ "),
@@ -765,13 +969,13 @@
     if (sign) return zoneSignAnswer(c, z, sign);
     let body = [z.text];
     if (z.status === "unmentioned") {
-      body.push("这条不是“正常”，而是“公开来源没有逐区描述”。本工具不把它推断成正常或异常。");
+      body.push("该区在原始图注中没有逐区描述，因此不能判为正常或异常；请回到整张片子自行观察。");
     } else if (z.status === "limited") {
       body.push("判读受限的原因见影像质量说明；受限不等于正常。");
     } else if (z.status === "normal") {
-      body.push("该分区在本病例的公开说明中为未见明确异常；这不等于排除了所有细微病变。");
+      body.push("该区未见明确异常；仍要结合吸气程度、体位与曝光条件复核，不等于排除了细微病变。");
     } else {
-      body.push("该分区在本病例的公开说明/图注中标注为异常。");
+      body.push("该区标注为异常，需结合具体征象判断性质。");
     }
     const signs = (z.sign_ids || []).map(signOf).filter(Boolean);
     if (signs.length) body.push(`相关征象：${signs.map((s) => s.name).join("、")}。`);
@@ -791,13 +995,13 @@
       status = "answer";
       body.push(`是。该分区标注包含「${sign.name}」：${z.text}`);
     } else if (z.status === "normal") {
-      body.push(`该分区标注为未见明确异常，公开说明未提及「${sign.name}」。不能据此排除，也不能据此诊断。`);
+      body.push(`该区未见明确异常，也没有「${sign.name}」的标注；不能据此排除早期或细微病变。`);
     } else if (z.status === "unmentioned") {
-      body.push(`该分区在本病例中没有逐区描述，不能判断有没有「${sign.name}」。`);
+      body.push(`该区没有逐区描述，不能判断有没有「${sign.name}」。`);
     } else if (z.status === "limited") {
-      body.push(`该分区判读受限，不能可靠判断有没有「${sign.name}」。`);
+      body.push(`该区判读受限，不能可靠判断有没有「${sign.name}」。`);
     } else {
-      body.push(`该分区标注为「${statusLabel(z.status)}」，没有标注「${sign.name}」；不能据此排除。`);
+      body.push(`该区标注为「${statusLabel(z.status)}」，没有「${sign.name}」的标注；不能据此排除。`);
     }
     body.push(`征象释义：${sign.appearance}`);
     if ((sign.pitfalls || []).length) body.push(`易错点：${sign.pitfalls.join("；")}。`);
@@ -814,10 +1018,10 @@
     let status = hits.length ? "answer" : "partial";
     let body = [];
     if (hits.length) {
-      body.push(`本病例的公开说明/标注中出现「${sign.name}」，位于：${hits.map((z) => z.name).join("、")}。`);
+      body.push(`本病例的「${sign.name}」位于：${hits.map((z) => z.name).join("、")}。`);
       body.push(hits[0].text);
     } else {
-      body.push(`本病例的公开说明未提及「${sign.name}」。不能据此排除，也不能据此诊断。`);
+      body.push(`本病例没有「${sign.name}」的标注；不能据此排除，也不能据此诊断。`);
       body.push("如果问题指向其他病例，请先在左侧切换病例；本页不跨病例拼答案。");
     }
     body.push(`征象释义：${sign.appearance}`);
@@ -837,14 +1041,14 @@
     const sysAb = c.system.filter((x) => x.status === "abnormal");
     let body = [];
     if (ab.length) {
-      body.push(`本病例公开说明的异常位于：${ab.map((z) => z.name).join("、")}。`);
+      body.push(`本病例的异常位于：${ab.map((z) => z.name).join("、")}。`);
     } else if (!c.signs.length) {
-      body.push("本病例公开说明为正常胸片；已标注分区均未见明确异常。");
+      body.push("本片为正常胸片；已标注分区均未见明确异常。");
     } else {
-      body.push("本病例没有逐区标注为异常的分区；公开说明的描述见下方系统所见。");
+      body.push("没有逐区标注为异常的分区；系统所见见下方。");
     }
     if (sysAb.length) body.push(`系统所见异常：${sysAb.map((x) => x.name + "（" + x.text + "）").join("；")}。`);
-    if (un.length) body.push(`另有 ${un.length} 个分区公开来源未逐区描述，本工具不作正常/异常推断。`);
+    if (un.length) body.push(`另有 ${un.length} 个分区原图注未逐区描述，不作正常/异常推断。`);
     if (lim.length) body.push(`有 ${lim.length} 个分区判读受限，受限不等于正常。`);
     if (c.caveats.length) body.push(`需要注意：${c.caveats.join("；")}。`);
     return {
@@ -858,10 +1062,10 @@
   function fallbackAnswer(c, q) {
     return {
       status: "partial",
-      title: "没有匹配到库内分区或征象",
+      title: "没有匹配到对应分区或征象",
       body: [
         `没有在「${c.title}」里识别到与“${q}”对应的分区或征象词条。`,
-        "可以直接点影像上的分区，或换用库内说法：右肺上野 / 右肺中野 / 右肺下野 / 左肺上野 / 左肺中野 / 左肺下野 / 纵隔与心影 / 膈下；征象如气胸、胸腔积液、实变、结节、磨玻璃影。",
+        "可以直接点影像上的分区，或换用规范说法：右肺上野 / 右肺中野 / 右肺下野 / 左肺上野 / 左肺中野 / 左肺下野 / 纵隔与心影 / 膈下；征象如气胸、胸腔积液、实变、结节、磨玻璃影。",
       ],
       cites: [caseCite(c)],
     };
@@ -911,6 +1115,7 @@
       agent: c ? { query: text, case_id: c.id, zone_id: z ? z.id : "", evidence } : null,
     });
     S.qaDraft = "";
+    S.qaMode = "kb";
     S.tab = "qa";
     renderPanel();
     requestAnimationFrame(() => {
@@ -961,7 +1166,7 @@
     }
     L.push("");
     L.push("六、边界与声明");
-    L.push("  本记录只复述公开来源、原图标注与本库结构化校正，不构成诊断意见，不替代临床决策。");
+    L.push("  本记录仅整理影像表现与鉴别要点，不构成诊断意见，不替代临床决策。");
     L.push("  分区框为教学分区，不是病灶分割；未提及的分区不作正常或异常推断。");
     L.push("  正式教学或对外发布前，须由具备资质的医学人员逐条审核。");
     return L.join("\n");
@@ -1047,7 +1252,7 @@
     if (hit) {
       S.upload = { ok: true, name: file.name, size: file.size, hash, caseId: hit.id };
       selectCase(hit.id);
-      toast(`已匹配库内病例 ${hit.id}`);
+      toast(`已匹配知识库病例 ${hit.id}`);
     } else {
       S.upload = {
         ok: false, generic: true, name: file.name, size: file.size, hash, url,
@@ -1063,8 +1268,8 @@
     if (!zone) return "";
     return `<div class="src-block generic-result">
       <b>通用解剖分区 · ${esc(zone)}</b>
-      <p>这是按胸片比例给出的通用分区，<b>不含该影像的库内标注</b>；不能据此判断有无异常，也不生成征象结论。</p>
-      <p>可对照左侧 21 例库内影像的同一分区，或换用库内原图做逐区对照。需要模型自动定位时，请在本地启动 Agent 服务后使用视觉分区接口。</p>
+      <p>这是按胸片比例给出的通用分区，<b>不含该影像的知识库标注</b>；不能据此判断有无异常，也不生成征象结论。</p>
+      <p>可对照左侧 21 例知识库影像的同一分区，或换用知识库原图做逐区对照。需要进一步解释时，可用右侧的智能问答；未入库影像不会给出异常判断。</p>
     </div>`;
   }
 
@@ -1077,11 +1282,14 @@
     S.zoneId = null;
     S.qa = [];
     S.qaDraft = "";
+    S.qaMode = "kb";
+    S.agent = { messages: [], draft: "", running: false };
     S.zoom = 1;
     S.upload = null;
     const attempt = taskAttempt(id);
     S.quiz = {
-      zoneId: "",
+      zoneIds: [],
+      zoneNone: false,
       status: "",
       signs: [],
       signsTouched: false,
@@ -1099,7 +1307,10 @@
     const z = c.zones.find((x) => x.id === id);
     if (!z) return;
     if (S.task && !quizSubmitted(c.id)) {
-      S.quiz.zoneId = id;
+      const set = new Set(S.quiz.zoneIds);
+      if (set.has(id)) set.delete(id); else set.add(id);
+      S.quiz.zoneIds = Array.from(set);
+      S.quiz.zoneNone = false;
       S.quiz.redo = false;
       S.tab = "task";
       renderViewer();
@@ -1130,7 +1341,7 @@
   function submitQuiz() {
     const c = currentCase();
     if (!c || !S.task) return;
-    if (!S.quiz.zoneId || !S.quiz.status || !S.quiz.signsTouched) {
+    if (!(S.quiz.zoneNone || S.quiz.zoneIds.length) || !S.quiz.status || !S.quiz.signsTouched) {
       toast("三题都作答后才能提交");
       return;
     }
@@ -1139,7 +1350,8 @@
       return;
     }
     const graded = window.RCClass.gradeCase(c, {
-      zoneId: S.quiz.zoneId,
+      zoneIds: S.quiz.zoneIds,
+      zoneNone: S.quiz.zoneNone,
       status: S.quiz.status,
       signs: S.quiz.signs,
     });
@@ -1149,7 +1361,8 @@
       studentId: S.task.student.id,
       caseId: c.id,
       answers: {
-        zoneId: S.quiz.zoneId,
+        zoneIds: S.quiz.zoneIds,
+        zoneNone: S.quiz.zoneNone,
         status: S.quiz.status,
         signs: S.quiz.signs,
       },
@@ -1183,7 +1396,8 @@
 
   function redoQuiz() {
     S.quiz = {
-      zoneId: "",
+      zoneIds: [],
+      zoneNone: false,
       status: "",
       signs: [],
       signsTouched: false,
@@ -1209,7 +1423,17 @@
 
       const quizZone = e.target.closest("[data-quiz-zone]");
       if (quizZone) {
-        S.quiz.zoneId = quizZone.dataset.quizZone;
+        const id = quizZone.dataset.quizZone;
+        if (id === "none") {
+          S.quiz.zoneNone = true;
+          S.quiz.zoneIds = [];
+        } else {
+          S.quiz.zoneNone = false;
+          const set = new Set(S.quiz.zoneIds);
+          if (set.has(id)) set.delete(id); else set.add(id);
+          S.quiz.zoneIds = Array.from(set);
+        }
+        S.quiz.redo = false;
         renderViewer();
         renderPanel();
         return;
@@ -1257,11 +1481,24 @@
       const tab = e.target.closest("[data-tab]");
       if (tab) { S.tab = tab.dataset.tab; renderPanel(); return; }
 
+      const qaMode = e.target.closest("[data-qa-mode]");
+      if (qaMode) { S.qaMode = qaMode.dataset.qaMode === "agent" ? "agent" : "kb"; renderPanel(); return; }
+
       const zone = e.target.closest("[data-zone]");
       if (zone) { selectZone(zone.dataset.zone); return; }
 
       const askBtn = e.target.closest("[data-ask]");
-      if (askBtn) { ask(askBtn.dataset.ask); return; }
+      if (askBtn) {
+        if (S.qaMode === "agent") runAgent(askBtn.dataset.ask);
+        else ask(askBtn.dataset.ask);
+        return;
+      }
+
+      if (e.target && e.target.id === "qaAgentSend") {
+        const input = $("#qaAgentInput");
+        runAgent(input ? input.value : S.agent.draft);
+        return;
+      }
 
       const signBtn = e.target.closest("[data-sign]");
       if (signBtn) {
@@ -1374,10 +1611,15 @@
         e.preventDefault();
         ask(e.target.value);
       }
+      if (e.key === "Enter" && e.target && e.target.id === "qaAgentInput") {
+        e.preventDefault();
+        runAgent(e.target.value);
+      }
     });
 
     document.addEventListener("input", (e) => {
       if (e.target && e.target.id === "qaInput") S.qaDraft = e.target.value;
+      if (e.target && e.target.id === "qaAgentInput") S.agent.draft = e.target.value;
     });
 
     document.addEventListener("click", (e) => {
@@ -1398,11 +1640,11 @@
 
   async function boot() {
     try {
-      const r = await fetch(DATA_URL, { cache: "no-cache" });
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      S.data = await r.json();
+      S.data = window.RCKB
+        ? await window.RCKB.getJSON("/api/kb/chest", DATA_URL)
+        : await (await fetch(DATA_URL, { cache: "no-cache" })).json();
     } catch (e) {
-      $("#queueList").innerHTML = `<div class="empty-state"><b>胸片数据载入失败</b><span>${esc(DATA_URL)}<br>请先运行 python3 kb/scripts/build_chest_reading.py。</span></div>`;
+      $("#queueList").innerHTML = `<div class="empty-state"><b>胸片数据载入失败</b><span>请确认知识库服务已启动，或先完成站点构建。</span></div>`;
       $("#stageEmpty").innerHTML = `<b>胸片数据未载入</b><span>${esc(String(e.message || e))}</span>`;
       return;
     }
@@ -1423,6 +1665,7 @@
 
     const first = enabledCases()[0];
     const qp = params ? (params.get("case") || "") : "";
+    const zq = params ? (params.get("zone") || "") : "";
     const deep = qp ? enabledCases().find((c) => c.id === qp) : null;
     const pending = S.task ? enabledCases().find((c) => !taskAttempt(c.id)) : null;
     if (deep) S.caseId = deep.id;
@@ -1430,7 +1673,8 @@
     else if (first) S.caseId = first.id;
     const initialAttempt = taskAttempt(S.caseId);
     S.quiz = {
-      zoneId: "",
+      zoneIds: [],
+      zoneNone: false,
       status: "",
       signs: [],
       signsTouched: false,
@@ -1440,9 +1684,7 @@
     S.tab = S.task ? "task" : "zone";
     bind();
     render();
-    $("#barNote").textContent = S.task
-      ? `课堂任务 · ${S.task.assignment.title}`
-      : `CR 胸部 · ${enabledCases().length} 例逐区校正`;
+    if (deep && zq) selectZone(zq);
     if (taskError) toast(taskError);
   }
 

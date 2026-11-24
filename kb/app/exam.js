@@ -153,7 +153,7 @@
       </dl>`;
 
     $('#imgPose').textContent = c.pose + ' · ' + c.image_width + '×' + c.image_height;
-    $('#img').src = '../' + c.image;
+    $('#img').src = window.RCKB ? window.RCKB.imageUrl(c.image) : '../' + c.image;
     $('#img').alt = c.image_alt;
     $('#imgEmpty').hidden = true;
     $('#imgNote').textContent = c.image_note || '';
@@ -187,7 +187,7 @@
     $('#img').onload = () => { $('#imgEmpty').hidden = true; };
     $('#img').onerror = () => {
       $('#imgEmpty').hidden = false;
-      $('#imgEmpty').textContent = '影像载入失败：' + c.image;
+      $('#imgEmpty').textContent = '影像载入失败，请稍后重试。';
     };
   }
 
@@ -258,7 +258,7 @@
       </div></div>
       <div class="fb-src">影像：${esc(c.source.title)} · ${esc(c.source.artist)} · ${esc(c.source.license)} ·
         <a href="${esc(c.source.url)}" target="_blank" rel="noopener">原始页面 ↗</a><br>
-        题目按公开大纲与公开例题题型自编，不是官方真题原文；不构成诊断。</div>
+        题目为自编，非官方真题；不构成诊断。</div>
       <div class="fb-compare">${cmp}</div>`;
     $('#qState').className = 'q-state ' + (right ? 'right' : 'wrong');
     $('#qState').textContent = right ? '已答对' : '已答错';
@@ -398,15 +398,15 @@
   async function init() {
     loadStore();
     try {
-      const r = await fetch(DATA_URL, { cache: 'no-cache' });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      DATA = await r.json();
+      DATA = window.RCKB
+        ? await window.RCKB.getJSON('/api/kb/exam', DATA_URL)
+        : await (await fetch(DATA_URL, { cache: 'no-cache' })).json();
       CASES = DATA.cases || [];
       BY_ID = Object.fromEntries(CASES.map((c) => [c.id, c]));
       PAIRS = DATA.pairs || [];
       if (!CASES.length) throw new Error('没有病例');
     } catch (err) {
-      $('#vignette').innerHTML = `<div class="empty-state"><b>病例数据载入失败</b><span>${esc(DATA_URL)}<br>${esc(err.message)}<br>请先运行 python3 kb/scripts/build_exam_cases.py。</span></div>`;
+      $('#vignette').innerHTML = `<div class="empty-state"><b>病例数据载入失败</b><span>请确认知识库服务已启动，或先完成站点构建。</span></div>`;
       return;
     }
     renderSources();

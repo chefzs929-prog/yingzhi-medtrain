@@ -11,108 +11,152 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
 <style>
 :root{
-  --bg:#f4fbfa;--surface:#fff;--ink:#10232e;--ink2:#2c4652;--muted:#5b7480;
-  --faint:#8aa0a9;--line:#dcebe8;--brand:#0b4f55;--brand2:#0e7c7b;
-  --ok:#147a5b;--warn:#a9690b;--bad:#b23b3b;--r:14px;
+  --bg:#f5faf9;--surface:#fff;--ink:#0f2029;--ink2:#2a4350;--muted:#5f7784;
+  --faint:#8ba0ab;--line:#e1ece9;--brand:#0b4f55;--brand2:#0e7c7b;
+  --ok:#147a5b;--warn:#a9690b;--bad:#b23b3b;--r:16px;
   --mono:"SFMono-Regular",Menlo,Consolas,monospace;
+  --shadow:0 1px 2px rgba(16,35,46,.04),0 18px 44px -34px rgba(11,79,85,.5);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);
+body{margin:0;color:var(--ink);
+  background:radial-gradient(1100px 620px at 24% -6%,rgba(14,124,123,.10),rgba(14,124,123,0) 72%),var(--bg);
+  background-attachment:fixed;
   font:15px/1.7 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-  -webkit-font-smoothing:antialiased}
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 a{color:inherit;text-decoration:none}
-.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
-.top{height:64px;display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid var(--line);background:rgba(244,251,250,.9);
-  position:sticky;top:0;z-index:10;backdrop-filter:blur(10px)}
-.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px}
-.brand .m{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
-  background:linear-gradient(140deg,var(--brand),var(--brand2));color:#fff;font-size:15px}
-.brand span{font-weight:500;color:var(--faint);font-size:11px;letter-spacing:.08em}
-.top nav{display:flex;align-items:center;gap:18px;font-size:13px;color:var(--ink2)}
-.top nav a:hover{color:var(--brand)}
-.btn{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 18px;
-  border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink2);
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+
+/* 顶栏 */
+.top{height:68px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--line);background:rgba(245,250,249,.86);
+  position:sticky;top:0;z-index:10;backdrop-filter:saturate(160%) blur(14px)}
+.brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:15.5px;letter-spacing:.01em}
+.brand .m{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--brand),var(--brand2));color:#fff;font-size:16px;
+  box-shadow:0 2px 8px -3px rgba(11,79,85,.6)}
+.brand span{font-weight:500;color:var(--faint);font-size:11px;letter-spacing:.1em}
+.top nav{display:flex;align-items:center;gap:22px;font-size:13.5px;color:var(--ink2)}
+.top nav a{transition:color .16s}
+.top nav a:hover{color:var(--brand2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 20px;
+  border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--ink2);
   font-size:13.5px;font-weight:600;transition:.16s;white-space:nowrap}
-.btn:hover{border-color:var(--brand);color:var(--brand)}
+.btn:hover{border-color:var(--brand2);color:var(--brand2);transform:translateY(-1px)}
 .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff;
-  box-shadow:0 12px 26px -16px rgba(11,79,85,.8)}
+  box-shadow:0 14px 30px -18px rgba(11,79,85,.85)}
 .btn.primary:hover{background:#083f44;color:#fff}
-.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center;
-  padding:58px 0 42px}
-.kicker{font-size:11px;letter-spacing:.18em;color:var(--brand2);font-weight:700;margin:0 0 14px}
-h1{font-size:44px;line-height:1.24;letter-spacing:-.02em;margin:0;font-weight:750}
+
+/* 首屏 */
+.hero{position:relative;display:grid;grid-template-columns:1.04fr .96fr;gap:52px;align-items:center;
+  padding:66px 0 46px}
+.kicker{font-size:11px;letter-spacing:.2em;color:var(--brand2);font-weight:700;margin:0 0 16px;
+  display:inline-flex;align-items:center;gap:8px}
+.kicker::before{content:"";width:18px;height:1.5px;background:var(--brand2);border-radius:2px}
+h1{font-size:clamp(34px,4vw,48px);line-height:1.22;letter-spacing:-.025em;margin:0;font-weight:750}
 h1 em{font-style:normal;color:var(--brand2)}
-.lede{margin:18px 0 0;font-size:14.5px;line-height:1.95;color:var(--muted);max-width:36em}
-.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
-.micro{margin:14px 0 0;font-size:11.5px;color:var(--faint);letter-spacing:.02em}
+.lede{margin:20px 0 0;font-size:15px;line-height:1.95;color:var(--muted);max-width:34em}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+
+/* 示例卡 */
 .demo{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
-  box-shadow:0 24px 60px -40px rgba(16,35,46,.45);overflow:hidden}
-.demo-h{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;
-  border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10.5px;color:var(--faint);
+  box-shadow:0 30px 70px -46px rgba(16,35,46,.55);overflow:hidden}
+.demo-h{display:flex;justify-content:space-between;align-items:center;padding:13px 17px;
+  border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--faint);
   letter-spacing:.06em;background:#fbfefd}
 .demo-h span:first-child{color:var(--brand);font-weight:700}
-.demo-body{padding:16px}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.chips span{font-size:10.5px;padding:3px 9px;border-radius:999px;border:1px solid transparent}
+.demo-body{padding:18px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:15px}
+.chips span{font-size:11px;padding:3px 10px;border-radius:999px;border:1px solid transparent}
 .chips .bad{color:var(--bad);background:#fdf1f1;border-color:#f3d4d4}
 .chips .warn{color:var(--warn);background:#fdf6e9;border-color:#f0dfba}
 .chips .ok{color:var(--ok);background:#eef8f4;border-color:#cfe9df}
 .chips .mute{color:var(--faint);background:#f5f8f8;border-color:#e3eceb}
-.q{font-size:12.5px;color:var(--muted);margin:0 0 8px}
-.a{font-size:13.5px;line-height:1.8;color:var(--ink2);margin:0}
+.q{font-size:13px;color:var(--muted);margin:0 0 9px}
+.a{font-size:13.5px;line-height:1.85;color:var(--ink2);margin:0}
 .a b{color:var(--warn)}
-.cite{margin-top:14px;padding:10px 12px;border-radius:9px;background:#f4faf8;
-  border:1px solid #dcece7;font-size:11.5px;color:var(--muted)}
-.cite b{display:block;color:var(--brand);font-size:10px;letter-spacing:.12em;margin-bottom:3px}
-.demo-f{padding:10px 16px;border-top:1px solid var(--line);font-size:10.5px;
+.cite{margin-top:15px;padding:11px 13px;border-radius:10px;background:#f4faf8;
+  border:1px solid #dcece7;font-size:12px;color:var(--muted)}
+.cite b{display:block;color:var(--brand);font-size:10px;letter-spacing:.14em;margin-bottom:3px}
+.demo-f{padding:11px 17px;border-top:1px solid var(--line);font-size:11px;
   color:var(--faint);background:#fbfefd}
+
+/* 数字 */
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
-  border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:8px 0 54px}
-.metrics div{background:var(--surface);padding:16px 18px}
-.metrics b{display:block;font-size:22px;letter-spacing:-.02em;color:var(--brand)}
-.metrics span{font-size:11.5px;color:var(--muted)}
-.method{padding:0 0 48px}
-.method h2{font-size:22px;letter-spacing:-.01em;margin:0 0 6px}
-.method>p{color:var(--muted);font-size:13.5px;margin:0 0 20px}
-.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.mgrid div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
-.mgrid b{display:block;font-size:13.5px;margin-bottom:5px}
-.mgrid p{margin:0;font-size:12px;line-height:1.8;color:var(--muted)}
-.boundary{margin-top:12px;padding:14px 18px;border-left:3px solid var(--brand2);
-  background:#f0f8f6;border-radius:0 10px 10px 0;font-size:12px;line-height:1.85;color:var(--ink2)}
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin:10px 0 64px}
+.metrics div{background:var(--surface);padding:20px 22px}
+.metrics b{display:block;font-size:26px;letter-spacing:-.02em;color:var(--brand);font-weight:700}
+.metrics span{font-size:12px;color:var(--muted)}
+
+/* 入口分流：首页即可选「课堂-教师/学生」与「阅片学习」 */
+.picker{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 64px}
+.pick{background:var(--surface);border:1px solid var(--line);border-radius:20px;
+  padding:24px 26px 22px;display:flex;flex-direction:column;
+  box-shadow:0 20px 50px -44px rgba(11,79,85,.6)}
+.pick-k{font-size:10px;letter-spacing:.18em;font-weight:700;color:var(--brand);margin-bottom:9px}
+.pick h3{font-size:18px;letter-spacing:-.01em;margin:0 0 8px;font-weight:700}
+.pick>p{margin:0 0 18px;font-size:12.5px;line-height:1.85;color:var(--muted)}
+.pick-acts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:auto}
+.pick-acts.three{grid-template-columns:repeat(3,1fr)}
+.pick-act{display:flex;flex-direction:column;gap:3px;padding:13px 14px;border-radius:12px;
+  border:1px solid var(--line);background:#fbfefd;transition:.16s}
+.pick-act:hover{border-color:#0e7c7b;background:#f3fbf8;transform:translateY(-1px)}
+.pick-act b{font-size:13.5px;color:var(--brand)}
+.pick-act span{font-size:11px;line-height:1.5;color:var(--faint)}
+#classroom,#reading{scroll-margin-top:88px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.steps div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.steps b{display:block;font-size:13px;color:var(--brand);margin-bottom:5px}
+.steps p{margin:0;font-size:12.5px;line-height:1.8;color:var(--muted)}
+
+/* 章节 */
+section.block{padding:0 0 56px}
+section.block h2{font-size:24px;letter-spacing:-.015em;margin:0 0 8px;font-weight:700}
+section.block>p{color:var(--muted);font-size:14px;line-height:1.85;margin:0 0 22px;max-width:62em}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{display:block;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:22px 24px;transition:.18s;position:relative;overflow:hidden}
+a.card:hover{border-color:#bfe0da;box-shadow:var(--shadow);transform:translateY(-2px)}
+.card .cc-k{font-size:10px;letter-spacing:.18em;font-weight:700;color:var(--brand);margin-bottom:8px}
+.card.student .cc-k{color:#2563eb}
+.card b{display:block;font-size:16.5px;margin-bottom:6px}
+.card p{margin:0;font-size:12.5px;line-height:1.85;color:var(--muted)}
+.card .cc-go{display:inline-flex;align-items:center;gap:5px;margin-top:14px;font-size:12.5px;font-weight:650;color:var(--brand)}
+.card.student .cc-go{color:#2563eb}
+.mgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.mgrid div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px}
+.mgrid b{display:block;font-size:14px;margin-bottom:6px}
+.mgrid p{margin:0;font-size:12.5px;line-height:1.8;color:var(--muted)}
+.boundary{margin-top:14px;padding:16px 20px;border-left:3px solid var(--brand2);
+  background:#f0f8f6;border-radius:0 12px 12px 0;font-size:12.5px;line-height:1.9;color:var(--ink2)}
 .boundary b{color:var(--brand)}
-.classroom{padding:0 0 48px}
-.classroom h2{font-size:22px;letter-spacing:-.01em;margin:0 0 6px}
-.classroom>p{color:var(--muted);font-size:13.5px;margin:0 0 18px}
-.class-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.class-card{display:block;background:var(--surface);border:1px solid var(--line);border-radius:14px;
-  padding:20px 22px;transition:.16s;position:relative;overflow:hidden}
-.class-card:hover{border-color:#bfe0da;box-shadow:0 18px 40px -30px rgba(11,79,85,.6);transform:translateY(-1px)}
-.class-card .cc-k{font-size:10px;letter-spacing:.16em;font-weight:700;color:var(--brand);margin-bottom:7px}
-.class-card.student .cc-k{color:#2563eb}
-.class-card b{display:block;font-size:16px;margin-bottom:5px}
-.class-card p{margin:0;font-size:12px;line-height:1.8;color:var(--muted)}
-.class-card .cc-go{display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-size:12px;font-weight:650;color:var(--brand)}
-.class-card.student .cc-go{color:#2563eb}
-footer{border-top:1px solid var(--line);padding:18px 0 30px;font-size:11px;
-  line-height:1.85;color:var(--faint)}
+footer{border-top:1px solid var(--line);padding:22px 0 36px;font-size:11.5px;
+  line-height:1.9;color:var(--faint)}
 footer b{color:var(--muted);font-weight:600}
-@media(max-width:860px){
-  .hero{grid-template-columns:1fr;gap:28px;padding:36px 0 30px}
-  h1{font-size:34px}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;gap:32px;padding:42px 0 34px}
   .metrics{grid-template-columns:repeat(2,1fr)}
-  .mgrid{grid-template-columns:1fr}
-  .class-grid{grid-template-columns:1fr}
+  .mgrid,.grid2{grid-template-columns:1fr}
+  .picker{grid-template-columns:1fr;margin-bottom:44px}
   .top nav a:first-child{display:none}
 }
-@media(max-width:520px){
-  .wrap{padding:0 18px}
-  h1{font-size:30px}
-  .top{height:58px}
+@media(max-width:720px){
+  .top nav a:not(.btn){display:none}
+  .pick-acts.three{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .wrap{padding:0 20px}
+  .top{height:60px}
   .brand span{display:none}
+  .top nav{gap:14px;font-size:12.5px}
   .acts .btn{width:100%}
+  .hero{padding:30px 0 26px}
+  .metrics{margin-bottom:44px}
+  .pick{padding:20px 18px}
+  .pick-acts,.pick-acts.three{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  section.block{padding-bottom:40px}
 }
 </style>
 </head>
@@ -122,9 +166,8 @@ footer b{color:var(--muted);font-weight:600}
   <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;width:100%">
     <a class="brand" href="./"><span class="m">R</span>RadioCheck <span>影像循证</span></a>
     <nav aria-label="页面导航">
-      <a href="read/exam.html">病例题</a>
-      <a href="read/compare.html">对比阅片</a>
-      <a href="read/classroom.html">课堂</a>
+      <a href="#classroom">课堂</a>
+      <a href="#reading">阅片学习</a>
       <a href="#method">方法与边界</a>
       <a class="btn primary" href="read/clinic.html">进入胸片阅片</a>
     </nav>
@@ -137,19 +180,13 @@ footer b{color:var(--muted);font-weight:600}
       <p class="kicker">赛道 B · 胸片阅片</p>
       <h1>一张胸片，<br>一个分区，<br><em>一条出处。</em></h1>
       <p class="lede">
-        21 例 CR 胸部逐区校正；10 例按执业医师大纲出的病例题；
-        8 组“长得像、病不同”的对比阅片。点分区或拖框，只回答这一区；
-        公开来源没写的，明确写“未提及”，不补成正常。
-        学生端另有影像库问答、读片陪练、350 道自测题与班级互助小组。
+        21 例 CR 胸部逐区校正，10 例大纲病例题，8 组易混对比。
+        点分区或拖框，只回答这一区；公开来源没写的，明确标为“未提及”。
       </p>
       <div class="acts">
-        <a class="btn primary" href="read/clinic.html">进入胸片阅片 →</a>
-        <a class="btn" href="read/exam.html">病例题 · 主诉 + 胸片</a>
-        <a class="btn" href="read/compare.html">对比阅片</a>
-        <a class="btn" href="read/classroom.html?role=student">学生影像实验室</a>
-        <a class="btn" href="read/classroom.html">教师 / 学生课堂</a>
+        <a class="btn primary" href="#classroom">课堂 · 教师 / 学生 →</a>
+        <a class="btn" href="#reading">阅片学习 →</a>
       </div>
-      <p class="micro">纯静态 · 无需登录 · 不调用大模型 · 非诊断用途</p>
     </div>
 
     <div class="demo" aria-label="分区回答示例">
@@ -164,7 +201,7 @@ footer b{color:var(--muted);font-weight:600}
           右肺中野：大片实变，红箭头指向病灶边缘。</p>
         <div class="cite"><b>出处</b>病例来源页 · 原图箭头 · REG-006-RML</div>
       </div>
-      <div class="demo-f">四种状态由数据规则算出，不靠模型语气</div>
+      <div class="demo-f">四种状态由数据规则算出</div>
     </div>
   </section>
 
@@ -175,69 +212,95 @@ footer b{color:var(--muted);font-weight:600}
     <div><b>350</b><span>道规则自测题</span></div>
   </section>
 
-  <section class="classroom" id="exam">
+  <section class="picker" aria-label="选择入口">
+    <div class="pick" id="classroom">
+      <div class="pick-k">课堂 · TEACHING</div>
+      <h3>课堂：教师与学生，同一套病例</h3>
+      <p>教师建班、布置作业、看学情；学生用班级码加入，完成定位 / 判读 / 征象作业。</p>
+      <div class="pick-acts">
+        <a class="pick-act" href="read/classroom.html?role=teacher">
+          <b>我是教师</b>
+          <span>建班 · 布置 · 学情报告</span>
+        </a>
+        <a class="pick-act" href="read/classroom.html?role=student">
+          <b>我是学生</b>
+          <span>加入课堂 · 作业 · 问答陪练</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="pick" id="reading">
+      <div class="pick-k">阅片学习 · READING</div>
+      <h3>阅片学习：从一张胸片开始</h3>
+      <p>点分区看所见与出处；两例并排对比；按执业医师大纲做病例题。</p>
+      <div class="pick-acts three">
+        <a class="pick-act" href="read/clinic.html">
+          <b>胸片阅片</b>
+          <span>21 例 · 逐区校正</span>
+        </a>
+        <a class="pick-act" href="read/compare.html">
+          <b>对比阅片</b>
+          <span>8 组 · 并排 / 擦除</span>
+        </a>
+        <a class="pick-act" href="read/exam.html">
+          <b>病例题</b>
+          <span>10 例 · 5 选 1</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="exam">
     <h2>按考试大纲出题，把相似病放在一起看</h2>
-    <p>10 例胸部 X 线病例题覆盖正常、肺炎、浸润性肺结核、肺癌、气胸、胸腔积液、肋骨骨折与三种心型；每例先给主诉与查体，再作答。对比阅片可把任意两张影像拖到左右两侧，并排看轮廓、叠加擦除看差异。</p>
-    <div class="class-grid">
-      <a class="class-card" href="read/exam.html">
+    <p>病例题覆盖正常、肺炎、浸润性肺结核、肺癌、气胸、胸腔积液、肋骨骨折与三种心型；对比阅片可把任意两张影像拖到两侧，并排看轮廓、叠加擦除看差异。</p>
+    <div class="grid2">
+      <a class="card" href="read/exam.html">
         <div class="cc-k">EXAM · 10 CASES</div>
         <b>病例题 · 主诉 + 胸片</b>
-        <p>按执业医师实践技能大纲的胸部考点自编；5 选 1，提交后给影像所见、易错点、考点与出处。</p>
+        <p>按执业医师实践技能大纲的胸部考点自编；5 选 1，提交后给影像所见、易错点与出处。</p>
         <span class="cc-go">开始做题 →</span>
       </a>
-      <a class="class-card" href="read/compare.html">
+      <a class="card" href="read/compare.html">
         <div class="cc-k">COMPARE · 8 PAIRS</div>
         <b>对比阅片 · 拖动到两侧</b>
-        <p>肺炎 vs 结核、结核 vs 肺癌、积液 vs 肺炎、二尖瓣型 vs 主动脉型；中间分隔条可拖动，支持叠加擦除。</p>
+        <p>肺炎 vs 结核、结核 vs 肺癌、积液 vs 肺炎、二尖瓣型 vs 主动脉型；支持叠加擦除。</p>
         <span class="cc-go">打开对比 →</span>
       </a>
     </div>
-    <div class="boundary" style="margin-top:12px">
-      <b>题目边界：</b>题目按公开大纲与公开例题的题型自编，不是官方真题原文；不复制受版权保护的题库。影像来自 Wikimedia Commons 的 CC0 / CC BY / CC BY-SA / 公有领域素材，逐张署名见站点 ATTRIBUTION。
+    <div class="boundary">
+      <b>题目边界：</b>题目按公开大纲与公开例题的题型自编，不是官方真题原文；影像来自 Wikimedia Commons 的公开授权素材，逐张署名见 ATTRIBUTION。
     </div>
   </section>
 
-  <section class="classroom" id="classroom">
-    <h2>课堂：作业、问答、陪练、自测与互助小组</h2>
-    <p>同一套 21 例胸片，教师按教学进度组作业；学生在考核模式下先作答，提交后再对照分区与出处。学生端另有影像库问答（区域定位 + 文献双引用）、四步读片陪练、自测出题器与组内论坛。</p>
-    <div class="class-grid">
-      <a class="class-card teacher" href="read/classroom.html?role=teacher">
-        <div class="cc-k">TEACHER</div>
-        <b>教师端 · 建班与学情</b>
-        <p>生成班级码、按病例布置作业、查看提交率 / 均分 / 逐题错误分布，导出班级报告。</p>
-        <span class="cc-go">进入教师端 →</span>
-      </a>
-      <a class="class-card student" href="read/classroom.html?role=student">
-        <div class="cc-k">STUDENT</div>
-        <b>学生端 · 作业 + 影像实验室</b>
-        <p>用班级码加入，完成定位 / 判读 / 征象作业；另有影像库问答、读片陪练、自测出题器与班级互助小组。</p>
-        <span class="cc-go">进入学生端 →</span>
-      </a>
-    </div>
-    <div class="boundary" style="margin-top:12px">
-      <b>课堂边界：</b>班级、作业、问答记录、自测成绩与组内论坛只存在当前浏览器的 localStorage，不做账号与跨设备同步；教师端与学生端可在同一浏览器切换，便于现场演示。评分只对照库内逐区标注，不评价临床诊断；问答未命中时明确标注“通识补充·非库内证据”，不编造 id。
-    </div>
-  </section>
-
-  <section class="method" id="method">
-    <h2>只做一件事，并把边界写清楚</h2>
-    <p>对外保留一个阅片工作台、一组大纲病例题、一个对比阅片页和一个课堂；学生端再收进问答、陪练、自测与互助小组。旧入口已收缩为跳转。</p>
-    <div class="mgrid">
-      <div><b>只做 CR 胸部</b><p>23 例中 21 例进入队列；多图拼接、双幅对照移出。课堂只围绕这 21 例组作业，其他部位与报告对照不扩功能。</p></div>
-      <div><b>未提及 ≠ 正常</b><p>每个分区独立状态：异常 / 未见异常 / 来源未提及 / 判读受限。来源没写的，明确不作推断。</p></div>
-      <div><b>双引用可回查</b><p>问答每条命中给影像定位 E1（病例 + 分区 + 区域框）与文献溯源 L1（征象词条 + 来源链接 + 指南条款）；不把只适用于 CT 的指南硬挂到胸片。</p></div>
-      <div><b>不猜、不诊断</b><p>上传只做库内 SHA-256 精确匹配；陌生图明确拒绝。只做影像表现与来源对照，不输出诊断、分期、治疗或预后。</p></div>
+  <section class="block" id="classroom-how">
+    <h2>课堂怎么用：三步走完一次作业</h2>
+    <p>教师建班并布置病例，学生用 6 位班级码加入；提交后立即看到逐区对照与错题。</p>
+    <div class="steps">
+      <div><b>1 · 建班</b><p>教师生成班级码，从 21 例中选病例、设截止日期与及格线。</p></div>
+      <div><b>2 · 作答</b><p>学生用班级码 + 姓名加入；考核模式下先隐藏标题、分区颜色与出处。</p></div>
+      <div><b>3 · 回流</b><p>提交即评分并解锁对照；教师端看提交率、均分与逐题错误分布。</p></div>
     </div>
     <div class="boundary">
-      <b>能当场证明：</b>21 例逐区校正；点分区或拖框定位；库内原图精确命中、陌生图拒绝；教师建班/布置、学生作答/评分可跑通；学生端问答给区域框 + 双引用、陪练四步评分、350 道规则题自测、组内论坛发帖/回复/解决；数据 183/183、学生实验室 20/20、问答/陪练/自测/小组 52/52、全站 41/41 可复跑。<br>
-      <b>还没做到：</b>非胸片未逐区校正；不做病灶检测与分割；静态页不调大模型；不做诊断、分期、治疗或预后判断。<br>
+      <b>课堂边界：</b>班级、作业与答题记录只存在当前浏览器的 localStorage；评分只对照库内逐区标注，不评价临床诊断。
+    </div>
+  </section>
+
+  <section class="block" id="method">
+    <h2>只做一件事，并把边界写清楚</h2>
+    <p>一个阅片工作台、一组大纲病例题、一个对比阅片页和一个课堂；学生端再收进问答、陪练、自测与互助小组。</p>
+    <div class="mgrid">
+      <div><b>只做 CR 胸部</b><p>23 例中 21 例进入队列；多图拼接、双幅对照移出。其他部位与报告对照不扩功能。</p></div>
+      <div><b>未提及 ≠ 正常</b><p>每个分区独立状态：异常 / 未见异常 / 来源未提及 / 判读受限。来源没写的，不作推断。</p></div>
+      <div><b>双引用可回查</b><p>问答每条命中给影像定位 E1（病例 + 分区 + 区域框）与文献溯源 L1（词条 + 来源 + 指南条款）。</p></div>
+      <div><b>不猜、不诊断</b><p>上传只做库内 SHA-256 精确匹配；陌生图明确拒绝。不输出诊断、分期、治疗或预后。</p></div>
+    </div>
+    <div class="boundary">
       <b>用途声明：</b>仅用于医学影像教学与研究，不构成诊断意见，不替代临床决策。影像仅来自 CC0 / CC BY / CC BY-SA / 公有领域；分区框为教学分区，不是病灶分割。逐区文本由 AI 辅助整理，正式教学前须由医学人员逐条审核签字。
     </div>
   </section>
 
   <footer>
-    <b>RadioCheck · 影像循证</b> · 赛道 B 胸片阅片 · v10 学生影像实验室与互助小组版<br>
-    一个首页、一个工作台、一组病例题、一个对比页、一个课堂；学生端含问答、陪练、自测与互助小组；旧入口自动跳转到胸片阅片。
+    <b>RadioCheck · 影像循证</b> · 赛道 B 胸片阅片 · 非诊断用途
   </footer>
 </main>
 

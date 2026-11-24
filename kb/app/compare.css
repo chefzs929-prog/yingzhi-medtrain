@@ -3,7 +3,8 @@
  */
 body{overflow:hidden}
 .cmp-shell{
-  flex:1;min-height:0;display:grid;grid-template-rows:44px minmax(0,1fr) 258px;
+  flex:1;min-height:0;display:grid;
+  grid-template-rows:48px minmax(0,1fr) 9px var(--bottom-h,266px);
   background:var(--bg);
 }
 
@@ -12,13 +13,14 @@ body{overflow:hidden}
   display:flex;align-items:center;gap:6px;padding:0 12px;
   background:var(--surface);border-bottom:1px solid var(--line);
 }
-.seg{display:flex;gap:2px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:2px}
-.seg button{height:25px;padding:0 11px;border-radius:6px;font-size:11px;color:var(--muted)}
+.seg{display:flex;gap:2px;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:3px}
+.seg button{height:28px;padding:0 13px;border-radius:7px;font-size:12px;color:var(--muted)}
 .seg button.on{background:var(--brand);color:#fff;font-weight:600}
 .tb-sep{width:1px;height:20px;background:var(--line-2);margin:0 3px}
-.cmp-toolbar .btn{height:26px;font-size:10.5px}
+.cmp-toolbar .btn{height:30px;font-size:12px}
 .cmp-toolbar .btn.on{background:var(--brand-soft);border-color:#bfe0da;color:var(--brand-deep)}
-.tb-hint{font-size:10.5px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-hint{font-size:11.5px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-hint:empty{display:none}
 
 /* ---------------- 对比舞台 ---------------- */
 .cmp-stage{
@@ -54,9 +56,16 @@ body{overflow:hidden}
 .pane-canvas.dragging{cursor:grabbing}
 .pane-canvas.drop-hot{outline:2px dashed #4fb3a8;outline-offset:-8px;background:#10242a}
 .pane-img{
+  /* 实际尺寸由 compare.js 的 layout() 写成 px：两侧同高对齐后高度一致，
+     中心落在画布中线上；这里的 max-* 只是脚本未执行时的兜底。 */
   max-width:100%;max-height:100%;width:auto;height:auto;
   transform-origin:center center;will-change:transform;user-select:none;
   filter:contrast(1.02);
+}
+/* 对齐时画一条中线：两侧同一高度的结构应该落在同一条水平线上。 */
+.cmp-stage[data-align="on"] .pane-canvas::after{
+  content:'';position:absolute;left:0;right:0;top:50%;
+  border-top:1px dashed rgba(126,196,186,.26);pointer-events:none;
 }
 .pane-empty{
   position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -66,7 +75,7 @@ body{overflow:hidden}
   width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
   border:1px dashed #3a5262;color:#8fb3c4;font-size:20px;margin-bottom:2px;
 }
-.pane-empty b{font-size:12px;color:#b9cdd8}
+.pane-empty b{font-size:13px;color:#b9cdd8}
 .pane-empty span{font-size:10px;line-height:1.6;max-width:26ch}
 .pane-diag{
   position:absolute;left:10px;bottom:10px;padding:5px 9px;border-radius:6px;
@@ -113,17 +122,37 @@ body{overflow:hidden}
 .cmp-stage[data-mode="overlay"] .cmp-split em{top:-18px;color:#fff;background:#0e7c7b}
 
 /* ---------------- 底部：胶片条 + 鉴别 ---------------- */
-.cmp-bottom{
-  min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 392px;
-  gap:10px;padding:10px 12px 12px;background:var(--bg);border-top:1px solid var(--line);
+/* 底部高度与右侧鉴别区宽度都可拖拽；双击分隔条复位。 */
+.cmp-hsplit{
+  display:flex;align-items:center;justify-content:center;background:var(--bg);
+  border-top:1px solid var(--line);cursor:row-resize;position:relative;z-index:4;
+  touch-action:none;
 }
+.cmp-hsplit:hover,.cmp-hsplit:focus-visible{background:#e9f5f2;outline:none}
+.hs-grip{display:flex;gap:3px}
+.hs-grip i{width:22px;height:2px;border-radius:2px;background:#a8c6bf;transition:.14s}
+.cmp-hsplit:hover .hs-grip i,.cmp-hsplit:focus-visible .hs-grip i{background:#0e7c7b}
+
+.cmp-bottom{
+  min-height:0;display:grid;
+  grid-template-columns:minmax(0,1fr) 9px minmax(220px,var(--diff-w,392px));
+  gap:0;padding:10px 12px 12px;background:var(--bg);border-top:1px solid var(--line);
+}
+.cmp-vsplit{
+  display:flex;align-items:center;justify-content:center;cursor:col-resize;
+  border-radius:6px;touch-action:none;
+}
+.cmp-vsplit:hover,.cmp-vsplit:focus-visible{background:#e9f5f2;outline:none}
+.vs-grip{display:flex;flex-direction:column;gap:3px}
+.vs-grip i{width:2px;height:13px;border-radius:2px;background:#b7cec8;transition:.14s}
+.cmp-vsplit:hover .vs-grip i,.cmp-vsplit:focus-visible .vs-grip i{background:#0e7c7b}
 .film{min-height:0;display:flex;flex-direction:column;overflow:hidden}
 .film-head{
   display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
   padding:9px 11px 7px;border-bottom:1px solid var(--line);
 }
-.film-head b{display:block;font-size:11.5px}
-.film-head span{display:block;font-size:9.5px;color:var(--faint);margin-top:2px}
+.film-head b{display:block;font-size:12.5px}
+.film-head span{display:block;font-size:10.5px;color:var(--faint);margin-top:2px}
 .assign{display:flex;gap:4px;flex:none}
 .assign .btn{height:24px;font-size:9.5px;padding:0 7px}
 .assign .btn.on{background:var(--brand);border-color:var(--brand);color:#fff}
@@ -142,8 +171,8 @@ body{overflow:hidden}
 .film-card .thumb{height:70px;background:#0b1015;display:grid;place-items:center;overflow:hidden}
 .film-card .thumb img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:grayscale(1) contrast(1.05)}
 .film-card .fc-b{padding:4px 5px 5px}
-.film-card .fc-b b{display:block;font-size:9.5px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.film-card .fc-b span{display:block;font-family:var(--mono);font-size:8px;color:var(--faint);margin-top:1px}
+.film-card .fc-b b{display:block;font-size:10.5px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.film-card .fc-b span{display:block;font-family:var(--mono);font-size:9px;color:var(--faint);margin-top:1px}
 .film-card .drag-dot{
   position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:4px;
   background:rgba(255,255,255,.86);color:#0b4f55;font-size:9px;display:grid;place-items:center;
@@ -205,7 +234,7 @@ body{overflow:hidden}
 }
 
 @media (max-width:1080px){
-  .cmp-bottom{grid-template-columns:minmax(0,1fr) 330px}
+  .cmp-bottom{--diff-w:330px}
 }
 @media (max-width:860px){
   body{overflow:auto}
@@ -214,7 +243,7 @@ body{overflow:hidden}
   .tb-hint{display:none}
   .cmp-stage{height:420px;grid-template-columns:1fr;grid-template-rows:1fr 1fr}
   .cmp-stage .cmp-pane.left{border-right:0;border-bottom:1px solid #1c2a35}
-  .cmp-split{display:none}
+  .cmp-split,.cmp-hsplit,.cmp-vsplit{display:none}
   .cmp-bottom{display:block;padding:10px}
   .film{height:210px;margin-bottom:10px}
   .diff{height:auto;max-height:none}

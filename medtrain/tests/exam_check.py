@@ -13,7 +13,7 @@
   - 选对 / 选错、提交反馈、正确答案、影像所见、出处与对比入口；
   - 答题记录写入 localStorage，刷新后保留；
   - “只看错题”、重做、清空记录；
-  - 对比阅片默认配对、胶片条拖拽、并排 / 叠加擦除、隐藏诊断、交换、分隔条；
+  - 对比阅片默认配对、同高对齐、同步缩放、胶片条拖拽、并排 / 叠加擦除、隐藏诊断、交换、分隔条；
   - 无 console / page error 与 4xx。
 """
 from __future__ import annotations
@@ -31,6 +31,23 @@ DATA = json.loads((ROOT / "kb/data/exam_cases.json").read_text(encoding="utf8"))
 CASES = DATA["cases"]
 
 rows: list[tuple[str, bool, str]] = []
+
+
+GEOM_JS = """() => {
+  const out = {};
+  ['left', 'right'].forEach((s) => {
+    const img = document.querySelector(s === 'left' ? '#leftImg' : '#rightImg');
+    const cv = document.querySelector(s === 'left' ? '#paneLeft .pane-canvas' : '#paneRight .pane-canvas');
+    const a = img.getBoundingClientRect();
+    const c = cv.getBoundingClientRect();
+    out[s] = {
+      w: a.width, h: a.height, cy: a.top + a.height / 2,
+      ch: c.height, inside: a.top >= c.top - 1 && a.bottom <= c.bottom + 1,
+    };
+  });
+  return out;
+}"""
+
 
 
 def check(name: str, ok: bool, detail: str = "") -> None:
@@ -140,6 +157,14 @@ def main() -> None:
               page.eval_on_selector("#leftImg", "e=>e.complete && e.naturalWidth>0") and
               page.eval_on_selector("#rightImg", "e=>e.complete && e.naturalWidth>0"))
 
+        # 同高对齐：两侧显示高度一致、中心落在同一水平线、都不被裁切
+        g = page.evaluate(GEOM_JS)
+        check("两侧影像同高对齐", abs(g["left"]["h"] - g["right"]["h"]) <= 1.5,
+              f"{g['left']['h']:.1f} vs {g['right']['h']:.1f}")
+        check("两侧影像同中线", abs(g["left"]["cy"] - g["right"]["cy"]) <= 1.5,
+              f"{g['left']['cy']:.1f} vs {g['right']['cy']:.1f}")
+        check("对齐后两侧均不裁切", g["left"]["inside"] and g["right"]["inside"], json.dumps(g, ensure_ascii=False))
+
         # 拖拽
         page.locator('.film-card[data-case="EX-05"]').drag_to(page.locator('.pane-canvas[data-side="right"]'))
         page.wait_for_timeout(400)
@@ -181,6 +206,45 @@ def main() -> None:
             check("分隔条可拖动", pct > 50, page.inner_text("#splitPct"))
         else:
             check("分隔条可拖动", False, "split 不可见")
+
+        # 宽幅 / 竖幅混排：用户反馈的错位场景（EX-07 1.33 : EX-01 0.87）
+        page.goto(BASE + "read/compare.html?left=EX-07&right=EX-01", wait_until="networkidle")
+        page.wait_for_timeout(700)
+        g = page.evaluate(GEOM_JS)
+        check("宽窄幅混排仍同高", abs(g["left"]["h"] - g["right"]["h"]) <= 1.5,
+              f"{g['left']['h']:.1f} vs {g['right']['h']:.1f}")
+        check("宽窄幅混排同中线", abs(g["left"]["cy"] - g["right"]["cy"]) <= 1.5,
+              f"{g['left']['cy']:.1f} vs {g['right']['cy']:.1f}")
+        check("宽幅影像不被上下裁切", g["left"]["inside"] and g["right"]["inside"],
+              json.dumps(g, ensure_ascii=False))
+
+        # 缩放同步：在左侧滚轮放大，两侧 transform 必须一致
+        lb = page.locator('#paneLeft .pane-canvas').bounding_box()
+        if lb:
+            page.mouse.move(lb["x"] + lb["width"] / 2, lb["y"] + lb["height"] / 2)
+            page.mouse.wheel(0, -240)
+            page.wait_for_timeout(250)
+            tl = page.eval_on_selector("#leftImg", "e=>e.style.transform")
+            tr = page.eval_on_selector("#rightImg", "e=>e.style.transform")
+            check("缩放两侧同步", tl == tr and "scale(1)" not in tl, f"{tl} / {tr}")
+            check("放大后仍同中线", abs(
+                page.eval_on_selector("#leftImg", "e=>e.getBoundingClientRect().top + e.getBoundingClientRect().height/2") -
+                page.eval_on_selector("#rightImg", "e=>e.getBoundingClientRect().top + e.getBoundingClientRect().height/2")
+            ) <= 1.5)
+            page.click("#fitBtn")
+            page.wait_for_timeout(200)
+            g2 = page.evaluate(GEOM_JS)
+            check("复位视图后回到同高", abs(g2["left"]["h"] - g2["right"]["h"]) <= 1.5)
+        else:
+            check("缩放两侧同步", False, "画布不可见")
+
+        # 取消对齐后允许各自铺满
+        page.click("#alignBtn")
+        page.wait_for_timeout(250)
+        check("可取消对齐", page.get_attribute("#stage", "data-align") == "off")
+        page.click("#alignBtn")
+        page.wait_for_timeout(250)
+        check("可恢复对齐", page.get_attribute("#stage", "data-align") == "on")
 
         # 预置对比卡
         page.click('.pair-chip[data-pair="P-06"]')

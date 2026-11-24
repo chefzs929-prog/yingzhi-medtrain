@@ -3,10 +3,11 @@
 
 #import "RCServer.h"
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, WKNavigationDelegate>
+@interface AppDelegate : NSObject <NSApplicationDelegate, WKNavigationDelegate, WKUIDelegate, NSWindowDelegate>
 @property (strong) NSWindow *window;
 @property (strong) WKWebView *webView;
 @property (strong) RCServer *server;
+@property (strong) NSMutableArray<NSWindow *> *childWindows;
 @end
 
 @implementation AppDelegate
@@ -28,8 +29,10 @@
 - (void)buildWindow {
     WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
     config.websiteDataStore = [WKWebsiteDataStore defaultDataStore];
+    self.childWindows = [NSMutableArray array];
     self.webView = [[WKWebView alloc] initWithFrame:NSZeroRect configuration:config];
     self.webView.navigationDelegate = self;
+    self.webView.UIDelegate = self;
     self.webView.allowsBackForwardNavigationGestures = YES;
 
     NSRect rect = NSMakeRect(0, 0, 1440, 950);
@@ -110,6 +113,63 @@
     }
     [[NSWorkspace sharedWorkspace] openURL:url];
     decisionHandler(WKNavigationActionPolicyCancel);
+}
+
+#pragma mark - New windows (target="_blank")
+
+/* WKWebView 默认不会自己处理 target="_blank"：没有实现这个回调时，
+ * 课堂问答里的“在阅片台打开”、文献“来源”等链接点了没有任何反应。
+ * 站内链接开一个子窗口继续浏览，站外链接交给系统浏览器。 */
+- (WKWebView *)webView:(WKWebView *)webView
+    createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration
+               forNavigationAction:(WKNavigationAction *)navigationAction
+                    windowFeatures:(WKWindowFeatures *)windowFeatures {
+    NSURL *url = navigationAction.request.URL;
+    if (!url) return nil;
+
+    NSString *scheme = url.scheme.lowercaseString;
+    BOOL local = [scheme isEqualToString:@"file"] ||
+                 [url.host isEqualToString:@"127.0.0.1"] ||
+                 [url.host isEqualToString:@"localhost"];
+    if (!local) {
+        [[NSWorkspace sharedWorkspace] openURL:url];
+        return nil;
+    }
+
+    WKWebView *child = [[WKWebView alloc] initWithFrame:NSZeroRect configuration:configuration];
+    child.navigationDelegate = self;
+    child.UIDelegate = self;
+    child.allowsBackForwardNavigationGestures = YES;
+
+    NSRect rect = NSMakeRect(0, 0, 1200, 820);
+    NSWindowStyleMask style = NSWindowStyleMaskTitled |
+                              NSWindowStyleMaskClosable |
+                              NSWindowStyleMaskMiniaturizable |
+                              NSWindowStyleMaskResizable;
+    NSWindow *window = [[NSWindow alloc] initWithContentRect:rect
+                                                   styleMask:style
+                                                     backing:NSBackingStoreBuffered
+                                                       defer:NO];
+    window.title = @"RadioCheck · 阅片台";
+    window.minSize = NSMakeSize(900, 600);
+    window.contentView = child;
+    window.delegate = self;
+    [window center];
+
+    [self.childWindows addObject:window];
+    [window makeKeyAndOrderFront:nil];
+    [child loadRequest:navigationAction.request];
+    return child;
+}
+
+- (void)webViewDidClose:(WKWebView *)webView {
+    NSWindow *window = webView.window;
+    if (window && window != self.window) [window close];
+}
+
+- (void)windowWillClose:(NSNotification *)notification {
+    NSWindow *window = notification.object;
+    if (window && window != self.window) [self.childWindows removeObject:window];
 }
 
 #pragma mark - Menu

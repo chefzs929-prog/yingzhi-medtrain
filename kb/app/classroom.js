@@ -13,6 +13,7 @@
 
   const S = {
     data: null,
+    lab: null,
     role: "",
     teacherTab: "overview",
     studentTab: "home",
@@ -113,39 +114,23 @@
 
   function gateHTML() {
     return `<div class="page-head">
-      <div><div class="eyebrow">RADIOLOGY CLASSROOM</div><h1>课堂 · 教师与学生</h1>
-      <p>教师建班、布置胸片作业；学生用班级码加入，在阅片工作台完成定位、判读与征象三题；提交后自动回流成绩与错题。</p></div>
+      <div><div class="eyebrow">RADIOLOGY CLASSROOM</div><h1>课堂 · 教师与学生</h1></div>
     </div>
     <div class="role-gate">
       <div class="gate-card teacher">
         <div class="g-ic">T</div>
         <h2>教师端</h2>
-        <p>把 21 例胸片按教学进度组成本班作业，查看提交率、均分与逐题错误分布。</p>
-        <ul>
-          <li>建班后生成 6 位班级码，学生凭码加入</li>
-          <li>按病例布置作业，设置截止日期与及格线</li>
-          <li>按学生 / 病例 / 题型三段查看学情</li>
-          <li>查看班级互助小组与组内论坛</li>
-          <li>导出班级报告，可直接用于讲评</li>
-        </ul>
+        <p>把 21 例胸片组成班级作业，查看提交率、均分与错题分布。</p>
         <button class="btn solid" data-act="role" data-role="teacher">进入教师端 →</button>
       </div>
       <div class="gate-card student">
         <div class="g-ic">S</div>
         <h2>学生端</h2>
-        <p>加入班级后领取作业；另有影像库问答、读片陪练、自测出题器与班级互助小组。</p>
-        <ul>
-          <li>班级码 + 姓名即可加入，无需注册</li>
-          <li>考核模式下分区不着色、病例标题隐藏</li>
-          <li>影像库问答：区域定位 + 文献溯源双引用</li>
-          <li>读片陪练、自测出题器与错题重做</li>
-          <li>班级互助小组：组内论坛提问与回复</li>
-        </ul>
+        <p>加入班级领取作业，另有影像库问答、读片陪练、自测出题器与互助小组。</p>
         <button class="btn" data-act="role" data-role="student">进入学生端 →</button>
       </div>
     </div>
-    <div class="local-note"><b>本地演示：</b>班级、作业与答题记录保存在当前浏览器的 localStorage，不会上传服务器。
-      换一台设备或换浏览器需要重新建班；跨设备同步需接入后端。教师端与学生端可在同一浏览器切换，便于现场演示。</div>`;
+    <div class="local-note">数据保存在本机浏览器</div>`;
   }
 
   function setupHTML() {
@@ -165,7 +150,7 @@
         <button class="btn solid" data-act="create-class">创建班级并生成班级码</button>
         <button class="btn" data-act="demo-class">载入演示班级（6 名学生 + 1 份作业）</button>
       </div>
-      <p class="note" style="margin-top:10px">演示班级会写入 6 名演示学生和 1 份 6 例作业，方便直接看教师端与学情分析。</p>
+      <p class="note" style="margin-top:10px">演示班级会写入 6 名学生与 1 份 6 例作业。</p>
     </div>`;
   }
 
@@ -183,7 +168,7 @@
     ];
     const head = `<div class="page-head">
       <div><div class="eyebrow">TEACHING CONSOLE</div><h1>教师端 · ${esc(cls.name)}</h1>
-      <p>${esc(cls.teacher)} · 班级码 <b class="mono">${esc(cls.code)}</b> · 数据只在本机浏览器</p></div>
+      <p>${esc(cls.teacher)} · 班级码 <b class="mono">${esc(cls.code)}</b></p></div>
       <div class="page-actions">
         <button class="btn" data-act="role" data-role="student">切到学生端</button>
         <button class="btn solid" data-act="new-assignment">布置作业</button>
@@ -215,7 +200,7 @@
         <td class="num">${st.submitted}/${total}</td>
         <td class="num">${scoreText(st.avg)}</td>
         <td class="num muted">${fmtTime(lastAt)}</td>
-        <td class="num"><button class="btn sm" data-as-student="${esc(s.id)}">以该生身份进入</button>
+        <td class="num"><button class="btn sm" data-as-student="${esc(s.id)}" title="以该生身份进入">进入</button>
           <button class="btn sm ghost" data-remove-student="${esc(s.id)}">移除</button></td>
       </tr>`;
     }).join("");
@@ -250,6 +235,7 @@
           <span class="mini-chip">及格率 ${st ? pctText(st.totals.passRate) : "—"}</span>
           <span class="spacer"></span>
           <button class="btn sm" data-analysis="${esc(a.id)}">看学情</button>
+          <button class="btn sm" data-act="export-lesson" data-assignment="${esc(a.id)}">备课包</button>
           <button class="btn sm" data-student-try="${esc(a.id)}">学生试做</button>
         </div>
       </div>`;
@@ -264,7 +250,6 @@
               <p>${esc(cls.name)} · ${cls.students.length} 名学生</p></div>
             <button class="btn sm" data-act="copy-code">复制班级码</button>
           </div>
-          <p class="note" style="margin-top:10px">演示时可在同一浏览器切到学生端，用这个班级码加入；换设备需重新建班。</p>
         </div>
         ${roster}
       </div>
@@ -272,14 +257,6 @@
         <div class="panel-card">
           <div class="panel-h"><h3>作业进度</h3><span class="sub">${cls.assignments.length} 份</span></div>
           ${progress}
-        </div>
-        <div class="panel-card">
-          <div class="panel-h"><h3>讲评建议</h3><span class="sub">通用</span></div>
-          <ul class="plain-list">
-            <li>先让学生自己定位异常分区，再揭示分区状态；不要一上来就给答案。</li>
-            <li>错得最多的一般不是“看不见”，而是把「来源未提及」当成「正常」。</li>
-            <li>讲评时回到影像：让学生指出分区框，再读出该区依据。</li>
-          </ul>
         </div>
       </div>
     </div>`;
@@ -307,6 +284,7 @@
         <div class="ac-foot"><span class="mini-chip">均分 ${st ? scoreText(st.totals.avg) : "—"}</span>
           <span class="spacer"></span>
           <button class="btn sm" data-analysis="${esc(a.id)}">看学情</button>
+          <button class="btn sm" data-act="export-lesson" data-assignment="${esc(a.id)}">备课包</button>
           <button class="btn sm" data-student-try="${esc(a.id)}">学生试做</button>
           <button class="btn sm ghost" data-del-assign="${esc(a.id)}">删除</button>
         </div>
@@ -332,7 +310,6 @@
       <div class="case-picker" id="casePicker">${picker}</div>
       <div class="form-actions">
         <button class="btn solid" data-act="create-assignment">发布作业</button>
-        <span class="note">学生提交后，成绩与错题会自动出现在「学情分析」。</span>
       </div>
     </div>
     <div class="panel-card">
@@ -420,7 +397,6 @@
       <div class="table-wrap"><table class="data-table">
         <thead><tr><th>病例</th><th class="num">提交</th><th class="num">均分</th><th class="num">定位</th><th class="num">判读</th><th class="num">征象</th><th class="num">及格率</th></tr></thead>
         <tbody>${caseRows}</tbody></table></div>
-      <p class="note" style="margin-top:9px">低于 60% 的格子标为琥珀色。定位题接受该病例任一异常分区；判读题按学生所选分区的真实状态判分；征象题按命中数减错选计分。</p>
     </div>`;
   }
 
@@ -440,10 +416,9 @@
     const first = RC.activeClass() || db.classes[0];
     const code = S.join.code || (first ? first.code : "");
     return `<div class="page-head">
-      <div><div class="eyebrow">STUDENT · JOIN</div><h1>学生端 · 加入班级</h1>
-      <p>向教师索取班级码，填写姓名即可加入；不需要注册，答题记录只在本机浏览器。</p></div>
+      <div><div class="eyebrow">STUDENT · JOIN</div><h1>学生端 · 加入班级</h1></div>
     </div>
-    <div class="grid-2">
+    <div class="grid-2" style="grid-template-columns:minmax(0,560px)">
       <div class="panel-card">
         <div class="panel-h"><h3>加入班级</h3><span class="sub">班级码 + 姓名</span></div>
         <div class="form-grid">
@@ -456,16 +431,6 @@
           <button class="btn solid" data-act="join-class">加入班级</button>
           ${first ? `<span class="note">本机已有班级：<b class="mono">${esc(first.code)}</b></span>` : ""}
         </div>
-      </div>
-      <div class="panel-card">
-        <div class="panel-h"><h3>学生会看到什么</h3><span class="sub">考核模式</span></div>
-        <ul class="plain-list">
-          <li>作业按病例逐例作答：先定位异常分区，再判断状态，最后选征象。</li>
-          <li>提交前病例标题与分区颜色隐藏，避免直接从界面读出答案。</li>
-          <li>提交后立即给分，并解锁分区所见、系统阅片与出处对照。</li>
-          <li>低于 80 分的病例进入错题本，可重做；重做会保留历史记录。</li>
-        </ul>
-        <p class="note" style="margin-top:12px">教师还没建班？请先切到教师端创建班级，或载入演示班级。</p>
       </div>
     </div>`;
   }
@@ -502,20 +467,126 @@
     else if (S.studentTab === "group") body = studentGroupHTML(cls, stu);
     else body = `<div class="empty-state"><b>正在载入影像实验室…</b></div>`;
     const heads = {
-      home: ["学生端 · 我的作业", "先自己读片，再提交；系统只对照库内逐区标注评分，不评价临床诊断。"],
-      qa: ["学生端 · 影像问答", "在 21 例胸片库内检索；每个结论给影像区域定位与文献溯源两条引用。"],
-      coach: ["学生端 · 读片陪练", "按定位、判读、征象、对照四步练习；提示只给方法，不直接给答案。"],
-      quiz: ["学生端 · 自测出题", "从库内规则题中自建试卷；交卷后逐题对照影像位置与文献来源。"],
-      group: ["学生端 · 互助小组", "按主题加入小组，在组内论坛提问、回复与标记解决。"],
+      home: "学生端 · 我的作业",
+      qa: "学生端 · 影像问答",
+      coach: "学生端 · 读片陪练",
+      quiz: "学生端 · 自测出题",
+      group: "学生端 · 互助小组",
     };
     const head = heads[S.studentTab] || heads.home;
     return `<div class="page-head">
-      <div><div class="eyebrow">STUDENT CONSOLE</div><h1>${head[0]}</h1>
-      <p>${head[1]}</p></div>
+      <div><div class="eyebrow">STUDENT CONSOLE</div><h1>${head}</h1></div>
     </div>
     ${studentHeroHTML(cls, stu)}
     ${studentTabsHTML()}
     <div id="studentTabBody">${body}</div>`;
+  }
+
+  function errorTags(d) {
+    const tags = [];
+    if (!d || d.zoneOk === false) tags.push("定位");
+    if (!d || d.statusOk === false) tags.push("判读");
+    if (d && typeof d.signRatio === "number" && d.signRatio < 0.8) tags.push("征象");
+    return tags.length ? tags : ["综合"];
+  }
+
+  function radarSVG(vals, labels) {
+    const cx = 100, cy = 100, r = 70;
+    const angles = [-90, 0, 90, 180];
+    const pt = (v, i) => {
+      const a = angles[i] * Math.PI / 180;
+      return [cx + Math.cos(a) * r * v / 100, cy + Math.sin(a) * r * v / 100];
+    };
+    const ring = (v) => vals.map((_, i) => pt(v, i).join(",")).join(" ");
+    const poly = vals.map((v, i) => pt(v, i).join(",")).join(" ");
+    const axis = angles.map((_, i) => {
+      const [x, y] = pt(100, i);
+      return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#d6e4e2" stroke-width="1"/>`;
+    }).join("");
+    const dots = vals.map((v, i) => {
+      const [x, y] = pt(v, i);
+      return `<circle cx="${x}" cy="${y}" r="3" fill="#0b4f55"/>`;
+    }).join("");
+    const labelPos = [[cx, cy - r - 12], [cx + r + 8, cy + 4], [cx, cy + r + 18], [cx - r - 8, cy + 4]];
+    const texts = labels.map((t, i) => {
+      const [x, y] = labelPos[i];
+      return `<text x="${x}" y="${y}" text-anchor="middle" font-size="11" fill="#5b7480">${esc(t)}</text>
+        <text x="${x}" y="${y + 13}" text-anchor="middle" font-size="11" font-weight="700" fill="#10232e">${vals[i]}</text>`;
+    }).join("");
+    return `<svg viewBox="0 0 200 200" class="radar-svg" role="img" aria-label="能力雷达图">
+      ${[25, 50, 75, 100].map((v) => `<polygon points="${ring(v)}" fill="none" stroke="#e2eeec" stroke-width="1"/>`).join("")}
+      ${axis}
+      <polygon points="${poly}" fill="rgba(11,79,85,.16)" stroke="#0b4f55" stroke-width="2"/>
+      ${dots}${texts}
+    </svg>`;
+  }
+
+  function studentRadarHTML(st) {
+    const attempts = st.attempts || [];
+    if (!attempts.length) {
+      return `<div class="panel-card"><div class="panel-h"><h3>能力雷达</h3><span class="sub">完成作业后生成</span></div>
+        <div class="empty-inline"><b>还没有作答</b>提交第一份作业后，这里会显示定位、判读、征象、依据四个维度。</div></div>`;
+    }
+    const mean = (fn) => Math.round(attempts.reduce((n, a) => n + fn(a), 0) / attempts.length * 100);
+    const locate = mean((a) => ((a.detail || {}).zonePoints || 0) / 40);
+    const status = mean((a) => ((a.detail || {}).statusPoints || 0) / 30);
+    const sign = mean((a) => (a.detail || {}).signRatio || 0);
+    const errCases = new Set((st.errors || []).map((e) => e.caseId));
+    const retried = Array.from(errCases).filter((cid) => attempts.filter((a) => a.caseId === cid).length >= 2).length;
+    const evidence = errCases.size ? Math.round(retried / errCases.size * 100) : 100;
+    return `<div class="panel-card">
+      <div class="panel-h"><h3>能力雷达</h3><span class="sub">定位 / 判读 / 征象 / 依据</span></div>
+      <div class="radar-wrap">
+        ${radarSVG([locate, status, sign, evidence], ["定位", "判读", "征象", "依据"])}
+        <div class="radar-note">
+          <p>定位 40 · 判读 30 · 征象 30</p>
+          <p>行为代理指标：取自作答记录，不代表临床能力。</p>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function studentPlanHTML(st, stu) {
+    const errors = st.errors || [];
+    if (!errors.length) {
+      return `<div class="panel-card"><div class="panel-h"><h3>7 天练习计划</h3><span class="sub">按错题归因</span></div>
+        <div class="empty-inline"><b>暂无错题计划</b>完成作业后，低于 80 分的病例会自动排进 7 天计划。</div></div>`;
+    }
+    const counts = { 定位: 0, 判读: 0, 征象: 0, 综合: 0 };
+    errors.forEach((e) => errorTags(e.detail).forEach((t) => { counts[t] += 1; }));
+    const uniq = new Map();
+    errors.forEach((e) => {
+      const old = uniq.get(e.caseId);
+      if (!old || e.score < old.score) uniq.set(e.caseId, e);
+    });
+    const list = Array.from(uniq.values()).sort((a, b) => a.score - b.score).slice(0, 14);
+    const days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(Date.now() + i * 86400000);
+      const md = `${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      return { md, items: [] };
+    });
+    list.forEach((e, i) => { days[i % 7].items.push(e); });
+    const rows = days.map((day, i) => {
+      const items = day.items.length ? day.items.map((e) => {
+        const tags = errorTags(e.detail).join(" / ");
+        return `<a class="plan-item" href="clinic.html?task=${encodeURIComponent(e.assignmentId)}&student=${encodeURIComponent(stu.id)}&case=${encodeURIComponent(e.caseId)}">
+          <span class="plan-case">${esc(caseTitle(e.caseId))}</span>
+          <span class="plan-focus">${esc(tags)} · ${e.score} 分</span>
+          <span class="plan-go">重练 →</span>
+        </a>`;
+      }).join("") : `<div class="plan-rest">巩固：回看已做病例的分区与出处。</div>`;
+      return `<div class="plan-day"><div class="plan-date"><b>第 ${i + 1} 天</b><span>${day.md}</span></div><div class="plan-list">${items}</div></div>`;
+    }).join("");
+    return `<div class="panel-card">
+      <div class="panel-h"><h3>7 天练习计划</h3><span class="sub">按错题归因</span></div>
+      <div class="plan-tags">
+        <span class="plan-tag">定位 ${counts.定位}</span>
+        <span class="plan-tag">判读 ${counts.判读}</span>
+        <span class="plan-tag">征象 ${counts.征象}</span>
+        ${counts.综合 ? `<span class="plan-tag">综合 ${counts.综合}</span>` : ""}
+      </div>
+      <div class="plan-days">${rows}</div>
+    </div>`;
   }
 
   function studentHomeHTML() {
@@ -564,6 +635,8 @@
         ${assignments}
       </div>
       <div class="stack">
+        ${studentRadarHTML(st)}
+        ${studentPlanHTML(st, stu)}
         <div class="panel-card">
           <div class="panel-h"><h3>错题本</h3><span class="sub">${st.errors.length} 条</span></div>
           ${errors}
@@ -622,9 +695,15 @@
   function postCaseHTML(post) {
     const c = caseById(post.caseId);
     if (!c) return "";
-    return `<a class="post-case" href="clinic.html?case=${encodeURIComponent(c.id)}" target="_blank" rel="noopener">
-      <img src="../${esc(c.image)}" alt="${esc(c.title)}" loading="lazy">
-      <div><b>${esc(c.id)} · ${esc(c.title)}</b><span>关联病例 · 点击在阅片台打开</span></div>
+    const href = `clinic.html?case=${encodeURIComponent(c.id)}` +
+      (post.zoneId ? `&zone=${encodeURIComponent(post.zoneId)}` : "");
+    const tags = [
+      post.zoneName ? `<span class="tag">${esc(post.zoneName)}</span>` : "",
+      post.signName ? `<span class="tag ab">${esc(post.signName)}</span>` : "",
+    ].join("");
+    return `<a class="post-case" href="${href}" target="_blank" rel="noopener">
+      <img src="${esc(window.RCKB ? window.RCKB.imageUrl(c.image) : "../" + c.image)}" alt="${esc(c.title)}" loading="lazy">
+      <div><b>${esc(c.id)} · ${esc(c.title)}</b><span>关联病例 · 点击在阅片台打开</span>${tags}</div>
     </a>`;
   }
 
@@ -661,10 +740,10 @@
       </div>
       ${canReply ? `<div class="reply-form">
         <label for="replyBody">写回复</label>
-        <textarea id="replyBody" maxlength="600" placeholder="例如：我会先看肋膈角是否变钝，再看空气支气管征；最后回到该区库内标注。"></textarea>
+        <textarea id="replyBody" maxlength="600" placeholder="例如：我会先看肋膈角是否变钝，再看空气支气管征；最后回到该区知识库标注。"></textarea>
         <div class="form-actions"><button class="btn solid" data-reply-submit="${esc(p.id)}">发布回复</button>
-          <span class="note">只在本机保存；请勿填写真实患者信息。</span></div>
-      </div>` : `<div class="note" style="margin-top:10px">${isTeacher ? "教师可查看与整理帖子。" : "加入小组后可以回复。"}</div>`}
+          <span class="note">请勿填写真实患者信息。</span></div>
+      </div>` : ""}
     </div>`;
   }
 
@@ -688,7 +767,7 @@
           ${allPosts.filter((p) => p.status !== "resolved").length} 待解决</span></div>
       ${detail ? postDetailHTML(Object.assign({}, detail, { groupJoined: joined }), cls, stu, isTeacher) : `
         ${!isTeacher && joined ? `<div class="post-form">
-          <div class="panel-h"><h4>向组内论坛提问</h4><span class="sub">先搜一下有没有同类问题</span></div>
+          <div class="panel-h"><h4>向组内论坛提问</h4></div>
           <div class="form-grid">
             <div class="field full"><label for="postTitle">问题标题</label>
               <input id="postTitle" maxlength="60" placeholder="例如：CASE-007 下肺野密度增高，实变还是积液？"></div>
@@ -698,9 +777,15 @@
               <select id="postCase"><option value="">不关联病例</option>
                 ${allCases().map((c) => `<option value="${esc(c.id)}">${esc(c.id)} · ${esc(c.title)}</option>`).join("")}
               </select></div>
+            <div class="field"><label for="postZone">关联分区（可选）</label>
+              <select id="postZone"><option value="">不关联分区</option></select></div>
+            <div class="field"><label for="postSign">关联征象（可选）</label>
+              <select id="postSign"><option value="">不关联征象</option>
+                ${((S.lab && S.lab.signs) || []).map((s) => `<option value="${esc(s.id)}" data-name="${esc(s.name)}">${esc(s.name)}</option>`).join("")}
+              </select></div>
           </div>
           <div class="form-actions"><button class="btn solid" data-post-submit>发布到组内论坛</button>
-            <span class="note">组内成员可见；本机保存。</span></div>
+            <span class="note">请勿填写真实患者信息。</span></div>
         </div>` : ""}
         ${!isTeacher && !joined ? `<div class="empty-inline"><b>先加入小组</b>加入后才能发帖与回复。</div>` : ""}
         <div class="post-filters">${filters.map(([id, label]) =>
@@ -720,8 +805,7 @@
       S.postId = "";
     }
     return `<div class="lab-head">
-      <div><div class="eyebrow">PEER SUPPORT</div><h2>班级互助小组</h2>
-      <p>按主题加入小组，在组内论坛提问、回复、标记已解决；帖子可关联 21 例胸片。</p></div>
+      <div><div class="eyebrow">PEER SUPPORT</div><h2>班级互助小组</h2></div>
       <span class="lab-scope">${groups.length} 个小组</span>
     </div>
     ${groupCreateHTML(false)}
@@ -741,7 +825,6 @@
     const unresolved = groups.reduce((n, g) => n + g.stats.unresolved, 0);
     return `<div class="panel-card">
       <div class="panel-h"><h3>小组与组内论坛</h3><span class="sub">${groups.length} 组 · ${totalPosts} 帖 · ${unresolved} 待解决</span></div>
-      <p>学生按主题加入小组，在组内论坛提问；教师可查看帖子、标记解决或删除。数据只在本机浏览器。</p>
     </div>
     ${groupCreateHTML(true)}
     <div class="group-grid">${groups.length ? groups.map((g) => groupCardHTML(g, true)).join("") :
@@ -756,15 +839,12 @@
     $$("#roleSwitch button").forEach((b) => b.classList.toggle("on", b.dataset.role === S.role));
     if (!S.role) {
       main.innerHTML = gateHTML();
-      $("#barNote").textContent = "班级与答题记录只存在本机浏览器";
       return;
     }
     if (S.role === "teacher") {
       main.innerHTML = teacherHTML();
-      $("#barNote").textContent = "教师端 · 建班、布置作业、看学情";
     } else {
       main.innerHTML = studentHTML();
-      $("#barNote").textContent = "学生端 · 作业、影像问答、陪练、自测与互助小组";
       if (["qa", "coach", "quiz"].includes(S.studentTab) && window.RCLab) {
         window.RCLab.mount(S.studentTab, $("#studentTabBody"));
       }
@@ -867,6 +947,100 @@
     ];
     download(`${cls.code}_${a.title}_班级报告.md`, lines.join("\n"));
     toast("班级报告已导出");
+  }
+
+  async function exportLesson(aid) {
+    const cls = RC.activeClass();
+    if (!cls) return;
+    const a = cls.assignments.find((x) => x.id === aid);
+    if (!a) return;
+    toast("正在生成备课包…");
+    let lab = null;
+    try {
+      lab = window.RCKB
+        ? await window.RCKB.getJSON("/api/kb/lab", "../data/lab/student_lab.json")
+        : await (await fetch("../data/lab/student_lab.json", { cache: "no-cache" })).json();
+    } catch (e) { /* 离线时仍可导出病例与分区 */ }
+    const signs = (lab && lab.signs) || [];
+    const signById = (id) => signs.find((s) => s.id === id);
+    const clean = (s) => String(s || "").replace(/\|/g, "｜").replace(/\n+/g, " ");
+    const lines = [
+      `# 备课包 · ${a.title}`,
+      "",
+      `> 班级：${cls.name}（${cls.code}）｜截止：${a.due || "待定"}｜及格线：${a.passScore}｜病例：${a.caseIds.length} 例`,
+      `> 生成时间：${new Date().toLocaleString("zh-CN")}｜非诊断用途，仅用于医学影像教学。`,
+      "",
+      "## 教学目标",
+      "",
+      "- 定位：先指出异常分区，再谈征象；没有异常分区时选“未见明确异常分区”。",
+      "- 判读：区分 abnormal / normal / unmentioned；**来源未逐区提及不等于正常**。",
+      "- 征象：只选知识库中标注的征象，不把关联征象当直接依据。",
+      "",
+    ];
+    a.caseIds.forEach((cid, idx) => {
+      const c = caseById(cid);
+      if (!c) return;
+      const expected = RC.caseAnswer(c);
+      const ab = (c.zones || []).filter((z) => z.status === "abnormal");
+      const um = (c.zones || []).filter((z) => z.status === "unmentioned");
+      lines.push(`## ${idx + 1}. ${c.id} · ${c.title}`);
+      lines.push("");
+      lines.push(`- 体位/质量：${c.pose_label || "—"} / ${c.quality || "—"}`);
+      lines.push(`- 教学提示：${c.teaching_note || "—"}`);
+      lines.push("");
+      lines.push("### 分区与来源");
+      lines.push("");
+      lines.push("| 分区 | 状态 | 来源文本 | 依据 |");
+      lines.push("| --- | --- | --- | --- |");
+      (c.zones || []).forEach((z) => {
+        lines.push(`| ${clean(z.name)} | ${RC.statusLabel(z.status)} | ${clean(z.text)} | ${clean(z.basis)} |`);
+      });
+      lines.push("");
+      lines.push("### 征象");
+      lines.push("");
+      if ((expected.signs || []).length) {
+        expected.signs.forEach((id) => {
+          const s = signById(id);
+          lines.push(s
+            ? `- **${s.name}**（${id}）：${clean(s.appearance)}`
+            : `- ${id}（学生实验室未发布该词条）`);
+        });
+      } else {
+        lines.push("- 本病例无挂载征象。");
+      }
+      lines.push("");
+      lines.push("### 证据锚点");
+      lines.push("");
+      ab.forEach((z) => lines.push(`- 影像位置：${c.id} / ${z.name}`));
+      const seen = new Set();
+      (expected.signs || []).forEach((id) => {
+        const s = signById(id);
+        (s && s.sources || []).forEach((src) => {
+          if (seen.has(src.id)) return;
+          seen.add(src.id);
+          lines.push(`- 文献来源：${clean(src.title || src.id)} ${src.url || ""}`);
+        });
+      });
+      if (!seen.size) lines.push("- 文献来源：本病例暂无已登记来源；不要补造出处。");
+      lines.push("");
+      lines.push("### 题目与答案");
+      lines.push("");
+      lines.push(`- 定位：${ab.length ? ab.map((z) => z.name).join("、") : "未见明确异常分区"}`);
+      lines.push(`- 判读：${RC.statusLabel(expected.status)}`);
+      lines.push(`- 征象：${(expected.signs || []).map((id) => { const s = signById(id); return s ? s.name : id; }).join("、") || "无"}`);
+      lines.push("");
+      lines.push("### 讲评提示");
+      lines.push("");
+      if (ab.length) lines.push("- 先让学生指框，再揭示状态；不要一上来报病名。");
+      if (um.length) lines.push(`- 本病例有 ${um.length} 个分区为「来源未逐区提及」；学生若判为正常，要回到来源文本纠正。`);
+      if (!ab.length) lines.push("- 本病例为正常/对照：重点练“不虚构异常”和“分区逐一确认”。");
+      lines.push("");
+    });
+    lines.push("---");
+    lines.push("");
+    lines.push("> 分区框为教学分区，不是病灶分割；答案只对照知识库标注，不评价临床诊断。");
+    download(`${cls.code}_${a.title}_备课包.md`, lines.join("\n"), "text/markdown;charset=utf-8");
+    toast("备课包已导出");
   }
 
   function bind() {
@@ -1098,6 +1272,7 @@
       if (name === "create-assignment") { createAssignmentFromDraft(); return; }
       if (name === "seed-attempts") { seedAttempts(); return; }
       if (name === "export-report") { exportReport(); return; }
+      if (name === "export-lesson") { exportLesson(act.dataset.assignment); return; }
       if (name === "join-class") {
         const nameEl = $("#joinName");
         const codeEl = $("#joinCode");
@@ -1129,6 +1304,16 @@
     });
 
     document.addEventListener("change", (e) => {
+      if (e.target && e.target.id === "postCase") {
+        const c = caseById(e.target.value);
+        const sel = $("#postZone");
+        if (sel) {
+          sel.innerHTML = `<option value="">不关联分区</option>` + (c
+            ? c.zones.map((z) => `<option value="${esc(z.id)}" data-name="${esc(z.name)}">${esc(z.name)}</option>`).join("")
+            : "");
+        }
+        return;
+      }
       if (e.target && e.target.id === "analysisSel") {
         S.analysisId = e.target.value;
         render();
@@ -1152,7 +1337,7 @@
 
   function exportClassroom() {
     const db = RC.read();
-    if (!db.classes.length) { toast("本机还没有班级数据"); return; }
+    if (!db.classes.length) toast("本机还没有班级数据，已导出空备份");
     const payload = {
       app: "RadioCheck",
       kind: "classroom-export",
@@ -1204,8 +1389,8 @@
         const data = j && j.data ? j.data : j;
         if (!data || !Array.isArray(data.classes)) throw new Error("不是课堂数据 JSON");
         RC.write(mergeClassroom(data));
-        toast("已合并课堂数据，正在刷新");
-        setTimeout(() => location.reload(), 600);
+        render();
+        toast("已合并课堂数据");
       } catch (e) {
         toast("导入失败：" + (e.message || e));
       }
@@ -1217,6 +1402,8 @@
     const exp = $("#exportClassroom");
     if (exp) exp.addEventListener("click", exportClassroom);
     const imp = $("#importClassroom");
+    const impBtn = $("#importClassroomBtn");
+    if (impBtn && imp) impBtn.addEventListener("click", () => imp.click());
     if (imp) imp.addEventListener("change", (e) => {
       importClassroom(e.target.files && e.target.files[0]);
       e.target.value = "";
@@ -1234,13 +1421,20 @@
       }
     } catch (e) { /* ignore */ }
     try {
-      const r = await fetch("../data/chest/chest_reading.json", { cache: "no-cache" });
-      if (r.ok) S.data = await r.json();
+      S.data = window.RCKB
+        ? await window.RCKB.getJSON("/api/kb/chest", "../data/chest/chest_reading.json")
+        : await (await fetch("../data/chest/chest_reading.json", { cache: "no-cache" })).json();
     } catch (e) { S.data = null; }
+    try {
+      S.lab = window.RCKB
+        ? await window.RCKB.getJSON("/api/kb/lab", "../data/lab/student_lab.json")
+        : await (await fetch("../data/lab/student_lab.json", { cache: "no-cache" })).json();
+    } catch (e) { S.lab = null; }
     bind();
-    bindTransfer();
     render();
   }
 
+  window.RCRender = render;
+  bindTransfer();
   boot();
 })();

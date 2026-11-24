@@ -7,15 +7,13 @@
 <meta name="theme-color" content="#0b4f55">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="apple-touch-icon" href="../icons/apple-touch-icon-180.png">
-<link rel="stylesheet" href="base.css?v=9">
-<link rel="stylesheet" href="clinic.css?v=9">
+<link rel="stylesheet" href="base.css?v=10">
+<link rel="stylesheet" href="clinic.css?v=10">
 </head>
 <body>
 
 <header class="bar" data-page="clinic">
   <div class="bar-extra">
-    <span class="quest-badge">赛道 B · 胸片阅片</span>
-    <span class="bar-note" id="barNote">CR 胸部 · 21 例逐区校正</span>
     <span class="spacer"></span>
     <label class="search">
       <span>⌕</span>
@@ -24,7 +22,7 @@
   </div>
 </header>
 
-<div class="global-disclaimer"><b>非诊断用途</b><span>仅用于医学影像教学与研究，不构成诊断意见，不替代临床决策；分区框为教学分区，不是病灶分割。</span></div>
+<div class="global-disclaimer"><b>非诊断用途</b><span>仅供医学影像教学与研究</span></div>
 
 <div class="task-banner" id="taskBanner" hidden></div>
 
@@ -49,10 +47,6 @@
     <div class="queue-list" id="queueList">
       <div class="empty-state">正在载入胸片数据…</div>
     </div>
-    <div class="queue-foot">
-      <span>仅 CR 胸部</span>
-      <span>未入库影像不推断</span>
-    </div>
   </aside>
 
   <main class="viewer">
@@ -75,7 +69,7 @@
       <span class="sep"></span>
       <span class="step" id="step3"><i>3</i>看所见与出处</span>
       <span class="spacer"></span>
-      <span class="chain-hint" id="chainHint">点影像上的彩色分区，或直接提问</span>
+      <span class="chain-hint" id="chainHint"></span>
     </div>
 
     <div class="stage" id="stage">
@@ -86,7 +80,7 @@
       </div>
       <div class="stage-empty" id="stageEmpty">
         <b>正在载入胸片…</b>
-        <span>如果长时间没有影像，请检查 data/chest/chest_reading.json 是否存在。</span>
+        <span>如果长时间没有影像，请稍后刷新页面。</span>
       </div>
       <div class="zoom-badge" id="zoomBadge">100%</div>
       <div class="legend" id="legend">
@@ -107,7 +101,6 @@
       <span class="sep"></span>
       <label class="btn sm" for="fileInput" title="仅上传公开教学影像；请勿上传真实患者影像">上传胸片</label>
       <input id="fileInput" type="file" accept="image/*" hidden>
-      <span class="mono hint" style="font-size:10px;color:#a12b2b">仅公开教学影像，勿传真实患者数据</span>
       <button class="btn sm" id="reportBtn">生成阅片记录</button>
       <span class="spacer"></span>
       <span class="mono hint" id="bboxMeta">—</span>
@@ -129,10 +122,6 @@
       <button data-tab="source">出处</button>
     </div>
     <div class="panel-body" id="panelBody"></div>
-    <div class="panel-foot">
-      <span>教学分区，不是病灶分割</span>
-      <span>非诊断用途</span>
-    </div>
   </aside>
 </div>
 
@@ -147,7 +136,6 @@
     </div>
     <pre id="reportText"></pre>
     <div class="report-foot">
-      <span>记录只复述公开来源、原图标注与本库人工校正。</span>
       <span class="spacer"></span>
       <button class="btn sm" id="reportCopy">复制</button>
       <button class="btn sm primary" id="reportDownload">下载 .txt</button>
@@ -157,10 +145,11 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="common.js?v=9"></script>
-<script src="classroom-core.js?v=9"></script>
-<script src="locate.js?v=9"></script>
-<script src="clinic.js?v=9"></script>
-<script src="agent-lite.js?v=1"></script>
+<script src="common.js?v=10"></script>
+<script src="kb-api.js?v=1"></script>
+<script src="classroom-core.js?v=11"></script>
+<script src="locate.js?v=10"></script>
+<script src="clinic.js?v=11"></script>
+<script src="agent-lite.js?v=2"></script>
 </body>
 </html>

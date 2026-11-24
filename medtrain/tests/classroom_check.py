@@ -135,10 +135,15 @@ def main() -> None:
         unlocked = page.eval_on_selector_all("#tabs button", "els=>els.map(e=>e.hidden)")
         check("提交后对照标签页解锁", not any(unlocked), str(unlocked))
 
-        # 第二例 CASE-006：故意答错
+        # 第二例 CASE-006：先验证分区可多选，再故意答错
         page.click("[data-quiz-next]")
         page.wait_for_timeout(500)
         check("进入第二例", "考核病例 2" in page.inner_text("#caseTitle"), page.inner_text("#caseTitle"))
+        page.click('.zone[data-zone="RML"]')
+        page.click('.zone[data-zone="RLL"]')
+        page.wait_for_timeout(200)
+        check("分区题可多选", page.locator(".zone.on").count() == 2, str(page.locator(".zone.on").count()))
+        check("多选分区提示", "2 个分区" in page.inner_text("#bboxMeta"), page.inner_text("#bboxMeta"))
         page.click('[data-quiz-zone="none"]')
         page.click('[data-quiz-status="normal"]')
         page.click('[data-quiz-sign="none"]')
@@ -190,6 +195,18 @@ def main() -> None:
         restored = page.inner_text("#classroomMain")
         check("课堂数据可导入恢复", "2026 春季影像规培班" in restored or "演示" in restored,
               restored[:300])
+
+        # 窄屏顶栏：导入/导出不能被挤出可视区
+        page.set_viewport_size({"width": 1024, "height": 900})
+        page.reload(wait_until="networkidle")
+        page.wait_for_timeout(500)
+        boxes = [
+            page.locator("#exportClassroom").bounding_box(),
+            page.locator("#importClassroomBtn").bounding_box(),
+        ]
+        check("窄屏导入导出按钮在可视区",
+              all(b and b["x"] >= 0 and b["x"] + b["width"] <= 1024 for b in boxes),
+              str(boxes))
 
         check("无 console / page error", not errors, "；".join(errors[:3]))
         browser.close()

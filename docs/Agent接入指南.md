@@ -24,7 +24,7 @@
 | 鉴权 | HTTP Basic Auth，凭证在引擎进程环境变量里 |
 | 可用 agent | `build` `plan` `explore` `general` `summary` `title` `compaction` |
 | 模型 | `dth/Auto`（同 provider 还有 Kimi-K3、GLM-5.3、DeepSeek-V4 等 10 个） |
-| 一次问答 | **7–9 秒**，四段式，带 `SIGN-xxx` / `CLM-xxxx` / `SL-xxx` 可追溯 id |
+| 一次问答 | **7–9 秒**，专业讲解 + 末行可追溯 id（`SIGN-xxx` / `CLM-xxxx` / `SL-xxx`） |
 | 工具事件 | 可观测：`grep` / `bash` / `glob` 的 `pending → running → completed` |
 
 验证命令（不启服务也能跑）：
@@ -269,10 +269,11 @@ done: {blocked: true, reason: "out_of_scope"}
 [yingzhi.md](../.opencode/agents/yingzhi.md) 是唯一事实来源，内容：
 
 - 只读知识库，禁止 write / edit
-- 固定四段（结论 / 依据 / 缺失 / 边界），首行必须是「结论：」
-- 依据必须带 id，给不出就写「未命中」
-- 不回答诊断、治疗、用药、手术、预后
-- 最多 2 条检索命令，未命中即停
+- 直接给专业讲解：首句回答问题，随后写影像表现与机制、鉴别要点、易错点
+- 不写来源与流程的元信息（库内 / 公开说明 / 通识补充 / 缺失 / 边界 / 免责声明）
+- 出处只放在最后一行「依据：SIGN-001 …」，只写真实命中的条目
+- 不回答个体化诊断、分期、治疗、用药、手术、预后
+- 最多 4 条检索命令，命中即停；未命中直接用标准影像学知识作答，不编造 id
 - 禁止输出检索过程与英文思考
 
 opencode 按请求里的 `directory` 加载它（见坑 2），因此**人设由 agent 自己读**，

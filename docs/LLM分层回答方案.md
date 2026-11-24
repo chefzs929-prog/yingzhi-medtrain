@@ -47,6 +47,10 @@ python3 yingzhi/scripts/build_concepts.py          # 写入 kb/data/concepts.jso
 python3 yingzhi/scripts/build_concepts.py --check  # 只校验不写
 ```
 
+> **2026-11-23 调整**：面向学生的正文不再出现「库内 / 公开说明 / 通识补充 / 缺失 / 边界」这类元信息。
+> 回答直接给专业讲解（首句结论 → 影像表现与机制 → 鉴别 → 易错点），出处只放末行「依据：…」。
+> 审计仍按「检索命中数 + 正文 id 是否真实存在」判断，`grounding` / `marker_ok` / `general_section_ids` 字段保留兼容。
+
 ### 第 2 层：回答三态
 
 | 状态 | 触发 | 输出要求 |

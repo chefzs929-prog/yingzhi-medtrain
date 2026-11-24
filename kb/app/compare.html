@@ -7,22 +7,21 @@
 <meta name="theme-color" content="#0b4f55">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="apple-touch-icon" href="../icons/apple-touch-icon-180.png">
-<link rel="stylesheet" href="base.css?v=10">
-<link rel="stylesheet" href="compare.css?v=2">
+<link rel="stylesheet" href="base.css?v=11">
+<link rel="stylesheet" href="compare.css?v=3">
 </head>
 <body class="cmp-body">
 
 <header class="bar" data-page="compare">
   <div class="bar-extra">
     <span class="quest-badge">对比阅片 · 拖动到两侧</span>
-    <span class="bar-note">并排看轮廓，擦除看差异</span>
     <span class="spacer"></span>
     <a class="btn sm" href="exam.html">病例题</a>
     <a class="btn sm" href="clinic.html">逐区阅片</a>
   </div>
 </header>
 
-<div class="global-disclaimer"><b>非诊断用途</b><span>仅用于医学影像教学与研究，不构成诊断意见，不替代临床决策；对比点是教学归纳，不是诊断路径。</span></div>
+<div class="global-disclaimer"><b>非诊断用途</b><span>仅供医学影像教学与研究</span></div>
 
 <div class="cmp-shell">
   <div class="cmp-toolbar">
@@ -31,12 +30,12 @@
       <button data-mode="overlay">叠加擦除</button>
     </div>
     <span class="tb-sep"></span>
-    <button class="btn sm on" id="syncBtn" title="两侧一起缩放/平移">同步缩放</button>
+    <button class="btn sm on" id="alignBtn" title="两侧同高对齐，缩放与平移同步">同高对齐</button>
     <button class="btn sm" id="swapBtn" title="交换左右">交换左右</button>
     <button class="btn sm" id="revealBtn">隐藏诊断</button>
     <button class="btn sm" id="fitBtn">复位视图</button>
     <span class="spacer"></span>
-    <span class="tb-hint" id="tbHint">从下方胶片条拖一张到左侧或右侧</span>
+    <span class="tb-hint" id="tbHint"></span>
     <button class="btn sm" id="randomBtn">随机一对</button>
   </div>
 
@@ -57,7 +56,6 @@
         <div class="pane-empty" id="leftEmpty">
           <div class="pe-ico">＋</div>
           <b>拖一张影像到这里</b>
-          <span>也可以点下方胶片条，再点“分配到左侧”</span>
         </div>
         <div class="pane-diag" id="leftDiag" hidden></div>
       </div>
@@ -85,7 +83,6 @@
         <div class="pane-empty" id="rightEmpty">
           <div class="pe-ico">＋</div>
           <b>拖一张影像到这里</b>
-          <span>拖动中间分隔条可改变两侧宽度</span>
         </div>
         <div class="pane-diag" id="rightDiag" hidden></div>
       </div>
@@ -93,12 +90,16 @@
     </section>
   </div>
 
-  <div class="cmp-bottom">
+  <div class="cmp-hsplit" id="hsplit" role="separator" aria-orientation="horizontal"
+       aria-label="拖动调整底部区域高度（双击复位）" tabindex="0" title="拖动调整底部高度 · 双击复位">
+    <span class="hs-grip"><i></i><i></i><i></i></span>
+  </div>
+
+  <div class="cmp-bottom" id="cmpBottom">
     <section class="film card" aria-label="影像胶片条">
       <div class="film-head">
         <div>
           <b>影像胶片条</b>
-          <span>拖动卡片 → 左/右；或先点卡片，再点分配</span>
         </div>
         <div class="assign">
           <button class="btn sm on" data-active="left">分配到左侧</button>
@@ -109,19 +110,24 @@
       <div class="pair-row" id="pairRow"></div>
     </section>
 
+    <div class="cmp-vsplit" id="vsplit" role="separator" aria-orientation="vertical"
+         aria-label="拖动调整鉴别区宽度（双击复位）" tabindex="0" title="拖动调整鉴别区宽度 · 双击复位">
+      <span class="vs-grip"><i></i><i></i><i></i></span>
+    </div>
+
     <aside class="diff card" id="diff">
       <div class="diff-head">
         <div>
           <b id="diffTitle">选一对，开始对比</b>
           <span id="diffTag">相同点 / 鉴别点 / 一句话记忆</span>
         </div>
+        <button class="btn sm" id="diffWideBtn" title="加宽或还原右侧鉴别区">加宽 ⤢</button>
         <button class="btn sm" id="openCase" hidden>打开病例题 →</button>
       </div>
       <div class="diff-body" id="diffBody">
         <div class="empty-state">
           <div class="ico">⇄</div>
           <b>把两张影像放到两侧</b>
-          <span>先用并排看轮廓，再切“叠加擦除”看同一位置的差异；最后看下方鉴别点。</span>
         </div>
       </div>
     </aside>
@@ -130,7 +136,8 @@
 
 <div id="yzToast" role="status" aria-live="polite"></div>
 
-<script src="common.js?v=10"></script>
-<script src="compare.js?v=2"></script>
+<script src="common.js?v=11"></script>
+<script src="kb-api.js?v=1"></script>
+<script src="compare.js?v=3"></script>
 </body>
 </html>

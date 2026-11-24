@@ -13,16 +13,20 @@
 """
 
 import argparse
+import contextlib
 import glob
 import json
 import os
 import random
 import re
+import shutil
 import string
 import sys
+import threading
 import time
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -33,6 +37,7 @@ import vision as vision_mod  # noqa: E402
 import atlas as atlas_mod  # noqa: E402
 import litsearch  # noqa: E402
 import segment as segment_mod  # noqa: E402
+import kb_api  # noqa: E402
 VISION_PROMPT = """你在做影像教学标注，不是诊断。只回答三件事：
 1. 这张图属于什么检查类型、什么部位、什么投照位/层面；
 2. 病灶或可疑区域的归一化外接框；
@@ -162,10 +167,8 @@ BLOCK_PATTERNS = [
     "手术", "预后", "存活期", "能活多久", "确诊", "是不是癌", "严重吗",
 ]
 BLOCK_REPLY = (
-    "结论：该问题超出本平台范围。\n"
-    "依据：平台只做影像征象与公开文献的对照，不做疾病判断。\n"
-    "缺失：无法提供诊断或治疗相关意见。\n"
-    "边界：仅用于教学与研究，不构成诊断意见，请以临床医师意见为准。"
+    "这个问题涉及诊断、治疗或预后判断，本平台只讲影像表现与鉴别思路。\n"
+    "可以换个问法：这张片的征象怎么描述、还要和什么鉴别、报告里该写哪几个要点。"
 )
 
 STATE = {
@@ -247,13 +250,24 @@ def ensure_gateway():
 
 
 _LLM = {"obj": None, "checked": False}
+DIRECT_LLM_FLAG = "YZ_ENABLE_DIRECT_LLM"
 
 
 def ensure_llm():
-    """双模型路由（有图走视觉、无图走文本）。未配置 key 时返回 None，
-    调用方回落到原有 gateway / fallback 路径。"""
+    """实验性「直连模型」分支（有图走视觉、无图走文本）。默认关闭。
+
+    职责边界：默认部署下本服务不产生任何推理调用，一次问答只经 gateway
+    转发给 DeepWorks 内置引擎（见 gateway.py）。只有显式设置
+    YZ_ENABLE_DIRECT_LLM=1 且配置了对应 key，才会启用这条实验分支。
+    答辩与验收一律使用默认配置，即 served_by 只会是 agent / fallback。
+    """
     if not _LLM["checked"]:
         _LLM["checked"] = True
+        flag = (os.environ.get(DIRECT_LLM_FLAG) or "").strip().lower()
+        if flag not in ("1", "true", "yes", "on"):
+            print("[llm] 直连分支未启用（%s 未设为 1）：推理仅经 DeepWorks 引擎"
+                  % DIRECT_LLM_FLAG, file=sys.stderr)
+            return None
         try:
             _LLM["obj"] = llm_route.build_from_env()
         except Exception as exc:
@@ -507,27 +521,29 @@ def fallback_answer(query):
             hits.append(row)
     if not hits:
         return (
-            "结论：本地演示态未命中「%s」。\n"
-            "依据：离线词条库仅支持关键词直接命中。\n"
-            "缺失：Agent 未连接，无法做语义检索与双线判断。\n"
-            "边界：仅用于教学与研究，不构成诊断意见。" % query
+            "暂时没有找到与该问题直接对应的词条。可以换成具体征象名（如气胸、实变、磨玻璃影）"
+            "或疾病名再问一次；也可以先描述部位、形态、密度与伴随征象。"
         ), []
     top = hits[0]
+    name = top.get("name") or query
     cites = [{
         "id": top.get("id", ""),
         "type": "sign",
-        "title": top.get("name", ""),
+        "title": name,
         "source_url": top.get("source_url") or "",
         "hash_ok": True,
     }]
-    text = (
-        "结论：%s（本地演示态）\n"
-        "依据：词条 %s，共命中 %d 条。\n"
-        "缺失：Agent 未连接，未做指南线对照。\n"
-        "边界：仅用于教学与研究，不构成诊断意见。"
-        % (top.get("name", query), top.get("id", ""), len(hits))
-    )
-    return text, cites
+    parts = []
+    appearance = str(top.get("appearance") or "").strip()
+    parts.append("%s：%s" % (name, appearance) if appearance else name)
+    may_see = [str(x).strip() for x in (top.get("may_see_in") or []) if str(x).strip()]
+    if may_see:
+        parts.append("常见于：%s。" % "、".join(may_see))
+    pitfalls = [str(x).strip() for x in (top.get("pitfalls") or []) if str(x).strip()]
+    if pitfalls:
+        parts.append("易错点：%s。" % "；".join(pitfalls))
+    parts.append("依据：%s %s" % (top.get("id", ""), name))
+    return "\n\n".join(parts), cites
 
 
 def suggest_term(query):
@@ -574,7 +590,7 @@ def suggest_concept(query):
     return best
 
 
-# 通识段落标记：模型必须用它把「库外知识」与「库内证据」隔开。
+# 旧版通识段落标记：保留解析兼容（历史会话仍可能带），新版回答不再要求。
 GENERAL_MARK = "【通识补充·非库内证据】"
 
 
@@ -596,15 +612,20 @@ def general_section_ids(text):
 
 
 def detect_grounding(text, kb_hits):
-    """回答的证据强度：grounded 全库内 / mixed 库内+通识 / general 纯通识。
+    """回答的证据强度：grounded 有库内命中 / mixed 库内+通识 / general 纯通识。
 
-    marker_ok 单独返回：未命中却没用通识标记，说明模型绕过了分层规则。
+    marker_ok 单独返回：未命中且正文没有引用 id 视为合规（新版允许直接讲通识）；
+    未命中却挂了 id，说明拿库外内容冒充可核验证据。
     """
     text = text or ""
     has_mark = GENERAL_MARK in text
     if has_mark:
         return ("mixed" if kb_hits > 0 else "general"), True
-    return ("grounded" if kb_hits > 0 else "general"), kb_hits > 0
+    if kb_hits > 0:
+        return "grounded", True
+    # 新版口径不再要求通识标记：未命中时正文只要不挂 id，就算合规的专业讲解；
+    # 挂 id 仍视为拿库外内容冒充可核验证据。
+    return "general", not bool(CITE_RE.search(text))
 
 
 STOP_WORDS = ["是什么", "怎么样", "怎么", "如何", "描述", "提示", "什么", "的区别",
@@ -634,11 +655,11 @@ def make_followups(cites, grounding, image_match):
     out = []
     if image_match and image_match.get("case_id"):
         out.append("这个分区的解剖边界怎么划？")
-        out.append("库内还有哪些相似病例？")
+        out.append("还有哪些相似病例可以对照？")
     if cites:
         out.append("把 %s 这条依据展开说说" % cites[0].get("id"))
     if grounding in ("general", "degraded"):
-        out.append("库内有没有能直接支撑这个说法的词条？")
+        out.append("这个说法有哪些经典征象支持？")
     else:
         out.append("这个征象还需要和什么鉴别？")
     seen = []
@@ -778,6 +799,208 @@ def build_trace(run_id, request, result, degraded, reason):
     }
 
 
+# ---------- 课堂数据同步（D1） ----------
+# 前端 classroom-sync.js 已实现 pull/push/合并/离线回退，这里补最后两个端点。
+# 存储是单文件 JSON：数据量小（单班 < 1 MB），无需数据库。
+
+SYNC_DIR = os.path.abspath(os.path.join(ROOT, "..", "data"))
+SYNC_PATH = os.path.join(SYNC_DIR, "classroom.json")
+SYNC_BAK = SYNC_PATH + ".bak"
+SYNC_LOCK = threading.Lock()
+SYNC_MAX_BYTES = 2 * 1024 * 1024
+
+try:  # 跨进程锁：同一台机器上可能同时跑 8800 与演示实例
+    import fcntl
+except ImportError:  # pragma: no cover - 非 POSIX 平台
+    fcntl = None
+
+
+@contextlib.contextmanager
+def _sync_file_lock():
+    os.makedirs(SYNC_DIR, exist_ok=True)
+    with SYNC_LOCK:
+        if fcntl is None:
+            yield
+            return
+        lock_path = os.path.join(SYNC_DIR, ".classroom.lock")
+        with open(lock_path, "a+") as handle:
+            fcntl.flock(handle, fcntl.LOCK_EX)
+            try:
+                yield
+            finally:
+                fcntl.flock(handle, fcntl.LOCK_UN)
+
+
+def _load_classroom_lib():
+    """复用 kb/server/classroom_server.py 的 normalize/merge，避免两套规则漂移。"""
+    path = os.path.abspath(os.path.join(ROOT, "..", "kb", "server", "classroom_server.py"))
+    if not os.path.exists(path):
+        return None
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("rc_classroom_sync", path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+    except Exception:
+        return None
+
+
+CLASSROOM_LIB = _load_classroom_lib()
+
+
+def _sync_blank():
+    return {
+        "version": 1,
+        "teacher": {"name": "", "createdAt": ""},
+        "classes": [],
+        "activeRole": "",
+        "activeClassId": "",
+        "activeStudentId": "",
+        "attempts": [],
+        "posts": [],
+    }
+
+
+def _sync_clone(value):
+    return json.loads(json.dumps(value))
+
+
+def _sync_merge(base, incoming):
+    """与 kb/app/classroom-sync.js 的 mergeInto 同规则：base 为主，incoming 补充。
+
+    服务端必须自己合并，不能整体覆盖——否则两个学生同时提交会丢一个。
+    """
+    if not isinstance(base, dict):
+        base = _sync_blank()
+    if not isinstance(incoming, dict):
+        return base
+    if CLASSROOM_LIB is not None:
+        try:
+            return CLASSROOM_LIB.merge(base, incoming)
+        except Exception:
+            pass
+    for key in ("classes", "attempts", "posts"):
+        if not isinstance(base.get(key), list):
+            base[key] = []
+    if not isinstance(base.get("teacher"), dict):
+        base["teacher"] = {"name": "", "createdAt": ""}
+
+    for rc in incoming.get("classes") or []:
+        if not isinstance(rc, dict):
+            continue
+        code = rc.get("code")
+        lc = next((c for c in base["classes"] if c.get("code") == code), None)
+        if lc is None:
+            base["classes"].append(_sync_clone(rc))
+            continue
+        for key in ("students", "assignments", "groups"):
+            if not isinstance(lc.get(key), list):
+                lc[key] = []
+
+        for s in rc.get("students") or []:
+            if not any(x.get("name") == s.get("name") for x in lc["students"]):
+                lc["students"].append(_sync_clone(s))
+
+        for a in rc.get("assignments") or []:
+            idx = next((i for i, x in enumerate(lc["assignments"])
+                        if x.get("id") == a.get("id")), -1)
+            if idx < 0:
+                lc["assignments"].append(_sync_clone(a))
+                continue
+            old = lc["assignments"][idx]
+            new_at = str(a.get("updatedAt") or a.get("createdAt") or "")
+            old_at = str(old.get("updatedAt") or old.get("createdAt") or "")
+            if new_at >= old_at:
+                lc["assignments"][idx] = _sync_clone(a)
+
+        for g in rc.get("groups") or []:
+            lg = next((x for x in lc["groups"] if x.get("name") == g.get("name")), None)
+            if lg is None:
+                lc["groups"].append(_sync_clone(g))
+                continue
+            ids = list(lg.get("memberIds") or [])
+            for member in g.get("memberIds") or []:
+                if member not in ids:
+                    ids.append(member)
+            lg["memberIds"] = ids
+
+    seen_attempts = {a.get("id") for a in base["attempts"]}
+    for a in incoming.get("attempts") or []:
+        if a.get("id") not in seen_attempts:
+            base["attempts"].append(_sync_clone(a))
+            seen_attempts.add(a.get("id"))
+
+    for p in incoming.get("posts") or []:
+        lp = next((x for x in base["posts"] if x.get("id") == p.get("id")), None)
+        if lp is None:
+            base["posts"].append(_sync_clone(p))
+            continue
+        if not isinstance(lp.get("replies"), list):
+            lp["replies"] = []
+        seen_replies = {r.get("id") for r in lp["replies"]}
+        for r in p.get("replies") or []:
+            if r.get("id") not in seen_replies:
+                lp["replies"].append(_sync_clone(r))
+                seen_replies.add(r.get("id"))
+
+    if not (base.get("teacher") or {}).get("name"):
+        if (incoming.get("teacher") or {}).get("name"):
+            base["teacher"] = _sync_clone(incoming["teacher"])
+    # 会话状态（当前角色/班级/学生）属于单台设备，不参与跨端合并
+    for key in ("activeRole", "activeClassId", "activeStudentId"):
+        if not base.get(key) and incoming.get(key):
+            base[key] = incoming[key]
+    return base
+
+
+def _sync_load():
+    try:
+        with open(SYNC_PATH, "r", encoding="utf-8") as f:
+            db = json.load(f)
+        if isinstance(db, dict):
+            if CLASSROOM_LIB is not None:
+                try:
+                    return CLASSROOM_LIB.normalize(db)
+                except Exception:
+                    pass
+            return db
+    except FileNotFoundError:
+        return _sync_blank()
+    except Exception:
+        try:
+            os.replace(SYNC_PATH, SYNC_PATH + ".corrupt")
+        except Exception:
+            pass
+        return _sync_blank()
+    return _sync_blank()
+
+
+def _sync_save(db):
+    os.makedirs(SYNC_DIR, exist_ok=True)
+    tmp = SYNC_PATH + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(db, f, ensure_ascii=False, indent=1)
+        f.flush()
+        os.fsync(f.fileno())
+    if os.path.exists(SYNC_PATH):
+        try:
+            shutil.copy2(SYNC_PATH, SYNC_BAK)
+        except Exception:
+            pass
+    os.replace(tmp, SYNC_PATH)
+
+
+def _sync_token_ok(handler, parsed):
+    want = (os.environ.get("YZ_SYNC_TOKEN") or "").strip()
+    if not want:
+        return True
+    got = (handler.headers.get("X-Sync-Token") or "").strip()
+    if not got:
+        got = (urllib.parse.parse_qs(parsed.query).get("token") or [""])[0].strip()
+    return got == want
+
+
 class Handler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
     server_version = "yingzhi-serve/3.0"
@@ -796,6 +1019,126 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Private-Network", "true")
         self.end_headers()
         self.wfile.write(body)
+
+    # ---------- 课堂同步（D1） ----------
+
+    def api_sync_snapshot(self, parsed):
+        if not _sync_token_ok(self, parsed):
+            return self.send_json(401, {"error": "sync token required"})
+        with _sync_file_lock():
+            db = _sync_load()
+        try:
+            updated = time.strftime("%Y-%m-%dT%H:%M:%S",
+                                    time.localtime(os.path.getmtime(SYNC_PATH)))
+        except OSError:
+            updated = ""
+        return self.send_json(200, {"ok": True, "data": db, "updatedAt": updated})
+
+    def api_sync_merge(self, body, parsed):
+        if not _sync_token_ok(self, parsed):
+            return self.send_json(401, {"error": "sync token required"})
+        incoming = body.get("data") if isinstance(body, dict) else None
+        if not isinstance(incoming, dict):
+            return self.send_json(400, {"error": "data required"})
+        size = len(json.dumps(incoming, ensure_ascii=False).encode("utf-8"))
+        if size > SYNC_MAX_BYTES:
+            return self.send_json(413, {"error": "snapshot too large: %d bytes" % size})
+        with _sync_file_lock():
+            merged = _sync_merge(_sync_load(), incoming)
+            _sync_save(merged)
+        return self.send_json(200, {"ok": True, "data": merged})
+
+    def send_bytes(self, code, body: bytes, ctype: str, cache: str = "no-cache"):
+        self.send_response(code)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", cache)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Private-Network", "true")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def send_file(self, path, cache: str = "no-cache"):
+        try:
+            body = path.read_bytes()
+        except OSError:
+            return self.send_json(404, {"error": "not found"})
+        return self.send_bytes(200, body, kb_api.content_type(path), cache)
+
+    def api_kb(self, path: str, parsed) -> bool:
+        """知识库只读接口。返回 True 表示已处理。"""
+        if not path.startswith("/api/kb/"):
+            return False
+        sub = path[len("/api/kb/"):]
+
+        if sub in ("", "health", "meta"):
+            self.send_json(200, kb_api.meta())
+            return True
+
+        if sub == "chest":
+            data = kb_api.chest()
+            self.send_json(200 if data else 404, data or {"ok": False, "error": "chest data missing"})
+            return True
+
+        if sub == "exam":
+            data = kb_api.exam()
+            self.send_json(200 if data else 404, data or {"ok": False, "error": "exam data missing"})
+            return True
+
+        if sub == "lab":
+            data = kb_api.lab()
+            self.send_json(200 if data else 404, data or {"ok": False, "error": "lab data missing"})
+            return True
+
+        if sub in ("audit/review", "review"):
+            data = kb_api.review_queue()
+            self.send_json(200 if data else 404, data or {"ok": False, "error": "review queue missing"})
+            return True
+
+        if sub == "search":
+            qs = urllib.parse.parse_qs(parsed.query)
+            q = (qs.get("q") or [""])[0]
+            try:
+                limit = int((qs.get("limit") or ["12"])[0])
+            except ValueError:
+                limit = 12
+            self.send_json(200, kb_api.search(q, limit))
+            return True
+
+        if sub in ("signs", "concepts", "guidelines", "claims", "regions", "paragraphs"):
+            qs = urllib.parse.parse_qs(parsed.query)
+            q = (qs.get("q") or [""])[0]
+            image_id = (qs.get("image_id") or [""])[0]
+            try:
+                limit = int((qs.get("limit") or ["200"])[0])
+            except ValueError:
+                limit = 200
+            self.send_json(200, kb_api.list_rows(sub, q, image_id, limit))
+            return True
+
+        if sub.startswith("sign/"):
+            sid = urllib.parse.unquote(sub[len("sign/"):])
+            data = kb_api.sign_detail(sid)
+            self.send_json(200 if data else 404, data or {"ok": False, "error": "sign not found", "id": sid})
+            return True
+
+        if sub.startswith("case/"):
+            cid = urllib.parse.unquote(sub[len("case/"):])
+            data = kb_api.case_detail(cid)
+            self.send_json(200 if data else 404, data or {"ok": False, "error": "case not found", "id": cid})
+            return True
+
+        if sub.startswith("image/"):
+            rel = urllib.parse.unquote(sub[len("image/"):])
+            target = kb_api.image_file(rel)
+            if not target or not target.is_file():
+                self.send_json(404, {"error": "image not found", "path": rel})
+                return True
+            self.send_file(target, "public, max-age=86400")
+            return True
+
+        self.send_json(404, {"error": "unknown kb endpoint", "path": path})
+        return True
 
     def sse_start(self):
         self.send_response(200)
@@ -825,7 +1168,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(204)
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Request-Private-Network")
+        self.send_header("Access-Control-Allow-Headers",
+                         "Content-Type, X-Sync-Token, Access-Control-Request-Private-Network")
         self.send_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
         self.send_header("Access-Control-Allow-Private-Network", "true")
         self.end_headers()
@@ -833,6 +1177,12 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
+
+        if self.api_kb(path, parsed):
+            return
+
+        if path == "/api/snapshot":
+            return self.api_sync_snapshot(parsed)
 
         if path == "/api/health":
             ensure_gateway()  # DeepWorks 重启后端口会变，健康检查时顺便自愈
@@ -889,7 +1239,10 @@ class Handler(BaseHTTPRequestHandler):
                 },
                 "events": ["trace", "tool", "delta", "citation",
                            "followup", "reset", "done"],
-                "modes": ["auto", "agent", "llm"],
+                "modes": ["agent", "auto", "llm"],
+                "default_mode": "agent",
+                "inference_location": "deepworks_engine",
+                "direct_llm_enabled": bool(ensure_llm() is not None),
                 "citation_kinds": ["local", "literature"],
                 "research": {
                     "enabled": True,
@@ -919,7 +1272,8 @@ class Handler(BaseHTTPRequestHandler):
                 },
                 "surfaces": ["clinic", "teach", "paper", "compare"],
                 "notes": [
-                    "auto 先走 agent，失败且未产出内容时才降级 llm",
+                    "默认 mode=agent：一次问答只经 gateway 转发给 DeepWorks 内置引擎，本服务不推理",
+                    "auto 先走 agent，失败且未产出内容时才降级直连模型；llm 为实验分支，需 YZ_ENABLE_DIRECT_LLM=1",
                     "done.served_by 会如实标注 agent / llm / fallback",
                     "followups 是规则生成的下一步入口，不是模型输出",
                 ],
@@ -942,7 +1296,7 @@ class Handler(BaseHTTPRequestHandler):
             with open(target, encoding="utf-8") as fh:
                 return self.send_json(200, json.load(fh))
 
-        if path in ("/", "/probe"):
+        if path == "/probe":
             page = os.path.join(APP_DIR, "probe.html")
             if os.path.exists(page):
                 with open(page, "rb") as fh:
@@ -953,6 +1307,16 @@ class Handler(BaseHTTPRequestHandler):
                 self.end_headers()
                 return self.wfile.write(body)
             return self.send_json(200, {"ok": True, "hint": "POST /api/ask"})
+
+        # 同一个端口托管构建好的前端；静态站仍可单独用 http.server 运行。
+        rel = path.lstrip("/") or "index.html"
+        target = kb_api.site_file(rel)
+        if target and target.is_dir():
+            target = kb_api.site_file(rel.rstrip("/") + "/index.html")
+        if target and target.is_file():
+            cache = "public, max-age=86400" if target.suffix.lower() in (
+                ".jpg", ".jpeg", ".png", ".webp", ".svg", ".ico", ".woff2") else "no-cache"
+            return self.send_file(target, cache)
 
         return self.send_json(404, {"error": "not found", "path": path})
 
@@ -1236,6 +1600,9 @@ class Handler(BaseHTTPRequestHandler):
         except Exception as exc:
             return self.send_json(400, {"error": "bad json: %s" % exc})
 
+        if path == "/api/merge":
+            return self.api_sync_merge(body, parsed)
+
         if path == "/api/lit/search":
             return self.api_lit_search(body)
         if path == "/api/vision/region":
@@ -1260,7 +1627,7 @@ class Handler(BaseHTTPRequestHandler):
             "device": device, "chain": chain,
             "surface": body.get("surface") or chain,
             "conversation_id": (body.get("conversation_id") or "").strip()[:80] or None,
-            "mode": (body.get("mode") or os.environ.get("YZ_ASK_MODE") or "auto").lower(),
+            "mode": (body.get("mode") or os.environ.get("YZ_ASK_MODE") or "agent").lower(),
             "filters": body.get("filters") or {},
             "context": body.get("context") or {},
             "kb_version": body.get("client_kb_version") or "local",
@@ -1289,11 +1656,11 @@ class Handler(BaseHTTPRequestHandler):
                                    "blocked": True, "reason": "out_of_scope"})
             return
 
-        # 路由：auto = agent 优先、失败降级直连模型；agent = 只用 agent；
-        # llm = 只用直连模型。前端可用 mode 显式指定，服务端可用 YZ_ASK_MODE 设默认。
-        mode = (body.get("mode") or os.environ.get("YZ_ASK_MODE") or "auto").lower()
+        # 路由：agent = 只经 gateway 转发给 DeepWorks 引擎（默认，也是唯一用于答辩的路径）；
+        # auto = agent 优先、失败降级直连模型；llm = 只用直连模型（实验分支，需 YZ_ENABLE_DIRECT_LLM=1）。
+        mode = (body.get("mode") or os.environ.get("YZ_ASK_MODE") or "agent").lower()
         if mode not in ("auto", "agent", "llm"):
-            mode = "auto"
+            mode = "agent"
         conversation_id = (body.get("conversation_id") or "").strip()[:80]
         context = body.get("context") or {}
         gateway = ensure_gateway() if mode in ("auto", "agent") else None
@@ -1425,21 +1792,20 @@ class Handler(BaseHTTPRequestHandler):
                     hint += ('\n2) 概念检索：grep -m 3 \'"name": "%s"\' %s/concepts.jsonl'
                              % (row.get("name"), DATA_DIR))
                     if sign_ids:
-                        hint += ('\n3) 回查征象（库内直接证据）：grep -m 8 -E \'%s\' %s/signs.jsonl'
+                        hint += ('\n3) 回查征象（直接证据）：grep -m 8 -E \'%s\' %s/signs.jsonl'
                                  % ("|".join(sign_ids), DATA_DIR))
                     if related:
-                        hint += ('\n4) 关联征象（人工补充，回答须标「关联」）：grep -m 8 -E \'%s\' %s/signs.jsonl'
+                        hint += ('\n4) 关联征象（人工补充，正文作为相关征象提一句）：grep -m 8 -E \'%s\' %s/signs.jsonl'
                                  % ("|".join(related), DATA_DIR))
-                    hint += ("\n概念命中的 sign_ids 必须逐条列出并带 id；"
-                             "related_sign_ids 标「关联」；库内未覆盖的维度再走通识补充段。")
+                    hint += ("\n概念命中的 sign_ids 要在正文讲清楚，出处统一放最后一行；"
+                             "related_sign_ids 作为相关征象提一句。")
                 else:
                     keyword = term[0] if term else extract_keyword(query)
                     if keyword:
                         hint += '\n2) 再执行：grep -m 5 "%s" %s/signs.jsonl' % (keyword, DATA_DIR)
                     hint += ("\n3) 若词条未命中，再查概念：grep -m 3 '\"name\": \"%s\"' %s/concepts.jsonl"
                              % (keyword or "", DATA_DIR))
-                    hint += ("\n四步都未命中才进入通识分支：通识段以 %s 单独成段，段内禁止出现任何 id。"
-                             % GENERAL_MARK)
+                    hint += "\n四步都未命中时直接用标准影像学知识回答，不写 id，也不说明“没有检索到”。"
                 result = gateway.ask(session_id, query, emit, context=context, hint=hint)
                 text = result.get("text") or ""
                 # agent 的引用写在正文里；这里把真实存在的 id 提成 citation 事件，
@@ -1609,9 +1975,14 @@ def main():
     ap.add_argument("--offline", action="store_true", help="强制本地降级，用于断网演练")
     ap.add_argument("--mode", default="clean", choices=("clean", "raw"),
                     help="clean=生成完再分片推送（正文干净）；raw=直接转发增量")
+    ap.add_argument("--site", default="",
+                    help="可选：同时托管构建好的前端，默认 outputs/medtrain")
     args = ap.parse_args()
     STATE["args"] = args
     STATE["offline"] = bool(args.offline)
+
+    if args.site:
+        kb_api.SITE = Path(args.site).expanduser().resolve()
 
     os.makedirs(RUN_DIR, exist_ok=True)
 
@@ -1659,6 +2030,9 @@ def main():
     server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
     server.daemon_threads = True
     print("RadioCheck 动态层已启动：http://127.0.0.1:%d/" % args.port)
+    if kb_api.SITE.is_dir():
+        print("知识库与前端同源：%s" % kb_api.SITE)
+    print("知识库接口：GET /api/kb/health  /api/kb/chest  /api/kb/exam  /api/kb/lab  /api/kb/search?q=气胸")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
