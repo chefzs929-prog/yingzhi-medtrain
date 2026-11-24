@@ -77,6 +77,24 @@
     img.style.height = '100%';
   }
 
+  /* 部分内嵌 WebView（例如旧版桌面壳）没有实现 target="_blank" 的新窗口回调，
+   * 站内“在阅片台打开”会点了没有任何反应。这里先尝试新窗口，拿不到窗口就
+   * 退回当前页跳转；站外来源链接不受影响。 */
+  document.addEventListener('click', function (e) {
+    const a = e.target && e.target.closest ? e.target.closest('a[target="_blank"]') : null;
+    if (!a) return;
+    const href = a.getAttribute('href') || '';
+    if (!/^clinic\.html(?:[?#]|$)/.test(href)) return;
+    e.preventDefault();
+    let win = null;
+    try { win = window.open(href, '_blank'); } catch (err) { win = null; }
+    if (win) {
+      try { win.opener = null; } catch (err) { /* ignore */ }
+    } else {
+      location.href = href;
+    }
+  }, true);
+
   mountBar();
 
   window.YZCommon = { NAV, query, toast, fitFrame, mountBar };

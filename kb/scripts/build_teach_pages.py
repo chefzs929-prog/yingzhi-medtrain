@@ -25,10 +25,10 @@ SITE = OUT.parent
 
 # 四个页面只依赖这些资源；agent/app/teach/paper 不再打包
 ASSETS = [
-    "base.css", "clinic.css", "common.js", "locate.js", "clinic.js",
+    "base.css", "clinic.css", "common.js", "kb-api.js", "locate.js", "clinic.js",
     "exam.css", "exam.js", "compare.css", "compare.js",
     "classroom-core.js", "classroom.css", "student-lab.js", "classroom.js",
-    "agent-lite.js",
+    "agent-lite.js", "classroom-sync.js", "qc.css", "qc.js",
 ]
 
 LEGACY_PAGES = ["index.html", "teach.html", "paper.html"]
@@ -84,6 +84,7 @@ def main() -> None:
     shutil.copy2(SRC / "exam.html", OUT / "exam.html")
     shutil.copy2(SRC / "compare.html", OUT / "compare.html")
     shutil.copy2(SRC / "classroom.html", OUT / "classroom.html")
+    shutil.copy2(SRC / "qc.html", OUT / "qc.html")
 
     # 旧四页与 read 入口全部收敛到 clinic
     for page in LEGACY_PAGES:
@@ -138,6 +139,11 @@ def main() -> None:
     lab_dst = SITE / "data/lab/student_lab.json"
     lab_dst.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(lab, lab_dst)
+
+    # 质控复核队列：AI 预标注 + 专家复核入口
+    review = SITE / "data/audit/review_queue.json"
+    if not review.exists():
+        print("missing outputs/medtrain/data/audit/review_queue.json; run kb/scripts/build_review_queue.py")
 
     attribution = ROOT / "kb/licenses/EXAM_ATTRIBUTION.md"
     if attribution.exists():

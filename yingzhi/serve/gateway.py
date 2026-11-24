@@ -22,8 +22,24 @@ import urllib.parse
 import urllib.request
 
 KB_TOOLS = {"read", "glob", "grep", "list", "ls"}
-# 严格匹配四段式起点：必须有冒号，避免把英文思考里的「结论」误判为正文
+# 回答起点：优先认「结论：」，否则退到第一行含中文的正文，
+# 避免把模型先输出的英文思考 / 工具计划播给用户。
 CONCL = re.compile(r"结论\s*[:：]")
+CJK = re.compile(r"[\u4e00-\u9fa5]")
+
+
+def trim_preamble(text):
+    text = (text or "").strip()
+    if not text:
+        return text
+    match = CONCL.search(text)
+    if match and match.start() > 0:
+        return text[match.start():].strip()
+    lines = text.split("\n")
+    for i, line in enumerate(lines):
+        if CJK.search(line) and not re.match(r"^\s*(```|\$|>|[-*]\s)", line):
+            return "\n".join(lines[i:]).strip()
+    return text
 
 
 class GatewayError(RuntimeError):
@@ -351,9 +367,7 @@ class Gateway:
             if part.get("type") == "text":
                 state["final_text"] += part.get("text") or ""
 
-        match = CONCL.search(state["final_text"])
-        if match and match.start() > 0:
-            state["final_text"] = state["final_text"][match.start():]
+        state["final_text"] = trim_preamble(state["final_text"])
 
         if self.mode == "clean" and state["final_text"]:
             for i in range(0, len(state["final_text"]), 40):

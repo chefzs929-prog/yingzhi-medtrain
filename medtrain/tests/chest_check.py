@@ -138,7 +138,7 @@ def main() -> None:
         page.wait_for_timeout(300)
         generic = page.inner_text(".generic-result")
         check("通用分区不下结论",
-              "不含该影像的库内标注" in generic and "不能据此判断有无异常" in generic,
+              "不含该影像的知识库标注" in generic and "不能据此判断有无异常" in generic,
               generic[:300])
 
         # 拖框

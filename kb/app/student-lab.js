@@ -18,14 +18,22 @@
   const DATA_URL = "../data/lab/student_lab.json";
   const HISTORY_KEY = "radiocheck.studentlab.v1";
   const STATUS = { abnormal: "异常", normal: "未见异常", unmentioned: "来源未提及", limited: "判读受限" };
-  const KIND_LABEL = { sign: "征象词条", concept: "疾病 / 病理概念", guideline: "指南条款", case: "病例", compare: "对比检索", report: "报告文本映射", general: "未命中" };
+  const KIND_LABEL = { sign: "征象解释", concept: "疾病解释", guideline: "指南条款", case: "病例", compare: "对比", report: "报告对应", general: "未找到" };
   // 越界词：只做影像表现与出处对照，不提供诊断/治疗/预后/操作建议。
   const SCOPE_WORDS = [
-    "治疗", "手术", "用药", "药物", "剂量", "化疗", "放疗", "靶向", "免疫治疗",
+    "治疗", "怎么治", "如何治", "治吗", "手术", "用药", "药物", "吃什么药", "用什么药",
+    "抗生素", "抗结核", "剂量", "化疗", "放疗", "靶向", "免疫治疗",
     "预后", "生存期", "能活多久", "活多久", "分期", "处方", "急救", "抢救",
-    "住院", "出院", "引流", "穿刺", "活检", "要不要做", "需要做", "建议做",
+    "住院", "出院", "引流", "穿刺", "抽水", "抽液", "置管", "闭式引流",
+    "活检", "要不要做", "需要做", "建议做", "固定", "复位", "石膏",
+    "气管插管", "插管", "机械通气", "疫苗", "接种", "护理", "康复", "预防",
     "严重吗", "会死吗",
   ];
+  const NON_CHEST = ["甲状腺", "乳腺", "肝脏", "胆囊", "胰腺", "脾脏", "肾脏", "肾上腺",
+    "盆腔", "子宫", "卵巢", "前列腺", "头颅", "大脑", "脊柱", "脊髓", "骨盆",
+    "髋关节", "膝关节", "踝关节", "肩关节", "腕关节", "肘关节"];
+  const CHEST_WORDS = ["胸", "肺", "心", "纵隔", "膈", "肋", "气胸", "实变", "积液"];
+  const TOO_BROAD = ["胸片", "片子", "影像", "图片", "看看", "这个"];
   const SCOPE_SUGGESTIONS = ["气胸在胸片上怎么找", "实变和胸腔积液怎么区分", "这个分区标注的依据是什么"];
   const HIT_FLOOR = { sign: 50, concept: 50, guideline: 40, case: 40 };
   const WEAK_FLOOR = { sign: 30, concept: 30, guideline: 24, case: 24 };
@@ -39,7 +47,7 @@
     data: null,
     tab: "qa",
     qa: { query: "", result: null, reportText: "" },
-    coach: { caseId: "", step: 1, zoneId: "", status: "", signs: [], touched: false, hint: 0, revealed: false, result: null },
+    coach: { caseId: "", step: 1, zoneIds: [], zoneNone: false, status: "", signs: [], touched: false, hint: 0, revealed: false, result: null },
     quiz: { paper: null, result: null, timer: null, config: { scope: "all", type: "mixed", count: 10, minutes: 0 } },
     history: { practice: [], quizzes: [] },
   };
@@ -120,11 +128,12 @@
   function load() {
     if (L.data) return Promise.resolve(L.data);
     if (loading) return loading;
-    loading = fetch(DATA_URL, { cache: "no-cache" })
-      .then((r) => {
+    loading = (window.RCKB
+      ? window.RCKB.getJSON("/api/kb/lab", DATA_URL)
+      : fetch(DATA_URL, { cache: "no-cache" }).then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
-      })
+      }))
       .then((d) => {
         L.data = d;
         return d;
@@ -140,7 +149,10 @@
   function caseById(id) { return cases().find((c) => c.id === id) || null; }
   function signById(id) { return ((L.data && L.data.signs) || []).find((s) => s.id === id) || null; }
   function sourceById(id) { return ((L.data && L.data.sources) || []).find((s) => s.id === id) || null; }
-  function imagePath(p) { return p ? "../" + String(p).replace(/^\.\.\//, "") : ""; }
+  function imagePath(p) {
+    if (!p) return "";
+    return window.RCKB ? window.RCKB.imageUrl(p) : "../" + String(p).replace(/^\.\.\//, "");
+  }
   function signName(id) { const s = signById(id); return s ? s.name : id; }
 
   function zoneOf(c, zoneId) {
@@ -169,9 +181,23 @@
     const s = norm(q);
     if (!s) return "";
     if (SCOPE_WORDS.some((w) => s.includes(norm(w)))) return "治疗 / 预后 / 操作建议";
-    if (/(诊断|确诊|是不是癌|是不是肿瘤|什么病)/.test(s) &&
+    if (/(诊断|确诊|是不是.{0,4}(癌|肿瘤|病)|什么病|良性还是恶性|恶性还是良性)/.test(s) &&
         !/(依据|标准|怎么找|表现|征象|鉴别|区分)/.test(s)) return "诊断结论";
     return "";
+  }
+
+  function nonChestReason(q) {
+    const s = norm(q);
+    if (!s) return "";
+    const hasNonChest = NON_CHEST.some((w) => s.includes(norm(w)));
+    if (!hasNonChest) return "";
+    const hasChest = CHEST_WORDS.some((w) => s.includes(norm(w)));
+    return hasChest ? "" : "非胸部部位";
+  }
+
+  function tooBroadReason(q) {
+    const s = norm(q);
+    return TOO_BROAD.some((w) => s === norm(w)) ? "问句过于宽泛" : "";
   }
 
   function textScore(text, q, base) {
@@ -209,6 +235,14 @@
     sc = Math.max(sc, textScore(g.category, q, 40));
     sc = Math.max(sc, textScore(g.statement, q, 34));
     (g.conditions || []).forEach((x) => { sc = Math.max(sc, textScore(x, q, 24)); });
+    // 条款是长句，整句匹配几乎不可能；用指南关键词做可解释加分。
+    const hay = norm([g.standard_name, g.category, g.statement, (g.conditions || []).join(" ")].join(" "));
+    const terms = ["结节", "随访", "复查", "实性", "磨玻璃", "部分实性", "6mm", "8mm",
+      "fleischner", "lung-rads", "lungrads", "指南", "低剂量"];
+    terms.forEach((w) => { if (q.includes(w) && hay.includes(w)) sc += 10; });
+    if (/随访|复查|指南/.test(q)) sc += 12;
+    if (/fleischner/.test(q) && /fleischner/.test(hay)) sc += 30;
+    if (/lung\s*-?\s*rads/.test(q) && /lung\s*-?\s*rads/.test(hay)) sc += 30;
     return sc;
   }
 
@@ -304,7 +338,7 @@
     ids.forEach((id) => { relation[id] = "direct"; });
     const a = signs[0];
     const b = signs[1];
-    const pitfalls = (s) => (s.pitfalls || []).slice(0, 2).join("；") || "库内未列易错点";
+    const pitfalls = (s) => (s.pitfalls || []).slice(0, 2).join("；") || "暂未列出易错点";
     return {
       kind: "compare",
       tier: "hit",
@@ -319,7 +353,7 @@
       conclusion: `${a.name}：${a.appearance} ${b.name}：${b.appearance} ` +
         `鉴别时不要只看一个征象：${a.name} 的易错点——${pitfalls(a)}；${b.name} 的易错点——${pitfalls(b)}。`,
       missing: [
-        "对比检索只并列库内定义、影像位置与易错点，不是诊断路径。",
+        "对比只并列知识库中的定义、影像位置与易错点，不是诊断路径。",
         "同一病例可能同时挂两个征象；以该区逐区标注和原始出处为准。",
       ],
     };
@@ -337,6 +371,20 @@
         scopeLabel: scope,
         query: String(query || "").trim(),
         message: `“${String(query || "").trim()}”涉及${scope}，本工具不提供这类内容。`,
+        suggestions: SCOPE_SUGGESTIONS,
+      };
+    }
+    const offChest = nonChestReason(q);
+    const broad = tooBroadReason(q);
+    if (offChest || broad) {
+      return {
+        kind: "refuse",
+        tier: "refuse",
+        reason: "miss",
+        query: String(query || "").trim(),
+        message: offChest
+          ? `“${String(query || "").trim()}”属于${offChest}，本工具只做胸部 X 线教学，不跨部位回答。`
+          : `“${String(query || "").trim()}”过于宽泛；请给出具体征象、疾病或分区。`,
         suggestions: SCOPE_SUGGESTIONS,
       };
     }
@@ -358,6 +406,15 @@
       guideHits[0] && { kind: "guideline", hit: guideHits[0], score: guideHits[0].score },
       caseHits[0] && { kind: "case", hit: caseHits[0], score: caseHits[0].score },
     ].filter(Boolean).sort((a, b) => b.score - a.score);
+    // 指南意图词出现时，优先给条款；否则“肺结节随访”会被“结节”词条抢走。
+    const wantsGuide = /随访|复查|指南|fleischner|lung\s*-?\s*rads|几毫米|mm/.test(q);
+    if (wantsGuide && guideHits[0] && guideHits[0].score >= (WEAK_FLOOR.guideline || 24)) {
+      const gi = candidates.findIndex((c) => c.kind === "guideline");
+      if (gi > 0) {
+        const [g] = candidates.splice(gi, 1);
+        candidates.unshift(g);
+      }
+    }
     if (!candidates.length) {
       const guesses = [];
       ((L.data && L.data.signs) || []).forEach((s) => {
@@ -368,7 +425,7 @@
         tier: "refuse",
         reason: "miss",
         query: String(query || "").trim(),
-        message: `库内没有找到与“${String(query || "").trim()}”可对应的词条或分区；不编造答案。`,
+        message: `知识库里暂时没有找到与“${String(query || "").trim()}”对应的词条或分区；不编造答案。`,
         suggestions: Array.from(new Set(guesses)).slice(0, 6).length
           ? Array.from(new Set(guesses)).slice(0, 6)
           : SCOPE_SUGGESTIONS,
@@ -384,7 +441,7 @@
         tier: "refuse",
         reason: "low",
         query: String(query || "").trim(),
-        message: `库内最接近的匹配只有 ${primary.score} 分，低于可回答阈值；不把弱相关当成结论。`,
+        message: "这次最接近的匹配也不够明确，不能直接回答；不把弱相关当成结论。",
         suggestions: SCOPE_SUGGESTIONS,
       };
     }
@@ -403,7 +460,7 @@
       casesOut = casesForSigns(signIds, 8);
       guidelines = guidelinesForSigns(signIds);
       conclusion = `${hit.name}：${hit.appearance} ${hit.modality && hit.modality.length ? `（${hit.modality.join(" / ")}）` : ""}`;
-      if (!casesOut.length) missing.push("库内 21 例胸片中暂无直接挂载该征象的分区；只能给出词条与文献。");
+      if (!casesOut.length) missing.push("当前影像库中暂时没有直接标注该征象的分区，只能给出词条与文献。");
     } else if (kind === "concept") {
       const direct = (hit.sign_ids || []).filter((id) => signById(id));
       const related = (hit.related_sign_ids || []).filter((id) => signById(id));
@@ -412,12 +469,14 @@
       related.forEach((id) => { relation[id] = "related"; });
       casesOut = casesForSigns(signIds, 8);
       guidelines = /结节|随访|指南/.test(q) ? guidelinesForSigns(signIds) : [];
-      const names = direct.map((id) => `${signName(id)}（${id}）`);
-      const relNames = related.map((id) => `${signName(id)}（${id}，关联）`);
-      conclusion = `${hit.name} 在库内对应的征象：${names.length ? names.join("、") : "无直接挂载征象"}` +
-        (relNames.length ? `；关联征象（非 may_see_in 原文）：${relNames.join("、")}` : "") +
-        (hit.note ? `。${hit.note}` : "");
-      if (!direct.length) missing.push("该概念在库内没有直接挂载征象，只有关联征象；关联不能当作原文依据。");
+      const names = direct.map((id) => signName(id));
+      const relNames = related.map((id) => signName(id));
+      conclusion = names.length
+        ? `${hit.name} 在知识库中对应的征象：${names.join("、")}`
+        : `${hit.name} 在知识库中没有直接对应的征象`;
+      if (relNames.length) conclusion += `；可参考关联征象：${relNames.join("、")}（仅作参考，不作为直接依据）`;
+      if (hit.note) conclusion += `。${hit.note}`;
+      if (!direct.length) missing.push("该疾病在知识库中没有直接对应的征象，只有关联征象；关联只作参考，不作为直接依据。");
     } else if (kind === "guideline") {
       const names = ((L.data && L.data.signs) || []).filter((s) => norm(hit.statement + " " + (hit.conditions || []).join(" ")).includes(norm(s.name))).map((s) => s.id);
       signIds = names;
@@ -425,7 +484,7 @@
       casesOut = casesForSigns(signIds, 6);
       guidelines = [hit];
       conclusion = `${hit.standard_name} · ${hit.category}：${hit.statement}`;
-      missing.push("指南条款有明确适用条件；不能把 CT 随访建议直接外推到胸片或个体诊断。");
+      missing.push("指南条款有明确的适用条件，不能把 CT 随访建议直接套用到胸片或个体判断。");
     } else {
       const c = hit;
       signIds = (c.signs || []).filter((id) => signById(id));
@@ -434,13 +493,13 @@
         (c.zones || []).find((z) => z.status === "abnormal") || null;
       casesOut = [{ case: c, zone }];
       guidelines = /结节|随访|指南/.test(q) ? guidelinesForSigns(signIds) : [];
-      conclusion = `${c.id} · ${c.title}：${c.teaching_note || "按库内逐区标注阅读。"}`;
+      conclusion = `${c.id} · ${c.title}：${c.teaching_note || "按知识库逐区标注阅读。"}`;
     }
 
     const sources = sourcesForSigns(signIds);
-    if (!sources.length && kind !== "general") missing.push("相关词条未登记可引用的文献来源；不能补造出处。");
+    if (!sources.length && kind !== "general") missing.push("相关词条没有登记可引用的文献来源，因此不补造出处。");
     if (!guidelines.length && (kind === "sign" || kind === "concept")) {
-      missing.push("库内暂无与该征象直接对应的胸部指南条款；已检索 guidelines.jsonl。");
+      missing.push("知识库中暂时没有与该征象直接对应的胸部指南条款。");
     }
     if (casesOut.some((e) => e.zone && e.zone.status === "unmentioned")) {
       missing.push("标注为「来源未提及」的分区不等于正常，本工具不作推断。");
@@ -533,8 +592,8 @@
         concepts: relatedConcepts(ids),
         conclusion: `${g.standard_name} · ${g.category}：${g.statement}`,
         missing: [
-          "指南条款有明确适用条件；不能把 CT 随访建议直接外推到胸片或个体诊断。",
-          "以下只做指南条款与库内征象的对照，不构成诊断。",
+          "指南条款有明确的适用条件，不能把 CT 随访建议直接套用到胸片或个体判断。",
+          "以下只做指南条款与知识库征象的对照，不构成诊断。",
         ],
       };
     }
@@ -542,7 +601,7 @@
     if (!signHits.length && !sites.length && !guidelines.length) {
       return {
         kind: "refuse", tier: "refuse", reason: "miss", query: raw,
-        message: "报告文本里没有匹配到库内征象、分区或指南条款；不猜测报告含义。",
+        message: "报告文本里没有找到对应的征象、分区或指南条款；不猜测报告含义。",
         suggestions: SCOPE_SUGGESTIONS,
       };
     }
@@ -550,16 +609,16 @@
     const conclusion = `报告文本命中：${sites.length ? sites.join("、") : "未识别明确分区"}；` +
       `${signHits.length ? signHits.map((s) => s.name).join("、") : "未识别征象"}` +
       `${conceptHits.length ? `；相关概念：${conceptHits.map((c) => c.name).join("、")}` : ""}。` +
-      "以下只做文本到库内证据的映射，不判断报告对错。";
+      "以下只做文本到知识库依据的对应，不判断报告对错。";
     const missing = [
       "报告解析只做关键词映射，不替代影像阅片；未提到的征象不等于不存在。",
-      "若报告描述与库内标注冲突，以原始出处与医学审核为准。",
+      "若报告描述与知识库标注冲突，以原始出处与医学审核为准。",
     ];
-    if (guidelines.length) missing.push("指南条款有适用条件，不能直接外推到个体。");
+    if (guidelines.length) missing.push("指南条款有适用条件，不能直接套用到个体。");
 
     return {
       kind: "report", tier: "hit", query: raw,
-      hit: { id: "REPORT", name: "报告文本 → 库内证据" },
+      hit: { id: "REPORT", name: "报告文本 → 知识库依据" },
       signIds, relation, cases: casesOut, guidelines,
       sources: sourcesForSigns(signIds), concepts: relatedConcepts(signIds),
       conclusion, missing,
@@ -579,20 +638,19 @@
     ];
     const result = L.qa.result;
     host.innerHTML = `<div class="lab-head">
-      <div><div class="eyebrow">IMAGE LIBRARY Q&amp;A</div><h2>教学影像库问答</h2>
-      <p>只检索 21 例胸片库内词条与逐区标注；命中给“影像区域定位”和“文献段落溯源”两条引用链，越界/低置信/未命中明确拒答。</p></div>
-      <span class="lab-scope">库内 ${cases().length} 例 · ${(L.data.signs || []).length} 条征象</span>
+      <div><div class="eyebrow">IMAGE LIBRARY Q&amp;A</div><h2>教学影像库问答</h2></div>
+      <span class="lab-scope">当前 ${cases().length} 例 · ${(L.data.signs || []).length} 条征象</span>
     </div>
     <div class="lab-ask">
       <div class="lab-ask-row"><input id="labQ" value="${esc(L.qa.query)}" maxlength="80"
         placeholder="问一个征象或疾病，例如：气胸、实变、肺结核、肺水肿、肺结节随访">
-        <button class="btn solid" data-lab-ask>检索库内证据</button></div>
+        <button class="btn solid" data-lab-ask>查找依据</button></div>
       <div class="lab-chips">${chips.map((c) => `<button data-lab-q="${esc(c)}">${esc(c)}</button>`).join("")}</div>
       <details class="lab-report" ${L.qa.reportText ? "open" : ""}>
         <summary>粘贴报告 / 指南问题（可选）</summary>
         <textarea id="labReport" rows="4" placeholder="粘贴一段公开教学报告，例如：右肺上野见片状密度增高影，边界模糊，余肺野清晰。&#10;也可以贴一句指南问题，例如：6 mm 实性结节怎么随访？">${esc(L.qa.reportText || "")}</textarea>
         <button class="btn" data-lab-report>解析报告并找证据</button>
-        <span class="lab-small">只做“文本 → 库内征象/分区/段落”的关键词映射，不判断报告对错，不生成诊断。</span>
+        <span class="lab-small">只做“文本 → 知识库征象 / 分区 / 段落”的对应，不判断报告对错，不生成诊断。</span>
       </details>
     </div>
     <div id="labQaResult">${result ? answerHTML(result) : qaEmptyHTML()}</div>`;
@@ -602,10 +660,9 @@
     return `<div class="lab-empty">
       <div class="lab-empty-ic">Q</div>
       <b>先问一个具体征象或疾病</b>
-      <p>问答会先查 signs / concepts / guidelines，再回到 21 例胸片的分区框。越界、低置信或库内未命中都会明确拒答，不把通识伪装成库内证据。</p>
       <div class="lab-empty-grid">
-        <div><b>① 影像定位</b><span>病例 + 分区框 + 状态 + 影像出处</span></div>
-        <div><b>② 文献溯源</b><span>征象词条 + 来源 + 段落锚点（para_id / sha256）</span></div>
+        <div><b>① 影像位置</b><span>病例、分区、状态与影像出处</span></div>
+        <div><b>② 文献依据</b><span>征象解释、来源与可展开的原文段落</span></div>
       </div>
     </div>`;
   }
@@ -623,36 +680,37 @@
     const signCites = (a.signIds || []).map((sid, i) => ({ sign: signById(sid), relation: a.relation[sid], n: i + 1 })).filter((x) => x.sign);
     const evidence = a.cases || [];
     const chain = [];
-    if (evidence[0]) chain.push(`E1 ${evidence[0].case.id}${evidence[0].zone ? " / " + evidence[0].zone.name : ""}`);
-    if (signCites[0]) chain.push(`L1 ${signCites[0].sign.id} ${signCites[0].sign.name}`);
-    if (a.sources[0]) chain.push(`${a.sources[0].id}`);
+    if (evidence[0]) chain.push(`影像位置 ${evidence[0].case.id}${evidence[0].zone ? " / " + evidence[0].zone.name : ""}`);
+    if (signCites[0]) chain.push(`文献来源 ${signCites[0].sign.name}`);
+    if (a.sources[0]) chain.push(`来源 ${a.sources[0].title || a.sources[0].id}`);
     return `<div class="lab-answer ${a.tier === "weak" ? "weak" : ""}">
       <div class="lab-ans-head">
-        <div><span class="lab-kind ${a.tier === "weak" ? "warn" : ""}">${a.tier === "weak" ? "弱命中 · 需确认" : "库内命中"} · ${esc(kind)}</span>
-          <h3>${esc(title)} ${id ? `<code>${esc(id)}</code>` : ""}</h3></div>
+        <div><span class="lab-kind ${a.tier === "weak" ? "warn" : ""}">${a.tier === "weak" ? "匹配度较低 · 请核对" : "知识库中找到"} · ${esc(kind)}</span>
+          <h3>${esc(title)}</h3></div>
         <span class="lab-hit">${a.signIds.length} 条征象 · ${evidence.length} 个影像位置</span>
       </div>
-      ${a.tier === "weak" ? `<div class="lab-weak-note">弱命中：库内匹配度不足，以下只作候选，不应当作确定答案。</div>` : ""}
+      ${a.tier === "weak" ? `<div class="lab-weak-note">这次匹配度不高，以下只作候选，请结合原图和来源核对。</div>` : ""}
       <p class="lab-conclusion">${esc(a.conclusion)}</p>
       <div class="lab-dual">
         <section class="lab-evidence">
-          <div class="lab-sec-h"><h4>① 影像区域定位</h4><span>E = evidence</span></div>
+          <div class="lab-sec-h"><h4>① 影像中的位置</h4><span>病例与分区</span></div>
           ${evidence.length ? evidence.map((e, i) => caseEvidenceHTML(e, i + 1)).join("") :
-            `<div class="lab-none">库内暂无该征象的胸片分区定位。</div>`}
+            `<div class="lab-none">当前影像库中还没有该征象的分区标注。</div>`}
         </section>
         <section class="lab-citations">
-          <div class="lab-sec-h"><h4>② 文献溯源</h4><span>L = literature</span></div>
+          <div class="lab-sec-h"><h4>② 文献依据</h4><span>来源与段落</span></div>
+          ${id ? `<div class="lab-entry"><span>条目编号</span><code>${esc(id)}</code></div>` : ""}
           ${signCites.length ? signCites.map((x, i) => signCiteHTML(x.sign, i + 1, x.relation)).join("") :
-            `<div class="lab-none">该条没有可引用的征象词条。</div>`}
+            `<div class="lab-none">这条暂时没有可展开的征象解释。</div>`}
           ${a.guidelines.length ? a.guidelines.map((g, i) => guidelineHTML(g, i + 1)).join("") : ""}
         </section>
       </div>
-      ${chain.length ? `<div class="lab-chain"><b>双引用链</b><span>${chain.map(esc).join(" → ")}</span>
-        <em>影像位置与文献条目分别可点开核对；链只表示“该病例该区挂载了该征象”，不表示诊断。</em></div>` : ""}
-      ${a.concepts && a.concepts.length ? `<div class="lab-related"><b>相关概念</b>${a.concepts.map((c) =>
-        `<span class="mini-chip">${esc(c.name)} · ${esc(c.id)}</span>`).join("")}</div>` : ""}
-      ${a.missing && a.missing.length ? `<div class="lab-missing"><b>缺失与边界</b><ul>${a.missing.map((m) =>
-        `<li>${esc(m)}</li>`).join("")}</ul></div>` : ""}
+      ${chain.length ? `<div class="lab-chain"><b>证据链</b><span>${chain.map(esc).join(" → ")}</span>
+        <em>影像位置与文献条目可以分别点开核对；这只表示该病例该区标注了该征象，不表示诊断。</em></div>` : ""}
+      ${a.concepts && a.concepts.length ? `<div class="lab-related"><b>相关疾病 / 概念</b>${a.concepts.map((c) =>
+        `<span class="mini-chip" title="${esc(c.id)}">${esc(c.name)}</span>`).join("")}</div>` : ""}
+      ${a.missing && a.missing.length ? `<details class="lab-missing"><summary>还需要注意</summary><ul>${a.missing.map((m) =>
+        `<li>${esc(m)}</li>`).join("")}</ul></details>` : ""}
       <p class="lab-disclaimer">仅用于医学影像教学与研究，不构成诊断意见，不替代临床决策。</p>
     </div>`;
   }
@@ -667,22 +725,29 @@
         <img src="${esc(imagePath(c.image))}" alt="${esc(c.title)}" loading="lazy">${box}
       </a>
       <div class="lab-case-main">
-        <div class="lab-case-top"><b>E${n} · ${esc(c.id)}</b>
+        <div class="lab-case-top"><b>影像位置 ${n} · ${esc(c.id)}</b>
           <span class="lab-status ${z ? esc(z.status) : ""}">${esc(z ? z.status_label : "无异常分区")}</span></div>
         <strong>${esc(c.title)}</strong>
-        <p>${z ? `${esc(z.name)} · ${esc(z.text)}` : "该例库内没有挂载异常分区。"}</p>
+        <p>${z ? `${esc(z.name)} · ${esc(z.text)}` : "该例没有挂载异常分区。"}</p>
         <div class="lab-meta">${esc(c.license || "许可见来源")} · ${esc(c.artist || "来源未署名")}</div>
         <a class="lab-link" href="clinic.html?case=${encodeURIComponent(c.id)}" target="_blank" rel="noopener">在阅片台打开 →</a>
       </div>
     </article>`;
   }
 
+  const SECTION_LABEL = {
+    appearance: "表现", pitfall: "易错点", statement: "条款", conditions: "适用条件",
+    definition: "定义", note: "说明", summary: "摘要",
+  };
+
+  function sectionLabel(s) { return SECTION_LABEL[s] || "摘录"; }
+
   function paraHTML(p, open) {
     const hash = (p.sha256 || "").slice(0, 12);
     return `<details class="lab-para" ${open ? "open" : ""}>
-      <summary><code>${esc(p.para_id)}</code><span>${esc(p.section)} · char ${p.char_start}-${p.char_end}</span></summary>
+      <summary><span>原文段落 · ${esc(sectionLabel(p.section))}</span><span>可展开核对</span></summary>
       <p>${esc(p.text)}</p>
-      <div class="lab-para-meta">sha256 ${esc(hash)}… · ${p.page ? "页码 " + esc(p.page) : "页码待补（自撰摘要）"} · ${esc(p.license_note || "见来源")}</div>
+      <div class="lab-para-meta">段落 ${esc(p.para_id)} · 字符 ${p.char_start}-${p.char_end} · 校验 ${esc(hash)}… · ${p.page ? "页码 " + esc(p.page) : "页码待补（自撰摘要）"} · ${esc(p.license_note || "见来源")}</div>
     </details>`;
   }
 
@@ -690,41 +755,41 @@
     const src = (s.sources || []).map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.id)} · ${esc(x.title)}</a>`);
     const paras = ((L.data && L.data.sign_paragraphs) || {})[s.id] || [];
     return `<article class="lab-cite">
-      <div class="lab-cite-h"><b>L${n} · ${esc(s.id)} ${esc(s.name)}</b>
-        <span>${relation === "related" ? "关联征象" : "直接挂载"}</span></div>
+      <div class="lab-cite-h"><b>文献来源 ${n} · ${esc(s.name)}</b>
+        <span>${relation === "related" ? "关联征象" : "直接依据"}</span></div>
       <p>${esc(s.appearance)}</p>
-      <div class="lab-cite-meta">${(s.modality || []).join(" / ")} · ${esc(s.body_part || "")}</div>
+      <div class="lab-cite-meta">${(s.modality || []).join(" / ")} · ${esc(s.body_part || "")} · <code class="lab-cite-id">${esc(s.id)}</code></div>
       <div class="lab-src">${src.length ? src.join("") : `<span class="lab-none">该词条未登记来源</span>`}</div>
-      ${paras.length ? `<div class="lab-para-block"><b>段落 L2 · ${paras.length} 条</b>${paras.map((p, i) => paraHTML(p, i === 0)).join("")}</div>` :
-        `<div class="lab-none">该词条暂无段落锚点，只有来源级引用。</div>`}
+      ${paras.length ? `<div class="lab-para-block"><b>原文段落 · ${paras.length} 条</b>${paras.map((p, i) => paraHTML(p, i === 0)).join("")}</div>` :
+        `<div class="lab-none">该词条暂时没有可展开的原文段落，只有来源级引用。</div>`}
     </article>`;
   }
 
   function guidelineHTML(g, n) {
     const paras = ((L.data && L.data.guideline_paragraphs) || {})[g.id] || [];
     return `<article class="lab-guide">
-      <div class="lab-cite-h"><b>G${n} · ${esc(g.id)}</b><span>${esc(g.standard_name)}</span></div>
+      <div class="lab-cite-h"><b>指南 ${n} · ${esc(g.standard_name)}</b><span>${esc(g.category || "指南条款")}</span></div>
       <p>${esc(g.statement)}</p>
-      <div class="lab-cite-meta">${esc(g.category)} · ${esc(g.version_year || "")}</div>
+      <div class="lab-cite-meta">${esc(g.category)} · ${esc(g.version_year || "")} · <code class="lab-cite-id">${esc(g.id)}</code></div>
       <div class="lab-guide-note">适用条件：${esc((g.conditions || []).join("；") || "见原文")}。${esc(g.license_note || "")}</div>
-      ${paras.length ? `<div class="lab-para-block"><b>段落 L2 · ${paras.length} 条</b>${paras.map((p, i) => paraHTML(p, i === 0)).join("")}</div>` : ""}
+      ${paras.length ? `<div class="lab-para-block"><b>原文段落 · ${paras.length} 条</b>${paras.map((p, i) => paraHTML(p, i === 0)).join("")}</div>` : ""}
     </article>`;
   }
 
   function refuseHTML(a) {
     const scope = a.reason === "scope";
     const low = a.reason === "low";
-    const tag = scope ? "越界拒答" : low ? "低置信拒答" : "库内未覆盖";
+    const tag = scope ? "超出范围" : low ? "匹配不够明确" : "暂时没有依据";
     const title = scope ? "这个问题不在本工具范围内" :
-      low ? "匹配太弱，不能回答" : "库内没有可引用的证据";
+      low ? "这次匹配不够明确，不能直接回答" : "知识库里暂时没有可引用的证据";
     const suggestions = (a.suggestions && a.suggestions.length) ? a.suggestions : SCOPE_SUGGESTIONS;
     return `<div class="lab-answer refuse">
       <div class="lab-ans-head"><div><span class="lab-kind refuse">${tag}</span>
-        <h3>${title}</h3></div><span class="lab-hit">诚实拒答</span></div>
-      <p class="lab-conclusion">${esc(a.message || `库内未命中“${a.query}”；不编造答案。`)}</p>
+        <h3>${title}</h3></div><span class="lab-hit">没有编造答案</span></div>
+      <p class="lab-conclusion">${esc(a.message || `没有在知识库中找到与“${a.query}”对应的内容；不编造答案。`)}</p>
       <div class="lab-suggest"><b>可以改问</b>${suggestions.map((x) =>
         `<button data-lab-q="${esc(x)}">${esc(x)}</button>`).join("")}</div>
-      <div class="lab-missing"><b>边界</b><p>本工具只做影像表现与出处对照，不提供诊断、治疗、预后或操作建议；未命中时不编造 id，也不把通识内容标成库内证据。</p></div>
+      <details class="lab-missing"><summary>还需要注意</summary><p>本工具只做影像表现与出处对照，不提供诊断、治疗、预后或操作建议；没有找到依据时不会编造答案，也不会把通识内容说成知识库证据。</p></details>
       <p class="lab-disclaimer">仅用于医学影像教学与研究，不构成诊断意见，不替代临床决策。</p>
     </div>`;
   }
@@ -737,7 +802,7 @@
     const pool = cases().filter((c) => c.signs && c.signs.length);
     const c = caseById(caseId) || (pool.length ? pool[Math.floor(Math.random() * pool.length)] : cases()[0]);
     if (!c) return;
-    L.coach = { caseId: c.id, step: 1, zoneId: "", status: "", signs: [], touched: false, hint: 0, revealed: false, result: null };
+    L.coach = { caseId: c.id, step: 1, zoneIds: [], zoneNone: false, status: "", signs: [], touched: false, hint: 0, revealed: false, result: null };
   }
 
   function coachSignOptions(c) {
@@ -756,16 +821,16 @@
       return "四种状态要分清：异常＝该区有明确异常描述；未见异常＝来源明确描述正常；来源未提及＝来源没写，不等于正常；判读受限＝质量或体位限制。";
     }
     if (step === 3) {
-      return "只选库内实际挂载的征象；正常对照不要硬选。若不确定，先想“这个征象的定义是否真的能在该区看到”，再决定。";
+      return "只选知识库中实际标注的征象；正常对照不要硬选。若不确定，先想“这个征象的定义是否真的能在该区看到”，再决定。";
     }
-    return "对照时先看定位是否正确，再看状态与征象；分数只代表库内标注匹配度，不代表临床诊断能力。";
+    return "对照时先看定位是否正确，再看状态与征象；分数只代表与知识库标注的匹配度，不代表临床诊断能力。";
   }
 
   function coachHTML(host) {
     if (!L.coach.caseId) startCoach("");
     const c = coachCase();
     if (!c) { host.innerHTML = `<div class="lab-none">没有可练习的病例。</div>`; return; }
-    const z = zoneOf(c, L.coach.zoneId);
+    const z = zoneOf(c, L.coach.zoneIds[0]);
     const steps = [
       ["1", "定位"], ["2", "判读"], ["3", "征象"], ["4", "对照"],
     ];
@@ -776,15 +841,14 @@
     }).join("")}</div>`;
     const caseOptions = cases().map((x) => `<option value="${esc(x.id)}" ${x.id === c.id ? "selected" : ""}>${esc(x.id)} · ${esc(x.pose_label || "胸片")}</option>`).join("");
     const zones = (c.zones || []).map((x) => {
-      const on = x.id === L.coach.zoneId ? " on" : "";
+      const on = !L.coach.zoneNone && L.coach.zoneIds.includes(x.id) ? " on" : "";
       const st = L.coach.revealed ? ` ${x.status}` : "";
       const clickable = L.coach.step === 1 && !L.coach.revealed;
       return `<button class="lab-zone${on}${st}" ${clickable ? `data-lab-coach-zone="${esc(x.id)}"` : "disabled"}
         style="${bboxStyle(x.coords)}"><span>${esc(x.name)}</span></button>`;
     }).join("");
     host.innerHTML = `<div class="lab-head">
-      <div><div class="eyebrow">GUIDED READING</div><h2>读片练习陪练</h2>
-      <p>按“定位 → 判读 → 征象 → 对照”四步走；提示只给方法，不直接给答案。</p></div>
+      <div><div class="eyebrow">GUIDED READING</div><h2>读片练习陪练</h2></div>
       <div class="lab-head-actions">
         <select id="labCoachCase" class="lab-select">${caseOptions}</select>
         <button class="btn" data-lab-coach-new>换一例</button>
@@ -806,22 +870,28 @@
 
   function coachStepHTML(c, z) {
     if (L.coach.step === 1) {
+      const pickedNames = L.coach.zoneIds.map((id) => {
+        const x = zoneOf(c, id);
+        return x ? x.name : id;
+      }).join("、");
       return `<div class="lab-step">
-        <span class="lab-step-no">第 1 步 / 共 4 步</span><h3>先定位：异常在哪个分区？</h3>
-        <p>点击影像上的分区框；如果没有明确异常，选“未见明确异常”。此时不显示分区颜色。</p>
+        <span class="lab-step-no">第 1 步 / 共 4 步</span><h3>先定位：异常在哪些分区？（可多选）</h3>
+        <p>点击影像上的分区框，可多选；如果没有明确异常，选“未见明确异常”。此时不显示分区颜色。</p>
         <div class="lab-choice-row">
-          <button class="btn sm ${L.coach.zoneId === "none" ? "solid" : ""}" data-lab-coach-zone="none">未见明确异常</button>
+          <button class="btn sm ${L.coach.zoneNone ? "solid" : ""}" data-lab-coach-zone="none">未见明确异常</button>
         </div>
-        ${L.coach.zoneId ? `<div class="lab-picked">已选：<b>${L.coach.zoneId === "none" ? "未见明确异常" : esc(z ? z.name : "")}</b></div>` : ""}
+        ${L.coach.zoneNone || L.coach.zoneIds.length
+          ? `<div class="lab-picked">已选：<b>${L.coach.zoneNone ? "未见明确异常" : esc(pickedNames)}</b></div>`
+          : ""}
         <div class="lab-actions"><button class="btn sm" data-lab-coach-hint>给一个方法提示</button>
-          <button class="btn solid" data-lab-coach-next ${L.coach.zoneId ? "" : "disabled"}>下一步 →</button></div>
+          <button class="btn solid" data-lab-coach-next ${L.coach.zoneNone || L.coach.zoneIds.length ? "" : "disabled"}>下一步 →</button></div>
         ${L.coach.hint ? `<div class="lab-hint"><b>提示</b>${esc(coachHintText(c, 1))}</div>` : ""}
       </div>`;
     }
     if (L.coach.step === 2) {
       return `<div class="lab-step">
-        <span class="lab-step-no">第 2 步 / 共 4 步</span><h3>这个分区在库内是什么状态？</h3>
-        <p>“来源未提及”不是“正常”；请按库内逐区标注的含义选择。</p>
+        <span class="lab-step-no">第 2 步 / 共 4 步</span><h3>${L.coach.zoneIds.length > 1 ? "这些分区在知识库里是什么状态？" : "这个分区在知识库里是什么状态？"}</h3>
+        <p>多选时按共同状态作答；状态不一致时请只选异常分区。“来源未提及”不是“正常”。</p>
         <div class="lab-choice-col">${Object.keys(STATUS).map((k) =>
           `<button class="lab-choice ${L.coach.status === k ? "on" : ""}" data-lab-coach-status="${k}">${STATUS[k]}</button>`).join("")}</div>
         <div class="lab-actions"><button class="btn sm" data-lab-coach-hint>给一个方法提示</button>
@@ -832,7 +902,7 @@
     if (L.coach.step === 3) {
       const opts = coachSignOptions(c);
       return `<div class="lab-step">
-        <span class="lab-step-no">第 3 步 / 共 4 步</span><h3>该病例在库内挂载了哪些征象？</h3>
+        <span class="lab-step-no">第 3 步 / 共 4 步</span><h3>该病例在知识库中标注了哪些征象？</h3>
         <p>可多选；不确定的不要硬选。正常对照可以选择“未见明确征象”。</p>
         <div class="lab-sign-grid">${opts.map((o) =>
           `<button class="lab-sign ${L.coach.signs.includes(o.id) ? "on" : ""}" data-lab-coach-sign="${o.id}">${esc(o.name)}</button>`).join("")}
@@ -851,16 +921,22 @@
       return x ? x.name : id;
     }).join("、") || "未见明确异常";
     const correctSigns = (detail.expectedSigns || []).map(signName).join("、") || "未见明确征象";
-    const zz = zoneOf(c, L.coach.zoneId);
+    const zz = zoneOf(c, L.coach.zoneIds[0]);
+    const answeredZone = L.coach.zoneNone
+      ? "未见明确异常"
+      : (L.coach.zoneIds.map((id) => {
+        const x = zoneOf(c, id);
+        return x ? x.name : id;
+      }).join("、") || "—");
     return `<div class="lab-step">
-      <span class="lab-step-no">第 4 步 / 共 4 步</span><h3>对照库内标注</h3>
+      <span class="lab-step-no">第 4 步 / 共 4 步</span><h3>对照知识库标注</h3>
       <div class="lab-score"><b>${r.score}</b><span>/ 100</span><em>定位 ${detail.zonePoints || 0} · 判读 ${detail.statusPoints || 0} · 征象 ${detail.signPoints || 0}</em></div>
       <div class="lab-check">
-        <div class="${detail.zoneOk ? "ok" : "bad"}"><b>${detail.zoneOk ? "✓" : "×"} 定位</b><span>你选：${L.coach.zoneId === "none" ? "未见明确异常" : esc(zz ? zz.name : L.coach.zoneId)}；库内异常区：${esc(correctZone)}</span></div>
-        <div class="${detail.statusOk ? "ok" : "bad"}"><b>${detail.statusOk ? "✓" : "×"} 判读</b><span>你选：${esc(statusLabel(L.coach.status))}；该区库内状态：${esc(statusLabel(detail.expectedStatus))}</span></div>
-        <div class="${(detail.signRatio || 0) >= 0.99 ? "ok" : "bad"}"><b>${(detail.signRatio || 0) >= 0.99 ? "✓" : "×"} 征象</b><span>你选：${esc((L.coach.signs || []).map(signName).join("、") || "未见明确征象")}；库内：${esc(correctSigns)}</span></div>
+        <div class="${detail.zoneOk ? "ok" : "bad"}"><b>${detail.zoneOk ? "✓" : (detail.zonePoints ? "△" : "×")} 定位</b><span>你选：${esc(answeredZone)}；知识库异常区：${esc(correctZone)}</span></div>
+        <div class="${detail.statusOk ? "ok" : "bad"}"><b>${detail.statusOk ? "✓" : "×"} 判读</b><span>你选：${esc(statusLabel(L.coach.status))}；该区知识库状态：${esc(statusLabel(detail.expectedStatus))}</span></div>
+        <div class="${(detail.signRatio || 0) >= 0.99 ? "ok" : "bad"}"><b>${(detail.signRatio || 0) >= 0.99 ? "✓" : "×"} 征象</b><span>你选：${esc((L.coach.signs || []).map(signName).join("、") || "未见明确征象")}；知识库：${esc(correctSigns)}</span></div>
       </div>
-      ${zz ? `<div class="lab-truth"><b>该区库内所见</b><p>${esc(zz.text)}</p><span>依据：${esc(zz.basis || "库内逐区标注")}</span></div>` : ""}
+      ${zz ? `<div class="lab-truth"><b>该区知识库所见</b><p>${esc(zz.text)}</p><span>依据：${esc(zz.basis || "知识库逐区标注")}</span></div>` : ""}
       <div class="lab-truth"><b>病例教学提示</b><p>${esc(c.teaching_note || "无")}</p><span>${esc(c.license || "")} · ${esc(c.artist || "")}</span></div>
       <div class="lab-actions"><button class="btn sm" data-lab-coach-hint>看方法提示</button>
         <button class="btn solid" data-lab-coach-reset>重练本例</button>
@@ -871,9 +947,14 @@
 
   function submitCoach() {
     const c = coachCase();
-    if (!c || !L.coach.zoneId || !L.coach.status) return;
+    if (!c || !(L.coach.zoneNone || L.coach.zoneIds.length) || !L.coach.status) return;
     const signs = L.coach.signs.slice();
-    const graded = RC.gradeCase(c, { zoneId: L.coach.zoneId, status: L.coach.status, signs });
+    const graded = RC.gradeCase(c, {
+      zoneIds: L.coach.zoneIds,
+      zoneNone: L.coach.zoneNone,
+      status: L.coach.status,
+      signs,
+    });
     L.coach.result = graded;
     L.coach.revealed = true;
     L.coach.step = 4;
@@ -901,8 +982,7 @@
     const cfg = L.quiz.config;
     const hist = L.history.quizzes.slice(0, 6);
     host.innerHTML = `<div class="lab-head">
-      <div><div class="eyebrow">SELF-ASSESSMENT BUILDER</div><h2>自测出题器</h2>
-      <p>从 21 例胸片库内规则题中抽题：定位、判读、征象；交卷后逐题给影像位置与文献来源。</p></div>
+      <div><div class="eyebrow">SELF-ASSESSMENT BUILDER</div><h2>自测出题器</h2></div>
       <span class="lab-scope">题库 ${(L.data.questions || []).length} 题</span>
     </div>
     <div class="lab-quiz-config">
@@ -928,8 +1008,7 @@
         <option value="30" ${cfg.minutes === 30 ? "selected" : ""}>30 分钟</option>
       </select></div>
     </div>
-    <div class="lab-actions"><button class="btn solid" data-lab-quiz-start>生成试卷 →</button>
-      <span class="lab-small">题目由库内逐区标注生成，不是考试真题；答案只代表库内标注。</span></div>
+    <div class="lab-actions"><button class="btn solid" data-lab-quiz-start>生成试卷 →</button></div>
     ${hist.length ? `<div class="panel-card" style="margin-top:16px"><div class="panel-h"><h3>最近自测</h3><span class="sub">本机记录</span></div>
       <div class="table-wrap"><table class="data-table"><thead><tr><th>时间</th><th class="num">得分</th><th class="num">正确</th><th>范围 / 题型</th></tr></thead><tbody>
       ${hist.map((h) => `<tr><td class="muted">${fmtTime(h.at)}</td><td class="num ${h.score < 60 ? "warn" : "ok"}">${h.score}</td>
@@ -1021,7 +1100,7 @@
           ${box}
         </div>
         <div class="lab-stage-foot"><span>${esc(c ? c.id : "")} · ${esc(c ? (c.pose_label || "") : "")}</span>
-          <span>${esc(q.type_label)} · 框选位置以库内 coords 为准</span></div>
+          <span>${esc(q.type_label)} · 框选位置以知识库分区为准</span></div>
       </div>
       <div class="lab-panel">
         <span class="lab-step-no">${esc(q.type_label)}</span>
@@ -1081,7 +1160,6 @@
         </div>
       </div>
       <div class="lab-result-list">${r.rows.map((row, i) => quizRowHTML(row, i + 1)).join("")}</div>
-      <p class="lab-small" style="margin-top:12px">分数只代表与库内逐区标注的匹配度，不评价临床诊断能力；正式教学前须由医学人员审核。</p>
     </div>`;
   }
 
@@ -1104,17 +1182,17 @@
       <div class="lab-qr-answer">你的答案：<b>${esc(your)}</b> · 正确答案：<b>${esc(q.answer)}</b></div>
       <p class="lab-explain">${esc(q.explain)}</p>
       <div class="lab-qr-cites">
-        ${c ? `<a href="clinic.html?case=${encodeURIComponent(c.id)}" target="_blank" rel="noopener">影像 E1 · ${esc(c.id)}${z ? " / " + esc(z.name) : ""}</a>` : ""}
+        ${c ? `<a href="clinic.html?case=${encodeURIComponent(c.id)}" target="_blank" rel="noopener">在阅片台查看 · ${esc(c.id)}${z ? " / " + esc(z.name) : ""}</a>` : ""}
         ${(q.citations && q.citations.sign_ids || []).map((sid) => {
           const s = signById(sid);
-          return s ? `<span>文献 L · ${esc(s.id)} ${esc(s.name)}${(s.sources || []).length ? `（${s.sources.map((x) => esc(x.id)).join("、")}）` : "（未登记来源）"}</span>` : "";
+          return s ? `<span>文献来源 · ${esc(s.name)} <code>${esc(s.id)}</code>${(s.sources || []).length ? `（${s.sources.map((x) => esc(x.id)).join("、")}）` : "（未登记来源）"}</span>` : "";
         }).join("")}
       </div>
       ${!row.ok ? `<div class="qa-agent"><button class="btn sm" data-agent-ask data-agent-surface="lab"
         data-agent-case="${esc(q.case_id || "")}" data-agent-zone="${esc(q.zone_id || "")}"
         data-agent-signs="${esc((q.citations && q.citations.sign_ids || []).join(","))}"
         data-agent-evidence="${esc(evidence)}"
-        data-agent-query="${esc(`这道题我答错了：${q.prompt} 我的答案：${your}；正确答案：${q.answer}。请解释为什么错，只引用库内证据，不诊断、不治疗、不判分。`)}">问 Agent 为什么错</button></div>` : ""}
+        data-agent-query="${esc(`这道题我答错了：${q.prompt} 我的答案：${your}；正确答案：${q.answer}。请解释为什么错，只引用知识库证据，不诊断、不治疗、不判分。`)}">问为什么错</button></div>` : ""}
     </article>`;
   }
 
@@ -1191,7 +1269,7 @@
       load().then(() => {
         if (L.tab === tab) render();
       }).catch((e) => {
-        host.innerHTML = `<div class="lab-empty"><b>影像库载入失败</b><p>${esc(String(e.message || e))}<br>请先运行 python3 kb/scripts/build_student_lab.py 与 python3 medtrain/build.py。</p></div>`;
+        host.innerHTML = `<div class="lab-empty"><b>影像库载入失败</b><p>请确认知识库服务已启动，或稍后刷新页面。</p></div>`;
       });
       return;
     }
@@ -1235,7 +1313,16 @@
       }
       const coachZone = e.target.closest("[data-lab-coach-zone]");
       if (coachZone) {
-        L.coach.zoneId = coachZone.dataset.labCoachZone;
+        const id = coachZone.dataset.labCoachZone;
+        if (id === "none") {
+          L.coach.zoneNone = true;
+          L.coach.zoneIds = [];
+        } else {
+          L.coach.zoneNone = false;
+          const set = new Set(L.coach.zoneIds);
+          if (set.has(id)) set.delete(id); else set.add(id);
+          L.coach.zoneIds = Array.from(set);
+        }
         render();
         return;
       }
@@ -1260,8 +1347,8 @@
       }
       const coachNext = e.target.closest("[data-lab-coach-next]");
       if (coachNext) {
-        if (L.coach.step === 1 && !L.coach.zoneId) { toast("请先选择一个分区"); return; }
-        if (L.coach.step === 2 && !L.coach.status) { toast("请先选择该区状态"); return; }
+        if (L.coach.step === 1 && !(L.coach.zoneNone || L.coach.zoneIds.length)) { toast("请先选择异常分区"); return; }
+        if (L.coach.step === 2 && !L.coach.status) { toast("请先选择分区状态"); return; }
         L.coach.step = Math.min(4, L.coach.step + 1);
         render();
         return;
@@ -1316,5 +1403,5 @@
   L.history = loadHistory();
   bind();
 
-  window.RCLab = { mount, render, data: () => L.data, buildAnswer, startCoach };
+  window.RCLab = { mount, render, data: () => L.data, loadData: (d) => { L.data = d; return L.data; }, buildAnswer, startCoach };
 })();

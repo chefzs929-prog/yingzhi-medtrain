@@ -116,6 +116,7 @@
   function write(db) {
     try {
       global.localStorage.setItem(KEY, JSON.stringify(normalize(db)));
+      if (global.RCSync && global.RCSync.afterWrite) global.RCSync.afterWrite();
       return true;
     } catch (e) {
       return false;
@@ -417,6 +418,10 @@
       title,
       body,
       caseId: String(input.caseId || "").slice(0, 24),
+      zoneId: String(input.zoneId || "").slice(0, 24),
+      zoneName: String(input.zoneName || "").slice(0, 40),
+      signId: String(input.signId || "").slice(0, 24),
+      signName: String(input.signName || "").slice(0, 40),
       status: "open",
       createdAt: at,
       updatedAt: at,
@@ -593,6 +598,10 @@
     if (!assignment) return null;
     if (!cls.students.some((s) => s.id === input.studentId)) return null;
     if (!assignment.caseIds.includes(input.caseId)) return null;
+    const rawAnswers = input.answers || {};
+    const zoneIds = Array.isArray(rawAnswers.zoneIds)
+      ? rawAnswers.zoneIds.map((id) => String(id || "")).filter((id) => id && id !== "none")
+      : (rawAnswers.zoneId && rawAnswers.zoneId !== "none" ? [String(rawAnswers.zoneId)] : []);
     const attempt = {
       id: uid("ATT"),
       classId: input.classId,
@@ -600,9 +609,11 @@
       studentId: input.studentId,
       caseId: input.caseId,
       answers: {
-        zoneId: String((input.answers || {}).zoneId || ""),
-        status: String((input.answers || {}).status || ""),
-        signs: Array.isArray((input.answers || {}).signs) ? input.answers.signs.slice() : [],
+        zoneId: String(rawAnswers.zoneId || zoneIds[0] || (rawAnswers.zoneNone ? "none" : "")),
+        zoneIds,
+        zoneNone: !!rawAnswers.zoneNone,
+        status: String(rawAnswers.status || ""),
+        signs: Array.isArray(rawAnswers.signs) ? rawAnswers.signs.slice() : [],
       },
       score: clamp(Number(input.score) || 0, 0, 100),
       detail: input.detail || {},
@@ -622,6 +633,7 @@
     else if (c.zones.some((z) => z.status === "unmentioned")) status = "unmentioned";
     return {
       zoneId: ab.length ? ab[0].id : "none",
+      zoneIds: ab.map((z) => z.id),
       abnormalZoneIds: ab.map((z) => z.id),
       status,
       signs: (c.signs || []).slice(),
@@ -657,32 +669,55 @@
 
   function gradeCase(c, answers) {
     const expected = caseAnswer(c);
+    const raw = answers || {};
+    const legacyId = String(raw.zoneId || "");
+    const rawIds = Array.isArray(raw.zoneIds) ? raw.zoneIds : (legacyId ? [legacyId] : []);
+    const zoneIds = rawIds.map((id) => String(id || "")).filter((id) => id && id !== "none");
+    const zoneNone = !!raw.zoneNone || (!zoneIds.length && (legacyId === "none" || rawIds.includes("none")));
     const ans = {
-      zoneId: String((answers || {}).zoneId || ""),
-      status: String((answers || {}).status || ""),
-      signs: Array.isArray((answers || {}).signs) ? answers.signs.slice() : [],
+      zoneIds,
+      zoneNone,
+      status: String(raw.status || ""),
+      signs: Array.isArray(raw.signs) ? raw.signs.slice() : [],
     };
-    const zone = c.zones.find((z) => z.id === ans.zoneId) || null;
-    const zoneOk = expected.abnormalZoneIds.length
-      ? !!(zone && zone.status === "abnormal")
-      : ans.zoneId === "none";
-    const expectedStatus = zone ? zone.status : expected.status;
-    const statusOk = ans.status === expectedStatus;
+    const selected = zoneIds
+      .map((id) => c.zones.find((z) => z.id === id))
+      .filter(Boolean);
+    const expectedIds = expected.abnormalZoneIds;
+    const hits = zoneIds.filter((id) => expectedIds.includes(id)).length;
+    const wrong = zoneIds.filter((id) => !expectedIds.includes(id)).length;
+    const zoneRatio = expectedIds.length
+      ? clamp((hits - wrong * 0.5) / expectedIds.length, 0, 1)
+      : (zoneNone ? 1 : 0);
+    const zoneOk = expectedIds.length ? (hits === expectedIds.length && wrong === 0) : zoneNone;
+    const expectedZones = expectedIds
+      .map((id) => c.zones.find((z) => z.id === id))
+      .filter(Boolean);
+    const expectedStatus = expectedZones.length
+      && expectedZones.every((z) => z.status === expectedZones[0].status)
+      ? expectedZones[0].status
+      : expected.status;
+    const statusOk = selected.length
+      ? selected.every((z) => z.status === ans.status)
+      : ans.status === expectedStatus;
     const signRatio = signScore(expected.signs, ans.signs);
-    const score = Math.round(zoneOk * 40 + statusOk * 30 + signRatio * 30);
+    const score = Math.round(zoneRatio * 40 + statusOk * 30 + signRatio * 30);
     return {
       score,
       detail: {
         zoneOk,
+        zoneRatio: Math.round(zoneRatio * 100) / 100,
         statusOk,
         signRatio: Math.round(signRatio * 100) / 100,
-        zonePoints: zoneOk ? 40 : 0,
+        zonePoints: Math.round(zoneRatio * 40),
         statusPoints: statusOk ? 30 : 0,
         signPoints: Math.round(signRatio * 30),
-        answeredZoneId: ans.zoneId,
+        answeredZoneId: zoneIds[0] || (zoneNone ? "none" : ""),
+        answeredZoneIds: zoneIds,
+        answeredZoneNone: zoneNone,
         answeredStatus: ans.status,
         answeredSigns: ans.signs,
-        correctZoneIds: expected.abnormalZoneIds,
+        correctZoneIds: expectedIds,
         expectedZoneId: expected.zoneId,
         expectedStatus,
         expectedSigns: expected.signs,
@@ -893,15 +928,15 @@
         if (latestAttempt(classId, assignmentId, student.id, caseId)) return;
         const expected = caseAnswer(c);
         const pattern = patterns[(si + ci) % patterns.length];
-        let zoneId = expected.zoneId;
+        let zoneIds = expected.abnormalZoneIds.slice();
         if (!pattern.zone) {
-          if (expected.zoneId === "none") zoneId = c.zones[0] ? c.zones[0].id : "none";
+          if (!zoneIds.length) zoneIds = c.zones[0] ? [c.zones[0].id] : [];
           else {
             const other = c.zones.find((z) => z.status !== "abnormal");
-            zoneId = other ? other.id : "none";
+            zoneIds = other ? [other.id] : [];
           }
         }
-        const zone = c.zones.find((z) => z.id === zoneId) || null;
+        const zone = c.zones.find((z) => z.id === zoneIds[0]) || null;
         const rightStatus = zone ? zone.status : expected.status;
         let status = rightStatus;
         if (!pattern.status) {
@@ -910,14 +945,14 @@
         let signs = expected.signs.slice();
         if (pattern.sign === 0.5) signs = signs.slice(0, Math.max(1, Math.ceil(signs.length / 2)));
         if (pattern.sign === 0) signs = expected.signs.length ? [] : [CHEST_SIGNS[(si + ci) % CHEST_SIGNS.length]];
-        const graded = gradeCase(c, { zoneId, status, signs });
+        const graded = gradeCase(c, { zoneIds, zoneNone: zoneIds.length === 0, status, signs });
         const at = new Date(Date.now() - (6 - si) * 3600 * 1000 - ci * 60 * 1000).toISOString();
         saveAttempt({
           classId,
           assignmentId,
           studentId: student.id,
           caseId,
-          answers: { zoneId, status, signs },
+          answers: { zoneIds, zoneNone: zoneIds.length === 0, status, signs },
           score: graded.score,
           detail: graded.detail,
           at,

@@ -180,7 +180,7 @@
         <header class="yz-agent-head">
           <div>
             <b>${esc(opts.title || '问 Agent')}</b>
-            <span>${esc(opts.subtitle || '回答会带库内 id 与 trace；降级会明确标注')}</span>
+            <span>${esc(opts.subtitle || '回答附可核对出处；降级会明确标注')}</span>
           </div>
           <button class="yz-agent-x" data-close="1" aria-label="关闭">×</button>
         </header>

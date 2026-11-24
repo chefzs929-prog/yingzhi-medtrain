@@ -1,6 +1,6 @@
 {
   "version": "2026-11-22",
-  "generated_at": "2026-11-22",
+  "generated_at": "2026-11-24",
   "scope": "21 例已启用 CR 胸部逐区数据；问答、陪练与自测只在此范围内。",
   "disclaimer": "仅用于医学影像教学与研究，不构成诊断意见，不替代临床决策。",
   "method": "题目由 chest_reading.json 的逐区状态、分区框与征象关联规则生成；文献引用到来源级 + 段落级摘要锚点（paragraphs.jsonl 的 para_id / char 区间 / sha256）；原文页码仍待补，段落是自撰摘要，不复制受版权保护全文。",
