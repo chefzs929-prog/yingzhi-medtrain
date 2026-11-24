@@ -195,6 +195,14 @@ function dice(a,b){
   return 2*hit/(A.length+B.length);
 }
 
+const ZONE_KEY = {RUL:"右上",RML:"右中",RLL:"右下",LUL:"左上",LML:"左中",LLL:"左下"};
+function parseRegion(q){
+  const side = q.includes("右") ? "右" : (q.includes("左") ? "左" : "");
+  const m = q.match(/(上|中|下)\s*(野|部|叶|面|头|半|方|肺野|间|段)/);
+  if(!m) return side;
+  return side + m[1];
+}
+
 function scoreOf(query, item){
   const nq = norm(query);
   const text = norm(item.question + " " + (item.keywords||[]).join(" "));
@@ -203,6 +211,16 @@ function scoreOf(query, item){
     const nk = norm(k);
     if(nk.length >= 2 && !STOP.has(nk) && nq.includes(nk)) s += 0.18;
   });
+  (item.aliases||[]).some(a=>{
+    const na = norm(a);
+    if(na.length >= 2 && nq.includes(na)){ s += 0.5; return true; }
+    return false;
+  });
+  const qk = parseRegion(nq);
+  if(qk && item.region && item.region.zone_id){
+    const zk = ZONE_KEY[item.region.zone_id] || "";
+    if(zk && [...qk].every(ch=>zk.includes(ch))) s += 0.45;
+  }
   if(item.region && item.region.label){
     const nl = norm(item.region.label);
     if(nl && nq.includes(nl)) s += 0.28;

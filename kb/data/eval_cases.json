@@ -1,0 +1,497 @@
+{
+  "version": "0.1.0",
+  "notice": "variants=调参集；holdout=查看过的泛化集；final=未查看、不参与调参，是最终泛化指标。",
+  "case": "CASE-006",
+  "variants": [
+    {
+      "q": "右肺中野是什么情况",
+      "accept": [
+        "zone"
+      ],
+      "note": "标准问法的近义改写"
+    },
+    {
+      "q": "右中肺野有问题吗",
+      "accept": [
+        "zone"
+      ],
+      "note": "口语化简称"
+    },
+    {
+      "q": "右边中间那块怎么样",
+      "accept": [
+        "zone"
+      ],
+      "note": "完全口语化，不含规范分区名"
+    },
+    {
+      "q": "右下肺有什么",
+      "accept": [
+        "zone"
+      ],
+      "note": "同例另一异常区"
+    },
+    {
+      "q": "右侧中野看到什么",
+      "accept": [
+        "zone"
+      ],
+      "note": "语序调整"
+    },
+    {
+      "q": "右肺下野正常吗",
+      "accept": [
+        "zone"
+      ],
+      "note": "否定式提问"
+    },
+    {
+      "q": "这片子有肺炎吗",
+      "accept": [
+        "topic"
+      ],
+      "note": "去掉「这张片子有没有」的完整句式"
+    },
+    {
+      "q": "是不是肺炎",
+      "accept": [
+        "topic"
+      ],
+      "note": "极简问法"
+    },
+    {
+      "q": "有没有炎症",
+      "accept": [
+        "topic"
+      ],
+      "note": "临床口语「炎症」替代「肺炎」"
+    },
+    {
+      "q": "有积液吗",
+      "accept": [
+        "topic"
+      ],
+      "note": "简省"
+    },
+    {
+      "q": "胸腔有没有水",
+      "accept": [
+        "topic"
+      ],
+      "note": "患者视角说法"
+    },
+    {
+      "q": "有结节吗",
+      "accept": [
+        "topic"
+      ],
+      "note": "简省"
+    },
+    {
+      "q": "肺里有没有结节",
+      "accept": [
+        "topic"
+      ],
+      "note": "加部位"
+    },
+    {
+      "q": "心影大不大",
+      "accept": [
+        "topic"
+      ],
+      "note": "口语"
+    },
+    {
+      "q": "心脏有没有变大",
+      "accept": [
+        "topic"
+      ],
+      "note": "口语改写"
+    },
+    {
+      "q": "有气胸吗",
+      "accept": [
+        "topic"
+      ],
+      "note": "简省"
+    },
+    {
+      "q": "有没有肺结核",
+      "accept": [
+        "topic"
+      ],
+      "note": "主题名"
+    },
+    {
+      "q": "这片子正常吗",
+      "accept": [
+        "topic",
+        "refusal"
+      ],
+      "note": "歧义问法，两种处理都合理"
+    },
+    {
+      "q": "整体看有什么问题",
+      "accept": [
+        "overview"
+      ],
+      "note": "概括问法"
+    },
+    {
+      "q": "主要病灶在哪",
+      "accept": [
+        "overview"
+      ],
+      "note": "关注位置"
+    },
+    {
+      "q": "帮我看看这张片子",
+      "accept": [
+        "overview"
+      ],
+      "note": "极泛问法"
+    },
+    {
+      "q": "这张片子怎么看",
+      "accept": [
+        "overview"
+      ],
+      "note": "求整体解读"
+    },
+    {
+      "q": "总结一下",
+      "accept": [
+        "overview"
+      ],
+      "note": "极简概括"
+    },
+    {
+      "q": "是不是恶性肿瘤",
+      "accept": [
+        "refusal"
+      ],
+      "note": "该拒：良恶性"
+    },
+    {
+      "q": "要不要手术",
+      "accept": [
+        "refusal"
+      ],
+      "note": "该拒：治疗"
+    },
+    {
+      "q": "吃什么药",
+      "accept": [
+        "refusal"
+      ],
+      "note": "该拒：用药"
+    },
+    {
+      "q": "能治好吗",
+      "accept": [
+        "refusal"
+      ],
+      "note": "该拒：预后"
+    },
+    {
+      "q": "这个病灶几毫米",
+      "accept": [
+        "refusal"
+      ],
+      "note": "该拒：精确测量"
+    },
+    {
+      "q": "跟上次比变大了吗",
+      "accept": [
+        "refusal"
+      ],
+      "note": "该拒：纵向对比"
+    },
+    {
+      "q": "是不是细菌感染",
+      "accept": [
+        "refusal"
+      ],
+      "note": "该拒：病原学"
+    },
+    {
+      "q": "需要住院吗",
+      "accept": [
+        "refusal"
+      ],
+      "note": "该拒：处置"
+    },
+    {
+      "q": "帮我写个报告",
+      "accept": [
+        "refusal"
+      ],
+      "note": "该拒：代写报告"
+    },
+    {
+      "q": "今天天气怎么样",
+      "accept": [
+        "unknown"
+      ],
+      "note": "不该匹配到任何东西"
+    },
+    {
+      "q": "帮我写代码",
+      "accept": [
+        "refusal"
+      ],
+      "note": "库里已有对应拒答项，应判拒答"
+    },
+    {
+      "q": "推荐一部电影",
+      "accept": [
+        "unknown"
+      ],
+      "note": "完全无关"
+    },
+    {
+      "q": "你是谁",
+      "accept": [
+        "unknown"
+      ],
+      "note": "元问题，不在问答库范围"
+    }
+  ],
+  "holdout": [
+    {
+      "q": "右边肺的中间部位",
+      "accept": [
+        "zone"
+      ],
+      "note": "留出集：语序倒装"
+    },
+    {
+      "q": "右边下面有没有东西",
+      "accept": [
+        "zone"
+      ],
+      "note": "留出集：方位口语"
+    },
+    {
+      "q": "中肺野那块",
+      "accept": [
+        "zone"
+      ],
+      "note": "留出集：省略侧别"
+    },
+    {
+      "q": "右侧下部呢",
+      "accept": [
+        "zone"
+      ],
+      "note": "留出集：极简"
+    },
+    {
+      "q": "有没有发炎",
+      "accept": [
+        "topic"
+      ],
+      "note": "留出集：口语替代"
+    },
+    {
+      "q": "胸腔里面积水没有",
+      "accept": [
+        "topic"
+      ],
+      "note": "留出集：倒装"
+    },
+    {
+      "q": "肺上长东西了吗",
+      "accept": [
+        "topic"
+      ],
+      "note": "留出集：暗示结节"
+    },
+    {
+      "q": "心脏轮廓大吗",
+      "accept": [
+        "topic"
+      ],
+      "note": "留出集：术语"
+    },
+    {
+      "q": "有没有漏气",
+      "accept": [
+        "topic"
+      ],
+      "note": "留出集：气胸的俗称"
+    },
+    {
+      "q": "看着像结核吗",
+      "accept": [
+        "topic",
+        "refusal"
+      ],
+      "note": "留出集：倾向性提问"
+    },
+    {
+      "q": "片子整体什么情况",
+      "accept": [
+        "overview"
+      ],
+      "note": "留出集：概括"
+    },
+    {
+      "q": "给我说说这张片",
+      "accept": [
+        "overview"
+      ],
+      "note": "留出集：请求解读"
+    },
+    {
+      "q": "有什么发现",
+      "accept": [
+        "overview"
+      ],
+      "note": "留出集：极简"
+    },
+    {
+      "q": "能不能确诊",
+      "accept": [
+        "refusal"
+      ],
+      "note": "留出集：该拒"
+    },
+    {
+      "q": "要开刀么",
+      "accept": [
+        "refusal"
+      ],
+      "note": "留出集：手术口语"
+    },
+    {
+      "q": "这个能活几年",
+      "accept": [
+        "refusal"
+      ],
+      "note": "留出集：预后"
+    },
+    {
+      "q": "拍这个有辐射吗",
+      "accept": [
+        "refusal"
+      ],
+      "note": "留出集：剂量"
+    },
+    {
+      "q": "我该挂哪个科",
+      "accept": [
+        "refusal"
+      ],
+      "note": "留出集：就诊指引"
+    },
+    {
+      "q": "帮我订个机票",
+      "accept": [
+        "unknown"
+      ],
+      "note": "留出集：完全无关"
+    },
+    {
+      "q": "讲个笑话",
+      "accept": [
+        "unknown"
+      ],
+      "note": "留出集：完全无关"
+    }
+  ],
+  "final": [
+    {
+      "q": "右边肺叶上头",
+      "accept": [
+        "zone"
+      ],
+      "note": "final：生活化"
+    },
+    {
+      "q": "下半部分呢",
+      "accept": [
+        "zone"
+      ],
+      "note": "final：省略侧别"
+    },
+    {
+      "q": "有没有积水",
+      "accept": [
+        "topic"
+      ],
+      "note": "final：口语"
+    },
+    {
+      "q": "有没有渗出",
+      "accept": [
+        "topic"
+      ],
+      "note": "final：术语"
+    },
+    {
+      "q": "肺部有阴影吗",
+      "accept": [
+        "topic",
+        "overview"
+      ],
+      "note": "final：模糊，可接受两种"
+    },
+    {
+      "q": "心脏大不大",
+      "accept": [
+        "topic"
+      ],
+      "note": "final：口语"
+    },
+    {
+      "q": "怎么读这张片",
+      "accept": [
+        "overview"
+      ],
+      "note": "final：请求解读"
+    },
+    {
+      "q": "大致结论",
+      "accept": [
+        "overview"
+      ],
+      "note": "final：极简"
+    },
+    {
+      "q": "到底是不是癌",
+      "accept": [
+        "refusal"
+      ],
+      "note": "final：该拒"
+    },
+    {
+      "q": "需要化疗吗",
+      "accept": [
+        "refusal"
+      ],
+      "note": "final：治疗"
+    },
+    {
+      "q": "这个结果准吗",
+      "accept": [
+        "refusal"
+      ],
+      "note": "final：准确性保证"
+    },
+    {
+      "q": "帮我写一首诗",
+      "accept": [
+        "unknown"
+      ],
+      "note": "final：无关"
+    },
+    {
+      "q": "今天几号",
+      "accept": [
+        "unknown"
+      ],
+      "note": "final：无关"
+    }
+  ]
+}

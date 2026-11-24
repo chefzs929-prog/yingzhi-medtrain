@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
@@ -108,10 +109,19 @@ def main() -> None:
         ab = [z for z in zones if z["status"] == "abnormal"]
         sign_ids = case.get("signs") or []
 
-        # 1) 分区问：每个异常分区一个问题
-        for z in ab:
+        # 1) 分区问：每个分区都生成，非异常区明确说清边界
+        for z in zones:
             n += 1
             kp_id = pick_kp(topic, z.get("sign_ids") or sign_ids)
+            st = z["status"]
+            if st == "abnormal":
+                ans_text, conf = z["text"], ("high" if case.get("quality") != "limited" else "medium")
+            elif st == "normal":
+                ans_text, conf = f"来源明确描述该区未见异常。{z.get('text') or ''}", "medium"
+            elif st == "limited":
+                ans_text, conf = f"该区判读受限：{z.get('text') or '图像质量或体位不允许判读。'}", "low"
+            else:
+                ans_text, conf = "公开来源未逐区描述该区。未提及不等于正常，不能据此排除病变。", "low"
             items.append({
                 "qid": f"A{n:04d}",
                 "kind": "zone",
@@ -119,9 +129,10 @@ def main() -> None:
                 "topic_id": topic_id,
                 "question": f"{z['name']}有什么问题？",
                 "keywords": [z["name"], z["id"], (topic or {}).get("topic_cn", ""), "有什么", "问题", "异常"],
+                "aliases": region_aliases(z["name"]),
                 "answerable": True,
-                "answer": z["text"],
-                "confidence": "high" if case.get("quality") != "limited" else "medium",
+                "answer": ans_text,
+                "confidence": conf,
                 "region": {
                     "zone_id": z["id"],
                     "label": z["name"],
@@ -169,6 +180,7 @@ def main() -> None:
                 "topic_id": tid,
                 "question": q,
                 "keywords": [t["topic_cn"], tid] + kw + ["有没有", "吗", "有吗"],
+                "aliases": topic_aliases(tid, t),
                 "answerable": True,
                 "answer": ans,
                 "confidence": conf,
@@ -188,6 +200,7 @@ def main() -> None:
                 "topic_id": topic_id,
                 "question": "这张片子主要异常是什么？",
                 "keywords": ["主要异常", "怎么", "整体", "概括", "小结", "什么病", "看出什么"],
+                "aliases": ["主要异常", "整体", "概括", "总结", "小结", "看看", "怎么看", "什么问题", "主要问题", "主要病灶", "说说", "讲一下", "发现", "怎么读", "结论", "有阴影"],
                 "answerable": True,
                 "answer": f"{case.get('title','')}。库内标注的异常分区为{names}。" + (
                     f"其中{ab[0]['name']}：{ab[0]['text']}" if ab else ""),
@@ -208,6 +221,7 @@ def main() -> None:
             "question": r["question"],
             "keywords": _split_kw(r["question"]),
             "answerable": False,
+            "aliases": r.get("aliases", []),
             "refusal": {
                 "type": r["type"],
                 "type_cn": r["type_cn"],
@@ -287,6 +301,41 @@ def _region_of(zones, case):
         "case_title": case.get("title", ""),
         "status": z["status"],
     }
+
+
+EXTRA_REGION = {
+    "心影": ["心影", "心脏", "心影增大", "心脏增大", "心影大", "心胸比"],
+    "纵隔": ["纵隔", "纵隔影"],
+    "膈肌": ["膈肌", "膈面", "横膈"],
+    "右肋膈角": ["右肋膈角", "右侧肋膈角"],
+    "左肋膈角": ["左肋膈角", "左侧肋膈角"],
+}
+
+TOPIC_ALIASES = {
+    "PNEUMONIA": ["肺炎", "炎症", "实变", "气腔影", "浸润", "感染", "发炎", "渗出"],
+    "NODULE": ["结节", "肺结节", "小结节", "长东西", "肿块", "占位"],
+    "EFFUSION": ["积液", "胸腔积液", "胸水", "胸腔有水", "胸腔", "积水"],
+    "PNEUMOTHORAX": ["气胸", "肺压缩", "漏气", "破了"],
+    "TB": ["结核", "肺结核", "结核病"],
+    "NORMAL": ["正常", "正常胸片", "没问题", "没毛病"],
+    "CARDIOMEGALY": ["心影增大", "心脏增大", "心影大", "心胸比", "心脏大", "心脏"],
+}
+
+
+def region_aliases(name):
+    al = [name]
+    m = re.match(r"([左右])(肺)?([上中下])(野)$", name)
+    if m:
+        side, _, part, _ = m.groups()
+        al += [f"{side}{part}肺野", f"{side}侧{part}野", f"{side}{part}野", f"{side}{part}肺", f"{side}边{part}"]
+    al += EXTRA_REGION.get(name, [])
+    return list(dict.fromkeys(al))
+
+
+def topic_aliases(tid, t):
+    al = [tid] + list(TOPIC_ALIASES.get(tid, []))
+    al.append(t["topic_cn"].split(" / ")[0])
+    return list(dict.fromkeys(al))
 
 
 def _split_kw(q):

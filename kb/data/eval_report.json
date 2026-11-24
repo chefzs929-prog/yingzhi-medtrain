@@ -1,0 +1,130 @@
+{
+  "version": "0.1.0",
+  "notice": "评测集与库内标准问法措辞不同；指标用于说明边界，不是对外承诺。",
+  "retrieval": {
+    "case": "CASE-006",
+    "dev": {
+      "n": 36,
+      "ok": 36,
+      "accuracy": 1.0,
+      "by_group": {
+        "overview": {
+          "n": 5,
+          "ok": 5,
+          "acc": 1.0
+        },
+        "refusal": {
+          "n": 10,
+          "ok": 10,
+          "acc": 1.0
+        },
+        "topic": {
+          "n": 12,
+          "ok": 12,
+          "acc": 1.0
+        },
+        "unknown": {
+          "n": 3,
+          "ok": 3,
+          "acc": 1.0
+        },
+        "zone": {
+          "n": 6,
+          "ok": 6,
+          "acc": 1.0
+        }
+      },
+      "failures": []
+    },
+    "holdout": {
+      "n": 20,
+      "ok": 20,
+      "accuracy": 1.0,
+      "by_group": {
+        "overview": {
+          "n": 3,
+          "ok": 3,
+          "acc": 1.0
+        },
+        "refusal": {
+          "n": 5,
+          "ok": 5,
+          "acc": 1.0
+        },
+        "topic": {
+          "n": 6,
+          "ok": 6,
+          "acc": 1.0
+        },
+        "unknown": {
+          "n": 2,
+          "ok": 2,
+          "acc": 1.0
+        },
+        "zone": {
+          "n": 4,
+          "ok": 4,
+          "acc": 1.0
+        }
+      },
+      "failures": []
+    },
+    "final": {
+      "n": 13,
+      "ok": 13,
+      "accuracy": 1.0,
+      "by_group": {
+        "overview": {
+          "n": 2,
+          "ok": 2,
+          "acc": 1.0
+        },
+        "refusal": {
+          "n": 3,
+          "ok": 3,
+          "acc": 1.0
+        },
+        "topic": {
+          "n": 4,
+          "ok": 4,
+          "acc": 1.0
+        },
+        "unknown": {
+          "n": 2,
+          "ok": 2,
+          "acc": 1.0
+        },
+        "zone": {
+          "n": 2,
+          "ok": 2,
+          "acc": 1.0
+        }
+      },
+      "failures": []
+    },
+    "note": "dev 集用于调参；holdout 未参与调参，是泛化指标。"
+  },
+  "refusal": {
+    "positives": 38,
+    "negatives": 42,
+    "tp": 36,
+    "fn": 2,
+    "fp": 0,
+    "tn": 42,
+    "recall": 0.947,
+    "miss_rate": 0.053,
+    "false_refusal_rate": 0.0,
+    "note": "负样本用的是库内标准问法，因此误拒率偏保守（偏低）。漏拒率才是关键指标。"
+  },
+  "model": {
+    "available": true,
+    "method": "torchxrayvision DenseNet121 (densenet121-res224-all)",
+    "cases": 21,
+    "consistent": 13,
+    "conflict": 6,
+    "partial": 2,
+    "silent": 0,
+    "strict_rate": 0.619,
+    "weighted_rate": 0.667
+  }
+}
