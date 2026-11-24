@@ -286,12 +286,13 @@ function ask(query){
   if(!q) return;
   $("q").value = q;
   const res = AskCore.classify(q, cur, ITEMS);
+  const scope = cur ? `<div style="font-size:12px;color:#8a94a6;margin:0 0 8px">检索范围：当前病例 ${cur}（答案只针对这张片子；换一例后答案会变）</div>` : "";
   if(res.kind === "unknown"){
-    $("result").innerHTML = renderUnknown(q);
+    $("result").innerHTML = scope + renderUnknown(q);
   } else if(res.kind === "refusal"){
-    $("result").innerHTML = renderRefusal(res.item);
+    $("result").innerHTML = scope + renderRefusal(res.item);
   } else {
-    $("result").innerHTML = renderAnswer(res.item);
+    $("result").innerHTML = scope + renderAnswer(res.item);
   }
   bindResult();
 }
@@ -309,6 +310,15 @@ function pickCase(id){
   const cs = CASES;
   if(!cs.length) return null;
   if(id){ const f = cs.find(c=> c.id === id); if(f) return f; }
+  // 默认固定：优先第一张有病变的片子，否则第一例。
+  // 同一问句重复问必须得到同一答案，所以这里不能用随机。
+  const abn = cs.find(c => ITEMS.some(it => it.case_id === c.id && (it.region || {}).status === "abnormal"));
+  return abn || cs[0];
+}
+
+function shuffleCase(){
+  const cs = CASES;
+  if(!cs.length) return null;
   return cs[Math.floor(Math.random()*cs.length)];
 }
 
@@ -362,8 +372,8 @@ $("limToggle").onclick = ()=>{
 $("ask").onclick = ()=> ask($("q").value);
 $("q").addEventListener("keydown", e=>{ if(e.key === "Enter") ask($("q").value); });
 $("shuffle").onclick = ()=>{
-  let next = pickCase(null);
-  if(CASES.length > 1){ while(next && cur && next.id === cur.id) next = pickCase(null); }
+  let next = shuffleCase();
+  if(CASES.length > 1){ while(next && cur && next.id === cur.id) next = shuffleCase(); }
   selectCase(next);
   $("result").innerHTML = `<div class="empty">已换一例。现在可以问这张片子。</div>`;
 };

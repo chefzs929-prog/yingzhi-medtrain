@@ -1,0 +1,41 @@
+#!/bin/bash
+# 影知 RadioCheck 启动器
+# 双击：确保本地服务在跑，然后打开浏览器。
+
+set -u
+HERE="$(cd "$(dirname "$0")" && pwd)"
+SITE="$HERE/../Resources/site"
+PORT=8901
+URL="http://127.0.0.1:$PORT/index.html"
+
+# 已经在跑就直接打开
+if curl -s -o /dev/null --max-time 1 "$URL"; then
+  open "$URL"
+  exit 0
+fi
+
+# 找一个空闲端口（8901 起，最多试 20 个）
+for i in $(seq 0 20); do
+  p=$((PORT + i))
+  if ! lsof -ti tcp:"$p" >/dev/null 2>&1; then
+    PORT=$p
+    URL="http://127.0.0.1:$PORT/index.html"
+    break
+  fi
+done
+
+cd "$SITE" || exit 1
+PY="$(command -v python3 || echo /usr/bin/python3)"
+nohup "$PY" -m http.server "$PORT" --bind 127.0.0.1 >/dev/null 2>&1 &
+
+# 等端口就绪，最多 6 秒
+for i in $(seq 1 30); do
+  if curl -s -o /dev/null --max-time 1 "$URL"; then break; fi
+  sleep 0.2
+done
+
+open "$URL"
+
+# 顺带记一下端口，方便手动关闭
+echo "$PORT" > "$HOME/.yingzhi-port" 2>/dev/null
+exit 0

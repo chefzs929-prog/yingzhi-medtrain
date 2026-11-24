@@ -142,7 +142,9 @@ def main() -> None:
                     "case_title": case.get("title", ""),
                     "status": z["status"],
                 },
-                "citation": cite(spans, kp_id) if kp_id else None,
+                "citation": (cite(spans, kp_id) if kp_id else None) or (
+                    cite(spans, "GL-NOR-01") if z["status"] in ("normal", "limited") else None
+                ),
                 "basis": z.get("basis") or "库内逐区标注",
             })
 
@@ -184,7 +186,7 @@ def main() -> None:
                 "answerable": True,
                 "answer": ans,
                 "confidence": conf,
-                "region": _region_of(tz, case),
+                "region": _region_of(tz, case) or _whole_region(case),
                 "citation": cite(spans, kp_id) if kp_id else None,
                 "basis": "库内逐区标注 + 指南要点",
             })
@@ -285,6 +287,19 @@ def _join_texts(zones):
             if t and t not in seen:
                 seen.append(t)
     return ("；".join(seen[:2]) + "。") if seen else "（无）"
+
+
+def _whole_region(case):
+    """整片锚点：topic 问题在来源未逐区定位时，区域是整张片子而不是某个分区。"""
+    return {
+        "zone_id": "WHOLE",
+        "label": "全片",
+        "coords": [0.0, 0.0, 1.0, 1.0],
+        "image": case.get("image", ""),
+        "case_id": case["id"],
+        "case_title": case.get("title", ""),
+        "status": "whole",
+    }
 
 
 def _region_of(zones, case):
