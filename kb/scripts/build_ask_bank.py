@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 CHEST = ROOT / "kb/data/chest_reading.json"
 DIGEST = ROOT / "kb/data/guideline_digest.json"
 DUAL = ROOT / "kb/data/dual_source.json"
+REFUSALS = ROOT / "kb/data/refusals.json"
 OUT = ROOT / "kb/data/ask_bank.json"
 
 STATE_NOTE = {
@@ -196,43 +197,24 @@ def main() -> None:
                 "basis": "库内逐区标注",
             })
 
-    # 4) 拒答样例：真实规则判定，不是演的
-    refusals = [
-        ("这张片子是不是肺癌？", "out_of_scope_diagnosis", "超出诊断范围",
-         "库内是教学分区标注，不包含病理或恶性诊断依据。仅凭胸片分区描述不能判断良恶性，需要病理、增强 CT 或多学科会诊。",
-         "可以问：这张片子有没有结节？结节的部位和大小来源是怎么描述的？"),
-        ("病灶是早期还是晚期？", "out_of_scope_diagnosis", "超出分期范围",
-         "分期依赖 TNM 系统、影像分期与病理结果，本工具只做分区阅片描述，不做分期。",
-         "可以问：这张片子主要异常是什么？"),
-        ("需要做手术吗？", "out_of_scope_treatment", "超出治疗建议范围",
-         "治疗决策需要结合临床、实验室与患者整体情况，本工具不提供治疗建议。",
-         "可以问：这份报告缺哪些要素？"),
-        ("帮我写一份正式诊断报告", "out_of_scope_report", "超出报告签发范围",
-         "本工具输出的是教学分区所见与出处，不是可直接签发的诊断报告，也没有经过医师审核。",
-         "可以看：报告—指南双源对照，它只提示离规范报告还差哪几项。"),
-        ("这个病人预后怎么样？", "out_of_scope_prognosis", "超出预后判断范围",
-         "预后需要纵向随访数据与临床资料，单张胸片的分区描述不足以支撑预后判断。",
-         "可以问：这张片子有没有胸腔积液？"),
-        ("右肺上野有没有骨折？", "out_of_scope_topic", "超出覆盖主题",
-         "本工具的分区标注针对肺野、心影、纵隔、膈肌等胸部 X 线教学分区，不包含肋骨骨折的系统判读。",
-         "可以问：右肺上野有什么问题？"),
-        ("胸腔积液大概有多少毫升？", "out_of_scope_quantify", "超出定量范围",
-         "胸片只能提示积液的存在与大致范围，精确容量需要超声或 CT 评估，本工具不做容量估算。",
-         "可以问：这张片子有没有胸腔积液？"),
-        ("这张片子是肺炎还是肺结核？", "out_of_scope_differential", "不做鉴别结论",
-         "可以分别告诉你两种病变在库内的描述，但不下「二者之一」的鉴别结论——鉴别需要临床、实验室与随访。",
-         "可以分别问：有没有肺炎？有没有结核？"),
-    ]
-    for i, (q, t, tcn, reason, sug) in enumerate(refusals, 1):
+    # 4) 拒答样例：从数据文件读取，每条都是真实规则判定
+    refuse_data = json.loads(REFUSALS.read_text(encoding="utf8"))
+    for r in refuse_data["items"]:
         items.append({
-            "qid": f"R{i:04d}",
+            "qid": r["id"].replace("REF-", "R"),
             "kind": "refusal",
             "case_id": None,
             "topic_id": "",
-            "question": q,
-            "keywords": [q[:6]] + _split_kw(q),
+            "question": r["question"],
+            "keywords": _split_kw(r["question"]),
             "answerable": False,
-            "refusal": {"type": t, "type_cn": tcn, "reason": reason, "suggestion": sug},
+            "refusal": {
+                "type": r["type"],
+                "type_cn": r["type_cn"],
+                "level": r.get("level", "hard"),
+                "reason": r["reason"],
+                "suggestion": r["suggestion"],
+            },
         })
 
     for it in items:

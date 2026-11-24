@@ -48,6 +48,8 @@ button,input{font-family:inherit}
 @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .ans.ok{border-color:var(--okln)}
 .ans.no{border-color:var(--nolnn)}
+.ans.soft{border-color:#f0e2c4}
+.tag.soft{background:#fdf6e8;color:#94620b}
 .ans-h{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
 .tag{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:99px}
 .tag.ok{background:var(--okbg);color:var(--ok)}
@@ -84,6 +86,21 @@ button,input{font-family:inherit}
 .src{margin-top:12px;font-size:11px;color:var(--faint);line-height:1.7}
 .empty{background:#fff;border:1px dashed var(--line);border-radius:var(--r);padding:22px 16px;text-align:center;color:var(--faint);font-size:12.5px;line-height:1.8}
 
+.limits{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.lim-toggle{width:100%;display:flex;align-items:center;gap:8px;padding:13px 14px;background:none;border:0;cursor:pointer;font-size:13px;font-weight:650;color:var(--ink2);text-align:left}
+.lim-n{margin-left:auto;font-size:11px;color:var(--brand2);background:#eef7f5;padding:2px 8px;border-radius:99px;font-weight:600;white-space:nowrap}
+.lim-chev{color:var(--faint);transition:.2s;flex:0 0 auto}
+.limits.open .lim-chev{transform:rotate(90deg)}
+.lim-body{padding:0 14px 14px;border-top:1px solid var(--line)}
+.lim-cols{display:grid;gap:12px;padding-top:12px}
+@media(min-width:520px){.lim-cols{grid-template-columns:1fr 1fr}}
+.lim-h{font-size:10.5px;font-weight:700;letter-spacing:.05em;margin-bottom:6px}
+.lim-h.ok{color:var(--ok)}
+.lim-h.no{color:var(--no)}
+.lim-li{font-size:12px;color:var(--ink2);line-height:1.9;padding-left:10px;position:relative}
+.lim-li::before{content:"·";position:absolute;left:0;color:var(--faint)}
+.lim-foot{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:11px;color:var(--faint);line-height:1.8}
+
 .dis{margin-top:18px;font-size:11px;color:var(--no);background:var(--nobg);border:1px solid var(--nolnn);border-radius:10px;padding:9px 11px;line-height:1.7}
 
 .foot{display:flex;gap:8px;margin-top:16px}
@@ -112,6 +129,37 @@ button,input{font-family:inherit}
   <div class="chips" id="chips"></div>
 
   <div id="result"><div class="empty">先选一个问题，或直接输入。<br>能答的会给出影像区域与原文；不能答的会说明为什么。</div></div>
+
+  <div class="limits" id="limits">
+    <button class="lim-toggle" id="limToggle">
+      <span>能力边界：能答什么，不能答什么</span>
+      <span class="lim-n" id="limN">—</span>
+      <span class="lim-chev">›</span>
+    </button>
+    <div class="lim-body" id="limBody" hidden>
+      <div class="lim-cols">
+        <div class="lim-col">
+          <div class="lim-h ok">能答</div>
+          <div class="lim-li">分区异常：某区有什么问题</div>
+          <div class="lim-li">主题有无：有没有肺炎 / 结节 / 积液</div>
+          <div class="lim-li">整体概括：主要异常是什么</div>
+          <div class="lim-li">报告要素：这份报告缺什么</div>
+        </div>
+        <div class="lim-col">
+          <div class="lim-h no">不能答</div>
+          <div class="lim-li">诊断 / 分期 / 病因 / 良恶性</div>
+          <div class="lim-li">治疗 / 用药 / 手术 / 住院</div>
+          <div class="lim-li">预后 / 生存期</div>
+          <div class="lim-li">代写报告 / 签字</div>
+          <div class="lim-li">非胸片 / 非 X 线（CT、MRI、超声）</div>
+          <div class="lim-li">精确测量（毫米、毫升）</div>
+          <div class="lim-li">患者身份信息</div>
+          <div class="lim-li">通用医学知识 / 其他任务</div>
+        </div>
+      </div>
+      <div class="lim-foot" id="limFoot"></div>
+    </div>
+  </div>
 
   <div class="dis">非诊断用途 · 答案来自库内逐区标注，指南为公开资料要点转述（非逐字引用）· 不提供诊断、分期、治疗与预后建议</div>
 
@@ -243,12 +291,16 @@ function renderAnswer(item){
 
 function renderRefusal(item){
   const r = item.refusal;
+  const soft = r.level === "soft";
   const p = pool();
   const sugItem = p.filter(i=> i.answerable && i.kind !== "refusal")[0];
+  const cls = soft ? "soft" : "no";
+  const tagText = soft ? "不给结论 · 但可给依据" : "不能回答";
+  const title = soft ? "这个我不下结论。" : "这个我不能答。";
   return `
-    <div class="ans no">
-      <div class="ans-h"><span class="tag no">不能回答</span><span class="conf">${esc(r.type_cn)}</span></div>
-      <p class="concl">这个我不能答。</p>
+    <div class="ans ${cls}">
+      <div class="ans-h"><span class="tag ${cls}">${tagText}</span><span class="conf">${esc(r.type_cn)}</span></div>
+      <p class="concl">${title}</p>
       <p class="reason">${esc(r.reason)}</p>
       <div class="sug">
         <div class="sg-h">你可以问</div>
@@ -328,12 +380,27 @@ function boot(){
       CASES = Object.values(map);
       const want = new URLSearchParams(location.search).get("case");
       selectCase(pickCase(want));
+      renderLimits();
     })
     .catch(e=>{
       $("result").innerHTML = `<div class="empty">问答库未加载：请通过构建后的站点访问 read/ask.html</div>`;
       console.error(e);
     });
 }
+
+function renderLimits(){
+  const refs = ITEMS.filter(i=> !i.answerable);
+  const hard = refs.filter(i=> i.refusal && i.refusal.level !== "soft").length;
+  const soft = refs.length - hard;
+  $("limN").textContent = refs.length + " 条拒答样例";
+  $("limFoot").innerHTML = `共 ${refs.length} 条拒答样例：硬拒绝 <b>${hard}</b> 条（完全不能答），软拒绝 <b>${soft}</b> 条（不给结论，但给依据）。<br>阈值：拒答匹配门槛 0.25，低于回答门槛 0.32 —— 宁可多拒答，不可误答。`;
+}
+
+$("limToggle").onclick = ()=>{
+  const box = $("limits");
+  box.classList.toggle("open");
+  $("limBody").hidden = !box.classList.contains("open");
+};
 
 $("ask").onclick = ()=> ask($("q").value);
 $("q").addEventListener("keydown", e=>{ if(e.key === "Enter") ask($("q").value); });
