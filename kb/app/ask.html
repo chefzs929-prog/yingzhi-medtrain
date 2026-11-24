@@ -170,76 +170,16 @@ button,input{font-family:inherit}
   </div>
 </div>
 
+<script src="ask-core.js"></script>
 <script>
 const URL_BANK = "../data/chest/ask_bank.json";
-const STOP = new Set(["有没有","什么","这张","片子","问题","吗","有吗","吗？","怎样","怎么"]);
-
 let BANK = null, ITEMS = [], CORPUS = "", CASES = [], cur = null;
 
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
-function norm(s){ return String(s||"").replace(/[，。？！、；：\s"'“”‘’]/g,"").toLowerCase(); }
-
-function bigrams(s){
-  const r = [];
-  for(let i=0;i<s.length-1;i++) r.push(s.slice(i,i+2));
-  return r;
-}
-function dice(a,b){
-  const A = bigrams(a), B = bigrams(b);
-  if(!A.length || !B.length) return 0;
-  const m = new Map();
-  A.forEach(x=> m.set(x,(m.get(x)||0)+1));
-  let hit = 0;
-  B.forEach(x=>{ const c = m.get(x)||0; if(c>0){ hit++; m.set(x,c-1); } });
-  return 2*hit/(A.length+B.length);
-}
-
-const ZONE_KEY = {RUL:"右上",RML:"右中",RLL:"右下",LUL:"左上",LML:"左中",LLL:"左下"};
-function parseRegion(q){
-  const side = q.includes("右") ? "右" : (q.includes("左") ? "左" : "");
-  const m = q.match(/(上|中|下)\s*(野|部|叶|面|头|半|方|肺野|间|段)/);
-  if(!m) return side;
-  return side + m[1];
-}
-
-function scoreOf(query, item){
-  const nq = norm(query);
-  const text = norm(item.question + " " + (item.keywords||[]).join(" "));
-  let s = dice(nq, text);
-  (item.keywords||[]).forEach(k=>{
-    const nk = norm(k);
-    if(nk.length >= 2 && !STOP.has(nk) && nq.includes(nk)) s += 0.18;
-  });
-  (item.aliases||[]).some(a=>{
-    const na = norm(a);
-    if(na.length >= 2 && nq.includes(na)){ s += 0.5; return true; }
-    return false;
-  });
-  const qk = parseRegion(nq);
-  if(qk && item.region && item.region.zone_id){
-    const zk = ZONE_KEY[item.region.zone_id] || "";
-    if(zk && [...qk].every(ch=>zk.includes(ch))) s += 0.45;
-  }
-  if(item.region && item.region.label){
-    const nl = norm(item.region.label);
-    if(nl && nq.includes(nl)) s += 0.28;
-  }
-  return s;
-}
 
 function pool(){
   return ITEMS.filter(it=> it.case_id === null || it.case_id === cur);
-}
-
-function best(query){
-  const p = pool();
-  let top = null, ts = 0;
-  p.forEach(it=>{
-    const s = scoreOf(query, it);
-    if(s > ts){ ts = s; top = it; }
-  });
-  return { item: top, score: ts };
 }
 
 function renderChips(){
@@ -345,14 +285,13 @@ function ask(query){
   const q = String(query || "").trim();
   if(!q) return;
   $("q").value = q;
-  const { item, score } = best(q);
-  const threshold = (item && !item.answerable) ? 0.25 : 0.32;
-  if(!item || score < threshold){
+  const res = AskCore.classify(q, cur, ITEMS);
+  if(res.kind === "unknown"){
     $("result").innerHTML = renderUnknown(q);
-  } else if(item.answerable){
-    $("result").innerHTML = renderAnswer(item);
+  } else if(res.kind === "refusal"){
+    $("result").innerHTML = renderRefusal(res.item);
   } else {
-    $("result").innerHTML = renderRefusal(item);
+    $("result").innerHTML = renderAnswer(res.item);
   }
   bindResult();
 }

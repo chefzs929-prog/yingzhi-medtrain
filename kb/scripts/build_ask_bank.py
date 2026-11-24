@@ -227,7 +227,7 @@ def main() -> None:
                 "type_cn": r["type_cn"],
                 "level": r.get("level", "hard"),
                 "reason": r["reason"],
-                "suggestion": r["suggestion"],
+                "suggestion": re.sub(r"^可以(问|看)[：:]\s*", "", r["suggestion"]),
             },
         })
 
