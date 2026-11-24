@@ -1581,6 +1581,11 @@
       if (res.status === "single" && res.primary) {
         selectZone(res.primary.region.id);
         toast(`框选命中 ${res.primary.region.name}`);
+      } else if (res.status === "diffuse" && (res.regions || []).length) {
+        // 气胸 / 大量积液这类大范围病变，框本身就大：给"可能累及"而不是拒绝定位
+        const names = res.regions.map((x) => x.region.name);
+        selectZone(res.regions[0].region.id);
+        toast("大范围病变，可能累及：" + names.join("、"));
       } else {
         toast(res.message || "未命中单一分区，请缩小范围或直接点分区");
       }

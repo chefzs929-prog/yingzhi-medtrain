@@ -87,13 +87,16 @@ def write_redirects() -> None:
     write_redirect(OUT / "app.html", "read/clinic.html")
 
     for stale in OUT.glob("*.html"):
-        if stale.name not in ("index.html", "app.html"):
+        if stale.name not in ("index.html", "app.html", "pitch.html"):
             write_redirect(stale, "read/clinic.html")
 
     dev = OUT / "dev"
-    if dev.exists():
-        for page in dev.glob("*.html"):
-            write_redirect(page, "../read/clinic.html")
+    dev.mkdir(parents=True, exist_ok=True)
+    if not any(dev.glob("*.html")):
+        # 源码里已无 dev 目录，但站外仍有旧链接指向 dev/student.html，必须保留跳转
+        write_redirect(dev / "student.html", "../read/clinic.html")
+    for page in dev.glob("*.html"):
+        write_redirect(page, "../read/clinic.html")
 
 
 def write_readme() -> None:
@@ -188,6 +191,18 @@ python3 yingzhi/serve/main.py --port 8800
 
 前端会先探测 `GET /api/health`；不可用时明确提示启动命令，不会伪装成已接入。Agent 只解释库内证据，不判分、不诊断、不治疗；引用来自服务端 citation 事件，未验证 id 会标红。
 
+## 快速复现（6 条命令）
+
+```bash
+git clone https://github.com/chefzs929-prog/yingzhi-medtrain.git
+cd yingzhi-medtrain
+python3 -m pip install -r requirements.txt && python3 -m playwright install chromium
+python3 medtrain/build.py
+cd outputs/medtrain && python3 -m http.server 8811   # 浏览器打开 http://127.0.0.1:8811/
+```
+
+只装依赖、只构建、只起静态服务即可看到全部页面；下列验收脚本都以此服务为前提。
+
 ## 构建与验收
 
 ```bash
@@ -202,7 +217,12 @@ python3 medtrain/tests/exam_check.py           # 病例题 + 对比阅片端到�
 python3 medtrain/tests/classroom_check.py      # 课堂端到端 33 项（同上）
 python3 medtrain/tests/student_lab_check.py    # 问答 / 陪练 / 自测 / 小组 52 项（同上）
 python3 medtrain/tests/site_check.py           # 全站入口 41 项（同上）
+python3 medtrain/tests/refusal_eval.py         # 拒答 / 命中 50 条（同上）
+python3 kb/scripts/crosscheck.py               # JS 与 Python 引擎 69 条逐条比对
+python3 -m unittest discover -s kb/tests       # 知识库单元测试（区域定位 / 引用门禁 / 合规）
 ```
+
+`medtrain/tests/legacy/` 下两个脚本对应已下线的多版 SPA 与 3D 首页，不再纳入复现清单。
 
 胸片数据自检：`outputs/medtrain/chest_selfcheck.md`
 病例题数据自检：`outputs/medtrain/exam_selfcheck.md`

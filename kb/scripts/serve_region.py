@@ -46,7 +46,7 @@ CHAPTER_DESC = {
     "超声": "超声局部视野：只给探头相对位置",
 }
 
-SIDE_LABEL = {"right": "患者右侧", "left": "患者左侧", "midline": "中线", "unknown": "侧别未知"}
+SIDE_LABEL = {"right": "患者右侧", "left": "患者左侧", "midline": "中线", "mid": "中线", "unknown": "侧别未知"}
 
 
 def read_jsonl(name):
@@ -85,7 +85,25 @@ def inter(a, b):
 class RegionKB:
     def __init__(self):
         self.atlases = {a["id"]: a for a in read_jsonl("atlases.jsonl")}
+        # v2.0 图集改名（ATLAS-CHEST-PA -> ATLAS-CHEST-PA-6 等），旧数据仍引用旧 id；
+        # 这里做一次内存归一，避免 440 条分区全部解析不到图集元数据。
+        aliases = {
+            "ATLAS-CHEST-PA": "ATLAS-CHEST-PA-6",
+            "ATLAS-CHEST-CT": "ATLAS-CHEST-CT-LOCAL",
+            "ATLAS-ABD-CT": "ATLAS-ABD-CT-LOCAL",
+            "ATLAS-HEAD-MR": "ATLAS-HEAD-MR-LOCAL",
+            "ATLAS-HEAD-CT": "ATLAS-HEAD-CT-LOCAL",
+            "ATLAS-BREAST-MG": "ATLAS-BREAST-MLO-LOCAL",
+            "ATLAS-US": "ATLAS-US-LOCAL",
+            "ATLAS-MSK-CR": "ATLAS-MSK-CR-GLOBAL",
+            "ATLAS-MSK-MR": "ATLAS-LIMB-LOCAL",
+            "ATLAS-SPINE-CR": "ATLAS-SPINE-GLOBAL",
+            "ATLAS-SPINE-MR": "ATLAS-SPINE-GLOBAL",
+            "ATLAS-PET": "ATLAS-CHEST-CT-LOCAL",
+        }
         self.regions = read_jsonl("regions.jsonl")
+        for _r in self.regions:
+            _r["atlas_id"] = aliases.get(_r.get("atlas_id"), _r.get("atlas_id"))
         self.regions_by_id = {r["id"]: r for r in self.regions}
         self.claims = read_jsonl("claims.jsonl")
         self.cases = read_jsonl("cases.jsonl")
@@ -125,11 +143,13 @@ class RegionKB:
                 "message": claim.get("gate_reason") or "缺少空间锚点",
             })
         else:
+            # 库内 bbox 存的是 [x1, y1, x2, y2]（与 locate() 面积算法一致）；
+            # 此前按 [left, top, w, h] 校验，把 224 条正确锚点误判为越界。
             b = spatial["anchor"].get("bbox") or []
             bad_geom = (
-                len(b) != 4 or b[2] <= 0 or b[3] <= 0
+                len(b) != 4 or b[2] <= b[0] or b[3] <= b[1]
                 or b[0] < 0 or b[1] < 0
-                or b[0] + b[2] > 1.0001 or b[1] + b[3] > 1.0001
+                or b[2] > 1.0001 or b[3] > 1.0001
             )
             if bad_geom:
                 problems.append({"code": "anchor_invalid", "message": "空间锚点超出图像范围"})
@@ -187,9 +207,13 @@ class RegionKB:
 
         scored = []
         for r in regions:
-            a = inter(b, r["coords"])
+            # 库内 coords 是 [x1, y1, x2, y2]；inter() 按 [left, top, w, h] 计算，
+            # 必须先转换。此前未转换，下半野分区被放大到画外，是定位偏移的根因。
+            rc = r["coords"]
+            rb = [rc[0], rc[1], max(0.0, rc[2] - rc[0]), max(0.0, rc[3] - rc[1])]
+            a = inter(b, rb)
             coverage = a / max(1e-9, area(b))
-            purity = a / max(1e-9, area(r["coords"]))
+            purity = a / max(1e-9, area(rb))
             scored.append({
                 "region": r, "overlap": a, "coverage": coverage, "purity": purity,
                 "score": 0.7 * coverage + 0.3 * purity,
@@ -198,11 +222,23 @@ class RegionKB:
         top = scored[0]
         second = scored[1] if len(scored) > 1 else None
 
-        if area(b) > MAX_AREA:
-            return {"status": "too_large", "message": "选区过大，请缩小到单一分区后再定位", "bbox": b}
         if b[2] < MIN_SIDE or b[3] < MIN_SIDE:
             return {"status": "too_small", "message": "选区过小，请扩大后再定位", "bbox": b}
-        if top["coverage"] < MIN_COVER:
+        # 大面积病变（气胸、大量积液、大叶实变）的框天然就大。
+        # 用 purity（该分区有多少落在框内）判断"累及"，而不是 coverage（框内多少属于该区）——
+        # 后者会随框变大而趋近 0，等于惩罚大框，正是此前大片病变定位失败的原因。
+        strong = [x for x in scored if x["purity"] >= 0.75]
+        if area(b) > MAX_AREA or len(strong) >= 2:
+            hit = strong or [x for x in scored if x["coverage"] >= 0.2]
+            hit.sort(key=lambda x: x["purity"], reverse=True)
+            if hit:
+                return {
+                    "status": "diffuse",
+                    "message": "选区覆盖范围较大，按「分区被覆盖比例」列出可能累及的分区；这是范围推断，不宜据此判断单一分区",
+                    "bbox": b,
+                    "regions": [self._region_card(x) for x in hit[:5]],
+                }
+        if top["coverage"] < MIN_COVER and top["purity"] < 0.8:
             return {"status": "uncovered", "message": "该图未标注此区域，本工具不对未标注区域作推断", "bbox": b}
         if second and (top["score"] - second["score"]) < CROSS_GAP and second["coverage"] > SECOND_MIN:
             return {
@@ -223,12 +259,17 @@ class RegionKB:
     def _region_card(self, s):
         r = s["region"]
         atlas = self.atlases.get(r["atlas_id"], {})
+        # "mid" 有两种含义：全局胸片的中线（纵隔），与局部图集的"无侧别"。
+        if r["patient_side"] == "mid":
+            side_label = "中线" if atlas.get("level") == "global" else "侧别未知"
+        else:
+            side_label = SIDE_LABEL.get(r["patient_side"], r["patient_side"])
         return {
             "region": r,
             "coverage": round(s["coverage"], 4),
             "purity": round(s["purity"], 4),
             "score": round(s["score"], 4),
-            "side_label": SIDE_LABEL.get(r["patient_side"], r["patient_side"]),
+            "side_label": side_label,
             "atlas": {
                 "id": atlas.get("id"),
                 "name": atlas.get("name"),

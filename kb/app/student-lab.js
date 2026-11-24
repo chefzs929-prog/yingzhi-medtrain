@@ -29,6 +29,18 @@
     "气管插管", "插管", "机械通气", "疫苗", "接种", "护理", "康复", "预防",
     "严重吗", "会死吗",
   ];
+  // 拒答细分类：都属"超出能力范围"，但原因不同，答辩时能说清"为什么拒"
+  const SCOPE_RULES = [
+    { label: "分期判断", words: ["分期", "早期还是晚期", "晚期还是早期", "几期", "tnm"] },
+    { label: "病因判断", words: ["细菌还是病毒", "病毒还是细菌", "细菌感染", "病毒感染", "什么原因引起", "病因", "病原体"] },
+    { label: "检查方式（本工具只判胸片）", words: ["ct上", "ct片", "核磁", "mri", "磁共振", "超声", "b超", "彩超", "pet"] },
+    { label: "患者隐私", words: ["叫什么名字", "叫什么", "姓名", "多大年纪", "身份证", "电话号码", "住址", "哪家医院"] },
+    { label: "准确性保证", words: ["100%", "百分之百", "保证准确", "一定能确诊", "包准", "保证不出错"] },
+    { label: "非医学任务", words: ["写代码", "python", "翻译成", "写作文", "做表格", "写一段代码"] },
+    { label: "就诊指引", words: ["挂哪个科", "看哪个科", "挂号", "去哪个医院"] },
+    { label: "特殊人群与放射防护", words: ["儿童拍", "孕妇拍", "辐射剂量", "防护"] },
+    { label: "骨骼与关节系统", words: ["骨折", "退变", "骨质疏松", "骨破坏"] },
+  ];
   const NON_CHEST = ["甲状腺", "乳腺", "肝脏", "胆囊", "胰腺", "脾脏", "肾脏", "肾上腺",
     "盆腔", "子宫", "卵巢", "前列腺", "头颅", "大脑", "脊柱", "脊髓", "骨盆",
     "髋关节", "膝关节", "踝关节", "肩关节", "腕关节", "肘关节"];
@@ -181,6 +193,11 @@
     const s = norm(q);
     if (!s) return "";
     if (SCOPE_WORDS.some((w) => s.includes(norm(w)))) return "治疗 / 预后 / 操作建议";
+    const sc = s.replace(/\s+/g, "");
+    const cw = (w) => norm(w).replace(/\s+/g, "");
+    for (const rule of SCOPE_RULES) {
+      if (rule.words.some((w) => sc.includes(cw(w)))) return rule.label;
+    }
     if (/(诊断|确诊|是不是.{0,4}(癌|肿瘤|病)|什么病|良性还是恶性|恶性还是良性)/.test(s) &&
         !/(依据|标准|怎么找|表现|征象|鉴别|区分)/.test(s)) return "诊断结论";
     return "";
@@ -339,6 +356,7 @@
     const a = signs[0];
     const b = signs[1];
     const pitfalls = (s) => (s.pitfalls || []).slice(0, 2).join("；") || "暂未列出易错点";
+    const desc = (s) => s.appearance || s.note || "该词条暂无形态描述";
     return {
       kind: "compare",
       tier: "hit",
@@ -350,7 +368,7 @@
       guidelines,
       sources,
       concepts: relatedConcepts(ids),
-      conclusion: `${a.name}：${a.appearance} ${b.name}：${b.appearance} ` +
+      conclusion: `${a.name}：${desc(a)} ${b.name}：${desc(b)} ` +
         `鉴别时不要只看一个征象：${a.name} 的易错点——${pitfalls(a)}；${b.name} 的易错点——${pitfalls(b)}。`,
       missing: [
         "对比只并列知识库中的定义、影像位置与易错点，不是诊断路径。",
@@ -389,7 +407,8 @@
       };
     }
     // “A 和 B 怎么区分”这类对比问法：并列两个库内征象，而不是只命中一个
-    const mentioned = ((L.data && L.data.signs) || []).filter((s) => {
+    const comparePool = ((L.data && L.data.signs) || []).concat((L.data && L.data.concepts) || []);
+    const mentioned = comparePool.filter((s) => {
       const names = [s.name, s.en].concat(s.aliases || []).map(norm).filter(Boolean);
       return names.some((n) => n.length >= 2 && q.includes(n));
     }).slice(0, 2);

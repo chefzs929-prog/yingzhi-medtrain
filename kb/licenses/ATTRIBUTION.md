@@ -86,9 +86,9 @@ See also source article for additional im | CC BY 4.0 | https://commons.wikimedi
 | images/case-112.jpg | 胆囊结石超声 | 腹部实质脏器 | Nevit Dilmen (talk) | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File%3AUltrasound_image_of_gallbladder_stone_Gallstone_091937515.jpg |
 | images/case-118.jpg | 乳腺剪切波弹性成像 | 乳腺钙化与肿块 | Rosa M.S. Sigrist, Joy Liau, Ahmed El Kaffas, Maria Cristina Chammas, Juergen K. | CC BY 4.0 | https://commons.wikimedia.org/wiki/File%3ASWE_of_breast_cancer.jpg |
 | images/case-120.jpg | 乳腺肿瘤超声 | 乳腺钙化与肿块 | Natuchi84 | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File%3ATumor_mamario.jpg |
-| images/case-153.jpg | 胸部 X 线 | 胸部 CT 窗位与层面 | Mikael Häggström | CC0 | https://upload.wikimedia.org/wikipedia/commons/c/ca/Chest_radiograph_of_a_lung_with_Kerley_B_lines.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original |
-| images/case-158.jpg | 胸部 CT | 胸部 CT 窗位与层面 | Ptrump16 | CC BY-SA 4.0 | https://upload.wikimedia.org/wikipedia/commons/b/b0/CT_Scan_Thorax_Water_0_HU_Window_Level.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original |
-| images/case-162.jpg | 胸部 X 线 | 胸部 CT 窗位与层面 | Benjamín Herreros, Isabel Plaza, Rebeca García, Marta Chichón, Carmen Guerrero and Emilio Pintor | CC BY 4.0 | https://upload.wikimedia.org/wikipedia/commons/7/70/Chest_radiograph_of_miliary_tuberculosis_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original |
+| images/case-153.jpg | 胸部 X 线 | 胸部 CT 窗位与层面 | Mikael Häggström | CC0 | https://commons.wikimedia.org/wiki/File:Chest_radiograph_of_a_lung_with_Kerley_B_lines.jpg |
+| images/case-158.jpg | 胸部 CT | 胸部 CT 窗位与层面 | Ptrump16 | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:CT_Scan_Thorax_Water_0_HU_Window_Level.jpg |
+| images/case-162.jpg | 胸部 X 线 | 胸部 CT 窗位与层面 | Benjamín Herreros, Isabel Plaza, Rebeca García, Marta Chichón, Carmen Guerrero and Emilio Pintor | CC BY 4.0 | https://commons.wikimedia.org/wiki/File:Chest_radiograph_of_miliary_tuberculosis_2.jpg |
 | images/case-201.jpg | 肺孢子菌肺炎：双肺磨玻璃影（胸片） | 肺部实变与气腔影 | Carolyn M. Allen, Hamdan H. AL-Jahdali, Klaus L. Irion, Sarah Al Ghanem, Alaa Gouda, and Ali Nawaz Khan | CC BY 4.0 | https://commons.wikimedia.org/wiki/File:X-ray_of_ground_glass_opacities_of_pneumocystis_pneumonia.jpg |
 | images/case-202.jpg | 大叶性肺炎（胸片，红箭头） | 肺部实变与气腔影 | Mikael Häggström, M.D. Author info - Reusing images- Conflicts of interest:  None
 Mikael Häggström, M.D.Consent note: Wr | CC0 | https://commons.wikimedia.org/wiki/File:X-ray_of_lobar_pneumonia.jpg |

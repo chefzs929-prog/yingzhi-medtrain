@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RadioCheck 影知 · 路演</title>
+<style>
+  :root{--ink:#0f2b33;--muted:#5b7681;--line:#dbe6e8;--brand:#0b4f55;--brand2:#0e7c7b;--bg:#f3f8f7;--warn:#b4451f}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#0d1417;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;color:var(--ink)}
+  .slide{width:1280px;height:720px;background:var(--bg);margin:0 auto 18px;padding:56px 64px;position:relative;display:none;overflow:hidden}
+  .slide.on{display:block}
+  .slide::after{content:attr(data-n);position:absolute;right:34px;bottom:22px;font-size:12px;color:#9db3ba;letter-spacing:.08em}
+  .k{font-size:13px;letter-spacing:.2em;color:var(--brand2);font-weight:800;margin:0 0 10px}
+  h1{font-size:52px;line-height:1.12;letter-spacing:-.03em;margin:0 0 14px;font-weight:800}
+  h2{font-size:34px;line-height:1.2;letter-spacing:-.02em;margin:0 0 8px;font-weight:800}
+  .sub{font-size:17px;color:var(--muted);line-height:1.7;margin:0}
+  .lead{font-size:20px;line-height:1.75;margin:16px 0 0;max-width:1040px}
+  .grid{display:grid;gap:16px;margin-top:26px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .card b{display:block;font-size:15px;margin-bottom:6px}
+  .card p{margin:0;font-size:14px;color:var(--muted);line-height:1.7}
+  .num{font-size:38px;font-weight:800;letter-spacing:-.03em;color:var(--brand);line-height:1}
+  .num small{font-size:15px;font-weight:600;color:var(--muted);margin-left:6px;letter-spacing:0}
+  table{width:100%;border-collapse:collapse;margin-top:22px;font-size:14.5px}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:700;background:#eef5f4}
+  td b{color:var(--ink)}
+  .tl{background:var(--brand);color:#fff;border-radius:14px;padding:20px 22px;margin-top:24px}
+  .tl .q{font-size:19px;line-height:1.6;font-weight:700}
+  .tl .a{font-size:14px;opacity:.86;margin-top:8px;line-height:1.7}
+  .four{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+  .st{border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.6;border:1px solid var(--line);background:#fff}
+  .st b{display:block;font-size:15px;margin-bottom:4px}
+  .st.bad{border-color:#f0cdc2;background:#fdf5f2}
+  .st.ok{border-color:#c9e4d4;background:#f3fbf6}
+  .st.un{border-color:#f2e2c2;background:#fdf9f0}
+  .st.li{border-color:#d8dee2;background:#f7f9fa}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px}
+  .pipeline{display:flex;align-items:stretch;gap:0;margin-top:26px}
+  .step{flex:1;background:#fff;border:1px solid var(--line);padding:16px 14px;position:relative}
+  .step+.step{border-left:0}
+  .step:first-child{border-radius:12px 0 0 12px}
+  .step:last-child{border-radius:0 12px 12px 0}
+  .step b{font-size:14px;display:block;margin-bottom:5px}
+  .step p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.6}
+  .step em{position:absolute;left:14px;top:-9px;font-style:normal;font-size:11px;background:var(--brand);color:#fff;padding:2px 7px;border-radius:6px}
+  .code{background:#0f2b33;color:#d7ecea;border-radius:10px;padding:13px 16px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.7;margin-top:20px;overflow:auto;white-space:pre-wrap}
+  .code b{color:#8fd3cb;font-weight:600}
+  .foot{position:absolute;left:64px;bottom:26px;font-size:12px;color:#9db3ba}
+  .hero{display:flex;flex-direction:column;justify-content:center;height:100%}
+  .hero h1{font-size:64px}
+  .hero .sub{font-size:20px;max-width:820px}
+  .badge{display:inline-block;align-self:flex-start;font-size:12px;letter-spacing:.1em;font-weight:800;color:var(--brand);border:1px solid #cfe2e0;background:#fff;padding:6px 11px;border-radius:99px;margin-bottom:18px}
+  @media print{body{background:#fff}.slide{display:block!important;page-break-after:always;margin:0}}
+</style>
+</head>
+<body>
+
+<!-- 1 封面 -->
+<section class="slide on" data-n="1 / 9">
+  <div class="hero">
+    <span class="badge">滴普杯 DEEPWORKS 校园黑客松 · 赛道 B</span>
+    <h1>RadioCheck 影知</h1>
+    <p class="sub">一张胸片，一个分区，一条原文。<br>答得出就说清依据，答不出就明确说不。</p>
+    <p class="sub" style="margin-top:26px;font-size:15px">21 例公开胸片 · 153 个教学分区 · 350 道自测题 · 纯静态、断网可用</p>
+  </div>
+  <div class="foot">非诊断用途 · 仅供医学影像教学</div>
+</section>
+
+<!-- 2 问题 -->
+<section class="slide" data-n="2 / 9">
+  <p class="k">真实问题</p>
+  <h2>医学生看胸片，卡在"我看到的到底对不对"</h2>
+  <p class="lead">教材给的是典型图，真实片子是灰的。学生要么找不到病灶在哪个区，要么找到了却说不清依据；更麻烦的是——<b>没有描述的区域，学生默认它正常</b>。</p>
+  <div class="grid g3">
+    <div class="card"><b>找不到位置</b><p>能感觉"这里不对"，但说不清是右肺上野还是纵隔旁。</p></div>
+    <div class="card"><b>说不出来源</b><p>结论来自印象，不是来自某条可回查的描述。</p></div>
+    <div class="card"><b>把"没写"当"正常"</b><p>来源没提这一区，学生当成阴性——这是最需要纠正的习惯。</p></div>
+  </div>
+  <div class="tl">
+    <div class="q">所以我们要的不是"AI 读片"，而是"每个结论都能指回去"。</div>
+    <div class="a">指回哪个分区、哪条描述、哪个字符区间。指不回去的，就不说。</div>
+  </div>
+</section>
+
+<!-- 3 竞品 -->
+<section class="slide" data-n="3 / 9">
+  <p class="k">竞品对照</p>
+  <h2>专业库很全，但不回答"这张片的这个区"</h2>
+  <table>
+    <tr><th>产品</th><th>做什么</th><th>门槛</th><th>成本</th><th>缺什么</th></tr>
+    <tr><td><b>Radiopaedia</b></td><td>病例库 + 征象百科</td><td>英文为主，需检索能力</td><td>免费 / 会员</td><td>不针对"你的这张片"逐区对照</td></tr>
+    <tr><td><b>推想 InferRead</b></td><td>AI 辅助诊断，出结构化报告</td><td>院内系统集成</td><td>商用授权</td><td>面向临床流程，不是教学练习</td></tr>
+    <tr><td><b>教材 / 图谱</b></td><td>典型图 + 标准描述</td><td>低</td><td>低</td><td>典型图不覆盖真实变异，无逐区依据</td></tr>
+    <tr><td><b>通用大模型</b></td><td>自然语言解释</td><td>低</td><td>按量计费</td><td><b>会编</b>：说不清来源，也不会承认"没写"</td></tr>
+  </table>
+  <p class="lead" style="font-size:16px;margin-top:20px">我们的位置：<b>不替代专业库，也不做诊断</b>；把"这张片的这一区"和"这条原文"钉在一起，专门用于练习与核对。</p>
+</section>
+
+<!-- 4 双引用 -->
+<section class="slide" data-n="4 / 9">
+  <p class="k">核心能力 · 双引用</p>
+  <h2>一个结论，两个锚点：影像分区 + 文献原文</h2>
+  <div class="grid g2" style="margin-top:20px">
+    <div class="card">
+      <b>① 影像锚点</b>
+      <p>病例 CASE-006 · 右肺中野（RML）<br>归一化坐标 left 0.06 / top 0.33 / w 0.30 / h 0.24<br>分区状态：异常 · 来源：原图箭头 + 公开说明</p>
+    </div>
+    <div class="card">
+      <b>② 文献锚点</b>
+      <p>"实变内出现支气管充气征，提示病变位于肺泡腔……"<br>条目 GL-PNE-02 · 第 68 字起 · 校验 f25ddcf0<br>指南语料 839 字 · 全文校验 6f3f83c1a007</p>
+    </div>
+  </div>
+  <div class="tl">
+    <div class="q">每个结论都能回查到字段：哪个区、哪段字、哪个校验值。</div>
+    <div class="a">不是"据指南认为"，是"第 68 字起这一段"。评委可以逐条核对。</div>
+  </div>
+  <div class="code"><b># 现场可验：同一条回答，命令行也能拿到</b>
+python3 .opencode/skills/radhearing-ask/scripts/ask.py "右肺中野有什么问题" --case CASE-006</div>
+</section>
+
+<!-- 5 第四态 -->
+<section class="slide" data-n="5 / 9">
+  <p class="k">差异化 · 第四态</p>
+  <h2>不是"正常 / 异常"两种，是四种</h2>
+  <div class="four">
+    <div class="st bad"><b><span class="dot" style="background:#c0392b"></span>异常</b>该区有明确描述。</div>
+    <div class="st ok"><b><span class="dot" style="background:#2e8b57"></span>未见异常</b>来源明确写了正常。</div>
+    <div class="st un"><b><span class="dot" style="background:#d68910"></span>未提及</b>来源没写这一区。<b>不等于正常。</b></div>
+    <div class="st li"><b><span class="dot" style="background:#8ba0ab"></span>判读受限</b>图像质量或体位不允许判读。</div>
+  </div>
+  <p class="lead" style="margin-top:26px">市面上多数工具只有"阳性 / 阴性"。<b>"未提及"被渲染成"正常"，是教学里最常见、也最危险的错误。</b></p>
+  <div class="tl" style="background:#7a4a12">
+    <div class="q">题库里有 14 道题专考这一点：来源没写，你敢不敢说"不知道"。</div>
+    <div class="a">这是产品设计，不是补丁：数据层就有 unmentioned 这个状态，前端不会把它降级成 normal。</div>
+  </div>
+</section>
+
+<!-- 6 DeepWorks -->
+<section class="slide" data-n="6 / 9">
+  <p class="k">平台化 · 2026-11-24</p>
+  <h2>核心流程跑在 DeepWorks 里，不是套个壳</h2>
+  <div class="pipeline">
+    <div class="step"><em>① 输入</em><b>问题</b><p>自然语言提问，指定病例或自动定位</p></div>
+    <div class="step"><em>② 技能</em><b>radhearing-ask</b><p>DeepWorks Skill 调用，判定可答 / 拒答 / 未匹配</p></div>
+    <div class="step"><em>③ 引擎</em><b>ask_engine.py</b><p>实体别名 + 分区解析 + 双引用组装</p></div>
+    <div class="step"><em>④ 校验</em><b>crosscheck</b><p>与网页 JS 实现逐条比对</p></div>
+    <div class="step"><em>⑤ 输出</em><b>带锚点的回答</b><p>区域 + 原文 + 拒答理由</p></div>
+  </div>
+  <div class="grid g3" style="margin-top:22px">
+    <div class="card"><div class="num">69/69</div><p style="margin-top:8px">网页端与平台端引擎逐条一致（阈值 0.002）</p></div>
+    <div class="card"><div class="num">50/50</div><p style="margin-top:8px">拒答与命中评测，真实浏览器执行</p></div>
+    <div class="card"><div class="num">317</div><p style="margin-top:8px">端到端验收项，全部通过</p></div>
+  </div>
+  <p class="lead" style="font-size:15px;margin-top:18px">同一套判定逻辑维护两份实现，用 69 条用例锁死一致性——改一边不改另一边，测试会直接红。</p>
+  <div class="code"><b>$ python3 kb/scripts/crosscheck.py</b>
+用例 69 条 · JavaScript 与 Python 结果比对
+PASS  两端完全一致（69/69）</div>
+</section>
+
+<!-- 7 数字 -->
+<section class="slide" data-n="7 / 9">
+  <p class="k">可复现的数字</p>
+  <h2>不写"准确率 95%"，只写能自己跑的东西</h2>
+  <div class="grid g4" style="margin-top:18px">
+    <div class="card"><div class="num">21<small>例</small></div><p style="margin-top:8px">公开胸片，逐张署名与校验</p></div>
+    <div class="card"><div class="num">153<small>区</small></div><p style="margin-top:8px">教学分区，四态标注</p></div>
+    <div class="card"><div class="num">87<small>条</small></div><p style="margin-top:8px">同时具备影像与文献锚点的结论</p></div>
+    <div class="card"><div class="num">0<small>例</small></div><p style="margin-top:8px">定位"错认"：不会把框硬塞给错误分区</p></div>
+  </div>
+  <table style="margin-top:20px">
+    <tr><th>验收</th><th>结果</th><th>怎么验</th></tr>
+    <tr><td>定位扰动（放大 2 倍）</td><td><b>0% 未覆盖 · 0% 错认</b></td><td>大框改列"可能累及分区"，不再拒答</td></tr>
+    <tr><td>拒答 / 命中</td><td><b>50 / 50</b></td><td>越界 20 · 命中 15 · 对比 5 · 指南 5 · 库外 5</td></tr>
+    <tr><td>知识库单元测试</td><td><b>69 通过 / 1 跳过</b></td><td>区域定位、引用门禁、合规</td></tr>
+  </table>
+</section>
+
+<!-- 8 边界 -->
+<section class="slide" data-n="8 / 9">
+  <p class="k">边界与口径</p>
+  <h2>这些数字的分母，我们写清楚</h2>
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card"><b>双引用覆盖率</b><p>87 / 434 条结论同时有影像锚点与文献锚点。对外说"双引用"时，分母是<b>全部结论</b>，不是"有征象的结论"。</p></div>
+    <div class="card"><b>文献可追溯到段，不是到页</b><p>指南部分为要点转述，页码待补；不宣称"逐字引用原文第几页"。</p></div>
+    <div class="card"><b>评测集是自己出的</b><p>用例由团队编写并已查看，数字偏乐观；真实泛化需外部放射科医生出题验证。</p></div>
+    <div class="card"><b>不做的事</b><p>不诊断、不分期、不给治疗与预后、不做毫米级测量、不提供患者信息；未入库影像不冒充 AI 定位。</p></div>
+  </div>
+  <div class="tl" style="background:#7a4a12;margin-top:22px">
+    <div class="q">敢写"不做"清单，比敢写"准确率"更难。</div>
+    <div class="a">被追问任何一个百分比，5 秒内能翻到产出它的脚本。</div>
+  </div>
+</section>
+
+<!-- 9 结尾 -->
+<section class="slide" data-n="9 / 9">
+  <div class="hero">
+    <p class="k">一句话</p>
+    <h1 style="font-size:46px;line-height:1.25">让每个结论都能指回去，<br>让每个"不知道"都被允许说出口。</h1>
+    <p class="sub" style="margin-top:30px">RadioCheck 影知 · 21 例公开胸片 · 双引用 · 四态 · 纯静态</p>
+    <p class="sub" style="margin-top:10px;font-size:14px">非诊断用途，仅供医学影像教学研究；正式教学前须由医学人员逐条审核。</p>
+  </div>
+</section>
+
+<div style="position:fixed;left:16px;bottom:14px;color:#7d949b;font-size:12px;z-index:9">← → 翻页 · F 全屏 · Ctrl/Cmd+P 存 PDF</div>
+<script>
+  const slides=[...document.querySelectorAll('.slide')]; let i=0;
+  function go(n){i=(n+slides.length)%slides.length;slides.forEach((s,k)=>s.classList.toggle('on',k===i));}
+  addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(i+1);}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1);}
+    if(e.key==='f'||e.key==='F'){document.documentElement.requestFullscreen?.();}
+  });
+  addEventListener('click',e=>{if(e.clientX>innerWidth*0.5)go(i+1);else go(i-1);});
+</script>
+</body>
+</html>

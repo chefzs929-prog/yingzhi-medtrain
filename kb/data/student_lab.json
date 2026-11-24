@@ -139,7 +139,10 @@
       "aliases": [
         "GGO",
         "磨玻璃密度影",
-        "磨玻璃结节"
+        "磨玻璃结节",
+        "磨玻璃密度增高影",
+        "毛玻璃影",
+        "磨玻璃样密度影"
       ],
       "modality": [
         "CT"
@@ -194,7 +197,13 @@
       "en": "consolidation",
       "aliases": [
         "肺实变",
-        "大片状高密度影"
+        "大片状高密度影",
+        "斑片状密度增高影",
+        "斑片状影",
+        "片状密度增高影",
+        "大片实变影",
+        "实变影",
+        "气腔影"
       ],
       "modality": [
         "CT",
@@ -475,7 +484,10 @@
       "en": "pleural effusion",
       "aliases": [
         "胸水",
-        "胸腔积液影"
+        "胸腔积液影",
+        "肋膈角变钝",
+        "肋膈角模糊",
+        "肋膈角消失"
       ],
       "modality": [
         "CT",
@@ -693,7 +705,10 @@
       "en": "reticular pattern",
       "aliases": [
         "网格影",
-        "网样改变"
+        "网样改变",
+        "条索状影",
+        "索条影",
+        "间质改变"
       ],
       "modality": [
         "CT"
@@ -1114,7 +1129,9 @@
       "en": "atelectasis",
       "aliases": [
         "肺萎陷",
-        "不张"
+        "不张",
+        "肺叶萎陷",
+        "肺体积缩小"
       ],
       "modality": [
         "CT",
@@ -6362,7 +6379,7 @@
         "胸腔积液"
       ],
       "teaching_note": "公开影像，用于胸部区位对照。",
-      "source_page": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Chest_radiograph_of_a_lung_with_Kerley_B_lines.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Chest_radiograph_of_a_lung_with_Kerley_B_lines.jpg",
       "license": "CC0",
       "artist": "Mikael Häggström",
       "zones": [
@@ -6528,7 +6545,7 @@
         "网状影"
       ],
       "teaching_note": "公开影像，用于胸部区位对照。",
-      "source_page": "https://upload.wikimedia.org/wikipedia/commons/7/70/Chest_radiograph_of_miliary_tuberculosis_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Chest_radiograph_of_miliary_tuberculosis_2.jpg",
       "license": "CC BY 4.0",
       "artist": "Benjamín Herreros, Isabel Plaza, Rebeca García, Marta Chichón, Carmen Guerrero and Emilio Pintor",
       "zones": [

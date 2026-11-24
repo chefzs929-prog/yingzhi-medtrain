@@ -131,7 +131,8 @@ def main() -> None:
                      and p.name not in ("base.css", "clinic.css", "common.js", "kb-api.js", "locate.js", "clinic.js",
                                         "exam.css", "exam.js", "compare.css", "compare.js",
                                         "classroom-core.js", "classroom.css", "student-lab.js", "classroom.js",
-                                        "agent-lite.js", "classroom-sync.js", "qc.css", "qc.js")]
+                                        "agent-lite.js", "classroom-sync.js", "qc.css", "qc.js",
+                                        "ask-core.js", "ask.css")]
         check("read/ 无旧页脚本残留", not leftovers, str(leftovers))
 
         browser.close()

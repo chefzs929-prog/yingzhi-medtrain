@@ -1,0 +1,18 @@
+# RadioCheck 运行依赖
+# 安装：python3 -m pip install -r requirements.txt && python3 -m playwright install chromium
+# 环境：Python 3.9+（开发/验收环境为 3.13）
+
+# 站点验收（medtrain/tests/*.py 用真实浏览器跑端到端）
+playwright>=1.40
+
+# 图像处理与数值计算（构建分区模板、评测统计）
+Pillow>=10.0
+numpy>=1.24
+
+# --- 可选：仅在重建「AI 模型一致性探测」数据时需要 ---
+# 不装不影响站点构建与全部验收；build_model_probe.py 会输出降级说明。
+# torch>=2.0
+# torchxrayvision>=1.2
+
+# --- 可选：联网补充文献（默认关闭） ---
+# requests>=2.31

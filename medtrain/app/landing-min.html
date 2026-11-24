@@ -58,6 +58,15 @@ button{font-family:inherit}
 .group{margin:22px 20px 0}
 .group-title{font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--faint);margin:0 0 8px 4px}
 .inset{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.inset.quick{margin:10px 20px 0}
+.learn-cols{display:block}
+@media (min-width:1100px){
+  .app{max-width:1120px}
+  .learn-cols{display:grid;grid-template-columns:400px minmax(0,1fr);gap:0 26px;align-items:start;padding:0 6px}
+  .lc-main .hero-card{margin:18px 14px 0}
+  .lc-main .inset.quick{margin:10px 14px 0}
+  .lc-side .group{margin:18px 14px 0 0}
+}
 .row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line);transition:background .15s}
 .row:last-child{border-bottom:0}
 .row:active{background:#f4faf8}
@@ -101,9 +110,11 @@ button{font-family:inherit}
     <div class="large">
       <p class="kicker">赛道 B · 胸片阅片</p>
       <h1>学习</h1>
-      <p class="sub">21 例 CR 胸部 · 逐区校正 · 非诊断用途</p>
+      <p class="sub">21 例 CR 胸部 · 350 道自测题 · 逐区校正 · 非诊断用途</p>
     </div>
 
+    <div class="learn-cols">
+    <div class="lc-main">
     <a class="hero-card" href="read/path.html">
       <div class="hc-k">从这里开始 · 推荐</div>
       <h2>今日任务</h2>
@@ -112,12 +123,14 @@ button{font-family:inherit}
       <div class="hc-foot"><span>一轮 4 步 · 约 5 分钟</span><span>开始</span></div>
     </a>
 
-    <div class="inset" style="margin-top:10px">
+    <div class="inset quick">
       <a class="row" href="read/ask.html"><span class="ico">✦</span><b>提问</b><span class="val">答案可回溯</span><span class="chev">›</span></a>
       <a class="row" href="read/eval.html"><span class="ico">◇</span><b>评测</b><span class="val">可复现数字</span><span class="chev">›</span></a>
       <a class="row" href="read/clinic.html"><span class="ico">▣</span><b>分区精读工作台</b><span class="val">21 例 · PA 8 区</span><span class="chev">›</span></a>
     </div>
 
+    </div>
+    <div class="lc-side">
     <div class="group">
       <div class="group-title">练习</div>
       <div class="inset">
@@ -137,6 +150,8 @@ button{font-family:inherit}
         <a class="row" href="#boundary" onclick="go('me')"><span class="ico">◎</span><b>四种状态怎么读</b><span class="val">异常 / 未见异常 / 未提及 / 受限</span><span class="chev">›</span></a>
         <a class="row" href="#boundary" onclick="go('me')"><span class="ico">⚖</span><b>能力边界</b><span class="val">看它做不到什么</span><span class="chev">›</span></a>
       </div>
+    </div>
+    </div>
     </div>
   </section>
 
@@ -199,7 +214,7 @@ button{font-family:inherit}
     </div>
 
     <div class="note">
-      <b>为什么不做陌生图</b>：上传按 SHA-256 精确匹配库内影像，未入库会明确拒绝。这是刻意设计——宁可说"不在库里"，也不拿相似的图冒充。
+      <b>库外影像怎么处理</b>：上传按 SHA-256 精确匹配库内影像。命中则进入逐区标注；<b>未命中不会伪装成 AI 定位</b>——只按胸片比例给通用解剖分区，并明确标注"不含该影像的标注、不判断有无异常"。本项目当前未接入视觉检测模型，不做病灶自动定位。
     </div>
 
     <div class="disclaimer">

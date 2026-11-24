@@ -48,14 +48,10 @@
     if (!list.length) {
       return { status: "no_atlas", message: "该影像未标注分区，无法区域定位", bbox: b };
     }
-    if (area(b) > T.max_area) {
-      return { status: "too_large", message: "选区过大，请缩小到单一分区后再定位", bbox: b };
-    }
-    if (b[2] < T.min_side || b[3] < T.min_side) {
-      return { status: "too_small", message: "选区过小，请扩大后再定位", bbox: b };
-    }
 
     const scored = list.map((r) => {
+      // 站点数据 data/chest/*.json 的 zone.coords 是 [left, top, w, h]，
+      // 与知识库 regions.jsonl 的 [x1,y1,x2,y2] 不同，这里不要再转换。
       const a = inter(b, r.coords);
       const coverage = a / Math.max(1e-9, area(b));
       const purity = a / Math.max(1e-9, area(r.coords));
@@ -65,7 +61,27 @@
     const top = scored[0];
     const second = scored[1] || null;
 
-    if (top.coverage < T.min_coverage) {
+    if (b[2] < T.min_side || b[3] < T.min_side) {
+      return { status: "too_small", message: "选区过小，请扩大后再定位", bbox: b };
+    }
+
+    // 大范围病变（气胸 / 大量积液）：用 purity 判断"哪些分区被覆盖"，
+    // 不用 coverage——后者随框变大趋近 0，等于惩罚大框。
+    const strong = scored.filter((x) => x.purity >= 0.75);
+    if (area(b) > T.max_area || strong.length >= 2) {
+      const base = strong.length ? strong : scored.filter((x) => x.coverage >= 0.2);
+      const hit = base.slice().sort((x, y) => y.purity - x.purity);
+      if (hit.length) {
+        return {
+          status: "diffuse",
+          message: "选区覆盖范围较大，按「分区被覆盖比例」列出可能累及的分区；这是范围推断，不宜据此判断单一分区",
+          bbox: b,
+          regions: hit.slice(0, 5),
+        };
+      }
+    }
+
+    if (top.coverage < T.min_coverage && top.purity < 0.8) {
       return { status: "uncovered", message: "该图未标注此区域，本工具不对未标注区域作推断", bbox: b };
     }
     if (second && top.score - second.score < T.cross_gap && second.coverage > T.second_min) {

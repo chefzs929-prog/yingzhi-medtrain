@@ -92,6 +92,7 @@ def main() -> None:
     shutil.copy2(SRC / "ask.html", OUT / "ask.html")
     shutil.copy2(SRC / "eval.html", OUT / "eval.html")
     shutil.copy2(SRC / "ask-core.js", OUT / "ask-core.js")
+    shutil.copy2(ROOT / "medtrain/app/pitch.html", ROOT / "outputs/medtrain/pitch.html")
     shutil.copy2(SRC / "evidence.html", OUT / "evidence.html")
 
     # 旧四页与 read 入口全部收敛到 clinic

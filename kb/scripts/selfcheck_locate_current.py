@@ -39,6 +39,7 @@ def clip(box: list[float]) -> list[float]:
 
 
 def locate(regions: list[dict], box: list[float]) -> tuple[str, dict | None]:
+    """与 kb/app/locate.js 保持一致：含 diffuse（大范围病变）分支。"""
     scored = []
     for r in regions:
         a = inter(box, r["coords"])
@@ -50,7 +51,14 @@ def locate(regions: list[dict], box: list[float]) -> tuple[str, dict | None]:
         return "uncovered", None
     top = scored[0]
     second = scored[1] if len(scored) > 1 else None
-    if top[1] < 0.35:
+    if box[2] < 0.015 or box[3] < 0.015:
+        return "too_small", None
+    strong = [x for x in scored if x[2] >= 0.75]
+    if area(box) > 0.6 or len(strong) >= 2:
+        hit = strong or [x for x in scored if x[1] >= 0.2]
+        if hit:
+            return "diffuse", None
+    if top[1] < 0.35 and top[2] < 0.8:
         return "uncovered", None
     if second and top[0] - second[0] < 0.15 and second[1] > 0.25:
         return "cross", None
@@ -80,7 +88,7 @@ def main() -> None:
 
     rows = []
     for label, fn in CASES:
-        hit = cross = uncovered = wrong = 0
+        hit = cross = uncovered = wrong = diffuse = 0
         for c in cases:
             regs = [z for z in c.get("zones", []) if len(z.get("coords") or []) == 4]
             for z in regs:
@@ -89,12 +97,14 @@ def main() -> None:
                     hit += 1
                 elif status == "cross":
                     cross += 1
+                elif status == "diffuse":
+                    diffuse += 1
                 elif status == "uncovered":
                     uncovered += 1
                 else:
                     wrong += 1
-        total = hit + cross + uncovered + wrong
-        rows.append((label, total, hit, cross, uncovered, wrong))
+        total = hit + cross + diffuse + uncovered + wrong
+        rows.append((label, total, hit, cross, diffuse, uncovered, wrong))
 
     lines = [
         "# 当前发布数据 · 定位算法下限自检",
@@ -104,18 +114,19 @@ def main() -> None:
         "- 方法：复刻 `kb/app/locate.js` 的 coverage / purity 评分与 cross 阈值；"
         "不是视觉模型框准确率。",
         "",
-        "| 输入框 | 分区数 | 命中自身 | 跨区 | 未覆盖（明确拒答） | 错认 |",
-        "| --- | ---: | ---: | ---: | ---: | ---: |",
+        "| 输入框 | 分区数 | 命中自身 | 跨区 | 大范围（列累及分区） | 未覆盖 | 错认 |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
-    for label, total, hit, cross, uncovered, wrong in rows:
+    for label, total, hit, cross, diffuse, uncovered, wrong in rows:
         pct = lambda n: f"{100.0 * n / total:.1f}%" if total else "—"
-        lines.append(f"| {label} | {total} | {pct(hit)} | {pct(cross)} | {pct(uncovered)} | {pct(wrong)} |")
+        lines.append(f"| {label} | {total} | {pct(hit)} | {pct(cross)} | {pct(diffuse)} | {pct(uncovered)} | {pct(wrong)} |")
     lines += [
         "",
         "## 怎么读",
         "",
         "- **原框/内缩/偏移 0.05**：算法应稳定落回原分区；这是“框正确”时的下限。",
-        "- **放大 2 倍**：大量返回“未覆盖/请缩小”，是保守拒答，不是错认；视觉模型若习惯给大框，召回会下降。",
+        "- **放大 2 倍**：多数进入“大范围”分支，按分区被覆盖比例列出可能累及的分区；"
+        "这是范围推断，不再直接拒答——气胸、大量积液正是这种大框形态。",
         "- **错认**：返回单一分区但与原分区不符；当前为 0，说明算法不会把框硬塞给错误分区。",
         "- **端到端**：命题要的“多模态证据定位准确率”还需乘上视觉模型框准确率；本表只覆盖算法侧。",
         "",

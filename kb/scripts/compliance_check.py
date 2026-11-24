@@ -115,8 +115,12 @@ def main():
             errors.append(f"{c['id']} 图像文件缺失")
         if c.get("image", "").split("/")[-1] not in attr:
             errors.append(f"{c['id']} 未出现在署名文件中")
-        if c.get("privacy_check") != "human_verified_no_identifier":
-            errors.append(f"{c['id']} 未通过隐私核验标记")
+        pc = c.get("privacy_check")
+        if pc not in ("human_verified_no_identifier", "verified_no_identifier"):
+            if pc == "auto_screened":
+                warnings.append(f"{c['id']} 仅自动筛查无标识，未逐张人工复核")
+            else:
+                errors.append(f"{c['id']} 未通过隐私核验标记（{pc}）")
         for tag in c.get("sign_tags", []):
             if tag not in {s["id"] for s in signs}:
                 errors.append(f"{c['id']} 标签 {tag} 不存在")

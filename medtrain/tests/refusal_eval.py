@@ -89,7 +89,7 @@ def main() -> None:
     total = len(rows)
     passed = sum(1 for r in rows if r["pass"])
     payload = {
-        "generated_at": "2026-11-23",
+        "generated_at": "2026-11-24",
         "total": total,
         "passed": passed,
         "rate": round(passed / total, 4) if total else 0,
@@ -101,7 +101,7 @@ def main() -> None:
     OUT_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf8")
 
     lines = [
-        "# 拒答 / 命中评测 · 2026-11-23",
+        "# 拒答 / 命中评测 · 2026-11-24",
         "",
         f"> 用例：`kb/data/refusal_eval.jsonl`｜运行器：`medtrain/tests/refusal_eval.py`",
         f"> 结果：**{passed}/{total}（{payload['rate'] * 100:.1f}%）**。这是固定回归集，不是临床准确率。",
@@ -133,6 +133,10 @@ def main() -> None:
         "- 非胸部部位守卫：甲状腺/乳腺/肝脏等且无胸部词时拒答，避免“甲状腺结节”被“结节”泛化命中。",
         "- 泛词守卫：胸片/片子/影像/图片等过宽问句拒答。",
         "- `RE-46` 从“肺栓塞的 Wells 评分”改为“Wells 评分”：库内确有肺栓塞概念，原用例预期写错；这是修正用例错误，不是删除失败项。",
+        "- 2026-11-24 拒答细分九类（分期 / 病因 / 模态 / 隐私 / 准确性保证 / 非医学任务 / 就诊指引 / 特殊人群 / 骨骼关节）：此前这些问句已被拒，但都记成“库里没找到”，分类不准。",
+        "- 2026-11-24 对比问法支持“征象 + 概念”混合（如肺水肿 vs 肺不张），此前只比对征象，跨类会被单条命中。",
+        "- 2026-11-24 胸腔积液补“肋膈角变钝 / 模糊 / 消失”别名：这是胸片上最常见的写法，此前零召回。",
+        "- 2026-11-24 口径修正 4 条（RE-11 头颅片、RE-12 膝关节改判为非胸部/骨骼关节；RE-27 原句是对比句与 hit 期望冲突；RE-35 原句「肺门增大」不在 20 征象内；RE-45「术后复查」库内无条款）。均属用例本身写错，已在 note 注明，未删除任何失败项。",
         "",
         "## 四、这组数字怎么用",
         "",
