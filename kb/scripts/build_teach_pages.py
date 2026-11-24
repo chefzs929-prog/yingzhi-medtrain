@@ -88,6 +88,7 @@ def main() -> None:
     shutil.copy2(SRC / "blind.html", OUT / "blind.html")
     shutil.copy2(SRC / "dual.html", OUT / "dual.html")
     shutil.copy2(SRC / "drill.html", OUT / "drill.html")
+    shutil.copy2(SRC / "path.html", OUT / "path.html")
     shutil.copy2(SRC / "evidence.html", OUT / "evidence.html")
 
     # 旧四页与 read 入口全部收敛到 clinic

@@ -150,6 +150,16 @@ function load(){
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
 
+function writePath(n){
+  const K = "rc_path_v1";
+  let s = {};
+  try{ s = JSON.parse(localStorage.getItem(K) || "null") || {}; }catch(e){}
+  s.steps = s.steps || {};
+  s.steps[n] = true;
+  s.started = true;
+  try{ localStorage.setItem(K, JSON.stringify(s)); }catch(e){}
+}
+
 function kpStat(kp){
   return state.kp[kp] || { n:0, right:0, wrong:0 };
 }
@@ -220,7 +230,9 @@ function submit(){
   state.kp[cur.kp] = s;
   state.seen[cur.qid] = (state.seen[cur.qid] || 0) + 1;
   state.answered = (state.answered || 0) + 1;
+  state.round = (state.round || 0) + 1;
   save();
+  if(state.round >= 3) writePath(4);
 
   $("opts").querySelectorAll(".opt").forEach(b=>{
     b.disabled = true;

@@ -139,10 +139,12 @@ function startTimer(){
   timerId = setInterval(tick, 1000);
 }
 
-function pickCase(){
+function pickCase(forceId){
   const pool = CASES.filter(c=>c.enabled !== false);
-  let next = pool[Math.floor(Math.random()*pool.length)];
-  if(pool.length > 1 && cur && next.id === cur.id){
+  let next = forceId ? pool.find(c=>c.id === forceId) : null;
+  if(!next) next = pool[Math.floor(Math.random()*pool.length)];
+  if(!next) return;
+  if(!forceId && pool.length > 1 && cur && next.id === cur.id){
     next = pool[(pool.indexOf(next)+1) % pool.length];
   }
   cur = next;
@@ -263,6 +265,19 @@ function submit(){
     ? `应报异常 ${truth.size} 区 · 命中 ${hit} · 漏报 ${miss} · 误报 ${falsePos}`
     : `本例库内没有标记为异常的分区 · 你选了 ${picked.size} 区`;
   renderPicked();
+  writePath(1, { case: cur.id, score });
+}
+
+function writePath(n, extra){
+  const K = "rc_path_v1";
+  let s = {};
+  try{ s = JSON.parse(localStorage.getItem(K) || "null") || {}; }catch(e){}
+  s.steps = s.steps || {};
+  s.steps[n] = true;
+  if(extra && extra.case) s.case = extra.case;
+  if(extra && extra.score != null) s.score = extra.score;
+  s.started = true;
+  try{ localStorage.setItem(K, JSON.stringify(s)); }catch(e){}
 }
 
 function boot(){
@@ -271,7 +286,8 @@ function boot(){
     .then(d=>{
       CASES = (d.cases || []).filter(c=> c.zones && c.zones.length);
       if(!CASES.length) throw new Error("no cases");
-      pickCase();
+      const want = new URLSearchParams(location.search).get("case");
+      pickCase(want || "");
     })
     .catch(e=>{
       $("stage").innerHTML = `<div class="mask-box"><b>病例数据未加载</b>请通过构建后的站点访问（read/blind.html），或检查 data/chest/chest_reading.json</div>`;

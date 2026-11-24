@@ -331,6 +331,16 @@ function renderAll(){
   });
 }
 
+function writePath(n){
+  const K = "rc_path_v1";
+  let s = {};
+  try{ s = JSON.parse(localStorage.getItem(K) || "null") || {}; }catch(e){}
+  s.steps = s.steps || {};
+  s.steps[n] = true;
+  s.started = true;
+  try{ localStorage.setItem(K, JSON.stringify(s)); }catch(e){}
+}
+
 function boot(){
   Promise.all([
     fetch(URL_READ, {cache:"no-cache"}).then(r=>r.json()),
@@ -346,7 +356,13 @@ function boot(){
       model.cases.forEach(c=>{ MODEL[c.case_id] = c; });
     }
     idx = 0;
+    const want = new URLSearchParams(location.search).get("case");
+    if(want){
+      const i = CASES.findIndex(c=>c.id === want);
+      if(i >= 0) idx = i;
+    }
     renderAll();
+    writePath(2);
   }).catch(err=>{
     $("stage").innerHTML = `<div class="hint">数据未加载：请通过构建后的站点访问 read/evidence.html</div>`;
     console.error(err);

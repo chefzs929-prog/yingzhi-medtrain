@@ -216,6 +216,16 @@ function render(){
   });
 }
 
+function writePath(n){
+  const K = "rc_path_v1";
+  let s = {};
+  try{ s = JSON.parse(localStorage.getItem(K) || "null") || {}; }catch(e){}
+  s.steps = s.steps || {};
+  s.steps[n] = true;
+  s.started = true;
+  try{ localStorage.setItem(K, JSON.stringify(s)); }catch(e){}
+}
+
 function boot(){
   fetch(URL_DATA, {cache:"no-cache"})
     .then(r=>r.json())
@@ -223,7 +233,13 @@ function boot(){
       DATA = d.cases || [];
       if(!DATA.length) throw new Error("empty");
       idx = 0;
+      const want = new URLSearchParams(location.search).get("case");
+      if(want){
+        const i = DATA.findIndex(c=>c.case_id === want);
+        if(i >= 0) idx = i;
+      }
       render();
+      writePath(3);
     })
     .catch(e=>{
       $("matrix").innerHTML = `<div class="empty">数据未加载：请通过构建后的站点访问 read/dual.html</div>`;
