@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2f7f6">
+<title>报告—指南双源对照 · RadioCheck</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b4f55'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white' font-family='sans-serif'%3ER%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f2f7f6; --surface:#fff; --ink:#0f2029; --ink2:#2a4350;
+  --muted:#5f7784; --faint:#8ba0ab; --line:#e3eeeb;
+  --brand:#0b4f55; --brand2:#0e7c7b;
+  --ok:#147a5b; --warn:#a9690b; --bad:#b23b3b; --grey:#7c8f99;
+  --r:14px; --shadow:0 1px 2px rgba(16,35,46,.05),0 14px 36px -30px rgba(11,79,85,.5);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#e9f1ef;color:var(--ink);
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:18px 16px 44px}
+
+.top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.back{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid var(--line);display:grid;place-items:center;font-size:17px;color:var(--brand)}
+.top .t{font-size:15px;font-weight:700}
+.top .s{font-size:11.5px;color:var(--faint)}
+.nav{margin-left:auto;display:flex;gap:6px}
+.nav button{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--brand);cursor:pointer;font-size:15px}
+
+.cases{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px}
+.cases button{white-space:nowrap;border:1px solid var(--line);background:#fff;color:var(--ink2);font-size:11.5px;padding:5px 10px;border-radius:99px;cursor:pointer}
+.cases button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+
+.cols{display:grid;gap:14px}
+@media(min-width:920px){.cols{grid-template-columns:1fr 1fr;align-items:start}}
+
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.card-h{padding:11px 15px;border-bottom:1px solid var(--line);font-size:12px;font-weight:700;color:#334155;display:flex;align-items:center;gap:8px}
+.card-h .tag{font-size:10px;font-weight:700;padding:1px 7px;border-radius:99px;background:#e9f4f1;color:var(--brand2)}
+.card-b{padding:14px 15px}
+
+.film{border-radius:12px;overflow:hidden;background:#0b0f16;margin-bottom:12px}
+.film img{display:block;width:100%;height:auto;max-height:300px;object-fit:contain}
+.film .ph{padding:40px 10px;text-align:center;color:#94a3b8;font-size:12px}
+
+.rep-title{font-size:16px;font-weight:700;margin:0 0 8px}
+.rep-text{font-size:13.5px;line-height:1.85;color:var(--ink2);margin:0}
+.zline{display:flex;gap:8px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:12.5px;line-height:1.7}
+.zline:last-child{border-bottom:0}
+.zline .zj{flex:0 0 74px;color:var(--brand2);font-weight:700;font-size:11.5px;padding-top:1px}
+
+.gp{margin:0 0 12px;padding:11px 13px;background:#f8fbfa;border:1px solid var(--line);border-radius:10px;font-size:12.5px;line-height:1.8;color:var(--ink2)}
+.gp:last-child{margin-bottom:0}
+.gp .gid{font-size:10.5px;color:var(--brand2);font-weight:700;letter-spacing:.06em}
+.src{font-size:11px;color:var(--faint);line-height:1.8;margin-top:10px;padding-top:9px;border-top:1px dashed var(--line)}
+.src b{color:var(--muted);font-size:10px;letter-spacing:.1em;display:block;margin-bottom:3px}
+
+/* 核查矩阵 */
+.matrix{margin-top:14px}
+.mrow{display:grid;grid-template-columns:1fr 78px;gap:10px;align-items:start;padding:11px 0;border-bottom:1px solid var(--line)}
+.mrow:last-child{border-bottom:0}
+.mrow .lb{font-size:13px;font-weight:650;color:var(--ink)}
+.mrow .hint{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.7}
+.mrow .hint code{background:#eef4f2;padding:0 4px;border-radius:4px;font-size:11px}
+.mrow .st{text-align:right}
+.pill{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.p-ok{color:var(--ok);background:#eef8f4}
+.p-no{color:var(--bad);background:#fdf1f1}
+.p-na{color:var(--grey);background:#eef1f3}
+
+.cover{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.cover .num{font-size:30px;font-weight:750;letter-spacing:-.03em;color:var(--brand);font-variant-numeric:tabular-nums}
+.cover .lab{font-size:11.5px;color:var(--muted);line-height:1.6}
+.bar{height:7px;border-radius:99px;background:#eef3f1;overflow:hidden;margin:8px 0 14px}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#a9690b,#0e7c7b)}
+
+.note{font-size:11.5px;color:var(--muted);line-height:1.8;background:#f8fbfa;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:12px}
+.note b{color:var(--ink2)}
+.empty{padding:26px 14px;text-align:center;color:var(--muted);font-size:12.5px;line-height:1.8}
+.dis{margin-top:14px;font-size:11px;color:var(--bad);background:#fdf6f6;border:1px solid #f3dcdc;border-radius:10px;padding:9px 11px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a class="back" href="clinic.html">‹</a>
+    <div><div class="t">报告—指南双源对照</div><div class="s" id="sub">一边是报告写了什么，一边是指南要求写什么</div></div>
+    <div class="nav"><button id="prev">‹</button><button id="next">›</button></div>
+  </div>
+
+  <div class="cases" id="cases"></div>
+
+  <div class="cols">
+    <div class="card">
+      <div class="card-h">报告侧 <span class="tag" id="rep-tag">逐区简注</span></div>
+      <div class="card-b">
+        <div class="film" id="film"></div>
+        <h3 class="rep-title" id="rep-title">—</h3>
+        <div id="rep-zones"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">指南侧 <span class="tag" id="gd-tag">要点转述</span></div>
+      <div class="card-b" id="gd-body"></div>
+    </div>
+  </div>
+
+  <div class="card matrix">
+    <div class="card-h">要素核查 <span class="tag" id="mx-tag">指南要求 vs 报告覆盖</span></div>
+    <div class="card-b" id="matrix"></div>
+  </div>
+
+  <div class="dis">非诊断用途 · 指南为公开资料的要点转述，非逐字引用 · 要素核查只对照本项目定义的报告要素，不等同于正式报告质控标准</div>
+</div>
+
+<script>
+const URL_DATA = "../data/chest/dual_source.json";
+let DATA = [], idx = 0;
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
+
+function renderFilm(c){
+  const el = $("film");
+  if(!c.image){ el.innerHTML = `<div class="ph">本例无影像</div>`; return; }
+  el.innerHTML = `<img alt="" src="../${c.image}" onerror="this.parentNode.innerHTML='<div class=&quot;ph&quot;>影像未加载</div>'">`;
+}
+
+function renderReport(c){
+  $("rep-title").textContent = c.title || "（无标题）";
+  $("rep-tag").textContent = c.report_available ? "逐区简注" : "无异常描述";
+  const zs = (c.report && c.report.zones) || [];
+  if(!zs.length){
+    $("rep-zones").innerHTML = `<p class="rep-text" style="color:var(--muted)">本例没有逐区异常描述，只有标题。常见于正常片或仅做解剖标注的病例。</p>`;
+    return;
+  }
+  $("rep-zones").innerHTML = zs.map(z=>
+    `<div class="zline"><span class="zj">${esc(z.name || z.id)}</span><span>${esc(z.text)}</span></div>`
+  ).join("");
+}
+
+function renderGuide(c){
+  const g = c.guideline || {};
+  $("gd-tag").textContent = c.topic_id === "UNMAPPED" ? "未覆盖" : "要点转述";
+  if(!g.key_points || !g.key_points.length){
+    $("gd-body").innerHTML = `<div class="empty"><b>该例主题不在指南库覆盖范围内</b><br>我们不做外推，也不拿相近主题硬套。<br>这本身就是一条边界声明。</div>`;
+    return;
+  }
+  $("gd-body").innerHTML =
+    g.key_points.map(k=>`<div class="gp"><div class="gid">${esc(k.id)}</div>${esc(k.text)}</div>`).join("") +
+    `<div class="src"><b>来源</b>` +
+    (g.sources||[]).map(s=>`${esc(s.name)}（${s.type === "paraphrase" ? "要点转述" : "原文"}）`).join("<br>") +
+    `</div>`;
+}
+
+function renderMatrix(c){
+  const box = $("matrix");
+  if(c.topic_id === "UNMAPPED"){
+    $("mx-tag").textContent = "未覆盖";
+    box.innerHTML = `<div class="empty">该例主题未收录，暂不做要素核查。</div>`;
+    return;
+  }
+  if(!c.report_available){
+    $("mx-tag").textContent = "不适用";
+    box.innerHTML = `<div class="empty">本例没有逐区异常描述，无法做「报告有没有写清」的核查。<br>正常片若只有标题，也属于这种情况。</div>`;
+    return;
+  }
+  const pct = Math.round((c.coverage||0)*100);
+  const covered = (c.elements||[]).filter(e=>e.covered).length;
+  const total = (c.elements||[]).length;
+
+  let html = `
+    <div class="cover">
+      <div class="num">${pct}%</div>
+      <div class="lab">指南要求 ${total} 项要素<br>报告覆盖 ${covered} 项，缺 ${total-covered} 项</div>
+    </div>
+    <div class="bar"><i style="width:${pct}%"></i></div>`;
+
+  html += (c.elements||[]).map(e=>{
+    const hit = (e.matched||[]).join("、");
+    return `<div class="mrow">
+      <div>
+        <div class="lb">${esc(e.label)}</div>
+        <div class="hint">${e.covered
+          ? `报告中出现：<code>${esc(hit)}</code>`
+          : `报告里没有找到与「${esc(e.label)}」对应的表述`}</div>
+      </div>
+      <div class="st"><span class="pill ${e.covered?"p-ok":"p-no"}">${e.covered?"已写":"缺失"}</span></div>
+    </div>`;
+  }).join("");
+
+  html += `<div class="note"><b>怎么用这张表</b>库里存的是逐区简注，不是完整报告。这张表不是给简注扣分，而是提示：把「右肺中野大片实变」写成一份规范报告，还差哪几项。</div>`;
+
+  $("mx-tag").textContent = `覆盖 ${covered}/${total}`;
+  box.innerHTML = html;
+}
+
+function render(){
+  const c = DATA[idx];
+  if(!c) return;
+  $("sub").textContent = `${c.case_id} · ${c.topic_cn}`;
+  renderFilm(c);
+  renderReport(c);
+  renderGuide(c);
+  renderMatrix(c);
+
+  $("cases").innerHTML = DATA.map((cc,i)=>
+    `<button class="${i===idx?"on":""}" data-i="${i}">${cc.case_id.replace("CASE-","")} ${esc(cc.topic_cn)}</button>`
+  ).join("");
+  $("cases").querySelectorAll("button").forEach(b=>{
+    b.onclick = ()=>{ idx = +b.dataset.i; render(); window.scrollTo({top:0,behavior:"instant"}); };
+  });
+}
+
+function boot(){
+  fetch(URL_DATA, {cache:"no-cache"})
+    .then(r=>r.json())
+    .then(d=>{
+      DATA = d.cases || [];
+      if(!DATA.length) throw new Error("empty");
+      idx = 0;
+      render();
+    })
+    .catch(e=>{
+      $("matrix").innerHTML = `<div class="empty">数据未加载：请通过构建后的站点访问 read/dual.html</div>`;
+      console.error(e);
+    });
+}
+
+$("prev").onclick = ()=>{ if(DATA.length){ idx = (idx-1+DATA.length)%DATA.length; render(); } };
+$("next").onclick = ()=>{ if(DATA.length){ idx = (idx+1)%DATA.length; render(); } };
+boot();
+</script>
+</body>
+</html>
