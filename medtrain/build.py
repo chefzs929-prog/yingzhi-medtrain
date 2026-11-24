@@ -255,6 +255,7 @@ def build_reading() -> None:
                    "kb/scripts/build_dual_source.py",
                    "kb/scripts/build_drill_bank.py",
                    "kb/scripts/build_ask_bank.py",
+                   "kb/scripts/build_daily_src.py",
                    "kb/scripts/run_eval.py",
                    "kb/scripts/build_review_queue.py",
                    "kb/scripts/build_teach_pages.py"):

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ef">
+<title>今日查房 · RadioCheck</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b4f55'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white' font-family='sans-serif'%3ER%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f6f4ef; --surface:#fff; --ink:#111a20; --ink2:#2b3a44;
+  --muted:#5d6f7a; --faint:#93a3ab; --line:#e7e3da;
+  --brand:#0b4f55; --brand2:#0e7c7b; --accent:#a8551f;
+  --r:16px; --shadow:0 1px 2px rgba(16,35,46,.05),0 18px 44px -34px rgba(11,79,85,.5);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#eae7e0;color:var(--ink);
+  font:15px/1.7 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:860px;margin:0 auto;min-height:100vh;background:var(--bg);padding:18px 18px 48px}
+@media(min-width:640px){.wrap{min-height:calc(100vh - 44px);margin:22px auto;border-radius:26px;box-shadow:0 36px 96px -66px rgba(11,79,85,.75)}}
+
+.top{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.mark{width:36px;height:36px;border-radius:11px;background:linear-gradient(140deg,#0b4f55,#0e7c7b);
+  color:#fff;display:grid;place-items:center;font-weight:700;font-size:17px}
+.top .t{font-size:16px;font-weight:700;letter-spacing:-.01em}
+.top .s{font-size:11.5px;color:var(--faint)}
+.dates{margin-left:auto;display:flex;align-items:center;gap:6px}
+.dates button{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--brand);font-size:15px;line-height:1}
+.dates input{border:1px solid var(--line);background:#fff;border-radius:9px;padding:5px 8px;font-size:12.5px;color:var(--ink2)}
+
+.lead{background:var(--brand);color:#fff;border-radius:var(--r);padding:20px 22px;box-shadow:var(--shadow);margin-bottom:16px}
+.lead .d{font-size:12px;opacity:.72;letter-spacing:.06em}
+.lead h1{margin:6px 0 0;font-size:26px;letter-spacing:-.02em;line-height:1.25}
+.lead .sub{margin-top:8px;font-size:12.5px;opacity:.8}
+
+.grid{display:grid;gap:16px}
+@media(min-width:760px){.grid{grid-template-columns:1.15fr .85fr;align-items:start}}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.card h2{margin:0;padding:13px 16px;font-size:13px;letter-spacing:.04em;color:var(--muted);
+  border-bottom:1px solid var(--line);font-weight:600;display:flex;align-items:center;gap:8px}
+.card h2 .tag{font-size:10.5px;padding:2px 7px;border-radius:99px;background:#f0eee8;color:var(--muted);font-weight:500;letter-spacing:0}
+
+.shot{position:relative;background:#0d1216;line-height:0}
+.shot img{width:100%;display:block}
+.box{position:absolute;border:2px solid #ffcf5c;border-radius:4px;
+  box-shadow:0 0 0 1px rgba(0,0,0,.45),0 0 22px rgba(255,207,92,.35);pointer-events:none}
+.box::after{content:attr(data-label);position:absolute;left:-2px;bottom:100%;margin-bottom:3px;
+  background:#ffcf5c;color:#231a05;font-size:10.5px;font-weight:600;padding:2px 6px;border-radius:4px;white-space:nowrap;line-height:1.5}
+
+.body{padding:15px 16px 17px}
+.meta{font-size:12px;color:var(--faint);margin-bottom:8px}
+.say{font-size:16px;font-weight:600;line-height:1.6;letter-spacing:-.01em}
+.quote{margin-top:14px;padding:12px 14px;background:#fbfaf6;border:1px solid var(--line);border-left:3px solid var(--brand2);border-radius:0 10px 10px 0}
+.quote p{margin:0;font-size:13.5px;color:var(--ink2);line-height:1.75}
+.quote .src{margin-top:8px;font-size:11px;color:var(--faint);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+.alt .say{font-size:14.5px;font-weight:500}
+.alt .why{padding:15px 16px 16px;font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);background:#fcfbf8}
+
+.quiz{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.quiz .q{padding:15px 16px;font-size:15px;font-weight:600;line-height:1.65}
+.quiz details{border-top:1px solid var(--line)}
+.quiz summary{padding:11px 16px;font-size:12.5px;color:var(--brand);cursor:pointer;user-select:none;font-weight:600}
+.quiz .a{padding:0 16px 15px;font-size:13.5px;color:var(--ink2);line-height:1.8}
+
+.note{margin-top:16px;padding:13px 15px;border-radius:12px;background:#f2f0ea;border:1px solid var(--line);
+  font-size:12px;color:var(--muted);line-height:1.75}
+.note b{color:var(--ink2)}
+.foot{margin-top:18px;text-align:center;font-size:11px;color:var(--faint);line-height:1.8}
+.foot code{font-size:10.5px;background:#eceae4;padding:1px 5px;border-radius:4px}
+.err{padding:30px;text-align:center;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="mark">R</div>
+    <div>
+      <div class="t">今日查房</div>
+      <div class="s">一天一条 · 按日期确定性生成</div>
+    </div>
+    <div class="dates">
+      <button id="prev" title="前一天">‹</button>
+      <input type="date" id="day">
+      <button id="next" title="后一天">›</button>
+    </div>
+  </div>
+
+  <div id="app"><div class="err">正在读取数据…</div></div>
+
+  <div class="foot">
+    本页内容由 <code>daily_src.json</code> 与浏览器本地日期在<strong>客户端</strong>算出，<br>
+    同一日期在任何设备打开都是同一条；不依赖服务器定时任务，也不会因为没人访问而停止。<br>
+    仅用于教学，不构成诊断意见。
+  </div>
+</div>
+
+<script src="daily-core.js"></script>
+<script>
+(function () {
+  var app = document.getElementById('app');
+  var input = document.getElementById('day');
+  var today = new Date();
+  var iso = today.getFullYear() + '-' +
+    String(today.getMonth() + 1).padStart(2, '0') + '-' +
+    String(today.getDate()).padStart(2, '0');
+  input.value = iso;
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  function pct(v) { return (Math.max(0, Math.min(1, Number(v) || 0)) * 100).toFixed(2) + '%'; }
+
+  function boxStyle(c) {
+    if (!c || c.length !== 4) return '';
+    return 'left:' + pct(c[0]) + ';top:' + pct(c[1]) + ';width:' + pct(c[2] - c[0]) + ';height:' + pct(c[3] - c[1]);
+  }
+
+  function render(D, dateStr) {
+    var r = DailyBrief.pick(D, dateStr);
+    var f = r.focus;
+    if (!f) { app.innerHTML = '<div class="err">这一天没有可用条目。</div>'; return; }
+    var caseInfo = (D.cases && D.cases[f.case_id]) || {};
+    var c = r.contrast;
+    var cCase = c ? ((D.cases && D.cases[c.case_id]) || {}) : null;
+
+    var html = '';
+    html += '<div class="lead"><div class="d">' + esc(dateStr) + ' · 第 ' + (r.day + 1) + ' 天</div>' +
+      '<h1>' + esc(r.topic_cn) + '</h1>' +
+      '<div class="sub">' + esc(f.case_id) + ' · ' + esc((caseInfo.title || '胸部 X 线')) + ' · 区域：' + esc(f.zone || '全片') + '</div></div>';
+
+    html += '<div class="grid"><div>';
+    html += '<div class="card"><h2>影像区域 <span class="tag">框内为该条原文对应的分区</span></h2>' +
+      '<div class="shot"><img alt="' + esc(f.case_id) + '" src="../' + esc(caseInfo.image || '') + '">' +
+      '<div class="box" style="' + boxStyle(f.coords) + '" data-label="' + esc(f.zone || '全片') + '"></div></div>' +
+      '<div class="body"><div class="meta">' + esc(f.case_id) + ' · ' + esc(f.zone_id || '') + ' · 状态：' + esc(f.status || '') + '</div>' +
+      '<div class="say">' + esc(f.answer) + '</div>' +
+      '<div class="quote"><p>「' + esc(f.citation.quote) + '」</p>' +
+      '<div class="src">' + esc(f.citation.cite_id) + ' · 第 ' + esc(f.citation.offset) + ' 字起 · 校验 ' + esc(f.citation.sha1) + '</div></div>' +
+      '</div></div>';
+    html += '</div><div>';
+
+    if (c && cCase) {
+      html += '<div class="card alt"><h2>最容易混的一个 <span class="tag">对照</span></h2>' +
+        '<div class="shot"><img alt="' + esc(c.case_id) + '" src="../' + esc(cCase.image || '') + '">' +
+        '<div class="box" style="' + boxStyle(c.coords) + '" data-label="' + esc(c.zone || '') + '"></div></div>' +
+        '<div class="body"><div class="meta">' + esc(c.case_id) + ' · ' + esc(cCase.title || '') + ' · ' + esc(c.zone || '') + '</div>' +
+        '<div class="say">' + esc(c.answer) + '</div></div>' +
+        '<div class="why">两者都让「下野看起来不对劲」，但一个是边界外移，一个是角变钝。看边界，不看密度。</div></div>';
+    }
+
+    html += '</div></div>';
+
+    html += '<div class="quiz"><div class="q">自测：这张片子的「' + esc(f.zone || '全片') + '」区域，你会怎么描述？</div>' +
+      '<details><summary>看答案</summary><div class="a">' + esc(f.answer) +
+      '<br><br>依据：' + esc(f.citation.cite_id) + ' —— 「' + esc(f.citation.quote) + '」</div></details></div>';
+
+    html += '<div class="note"><b>本例边界</b>：本页只呈现库内<strong>明确标注</strong>的部分。来源未写到的分区，「未提及」不等于正常，本工具不作推断；也不对未入库影像下结论。</div>';
+
+    app.innerHTML = html;
+  }
+
+  var data = null;
+  fetch('../data/chest/daily_src.json', { cache: 'no-cache' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (D) { data = D; render(D, input.value); })
+    .catch(function (e) {
+      app.innerHTML = '<div class="err">数据加载失败：' + esc(e.message) + '<br>请通过站点根目录访问（read/daily.html），不要直接双击打开文件。</div>';
+    });
+
+  input.addEventListener('change', function () {
+    if (!input.value || !data) return;
+    render(data, input.value);
+  });
+
+  function shift(n) {
+    var d = new Date(input.value + 'T12:00:00');
+    d.setDate(d.getDate() + n);
+    input.value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    if (data) render(data, input.value);
+  }
+  document.getElementById('prev').addEventListener('click', function () { shift(-1); });
+  document.getElementById('next').addEventListener('click', function () { shift(1); });
+})();
+</script>
+</body>
+</html>

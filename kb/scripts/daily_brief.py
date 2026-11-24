@@ -22,6 +22,10 @@ BANK = ROOT / "kb/data/ask_bank.json"
 REFUSALS = ROOT / "kb/data/refusals.json"
 STATE = ROOT / "outputs/daily/.state.json"
 
+# 纯日期起点：同一天在任何机器、任何时候算出的结果都相同
+EPOCH = date(2026, 11, 24)
+TOPIC_ORDER = ["PNEUMONIA", "EFFUSION", "NODULE", "PNEUMOTHORAX", "CARDIOMEGALY", "TB"]
+
 TOPIC_CN = {
     "PNEUMONIA": "肺炎 / 肺实变",
     "NODULE": "肺结节 / 粟粒样结节",
@@ -42,15 +46,6 @@ CONFUSION = {
 }
 
 
-def load_state() -> dict:
-    if STATE.exists():
-        try:
-            return json.loads(STATE.read_text(encoding="utf-8"))
-        except json.JSONDecodeError:
-            pass
-    return {"last_date": "", "seen": {}}
-
-
 def abnormal_items(bank: dict, topic: str | None = None, min_rel: int = 0) -> list[dict]:
     out = []
     for it in bank["items"]:
@@ -67,43 +62,44 @@ def abnormal_items(bank: dict, topic: str | None = None, min_rel: int = 0) -> li
     return out
 
 
-def pick(bank: dict, state: dict) -> tuple[dict, dict]:
-    seen: dict = state.get("seen") or {}
-    # 优先条款与描述逐字对应的条目，避免「讲 Kerley 线、引心胸比」这种错配
+def _rel(it: dict) -> int:
+    return (it.get("citation") or {}).get("relevance_score", 0)
+
+
+def pick(bank: dict, day: date) -> tuple[dict, dict]:
+    """纯日期选材：主题按固定顺序轮转，病例按天数整除轮转。"""
     pool = abnormal_items(bank, min_rel=2) or abnormal_items(bank, min_rel=1) or abnormal_items(bank)
-    topics = sorted({i["topic_id"] for i in pool})
+    available = sorted({i["topic_id"] for i in pool})
+    order = [t for t in TOPIC_ORDER if t in available] or available
+    d = (day - EPOCH).days
+    topic = order[d % len(order)]
 
-    # 最久没讲的主题优先；同分按名称排序保证确定性
-    topics.sort(key=lambda t: (seen.get(t, ""), t))
-    topic = topics[0]
-
-    def rel(it):
-        return (it.get("citation") or {}).get("relevance_score", 0)
-
-    cases = {}
+    cases: dict = {}
     for it in pool:
         if it["topic_id"] != topic:
             continue
         cid = it["case_id"]
         prev = cases.get(cid)
-        # 同一病例里挑条款最贴合的那一条，并列时按 qid 保证确定性
-        if prev is None or (rel(it), -int(it["qid"][1:])) > (rel(prev), -int(prev["qid"][1:])):
+        # 同一病例里挑条款最贴合的那一条，并列按 qid 保证确定性
+        if prev is None or (_rel(it), -int(it["qid"][1:])) > (_rel(prev), -int(prev["qid"][1:])):
             cases[cid] = it
-    order = sorted(cases, key=lambda c: (seen.get(c, ""), c))
-    chosen = cases[order[0]]
+    keys = sorted(cases)
+    chosen = cases[keys[(d // len(order)) % len(keys)]]
     return chosen, {"topic": topic, "cases_available": len(cases)}
 
 
-def contrast_of(bank: dict, state: dict, topic: str) -> dict | None:
+def contrast_of(bank: dict, day: date, topic: str, exclude_case: str | None = None) -> dict | None:
     ct = CONFUSION.get(topic)
     if not ct:
         return None
-    items = [i for i in abnormal_items(bank, ct) if i.get("citation")]
+    # 对照必须是另一张片，否则「鉴别」变成自比
+    items = sorted(
+        [i for i in abnormal_items(bank, ct) if i.get("citation") and i["case_id"] != exclude_case],
+        key=lambda i: (i["case_id"], i["qid"]),
+    )
     if not items:
         return None
-    seen = state.get("seen") or {}
-    items.sort(key=lambda i: (seen.get(i["case_id"], ""), i["qid"]))
-    return items[0]
+    return items[(day - EPOCH).days % len(items)]
 
 
 def check_anchors(bank: dict) -> dict:
@@ -157,11 +153,11 @@ def main() -> int:
     args = ap.parse_args()
 
     bank = json.loads(BANK.read_text(encoding="utf-8"))
-    state = load_state()
+    day = date.fromisoformat(args.date)
 
-    item, meta = pick(bank, state)
+    item, meta = pick(bank, day)
     topic = meta["topic"]
-    contrast = contrast_of(bank, state, topic)
+    contrast = contrast_of(bank, day, topic, item["case_id"])
 
     case_zones = [
         i["region"]

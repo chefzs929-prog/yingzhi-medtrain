@@ -132,7 +132,8 @@ def main() -> None:
                                         "exam.css", "exam.js", "compare.css", "compare.js",
                                         "classroom-core.js", "classroom.css", "student-lab.js", "classroom.js",
                                         "agent-lite.js", "classroom-sync.js", "qc.css", "qc.js",
-                                        "ask-core.js", "ask.css")]
+                                        "ask-core.js", "ask.css",
+                                        "daily-core.js")]
         check("read/ 无旧页脚本残留", not leftovers, str(leftovers))
 
         browser.close()
