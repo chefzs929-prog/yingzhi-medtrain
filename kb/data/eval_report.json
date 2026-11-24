@@ -4,8 +4,8 @@
   "retrieval": {
     "case": "CASE-006",
     "dev": {
-      "n": 36,
-      "ok": 36,
+      "n": 38,
+      "ok": 38,
       "accuracy": 1.0,
       "by_group": {
         "overview": {
@@ -29,8 +29,8 @@
           "acc": 1.0
         },
         "zone": {
-          "n": 6,
-          "ok": 6,
+          "n": 8,
+          "ok": 8,
           "acc": 1.0
         }
       },
@@ -120,11 +120,45 @@
     "available": true,
     "method": "torchxrayvision DenseNet121 (densenet121-res224-all)",
     "cases": 21,
-    "consistent": 13,
-    "conflict": 6,
+    "eligible": 16,
+    "excluded": 5,
+    "consistent": 11,
+    "conflict": 0,
     "partial": 2,
-    "silent": 0,
-    "strict_rate": 0.619,
-    "weighted_rate": 0.667
+    "silent": 3,
+    "strict_rate": 0.6875,
+    "weighted_rate": 0.75,
+    "threshold": 0.6,
+    "thresholds": {
+      "0.5": {
+        "consistent": 13,
+        "conflict": 3,
+        "partial": 0,
+        "silent": 0,
+        "strict_rate": 0.8125
+      },
+      "0.6": {
+        "consistent": 11,
+        "conflict": 0,
+        "partial": 2,
+        "silent": 3,
+        "strict_rate": 0.6875
+      },
+      "0.7": {
+        "consistent": 9,
+        "conflict": 0,
+        "partial": 1,
+        "silent": 6,
+        "strict_rate": 0.5625
+      },
+      "0.8": {
+        "consistent": 9,
+        "conflict": 0,
+        "partial": 1,
+        "silent": 6,
+        "strict_rate": 0.5625
+      }
+    },
+    "note": "严格一致率只统计 eligible 病例（排除侧位投照与解剖标注图）；阈值敏感性见 thresholds，单点数字不应单独引用。"
   }
 }

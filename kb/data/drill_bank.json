@@ -4,17 +4,48 @@
   "notice": "题目由库内逐区标注自动生成，答案可追溯到具体病例与分区；不是模型出题。",
   "questions": [
     {
+      "type": "localize",
+      "case_id": "CASE-001",
+      "title": "正常后前位胸片",
+      "image": "images/case-001.jpg",
+      "kp": "KP-LOC-NORMAL",
+      "kp_cn": "NORMAL · 分区定位",
+      "stem": "这张片子上，哪一区被标注为异常？",
+      "options": [
+        {
+          "key": "A",
+          "text": "左肺上野"
+        },
+        {
+          "key": "B",
+          "text": "左肺中野"
+        },
+        {
+          "key": "C",
+          "text": "未见明确异常分区"
+        },
+        {
+          "key": "D",
+          "text": "膈下"
+        }
+      ],
+      "answer": "C",
+      "explain": "本片所有教学分区均标注为未见明确异常，没有异常分区。",
+      "source": "CASE-001 · 全部分区 · 库内标注",
+      "qid": "Q0001"
+    },
+    {
       "type": "state",
       "case_id": "CASE-001",
       "title": "正常后前位胸片",
       "image": "images/case-001.jpg",
       "kp": "KP-STATE-NORMAL",
       "kp_cn": "状态判读 · 未见异常",
-      "stem": "右肺下野（RLL）的标注状态是？",
+      "stem": "纵隔与心影（MED）的标注状态是？",
       "options": [
         {
           "key": "A",
-          "text": "未见异常"
+          "text": "判读受限"
         },
         {
           "key": "B",
@@ -22,17 +53,48 @@
         },
         {
           "key": "C",
-          "text": "判读受限"
+          "text": "异常"
         },
         {
           "key": "D",
-          "text": "异常"
+          "text": "未见异常"
+        }
+      ],
+      "answer": "D",
+      "explain": "来源明确写了该区正常，属于「未见异常」。",
+      "source": "CASE-001 · MED · 公开来源说明",
+      "qid": "Q0002"
+    },
+    {
+      "type": "localize",
+      "case_id": "CASE-002",
+      "title": "正常侧位胸片",
+      "image": "images/case-002.jpg",
+      "kp": "KP-LOC-NORMAL",
+      "kp_cn": "NORMAL · 分区定位",
+      "stem": "这张片子上，哪一区被标注为异常？",
+      "options": [
+        {
+          "key": "A",
+          "text": "未见明确异常分区"
+        },
+        {
+          "key": "B",
+          "text": "后肺野与后肋膈角"
+        },
+        {
+          "key": "C",
+          "text": "胸骨后间隙"
+        },
+        {
+          "key": "D",
+          "text": "肺门与中区"
         }
       ],
       "answer": "A",
-      "explain": "来源明确写了该区正常，属于「未见异常」。",
-      "source": "CASE-001 · RLL · 公开来源说明",
-      "qid": "Q0001"
+      "explain": "本片所有教学分区均标注为未见明确异常，没有异常分区。",
+      "source": "CASE-002 · 全部分区 · 库内标注",
+      "qid": "Q0003"
     },
     {
       "type": "state",
@@ -41,29 +103,60 @@
       "image": "images/case-002.jpg",
       "kp": "KP-STATE-NORMAL",
       "kp_cn": "状态判读 · 未见异常",
-      "stem": "后肺野与后肋膈角（POST）的标注状态是？",
+      "stem": "肺门与中区（MID）的标注状态是？",
       "options": [
         {
           "key": "A",
-          "text": "未提及"
+          "text": "判读受限"
         },
         {
           "key": "B",
-          "text": "异常"
-        },
-        {
-          "key": "C",
           "text": "未见异常"
         },
         {
+          "key": "C",
+          "text": "未提及"
+        },
+        {
           "key": "D",
-          "text": "判读受限"
+          "text": "异常"
         }
       ],
-      "answer": "C",
+      "answer": "B",
       "explain": "来源明确写了该区正常，属于「未见异常」。",
-      "source": "CASE-002 · POST · 公开来源说明",
-      "qid": "Q0002"
+      "source": "CASE-002 · MID · 公开来源说明",
+      "qid": "Q0004"
+    },
+    {
+      "type": "localize",
+      "case_id": "CASE-003",
+      "title": "胸片解剖标注（欠吸气、轻度旋转）",
+      "image": "images/case-003.jpg",
+      "kp": "KP-LOC-UNMAPPED",
+      "kp_cn": "UNMAPPED · 分区定位",
+      "stem": "这张片子上，哪一区被标注为异常？",
+      "options": [
+        {
+          "key": "A",
+          "text": "未见明确异常分区"
+        },
+        {
+          "key": "B",
+          "text": "右肺中野"
+        },
+        {
+          "key": "C",
+          "text": "左肺下野"
+        },
+        {
+          "key": "D",
+          "text": "左肺上野"
+        }
+      ],
+      "answer": "A",
+      "explain": "本片所有教学分区均标注为未见明确异常，没有异常分区。",
+      "source": "CASE-003 · 全部分区 · 库内标注",
+      "qid": "Q0005"
     },
     {
       "type": "state",
@@ -76,25 +169,25 @@
       "options": [
         {
           "key": "A",
-          "text": "未见异常"
-        },
-        {
-          "key": "B",
           "text": "异常"
         },
         {
+          "key": "B",
+          "text": "未见异常"
+        },
+        {
           "key": "C",
-          "text": "未提及"
+          "text": "判读受限"
         },
         {
           "key": "D",
-          "text": "判读受限"
+          "text": "未提及"
         }
       ],
-      "answer": "D",
+      "answer": "C",
       "explain": "图像质量或体位不允许判读，属于「判读受限」。",
       "source": "CASE-003 · MED · 公开来源说明",
-      "qid": "Q0003"
+      "qid": "Q0006"
     },
     {
       "type": "localize",
@@ -107,25 +200,25 @@
       "options": [
         {
           "key": "A",
-          "text": "纵隔与心影"
-        },
-        {
-          "key": "B",
           "text": "右肺中野"
         },
         {
+          "key": "B",
+          "text": "右肺上野"
+        },
+        {
           "key": "C",
-          "text": "膈下"
+          "text": "纵隔与心影"
         },
         {
           "key": "D",
-          "text": "右肺上野"
+          "text": "膈下"
         }
       ],
-      "answer": "D",
+      "answer": "B",
       "explain": "右肺上野标注为异常：双肺气腔影，伴肺不张；公开说明未逐区定位。",
       "source": "CASE-005 · RUL · 公开来源说明",
-      "qid": "Q0004"
+      "qid": "Q0007"
     },
     {
       "type": "state",
@@ -134,11 +227,11 @@
       "image": "images/case-005.jpg",
       "kp": "KP-STATE-UNMENTIONED",
       "kp_cn": "状态判读 · 未提及",
-      "stem": "纵隔与心影（MED）的标注状态是？",
+      "stem": "膈下（SUB）的标注状态是？",
       "options": [
         {
           "key": "A",
-          "text": "异常"
+          "text": "未提及"
         },
         {
           "key": "B",
@@ -146,17 +239,17 @@
         },
         {
           "key": "C",
-          "text": "未提及"
+          "text": "未见异常"
         },
         {
           "key": "D",
-          "text": "未见异常"
+          "text": "异常"
         }
       ],
-      "answer": "C",
+      "answer": "A",
       "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
-      "source": "CASE-005 · MED · 公开来源说明",
-      "qid": "Q0005"
+      "source": "CASE-005 · SUB · 公开来源说明",
+      "qid": "Q0008"
     },
     {
       "type": "localize",
@@ -169,11 +262,11 @@
       "options": [
         {
           "key": "A",
-          "text": "左肺中野"
+          "text": "左肺上野"
         },
         {
           "key": "B",
-          "text": "右肺上野"
+          "text": "左肺中野"
         },
         {
           "key": "C",
@@ -181,13 +274,13 @@
         },
         {
           "key": "D",
-          "text": "左肺上野"
+          "text": "右肺上野"
         }
       ],
       "answer": "C",
       "explain": "右肺中野标注为异常：右肺中野大片实变，红箭头指向病灶边缘。",
       "source": "CASE-006 · RML · 原图箭头 + 公开说明",
-      "qid": "Q0006"
+      "qid": "Q0009"
     },
     {
       "type": "state",
@@ -200,25 +293,25 @@
       "options": [
         {
           "key": "A",
-          "text": "未见异常"
-        },
-        {
-          "key": "B",
-          "text": "判读受限"
-        },
-        {
-          "key": "C",
           "text": "异常"
         },
         {
-          "key": "D",
+          "key": "B",
           "text": "未提及"
+        },
+        {
+          "key": "C",
+          "text": "未见异常"
+        },
+        {
+          "key": "D",
+          "text": "判读受限"
         }
       ],
-      "answer": "D",
+      "answer": "B",
       "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
       "source": "CASE-006 · MED · 公开来源说明",
-      "qid": "Q0007"
+      "qid": "Q0010"
     },
     {
       "type": "localize",
@@ -231,25 +324,25 @@
       "options": [
         {
           "key": "A",
-          "text": "右肺上野"
-        },
-        {
-          "key": "B",
           "text": "右肺下野"
         },
         {
+          "key": "B",
+          "text": "右肺上野"
+        },
+        {
           "key": "C",
-          "text": "左肺上野"
+          "text": "右肺中野"
         },
         {
           "key": "D",
-          "text": "右肺中野"
+          "text": "左肺上野"
         }
       ],
-      "answer": "B",
+      "answer": "A",
       "explain": "右肺下野标注为异常：双侧下肺野气腔影，密度增高。",
       "source": "CASE-007 · RLL · 公开来源说明",
-      "qid": "Q0008"
+      "qid": "Q0011"
     },
     {
       "type": "state",
@@ -258,15 +351,15 @@
       "image": "images/case-007.jpg",
       "kp": "KP-STATE-UNMENTIONED",
       "kp_cn": "状态判读 · 未提及",
-      "stem": "左肺中野（LML）的标注状态是？",
+      "stem": "右肺中野（RML）的标注状态是？",
       "options": [
         {
           "key": "A",
-          "text": "判读受限"
+          "text": "未见异常"
         },
         {
           "key": "B",
-          "text": "未见异常"
+          "text": "判读受限"
         },
         {
           "key": "C",
@@ -279,8 +372,39 @@
       ],
       "answer": "D",
       "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
-      "source": "CASE-007 · LML · 公开来源说明",
-      "qid": "Q0009"
+      "source": "CASE-007 · RML · 公开来源说明",
+      "qid": "Q0012"
+    },
+    {
+      "type": "localize",
+      "case_id": "CASE-008",
+      "title": "下肺野气腔影（侧位）",
+      "image": "images/case-008.jpg",
+      "kp": "KP-LOC-PNEUMONIA",
+      "kp_cn": "PNEUMONIA · 分区定位",
+      "stem": "这张片子上，哪一区被标注为异常？",
+      "options": [
+        {
+          "key": "A",
+          "text": "肺门与中区"
+        },
+        {
+          "key": "B",
+          "text": "胸骨后间隙"
+        },
+        {
+          "key": "C",
+          "text": "未见明确异常分区"
+        },
+        {
+          "key": "D",
+          "text": "后肺野与后肋膈角"
+        }
+      ],
+      "answer": "D",
+      "explain": "后肺野与后肋膈角标注为异常：侧位片示下肺野/后部气腔影。",
+      "source": "CASE-008 · POST · 公开来源说明",
+      "qid": "Q0013"
     },
     {
       "type": "state",
@@ -301,17 +425,17 @@
         },
         {
           "key": "C",
-          "text": "未见异常"
+          "text": "未提及"
         },
         {
           "key": "D",
-          "text": "未提及"
+          "text": "未见异常"
         }
       ],
-      "answer": "D",
+      "answer": "C",
       "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
       "source": "CASE-008 · MID · 公开来源说明",
-      "qid": "Q0010"
+      "qid": "Q0014"
     },
     {
       "type": "localize",
@@ -324,7 +448,7 @@
       "options": [
         {
           "key": "A",
-          "text": "左肺中野"
+          "text": "左肺上野"
         },
         {
           "key": "B",
@@ -336,13 +460,13 @@
         },
         {
           "key": "D",
-          "text": "左肺上野"
+          "text": "左肺中野"
         }
       ],
       "answer": "C",
       "explain": "右肺上野标注为异常：右中上肺野斑片状密度增高。",
       "source": "CASE-015 · RUL · 公开来源说明",
-      "qid": "Q0011"
+      "qid": "Q0015"
     },
     {
       "type": "state",
@@ -351,7 +475,7 @@
       "image": "images/case-015.jpg",
       "kp": "KP-STATE-UNMENTIONED",
       "kp_cn": "状态判读 · 未提及",
-      "stem": "右肺下野（RLL）的标注状态是？",
+      "stem": "左肺下野（LLL）的标注状态是？",
       "options": [
         {
           "key": "A",
@@ -359,7 +483,7 @@
         },
         {
           "key": "B",
-          "text": "判读受限"
+          "text": "未见异常"
         },
         {
           "key": "C",
@@ -367,13 +491,13 @@
         },
         {
           "key": "D",
-          "text": "未见异常"
+          "text": "判读受限"
         }
       ],
       "answer": "A",
       "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
-      "source": "CASE-015 · RLL · 公开来源说明",
-      "qid": "Q0012"
+      "source": "CASE-015 · LLL · 公开来源说明",
+      "qid": "Q0016"
     },
     {
       "type": "localize",
@@ -386,7 +510,7 @@
       "options": [
         {
           "key": "A",
-          "text": "右肺上野"
+          "text": "右肺中野"
         },
         {
           "key": "B",
@@ -398,13 +522,13 @@
         },
         {
           "key": "D",
-          "text": "右肺中野"
+          "text": "右肺上野"
         }
       ],
-      "answer": "A",
+      "answer": "D",
       "explain": "右肺上野标注为异常：双肺弥漫粟粒样细小结节。",
       "source": "CASE-016 · RUL · 公开来源说明",
-      "qid": "Q0013"
+      "qid": "Q0017"
     },
     {
       "type": "state",
@@ -413,7 +537,7 @@
       "image": "images/case-016.jpg",
       "kp": "KP-STATE-UNMENTIONED",
       "kp_cn": "状态判读 · 未提及",
-      "stem": "膈下（SUB）的标注状态是？",
+      "stem": "纵隔与心影（MED）的标注状态是？",
       "options": [
         {
           "key": "A",
@@ -421,21 +545,21 @@
         },
         {
           "key": "B",
-          "text": "未见异常"
+          "text": "判读受限"
         },
         {
           "key": "C",
-          "text": "异常"
+          "text": "未见异常"
         },
         {
           "key": "D",
-          "text": "判读受限"
+          "text": "异常"
         }
       ],
       "answer": "A",
       "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
-      "source": "CASE-016 · SUB · 公开来源说明",
-      "qid": "Q0014"
+      "source": "CASE-016 · MED · 公开来源说明",
+      "qid": "Q0018"
     },
     {
       "type": "localize",
@@ -452,21 +576,21 @@
         },
         {
           "key": "B",
-          "text": "右肺中野"
-        },
-        {
-          "key": "C",
           "text": "右肺下野"
         },
         {
-          "key": "D",
+          "key": "C",
           "text": "右肺上野"
+        },
+        {
+          "key": "D",
+          "text": "右肺中野"
         }
       ],
-      "answer": "C",
+      "answer": "B",
       "explain": "右肺下野标注为异常：双侧下肺野密度增高，肋膈角变钝。",
       "source": "CASE-017 · RLL · 公开来源说明",
-      "qid": "Q0015"
+      "qid": "Q0019"
     },
     {
       "type": "state",
@@ -475,7 +599,7 @@
       "image": "images/case-017.jpg",
       "kp": "KP-STATE-UNMENTIONED",
       "kp_cn": "状态判读 · 未提及",
-      "stem": "右肺中野（RML）的标注状态是？",
+      "stem": "膈下（SUB）的标注状态是？",
       "options": [
         {
           "key": "A",
@@ -483,7 +607,7 @@
         },
         {
           "key": "B",
-          "text": "未见异常"
+          "text": "判读受限"
         },
         {
           "key": "C",
@@ -491,13 +615,44 @@
         },
         {
           "key": "D",
-          "text": "判读受限"
+          "text": "未见异常"
         }
       ],
       "answer": "C",
       "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
-      "source": "CASE-017 · RML · 公开来源说明",
-      "qid": "Q0016"
+      "source": "CASE-017 · SUB · 公开来源说明",
+      "qid": "Q0020"
+    },
+    {
+      "type": "localize",
+      "case_id": "CASE-018",
+      "title": "侧位胸片：后肋膈角变钝（箭头）",
+      "image": "images/case-018.png",
+      "kp": "KP-LOC-EFFUSION",
+      "kp_cn": "EFFUSION · 分区定位",
+      "stem": "这张片子上，哪一区被标注为异常？",
+      "options": [
+        {
+          "key": "A",
+          "text": "未见明确异常分区"
+        },
+        {
+          "key": "B",
+          "text": "胸骨后间隙"
+        },
+        {
+          "key": "C",
+          "text": "后肺野与后肋膈角"
+        },
+        {
+          "key": "D",
+          "text": "肺门与中区"
+        }
+      ],
+      "answer": "C",
+      "explain": "后肺野与后肋膈角标注为异常：后肋膈角变钝，可见液体分布；箭头为原图标注。",
+      "source": "CASE-018 · POST · 原图箭头 + 公开说明",
+      "qid": "Q0021"
     },
     {
       "type": "state",
@@ -506,15 +661,15 @@
       "image": "images/case-018.png",
       "kp": "KP-STATE-UNMENTIONED",
       "kp_cn": "状态判读 · 未提及",
-      "stem": "胸骨后间隙（ANT）的标注状态是？",
+      "stem": "肺门与中区（MID）的标注状态是？",
       "options": [
         {
           "key": "A",
-          "text": "未提及"
+          "text": "异常"
         },
         {
           "key": "B",
-          "text": "判读受限"
+          "text": "未提及"
         },
         {
           "key": "C",
@@ -522,13 +677,44 @@
         },
         {
           "key": "D",
-          "text": "异常"
+          "text": "判读受限"
         }
       ],
-      "answer": "A",
+      "answer": "B",
       "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
-      "source": "CASE-018 · ANT · 公开来源说明",
-      "qid": "Q0017"
+      "source": "CASE-018 · MID · 公开来源说明",
+      "qid": "Q0022"
+    },
+    {
+      "type": "localize",
+      "case_id": "CASE-033",
+      "title": "胸部正位 X 线（解剖标注版）",
+      "image": "images/case-033.png",
+      "kp": "KP-LOC-UNMAPPED",
+      "kp_cn": "UNMAPPED · 分区定位",
+      "stem": "这张片子上，哪一区被标注为异常？",
+      "options": [
+        {
+          "key": "A",
+          "text": "左肺上野"
+        },
+        {
+          "key": "B",
+          "text": "左肺中野"
+        },
+        {
+          "key": "C",
+          "text": "左肺下野"
+        },
+        {
+          "key": "D",
+          "text": "未见明确异常分区"
+        }
+      ],
+      "answer": "D",
+      "explain": "本片所有教学分区均标注为未见明确异常，没有异常分区。",
+      "source": "CASE-033 · 全部分区 · 库内标注",
+      "qid": "Q0023"
     },
     {
       "type": "state",
@@ -537,7 +723,7 @@
       "image": "images/case-033.png",
       "kp": "KP-STATE-NORMAL",
       "kp_cn": "状态判读 · 未见异常",
-      "stem": "纵隔与心影（MED）的标注状态是？",
+      "stem": "膈下（SUB）的标注状态是？",
       "options": [
         {
           "key": "A",
@@ -545,21 +731,52 @@
         },
         {
           "key": "B",
-          "text": "异常"
-        },
-        {
-          "key": "C",
           "text": "未见异常"
         },
         {
-          "key": "D",
+          "key": "C",
           "text": "判读受限"
+        },
+        {
+          "key": "D",
+          "text": "异常"
         }
       ],
-      "answer": "C",
+      "answer": "B",
       "explain": "来源明确写了该区正常，属于「未见异常」。",
-      "source": "CASE-033 · MED · 公开来源说明",
-      "qid": "Q0018"
+      "source": "CASE-033 · SUB · 公开来源说明",
+      "qid": "Q0024"
+    },
+    {
+      "type": "localize",
+      "case_id": "CASE-034",
+      "title": "胸部正位 X 线",
+      "image": "images/case-034.png",
+      "kp": "KP-LOC-UNMAPPED",
+      "kp_cn": "UNMAPPED · 分区定位",
+      "stem": "这张片子上，哪一区被标注为异常？",
+      "options": [
+        {
+          "key": "A",
+          "text": "右肺上野"
+        },
+        {
+          "key": "B",
+          "text": "未见明确异常分区"
+        },
+        {
+          "key": "C",
+          "text": "右肺中野"
+        },
+        {
+          "key": "D",
+          "text": "纵隔与心影"
+        }
+      ],
+      "answer": "B",
+      "explain": "本片所有教学分区均标注为未见明确异常，没有异常分区。",
+      "source": "CASE-034 · 全部分区 · 库内标注",
+      "qid": "Q0025"
     },
     {
       "type": "state",
@@ -576,21 +793,21 @@
         },
         {
           "key": "B",
-          "text": "未提及"
-        },
-        {
-          "key": "C",
           "text": "未见异常"
         },
         {
-          "key": "D",
+          "key": "C",
           "text": "异常"
+        },
+        {
+          "key": "D",
+          "text": "未提及"
         }
       ],
-      "answer": "C",
+      "answer": "B",
       "explain": "来源明确写了该区正常，属于「未见异常」。",
       "source": "CASE-034 · SUB · 公开来源说明",
-      "qid": "Q0019"
+      "qid": "Q0026"
     },
     {
       "type": "localize",
@@ -603,25 +820,25 @@
       "options": [
         {
           "key": "A",
-          "text": "左肺中野"
-        },
-        {
-          "key": "B",
-          "text": "左肺上野"
-        },
-        {
-          "key": "C",
           "text": "左肺下野"
         },
         {
-          "key": "D",
+          "key": "B",
           "text": "右肺上野"
+        },
+        {
+          "key": "C",
+          "text": "左肺上野"
+        },
+        {
+          "key": "D",
+          "text": "左肺中野"
         }
       ],
-      "answer": "D",
+      "answer": "B",
       "explain": "右肺上野标注为异常：右侧胸腔可见气胸，右肺压缩，肺纹理消失（原图标注 Pneumothorax / Collapsed right lung）。",
       "source": "CASE-036 · RUL · 原图标注",
-      "qid": "Q0020"
+      "qid": "Q0027"
     },
     {
       "type": "state",
@@ -630,7 +847,7 @@
       "image": "images/case-036.jpg",
       "kp": "KP-STATE-UNMENTIONED",
       "kp_cn": "状态判读 · 未提及",
-      "stem": "左肺中野（LML）的标注状态是？",
+      "stem": "左肺下野（LLL）的标注状态是？",
       "options": [
         {
           "key": "A",
@@ -638,21 +855,52 @@
         },
         {
           "key": "B",
-          "text": "异常"
-        },
-        {
-          "key": "C",
           "text": "未见异常"
         },
         {
-          "key": "D",
+          "key": "C",
           "text": "未提及"
+        },
+        {
+          "key": "D",
+          "text": "异常"
         }
       ],
-      "answer": "D",
+      "answer": "C",
       "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
-      "source": "CASE-036 · LML · 公开来源说明",
-      "qid": "Q0021"
+      "source": "CASE-036 · LLL · 公开来源说明",
+      "qid": "Q0028"
+    },
+    {
+      "type": "localize",
+      "case_id": "CASE-041",
+      "title": "胸大肌影（胸片）",
+      "image": "images/case-041.jpg",
+      "kp": "KP-LOC-UNMAPPED",
+      "kp_cn": "UNMAPPED · 分区定位",
+      "stem": "这张片子上，哪一区被标注为异常？",
+      "options": [
+        {
+          "key": "A",
+          "text": "纵隔与心影"
+        },
+        {
+          "key": "B",
+          "text": "右肺下野"
+        },
+        {
+          "key": "C",
+          "text": "未见明确异常分区"
+        },
+        {
+          "key": "D",
+          "text": "膈下"
+        }
+      ],
+      "answer": "C",
+      "explain": "本片所有教学分区均标注为未见明确异常，没有异常分区。",
+      "source": "CASE-041 · 全部分区 · 库内标注",
+      "qid": "Q0029"
     },
     {
       "type": "state",
@@ -665,11 +913,11 @@
       "options": [
         {
           "key": "A",
-          "text": "异常"
+          "text": "未见异常"
         },
         {
           "key": "B",
-          "text": "未见异常"
+          "text": "判读受限"
         },
         {
           "key": "C",
@@ -677,13 +925,44 @@
         },
         {
           "key": "D",
-          "text": "判读受限"
+          "text": "异常"
         }
       ],
-      "answer": "B",
+      "answer": "A",
       "explain": "来源明确写了该区正常，属于「未见异常」。",
       "source": "CASE-041 · RLL · 公开来源说明",
-      "qid": "Q0022"
+      "qid": "Q0030"
+    },
+    {
+      "type": "localize",
+      "case_id": "CASE-047",
+      "title": "胸部后前位 X 线",
+      "image": "images/case-047.jpg",
+      "kp": "KP-LOC-UNMAPPED",
+      "kp_cn": "UNMAPPED · 分区定位",
+      "stem": "这张片子上，哪一区被标注为异常？",
+      "options": [
+        {
+          "key": "A",
+          "text": "左肺中野"
+        },
+        {
+          "key": "B",
+          "text": "右肺中野"
+        },
+        {
+          "key": "C",
+          "text": "未见明确异常分区"
+        },
+        {
+          "key": "D",
+          "text": "纵隔与心影"
+        }
+      ],
+      "answer": "C",
+      "explain": "本片所有教学分区均标注为未见明确异常，没有异常分区。",
+      "source": "CASE-047 · 全部分区 · 库内标注",
+      "qid": "Q0031"
     },
     {
       "type": "state",
@@ -692,11 +971,11 @@
       "image": "images/case-047.jpg",
       "kp": "KP-STATE-NORMAL",
       "kp_cn": "状态判读 · 未见异常",
-      "stem": "右肺上野（RUL）的标注状态是？",
+      "stem": "左肺中野（LML）的标注状态是？",
       "options": [
         {
           "key": "A",
-          "text": "异常"
+          "text": "未见异常"
         },
         {
           "key": "B",
@@ -704,17 +983,17 @@
         },
         {
           "key": "C",
-          "text": "未见异常"
+          "text": "异常"
         },
         {
           "key": "D",
           "text": "未提及"
         }
       ],
-      "answer": "C",
+      "answer": "A",
       "explain": "来源明确写了该区正常，属于「未见异常」。",
-      "source": "CASE-047 · RUL · 公开来源说明",
-      "qid": "Q0023"
+      "source": "CASE-047 · LML · 公开来源说明",
+      "qid": "Q0032"
     },
     {
       "type": "localize",
@@ -727,11 +1006,11 @@
       "options": [
         {
           "key": "A",
-          "text": "右肺下野"
+          "text": "右肺中野"
         },
         {
           "key": "B",
-          "text": "右肺上野"
+          "text": "右肺下野"
         },
         {
           "key": "C",
@@ -739,13 +1018,13 @@
         },
         {
           "key": "D",
-          "text": "右肺中野"
+          "text": "右肺上野"
         }
       ],
-      "answer": "A",
+      "answer": "B",
       "explain": "右肺下野标注为异常：下肺野可见 Kerley B 线，肺血管影增粗（公开说明）。",
       "source": "CASE-153 · RLL · 公开来源说明",
-      "qid": "Q0024"
+      "qid": "Q0033"
     },
     {
       "type": "state",
@@ -754,69 +1033,7 @@
       "image": "images/case-153.jpg",
       "kp": "KP-STATE-UNMENTIONED",
       "kp_cn": "状态判读 · 未提及",
-      "stem": "膈下（SUB）的标注状态是？",
-      "options": [
-        {
-          "key": "A",
-          "text": "未见异常"
-        },
-        {
-          "key": "B",
-          "text": "未提及"
-        },
-        {
-          "key": "C",
-          "text": "判读受限"
-        },
-        {
-          "key": "D",
-          "text": "异常"
-        }
-      ],
-      "answer": "B",
-      "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
-      "source": "CASE-153 · SUB · 公开来源说明",
-      "qid": "Q0025"
-    },
-    {
-      "type": "localize",
-      "case_id": "CASE-162",
-      "title": "胸部 X 线",
-      "image": "images/case-162.jpg",
-      "kp": "KP-LOC-NODULE",
-      "kp_cn": "NODULE · 分区定位",
-      "stem": "这张片子上，哪一区被标注为异常？",
-      "options": [
-        {
-          "key": "A",
-          "text": "右肺上野"
-        },
-        {
-          "key": "B",
-          "text": "右肺中野"
-        },
-        {
-          "key": "C",
-          "text": "膈下"
-        },
-        {
-          "key": "D",
-          "text": "纵隔与心影"
-        }
-      ],
-      "answer": "A",
-      "explain": "右肺上野标注为异常：双肺弥漫网结节影（公开说明）。",
-      "source": "CASE-162 · RUL · 公开来源说明",
-      "qid": "Q0026"
-    },
-    {
-      "type": "state",
-      "case_id": "CASE-162",
-      "title": "胸部 X 线",
-      "image": "images/case-162.jpg",
-      "kp": "KP-STATE-UNMENTIONED",
-      "kp_cn": "状态判读 · 未提及",
-      "stem": "纵隔与心影（MED）的标注状态是？",
+      "stem": "右肺上野（RUL）的标注状态是？",
       "options": [
         {
           "key": "A",
@@ -837,8 +1054,70 @@
       ],
       "answer": "C",
       "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
+      "source": "CASE-153 · RUL · 公开来源说明",
+      "qid": "Q0034"
+    },
+    {
+      "type": "localize",
+      "case_id": "CASE-162",
+      "title": "胸部 X 线",
+      "image": "images/case-162.jpg",
+      "kp": "KP-LOC-NODULE",
+      "kp_cn": "NODULE · 分区定位",
+      "stem": "这张片子上，哪一区被标注为异常？",
+      "options": [
+        {
+          "key": "A",
+          "text": "膈下"
+        },
+        {
+          "key": "B",
+          "text": "纵隔与心影"
+        },
+        {
+          "key": "C",
+          "text": "右肺上野"
+        },
+        {
+          "key": "D",
+          "text": "右肺中野"
+        }
+      ],
+      "answer": "C",
+      "explain": "右肺上野标注为异常：双肺弥漫网结节影（公开说明）。",
+      "source": "CASE-162 · RUL · 公开来源说明",
+      "qid": "Q0035"
+    },
+    {
+      "type": "state",
+      "case_id": "CASE-162",
+      "title": "胸部 X 线",
+      "image": "images/case-162.jpg",
+      "kp": "KP-STATE-UNMENTIONED",
+      "kp_cn": "状态判读 · 未提及",
+      "stem": "纵隔与心影（MED）的标注状态是？",
+      "options": [
+        {
+          "key": "A",
+          "text": "未见异常"
+        },
+        {
+          "key": "B",
+          "text": "异常"
+        },
+        {
+          "key": "C",
+          "text": "判读受限"
+        },
+        {
+          "key": "D",
+          "text": "未提及"
+        }
+      ],
+      "answer": "D",
+      "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
       "source": "CASE-162 · MED · 公开来源说明",
-      "qid": "Q0027"
+      "qid": "Q0036"
     },
     {
       "type": "localize",
@@ -851,7 +1130,7 @@
       "options": [
         {
           "key": "A",
-          "text": "左肺上野"
+          "text": "右肺中野"
         },
         {
           "key": "B",
@@ -859,17 +1138,17 @@
         },
         {
           "key": "C",
-          "text": "右肺中野"
+          "text": "右肺上野"
         },
         {
           "key": "D",
-          "text": "右肺上野"
+          "text": "左肺上野"
         }
       ],
-      "answer": "C",
+      "answer": "A",
       "explain": "右肺中野标注为异常：右肺中野大片实变，红箭头指向病灶边缘。",
       "source": "CASE-202 · RML · 原图箭头 + 公开说明",
-      "qid": "Q0028"
+      "qid": "Q0037"
     },
     {
       "type": "state",
@@ -878,7 +1157,7 @@
       "image": "images/case-202.jpg",
       "kp": "KP-STATE-UNMENTIONED",
       "kp_cn": "状态判读 · 未提及",
-      "stem": "右肺上野（RUL）的标注状态是？",
+      "stem": "纵隔与心影（MED）的标注状态是？",
       "options": [
         {
           "key": "A",
@@ -890,17 +1169,17 @@
         },
         {
           "key": "C",
-          "text": "未见异常"
+          "text": "异常"
         },
         {
           "key": "D",
-          "text": "异常"
+          "text": "未见异常"
         }
       ],
       "answer": "B",
       "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
-      "source": "CASE-202 · RUL · 公开来源说明",
-      "qid": "Q0029"
+      "source": "CASE-202 · MED · 公开来源说明",
+      "qid": "Q0038"
     },
     {
       "type": "localize",
@@ -913,25 +1192,25 @@
       "options": [
         {
           "key": "A",
-          "text": "右肺上野"
+          "text": "右肺下野"
         },
         {
           "key": "B",
-          "text": "右肺中野"
-        },
-        {
-          "key": "C",
           "text": "左肺中野"
         },
         {
+          "key": "C",
+          "text": "右肺上野"
+        },
+        {
           "key": "D",
-          "text": "右肺下野"
+          "text": "右肺中野"
         }
       ],
-      "answer": "A",
+      "answer": "C",
       "explain": "右肺上野标注为异常：双肺上野斑片状、结节状密度增高（公开说明）。",
       "source": "CASE-203 · RUL · 公开来源说明",
-      "qid": "Q0030"
+      "qid": "Q0039"
     },
     {
       "type": "state",
@@ -940,29 +1219,29 @@
       "image": "images/case-203.jpg",
       "kp": "KP-STATE-UNMENTIONED",
       "kp_cn": "状态判读 · 未提及",
-      "stem": "左肺下野（LLL）的标注状态是？",
+      "stem": "膈下（SUB）的标注状态是？",
       "options": [
         {
           "key": "A",
-          "text": "未提及"
-        },
-        {
-          "key": "B",
           "text": "异常"
         },
         {
-          "key": "C",
+          "key": "B",
           "text": "判读受限"
+        },
+        {
+          "key": "C",
+          "text": "未提及"
         },
         {
           "key": "D",
           "text": "未见异常"
         }
       ],
-      "answer": "A",
+      "answer": "C",
       "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
-      "source": "CASE-203 · LLL · 公开来源说明",
-      "qid": "Q0031"
+      "source": "CASE-203 · SUB · 公开来源说明",
+      "qid": "Q0040"
     },
     {
       "type": "localize",
@@ -975,25 +1254,25 @@
       "options": [
         {
           "key": "A",
-          "text": "右肺上野"
-        },
-        {
-          "key": "B",
-          "text": "膈下"
-        },
-        {
-          "key": "C",
           "text": "右肺中野"
         },
         {
-          "key": "D",
+          "key": "B",
+          "text": "右肺上野"
+        },
+        {
+          "key": "C",
           "text": "纵隔与心影"
+        },
+        {
+          "key": "D",
+          "text": "膈下"
         }
       ],
-      "answer": "A",
+      "answer": "B",
       "explain": "右肺上野标注为异常：双肺弥漫小结节影，以中上野为著。",
       "source": "CASE-204 · RUL · 公开来源说明",
-      "qid": "Q0032"
+      "qid": "Q0041"
     },
     {
       "type": "state",
@@ -1002,29 +1281,29 @@
       "image": "images/case-204.jpg",
       "kp": "KP-STATE-UNMENTIONED",
       "kp_cn": "状态判读 · 未提及",
-      "stem": "纵隔与心影（MED）的标注状态是？",
+      "stem": "膈下（SUB）的标注状态是？",
       "options": [
         {
           "key": "A",
-          "text": "异常"
-        },
-        {
-          "key": "B",
           "text": "判读受限"
         },
         {
+          "key": "B",
+          "text": "异常"
+        },
+        {
           "key": "C",
-          "text": "未见异常"
+          "text": "未提及"
         },
         {
           "key": "D",
-          "text": "未提及"
+          "text": "未见异常"
         }
       ],
-      "answer": "D",
+      "answer": "C",
       "explain": "来源没有描述这一区，属于「未提及」。未提及不等于正常，不能当作阴性结论。",
-      "source": "CASE-204 · MED · 公开来源说明",
-      "qid": "Q0033"
+      "source": "CASE-204 · SUB · 公开来源说明",
+      "qid": "Q0042"
     },
     {
       "type": "report",
@@ -1037,21 +1316,21 @@
       "options": [
         {
           "key": "A",
-          "text": "伴随征象"
+          "text": "部位与侧别"
         },
         {
           "key": "B",
-          "text": "密度与形态"
+          "text": "伴随征象"
         },
         {
           "key": "C",
-          "text": "部位与侧别"
+          "text": "密度与形态"
         }
       ],
-      "answer": "C",
+      "answer": "A",
       "explain": "缺少「部位与侧别」。指南要求报告写明该要素，但本报告的逐区描述中未出现对应表述。",
       "source": "CASE-005 · 指南主题 PNEUMONIA",
-      "qid": "Q0034"
+      "qid": "Q0043"
     },
     {
       "type": "report",
@@ -1064,25 +1343,25 @@
       "options": [
         {
           "key": "A",
-          "text": "部位与侧别"
-        },
-        {
-          "key": "B",
           "text": "伴随征象"
         },
         {
+          "key": "B",
+          "text": "密度与形态"
+        },
+        {
           "key": "C",
-          "text": "范围"
+          "text": "部位与侧别"
         },
         {
           "key": "D",
-          "text": "密度与形态"
+          "text": "范围"
         }
       ],
-      "answer": "B",
+      "answer": "A",
       "explain": "缺少「伴随征象」。指南要求报告写明该要素，但本报告的逐区描述中未出现对应表述。",
       "source": "CASE-006 · 指南主题 PNEUMONIA",
-      "qid": "Q0035"
+      "qid": "Q0044"
     },
     {
       "type": "report",
@@ -1095,25 +1374,25 @@
       "options": [
         {
           "key": "A",
-          "text": "部位与侧别"
-        },
-        {
-          "key": "B",
           "text": "范围"
         },
         {
+          "key": "B",
+          "text": "密度与形态"
+        },
+        {
           "key": "C",
-          "text": "伴随征象"
+          "text": "部位与侧别"
         },
         {
           "key": "D",
-          "text": "密度与形态"
+          "text": "伴随征象"
         }
       ],
-      "answer": "C",
+      "answer": "D",
       "explain": "缺少「伴随征象」。指南要求报告写明该要素，但本报告的逐区描述中未出现对应表述。",
       "source": "CASE-015 · 指南主题 PNEUMONIA",
-      "qid": "Q0036"
+      "qid": "Q0045"
     },
     {
       "type": "report",
@@ -1126,11 +1405,11 @@
       "options": [
         {
           "key": "A",
-          "text": "侧别"
+          "text": "肺压缩程度"
         },
         {
           "key": "B",
-          "text": "肺压缩程度"
+          "text": "侧别"
         },
         {
           "key": "C",
@@ -1140,7 +1419,7 @@
       "answer": "C",
       "explain": "缺少「张力征象」。指南要求报告写明该要素，但本报告的逐区描述中未出现对应表述。",
       "source": "CASE-036 · 指南主题 PNEUMOTHORAX",
-      "qid": "Q0037"
+      "qid": "Q0046"
     },
     {
       "type": "report",
@@ -1153,25 +1432,25 @@
       "options": [
         {
           "key": "A",
-          "text": "范围"
-        },
-        {
-          "key": "B",
-          "text": "密度与形态"
-        },
-        {
-          "key": "C",
           "text": "伴随征象"
         },
         {
-          "key": "D",
+          "key": "B",
           "text": "部位与侧别"
+        },
+        {
+          "key": "C",
+          "text": "密度与形态"
+        },
+        {
+          "key": "D",
+          "text": "范围"
         }
       ],
-      "answer": "C",
+      "answer": "A",
       "explain": "缺少「伴随征象」。指南要求报告写明该要素，但本报告的逐区描述中未出现对应表述。",
       "source": "CASE-202 · 指南主题 PNEUMONIA",
-      "qid": "Q0038"
+      "qid": "Q0047"
     }
   ],
   "kps": [
@@ -1183,7 +1462,7 @@
     {
       "kp": "KP-LOC-EFFUSION",
       "kp_cn": "EFFUSION · 分区定位",
-      "count": 1
+      "count": 2
     },
     {
       "kp": "KP-LOC-NODULE",
@@ -1191,9 +1470,14 @@
       "count": 3
     },
     {
+      "kp": "KP-LOC-NORMAL",
+      "kp_cn": "NORMAL · 分区定位",
+      "count": 2
+    },
+    {
       "kp": "KP-LOC-PNEUMONIA",
       "kp_cn": "PNEUMONIA · 分区定位",
-      "count": 5
+      "count": 6
     },
     {
       "kp": "KP-LOC-PNEUMOTHORAX",
@@ -1204,6 +1488,11 @@
       "kp": "KP-LOC-TB",
       "kp_cn": "TB · 分区定位",
       "count": 1
+    },
+    {
+      "kp": "KP-LOC-UNMAPPED",
+      "kp_cn": "UNMAPPED · 分区定位",
+      "count": 5
     },
     {
       "kp": "KP-REPORT-PNEUMONIA",
@@ -1232,10 +1521,10 @@
     }
   ],
   "summary": {
-    "questions": 38,
-    "localize": 12,
+    "questions": 47,
+    "localize": 21,
     "state": 21,
     "report": 5,
-    "kps": 11
+    "kps": 13
   }
 }

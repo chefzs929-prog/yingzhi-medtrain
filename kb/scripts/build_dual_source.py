@@ -111,6 +111,7 @@ def main() -> None:
     mapped = [c for c in cases if c["topic_id"] != "UNMAPPED"]
     covs = [c["coverage"] for c in mapped if c["coverage"] is not None]
     avg = round(sum(covs) / len(covs), 3) if covs else 0
+    no_report = [c["case_id"] for c in cases if not c.get("report_available")]
 
     out = {
         "version": "0.1.0",
@@ -120,7 +121,13 @@ def main() -> None:
             "cases": len(cases),
             "mapped": len(mapped),
             "unmapped": len(cases) - len(mapped),
+            "coverage_cases": len(covs),
+            "no_report": no_report,
             "avg_coverage": avg,
+            "coverage_note": (
+                f"平均覆盖率只统计 {len(covs)}/{len(cases)} 例有逐区描述的病例；"
+                f"{len(no_report)} 例没有报告文本，不做要素打分。"
+            ),
         },
     }
     OUT.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf8")

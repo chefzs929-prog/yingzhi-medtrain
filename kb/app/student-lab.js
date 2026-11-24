@@ -49,6 +49,8 @@
   const SCOPE_SUGGESTIONS = ["气胸在胸片上怎么找", "实变和胸腔积液怎么区分", "这个分区标注的依据是什么"];
   const HIT_FLOOR = { sign: 50, concept: 50, guideline: 40, case: 40 };
   const WEAK_FLOOR = { sign: 30, concept: 30, guideline: 24, case: 24 };
+  // 分区标注覆盖肺野与膈下；问到骨骼/软组织/胸壁结构时，先说明范围，避免把“肺野正常”读成“没有骨折”。
+  const NON_LUNG = /骨折|骨裂|肋骨|骨质|骨骼|软组织|胸壁|皮下|乳腺|甲状腺/;
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({
@@ -523,6 +525,10 @@
     if (casesOut.some((e) => e.zone && e.zone.status === "unmentioned")) {
       missing.push("标注为「来源未提及」的分区不等于正常，本工具不作推断。");
     }
+    const scopeNote = NON_LUNG.test(q)
+      ? "分区标注覆盖肺野、心影与纵隔轮廓、膈面与肋膈角、膈下（胃泡与肝影上部）；骨骼、软组织与胸壁结构不在标注范围内。下面的内容只是该区标注所见，不能用来判断骨折或软组织异常。"
+      : "";
+    if (scopeNote) missing.push(scopeNote);
     const concepts = kind === "sign" ? relatedConcepts(signIds) : [];
     return {
       kind,
@@ -537,6 +543,7 @@
       concepts,
       conclusion,
       missing,
+      scopeNote,
     };
   }
 
@@ -709,6 +716,7 @@
         <span class="lab-hit">${a.signIds.length} 条征象 · ${evidence.length} 个影像位置</span>
       </div>
       ${a.tier === "weak" ? `<div class="lab-weak-note">这次匹配度不高，以下只作候选，请结合原图和来源核对。</div>` : ""}
+      ${a.scopeNote ? `<div class="lab-weak-note">范围提示：${esc(a.scopeNote)}</div>` : ""}
       <p class="lab-conclusion">${esc(a.conclusion)}</p>
       <div class="lab-dual">
         <section class="lab-evidence">

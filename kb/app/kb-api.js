@@ -15,7 +15,7 @@
     (window.RC_API_BASE != null ? window.RC_API_BASE : (params ? params.get("api") : "")) || ""
   ).replace(/\/$/, "");
   const CACHE_KEY = "radiocheck.kbapi.v1";
-  const SKIP_PORTS = new Set(["8811", "8080", "8000", "3000", "4173", "5500", "5501"]);
+  const SKIP_PORTS = new Set(["8811", "8899", "8080", "8000", "3000", "4173", "5500", "5501"]);
   const SKIP_HOSTS = /(^|\.)github\.io$|(^|\.)githubusercontent\.com$/i;
   let resolved = null;
   let probing = null;

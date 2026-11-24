@@ -189,6 +189,15 @@
     return cls;
   }
 
+  // 删除需要同步传播：物理删除 + 记一条墓碑，服务端合并时按墓碑剔除，
+  // 否则任何一次 pull 都会把已删对象从远端加回来。
+  function addTombstone(db, type, id, extra) {
+    if (!id) return;
+    db.tombstones = Array.isArray(db.tombstones) ? db.tombstones : [];
+    if (db.tombstones.some((t) => t && t.type === type && t.id === id)) return;
+    db.tombstones.push(Object.assign({ type, id, at: now() }, extra || {}));
+  }
+
   function addStudent(classId, name) {
     const db = read();
     const cls = db.classes.find((c) => c.id === classId);
@@ -208,6 +217,8 @@
     const cls = db.classes.find((c) => c.id === classId);
     if (!cls) return false;
     const before = cls.students.length;
+    const target = cls.students.find((s) => s.id === studentId);
+    addTombstone(db, "student", studentId, { classId, name: target ? target.name : "" });
     cls.students = cls.students.filter((s) => s.id !== studentId);
     db.attempts = db.attempts.filter((a) => !(a.classId === classId && a.studentId === studentId));
     if (db.activeStudentId === studentId) db.activeStudentId = "";
@@ -393,6 +404,7 @@
   function deleteGroup(classId, groupId) {
     const found = findGroup(classId, groupId);
     if (!found) return false;
+    addTombstone(found.db, "group", groupId, { classId, name: found.group.name });
     found.cls.groups = found.cls.groups.filter((g) => g.id !== groupId);
     found.db.posts = found.db.posts.filter((p) => !(p.classId === classId && p.groupId === groupId));
     write(found.db);
@@ -469,6 +481,7 @@
   function deletePost(classId, postId) {
     const db = read();
     const before = db.posts.length;
+    addTombstone(db, "post", postId, { classId });
     db.posts = db.posts.filter((p) => !(p.classId === classId && p.id === postId));
     write(db);
     return db.posts.length !== before;
@@ -571,6 +584,7 @@
     const cls = db.classes.find((c) => c.id === classId);
     if (!cls) return false;
     const before = cls.assignments.length;
+    addTombstone(db, "assignment", assignmentId, { classId });
     cls.assignments = cls.assignments.filter((a) => a.id !== assignmentId);
     db.attempts = db.attempts.filter((a) => a.assignmentId !== assignmentId);
     write(db);

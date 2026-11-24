@@ -1497,6 +1497,17 @@
     "cases": 21,
     "mapped": 16,
     "unmapped": 5,
-    "avg_coverage": 0.314
+    "coverage_cases": 14,
+    "no_report": [
+      "CASE-001",
+      "CASE-002",
+      "CASE-003",
+      "CASE-033",
+      "CASE-034",
+      "CASE-041",
+      "CASE-047"
+    ],
+    "avg_coverage": 0.314,
+    "coverage_note": "平均覆盖率只统计 14/21 例有逐区描述的病例；7 例没有报告文本，不做要素打分。"
   }
 }

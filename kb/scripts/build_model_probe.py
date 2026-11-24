@@ -6,28 +6,37 @@
 注意：
 - 这是整图级的多标签概率，不是分区级定位，也不是诊断
 - 只用于和人工逐区标注做「是否互相打脸」的对比
+- 侧位片与解剖标注图不参与主统计：模型训练以 PA/AP 为主，标注图不是诊断影像
 - 必须在 .venv 下运行：.venv/bin/python kb/scripts/build_model_probe.py
+- 没有 torch 环境时，可用 --recompute 只重算判定与汇总（不重新推理）
 
 产物：kb/data/model_probe.json
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
 
-import numpy as np
-import torch
-from PIL import Image
-
 ROOT = Path(__file__).resolve().parent.parent.parent
 SRC = ROOT / "kb/data/chest_reading.json"
+CASES_META = ROOT / "kb/data/cases.jsonl"
 IMG_ROOT = ROOT / "kb"
 OUT = ROOT / "kb/data/model_probe.json"
 
 WEIGHTS = "densenet121-res224-all"
 TOP_K = 5
+
+# 主判定阈值：0.5 会把大量正常片的弱信号（0.50~0.62）误判成「模型高分提示」。
+# 0.6 是常用的弱校准阈值；同时输出 0.5/0.6/0.7/0.8 的敏感性，避免单点结论。
+HIGH_THRESHOLD = 0.6
+THRESHOLD_GRID = (0.5, 0.6, 0.7, 0.8)
+
+# 不参与主统计的图像：侧位投照、解剖标注图。
+EXCLUDE_POSE = {"chest_lat"}
+EXCLUDE_TITLE_KEYWORDS = ("解剖标注",)
 
 # 模型标签 -> 中文
 LABEL_CN = {
@@ -78,6 +87,10 @@ def load_model():
 
 
 def infer(model, xrv, path: Path) -> dict:
+    import numpy as np
+    import torch
+    from PIL import Image
+
     img = Image.open(path).convert("L")
     arr = np.asarray(img.resize((224, 224)), dtype=np.float32)
     arr = xrv.datasets.normalize(arr, 255)
@@ -89,9 +102,150 @@ def infer(model, xrv, path: Path) -> dict:
     return {k: float(v) for k, v in pairs}
 
 
+def load_meta() -> dict[str, dict]:
+    meta: dict[str, dict] = {}
+    if not CASES_META.exists():
+        return meta
+    for line in CASES_META.read_text(encoding="utf8").splitlines():
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        meta[row.get("id", "")] = {
+            "pose_class": row.get("pose_class", ""),
+            "title": row.get("title", ""),
+        }
+    return meta
+
+
+def eligibility(case: dict) -> tuple[bool, str]:
+    if case.get("pose_class") in EXCLUDE_POSE:
+        return False, "侧位投照：模型训练以 PA/AP 为主，不纳入主统计"
+    title = case.get("title") or ""
+    if any(k in title for k in EXCLUDE_TITLE_KEYWORDS):
+        return False, "解剖标注图：不是诊断影像，不纳入主统计"
+    return True, ""
+
+
+def judge(top: list[dict], abnormal_zones: set[str], threshold: float) -> tuple[bool, str, str]:
+    all_normal = len(abnormal_zones) == 0
+    high = [t for t in top if t["score"] >= threshold]
+    top1 = top[0] if top else {"label": "", "score": 0.0}
+    if high:
+        if any(LABEL_ZONES.get(h["label"], set()) & abnormal_zones for h in high):
+            return True, "consistent", "模型高分项与人工标注的异常分区指向同一类表现"
+        if all_normal:
+            return False, "conflict", f"模型最高分 {top1['score']:.3f} ≥ {threshold}，但该例人工标注为全部未见异常"
+        return False, "partial", "模型有高分提示，但未命中人工标注的异常分区"
+    if all_normal:
+        return True, "consistent", f"模型最高分 {top1['score']:.3f} < {threshold}，与「全部未见异常」一致"
+    return False, "silent", f"人工标注存在异常，但模型最高分 {top1['score']:.3f} < {threshold}（弱信号/漏检）"
+
+
+def build_result(case: dict, top: list[dict], threshold: float) -> dict:
+    abnormal_zones = {z["id"] for z in case.get("zones", []) if z.get("status") == "abnormal"}
+    eligible, reason = eligibility(case)
+    agree, verdict, note = judge(top, abnormal_zones, threshold)
+    return {
+        "case_id": case["id"],
+        "title": case.get("title", ""),
+        "pose_class": case.get("pose_class", ""),
+        "eligible": eligible,
+        "exclude_reason": reason,
+        "abnormal_zones": sorted(abnormal_zones),
+        "top": top,
+        "verdict": verdict,
+        "agreement": agree,
+        "note": note,
+    }
+
+
+def summarize(results: list[dict], threshold: float) -> dict:
+    eligible = [r for r in results if r["eligible"]]
+    n = len(eligible)
+    counts = {k: sum(1 for r in eligible if r["verdict"] == k) for k in ("consistent", "conflict", "partial", "silent")}
+    strict = round(counts["consistent"] / n, 4) if n else 0
+    weighted = round((counts["consistent"] + 0.5 * counts["partial"]) / n, 4) if n else 0
+
+    grid = {}
+    for th in THRESHOLD_GRID:
+        rows = []
+        for r in eligible:
+            zones = set(r["abnormal_zones"])
+            agree, verdict, _ = judge(r["top"], zones, th)
+            rows.append(verdict)
+        c = {k: rows.count(k) for k in ("consistent", "conflict", "partial", "silent")}
+        grid[str(th)] = {
+            "consistent": c["consistent"],
+            "conflict": c["conflict"],
+            "partial": c["partial"],
+            "silent": c["silent"],
+            "strict_rate": round(c["consistent"] / n, 4) if n else 0,
+        }
+
+    return {
+        "cases": len(results),
+        "eligible": n,
+        "excluded": len(results) - n,
+        "consistent": counts["consistent"],
+        "conflict": counts["conflict"],
+        "partial": counts["partial"],
+        "silent": counts["silent"],
+        "threshold": threshold,
+        "strict_rate": strict,
+        "weighted_rate": weighted,
+        "thresholds": grid,
+        "note": (
+            "严格一致率只统计 eligible 病例（排除侧位投照与解剖标注图）；"
+            "阈值敏感性见 thresholds，单点数字不应单独引用。"
+        ),
+    }
+
+
+def write_out(results: list[dict], threshold: float, method: str, disclaimer: str) -> None:
+    out = {
+        "version": "0.2.0",
+        "method": method,
+        "disclaimer": disclaimer,
+        "cases": results,
+        "summary": summarize(results, threshold),
+    }
+    OUT.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf8")
+    print("\n写出", OUT)
+    print("汇总", json.dumps(out["summary"], ensure_ascii=False))
+
+
+def recompute(threshold: float) -> None:
+    """只重算判定与汇总，不重新推理；用于没有 torch 的环境。"""
+    if not OUT.exists():
+        raise SystemExit("缺少 model_probe.json，无法 --recompute")
+    old = json.loads(OUT.read_text(encoding="utf8"))
+    meta = load_meta()
+    chest = json.loads(SRC.read_text(encoding="utf8"))
+    cases = {c["id"]: c for c in chest["cases"] if c.get("enabled") is not False}
+
+    results = []
+    for row in old.get("cases", []):
+        case = cases.get(row.get("case_id"))
+        if not case:
+            continue
+        case = dict(case)
+        case.update(meta.get(row.get("case_id"), {}))
+        results.append(build_result(case, row.get("top") or [], threshold))
+    write_out(results, threshold, old.get("method", ""), old.get("disclaimer", ""))
+
+
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--recompute", action="store_true", help="只重算判定，不加载模型")
+    parser.add_argument("--threshold", type=float, default=HIGH_THRESHOLD)
+    args = parser.parse_args()
+    if args.recompute:
+        recompute(args.threshold)
+        return
+
     payload = json.loads(SRC.read_text(encoding="utf8"))
     cases = [c for c in payload["cases"] if c.get("enabled") is not False]
+    meta = load_meta()
 
     print("加载模型…")
     model, xrv = load_model()
@@ -110,67 +264,23 @@ def main() -> None:
 
         top = sorted(probs.items(), key=lambda x: x[1], reverse=True)[:TOP_K]
         top = [{"label": k, "label_cn": LABEL_CN.get(k, k), "score": round(v, 4)} for k, v in top]
+        case = dict(case)
+        case.update(meta.get(case["id"], {}))
+        result = build_result(case, top, args.threshold)
+        results.append(result)
+        flag = "" if result["eligible"] else "（不纳入主统计）"
+        print(f"  [{i:02d}] {case['id']} {result['verdict']} top={top[0]['label']} {top[0]['score']:.2f} {flag}")
 
-        abnormal_zones = {z["id"] for z in case["zones"] if z["status"] == "abnormal"}
-        named = [z for z in case["zones"] if z["id"] != "SUB"]
-        all_normal = len(abnormal_zones) == 0
-
-        # 一致性判定：只看高分标签（>=0.5）
-        high = [t for t in top if t["score"] >= 0.5]
-        agree, verdict, note = False, "silent", ""
-        if high:
-            hit = False
-            for h in high:
-                zones = LABEL_ZONES.get(h["label"], set())
-                if zones & abnormal_zones:
-                    hit = True
-                    break
-            if hit:
-                agree, verdict = True, "consistent"
-                note = "模型高分项与人工标注的异常分区指向同一类表现"
-            elif all_normal:
-                verdict, note = "conflict", "模型给出高分提示，但该例人工标注为全部未见异常"
-            else:
-                verdict, note = "partial", "模型有高分提示，但未命中人工标注的异常分区"
-        else:
-            if all_normal:
-                agree, verdict = True, "consistent"
-                note = "模型无高分提示，与「全部未见异常」一致"
-            else:
-                verdict, note = "silent", "人工标注存在异常，但模型未给出高分提示（漏检）"
-
-        results.append(
-            {
-                "case_id": case["id"],
-                "title": case.get("title", ""),
-                "abnormal_zones": sorted(abnormal_zones),
-                "top": top,
-                "verdict": verdict,
-                "agreement": agree,
-                "note": note,
-            }
-        )
-        print(f"  [{i:02d}] {case['id']} {verdict} top={top[0]['label']} {top[0]['score']:.2f}")
-
-    out = {
-        "version": "0.1.0",
-        "method": f"torchxrayvision DenseNet121 ({WEIGHTS})",
-        "disclaimer": (
+    write_out(
+        results,
+        args.threshold,
+        f"torchxrayvision DenseNet121 ({WEIGHTS})",
+        (
             "整图级多标签概率，不是分区级定位，也不是诊断结论；"
             "模型在公开胸片数据上训练，对本库病例仅为独立交叉检验，未经医学审核。"
+            "侧位投照与解剖标注图不纳入主统计。"
         ),
-        "cases": results,
-        "summary": {
-            "cases": len(results),
-            "consistent": sum(1 for r in results if r["verdict"] == "consistent"),
-            "conflict": sum(1 for r in results if r["verdict"] == "conflict"),
-            "partial": sum(1 for r in results if r["verdict"] == "partial"),
-            "silent": sum(1 for r in results if r["verdict"] == "silent"),
-        },
-    }
-    OUT.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf8")
-    print("\n写出", OUT)
-    print("汇总", out["summary"])
+    )
 
 
 if __name__ == "__main__":

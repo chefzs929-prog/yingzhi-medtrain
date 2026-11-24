@@ -49,7 +49,7 @@ def main() -> None:
         check("首页保留对比阅片入口", "read/compare.html" in links, str(links))
         check("首页保留课堂入口", any("classroom" in x for x in links), str(links))
         check("首页保留学生影像实验室入口", any("classroom.html?role=student" in x for x in links), str(links))
-        check("首页写明 350 道自测题", "350" in page.inner_text("body"), page.inner_text("body")[:300])
+        check("首页保留自适应练习入口", "read/drill.html" in links, str(links))
         check("首页无旧功能入口", not any(x in " ".join(links) for x in
               ("app.html", "read/teach.html", "read/paper.html", "dev/")), str(links))
 

@@ -102,6 +102,8 @@ button,input{font-family:inherit}
 .lim-foot{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:11px;color:var(--faint);line-height:1.8}
 
 .dis{margin-top:18px;font-size:11px;color:var(--no);background:var(--nobg);border:1px solid var(--nolnn);border-radius:10px;padding:9px 11px;line-height:1.7}
+.scopenote{display:flex;gap:8px;align-items:flex-start;background:#fdf6e8;border:1px solid #f0e2c4;border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:12px;line-height:1.65;color:#7a5310}
+.scopenote b{flex:0 0 auto;font-size:10.5px;padding:2px 8px;border-radius:99px;background:#f3e3bd;color:#94620b}
 
 .foot{display:flex;gap:8px;margin-top:16px}
 .foot a{flex:1;text-align:center;height:40px;line-height:40px;border-radius:11px;background:#fff;border:1px solid var(--line);font-size:12.5px;color:var(--muted)}
@@ -174,6 +176,8 @@ button,input{font-family:inherit}
 <script>
 const URL_BANK = "../data/chest/ask_bank.json";
 let BANK = null, ITEMS = [], CORPUS = "", CASES = [], cur = null;
+// 分区标注覆盖肺野与膈下；问到骨骼/软组织/胸壁结构时，先说明范围，避免把“肺野正常”读成“没有骨折”。
+const NON_LUNG = /骨折|骨裂|肋骨|骨质|骨骼|软组织|胸壁|皮下|乳腺|甲状腺/;
 
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
@@ -234,6 +238,13 @@ function renderAnswer(item){
           </div>
         </div>
       </div>`;
+  } else if(item.kind === "zone"){
+    // 这 5 例只有分区标注、没有可回溯的指南原文；明确说出来，不静默省略，也不补造出处。
+    citeHtml = `
+      <div class="sec">
+        <div class="sec-h">依据原文 <span class="mini">本条无原文锚点</span></div>
+        <div class="cite"><p class="q">该病例只有库内分区标注，没有可回溯的指南原文。请以影像区域（E1）为准，不要据此补造文献出处。</p></div>
+      </div>`;
   }
 
   const conf = item.confidence === "high" ? "高" : (item.confidence === "low" ? "低（来源未描述）" : "中");
@@ -281,18 +292,40 @@ function renderUnknown(query){
     </div>`;
 }
 
+// 骨骼与关节判断直接拒答，和课堂实验室的“骨骼与关节系统”口径保持一致。
+const BONE_JUDGE = /骨折|骨裂|骨破坏|骨质疏松|骨质增生|退变/;
+function boneRefusalHtml(q){
+  return `
+    <div class="ans no">
+      <div class="ans-h"><span class="tag no">不能回答</span><span class="conf">骨骼与关节系统</span></div>
+      <p class="concl">这个我不能答。</p>
+      <p class="reason">本工具的分区标注只覆盖肺野、心影与纵隔轮廓、膈面与肋膈角、膈下（胃泡与肝影上部），骨骼与关节系统不在范围内，不能判断“${esc(q)}”。</p>
+      <div class="sug"><div class="sg-h">你可以问</div><div>该区肺野、胸膜、纵隔或膈下有什么表现</div></div>
+    </div>`;
+}
+
+function scopeNoteHtml(q){
+  if(!NON_LUNG.test(q)) return "";
+  return `<div class="scopenote"><b>范围提示</b><span>分区标注覆盖肺野、心影与纵隔轮廓、膈面与肋膈角、膈下（胃泡与肝影上部）；骨骼、软组织与胸壁结构不在标注范围内。下面的内容只是该区标注所见，不能用来判断骨折或软组织异常。</span></div>`;
+}
+
 function ask(query){
   const q = String(query || "").trim();
   if(!q) return;
   $("q").value = q;
-  const res = AskCore.classify(q, cur, ITEMS);
   const scope = cur ? `<div style="font-size:12px;color:#8a94a6;margin:0 0 8px">检索范围：当前病例 ${cur}（答案只针对这张片子；换一例后答案会变）</div>` : "";
+  if(BONE_JUDGE.test(q)){
+    $("result").innerHTML = scope + boneRefusalHtml(q);
+    bindResult();
+    return;
+  }
+  const res = AskCore.classify(q, cur, ITEMS);
   if(res.kind === "unknown"){
     $("result").innerHTML = scope + renderUnknown(q);
   } else if(res.kind === "refusal"){
     $("result").innerHTML = scope + renderRefusal(res.item);
   } else {
-    $("result").innerHTML = scope + renderAnswer(res.item);
+    $("result").innerHTML = scope + scopeNoteHtml(q) + renderAnswer(res.item);
   }
   bindResult();
 }

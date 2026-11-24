@@ -24,6 +24,7 @@
     limited: "判读受限",
   };
   const SIDE = { right: "患者右侧", left: "患者左侧", midline: "中线" };
+  const IMG_SIDE = { right: "图像左侧", left: "图像右侧", midline: "图像中线" };
   const SHORT = {
     RUL: "右上", RML: "右中", RLL: "右下",
     LUL: "左上", LML: "左中", LLL: "左下",
@@ -304,7 +305,10 @@
         ? `来源：<a href="${esc(c.source_page)}" target="_blank" rel="noopener">${esc(c.source_page.replace(/^https?:\/\//, "").slice(0, 82))}</a>`
         : "来源：—";
       $("#licLine").textContent = `${c.license || "许可未标注"} · ${(c.artist || "作者未标注").slice(0, 60)}`;
-      $("#bboxMeta").textContent = S.zoneId ? `分区 ${S.zoneId} · ${SIDE[currentZone() ? currentZone().side : ""] || ""}` : "未选分区";
+      const zSel = currentZone();
+      $("#bboxMeta").textContent = S.zoneId
+        ? `分区 ${S.zoneId} · ${SIDE[zSel ? zSel.side : ""] || ""}${zSel ? `（${IMG_SIDE[zSel.side] || "—"}）` : ""}`
+        : "未选分区";
     } else {
       $("#srcLine").textContent = "考核模式 · 提交后显示来源";
       $("#licLine").textContent = "提交后显示许可与作者";

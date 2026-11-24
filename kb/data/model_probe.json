@@ -1,11 +1,14 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "method": "torchxrayvision DenseNet121 (densenet121-res224-all)",
   "disclaimer": "整图级多标签概率，不是分区级定位，也不是诊断结论；模型在公开胸片数据上训练，对本库病例仅为独立交叉检验，未经医学审核。",
   "cases": [
     {
       "case_id": "CASE-001",
       "title": "正常后前位胸片",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [],
       "top": [
         {
@@ -36,11 +39,14 @@
       ],
       "verdict": "consistent",
       "agreement": true,
-      "note": "模型无高分提示，与「全部未见异常」一致"
+      "note": "模型最高分 0.411 < 0.6，与「全部未见异常」一致"
     },
     {
       "case_id": "CASE-002",
       "title": "正常侧位胸片",
+      "pose_class": "chest_lat",
+      "eligible": false,
+      "exclude_reason": "侧位投照：模型训练以 PA/AP 为主，不纳入主统计",
       "abnormal_zones": [],
       "top": [
         {
@@ -69,13 +75,16 @@
           "score": 0.5002
         }
       ],
-      "verdict": "conflict",
-      "agreement": false,
-      "note": "模型给出高分提示，但该例人工标注为全部未见异常"
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型最高分 0.530 < 0.6，与「全部未见异常」一致"
     },
     {
       "case_id": "CASE-003",
       "title": "胸片解剖标注（欠吸气、轻度旋转）",
+      "pose_class": "chest_pa",
+      "eligible": false,
+      "exclude_reason": "解剖标注图：不是诊断影像，不纳入主统计",
       "abnormal_zones": [],
       "top": [
         {
@@ -104,13 +113,16 @@
           "score": 0.5022
         }
       ],
-      "verdict": "conflict",
-      "agreement": false,
-      "note": "模型给出高分提示，但该例人工标注为全部未见异常"
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型最高分 0.515 < 0.6，与「全部未见异常」一致"
     },
     {
       "case_id": "CASE-005",
       "title": "双肺气腔影伴肺不张（含中心静脉导管）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [
         "LLL",
         "LML",
@@ -153,6 +165,9 @@
     {
       "case_id": "CASE-006",
       "title": "大叶性肺炎（箭头标注）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [
         "RLL",
         "RML"
@@ -184,13 +199,16 @@
           "score": 0.5107
         }
       ],
-      "verdict": "consistent",
-      "agreement": true,
-      "note": "模型高分项与人工标注的异常分区指向同一类表现"
+      "verdict": "silent",
+      "agreement": false,
+      "note": "人工标注存在异常，但模型最高分 0.532 < 0.6（弱信号/漏检）"
     },
     {
       "case_id": "CASE-007",
       "title": "下肺野气腔影（正位）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [
         "LLL",
         "RLL"
@@ -222,13 +240,16 @@
           "score": 0.5414
         }
       ],
-      "verdict": "consistent",
-      "agreement": true,
-      "note": "模型高分项与人工标注的异常分区指向同一类表现"
+      "verdict": "partial",
+      "agreement": false,
+      "note": "模型有高分提示，但未命中人工标注的异常分区"
     },
     {
       "case_id": "CASE-008",
       "title": "下肺野气腔影（侧位）",
+      "pose_class": "chest_lat",
+      "eligible": false,
+      "exclude_reason": "侧位投照：模型训练以 PA/AP 为主，不纳入主统计",
       "abnormal_zones": [
         "POST"
       ],
@@ -266,6 +287,9 @@
     {
       "case_id": "CASE-015",
       "title": "右中上肺野气腔影（正位）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [
         "RML",
         "RUL"
@@ -304,6 +328,9 @@
     {
       "case_id": "CASE-016",
       "title": "双肺弥漫粟粒样结节",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [
         "LLL",
         "LML",
@@ -346,6 +373,9 @@
     {
       "case_id": "CASE-017",
       "title": "双侧下肺野模糊伴肋膈角变钝",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [
         "LLL",
         "RLL"
@@ -384,6 +414,9 @@
     {
       "case_id": "CASE-018",
       "title": "侧位胸片：后肋膈角变钝（箭头）",
+      "pose_class": "chest_lat",
+      "eligible": false,
+      "exclude_reason": "侧位投照：模型训练以 PA/AP 为主，不纳入主统计",
       "abnormal_zones": [
         "POST"
       ],
@@ -421,6 +454,9 @@
     {
       "case_id": "CASE-033",
       "title": "胸部正位 X 线（解剖标注版）",
+      "pose_class": "chest_pa",
+      "eligible": false,
+      "exclude_reason": "解剖标注图：不是诊断影像，不纳入主统计",
       "abnormal_zones": [],
       "top": [
         {
@@ -451,11 +487,14 @@
       ],
       "verdict": "conflict",
       "agreement": false,
-      "note": "模型给出高分提示，但该例人工标注为全部未见异常"
+      "note": "模型最高分 0.615 ≥ 0.6，但该例人工标注为全部未见异常"
     },
     {
       "case_id": "CASE-034",
       "title": "胸部正位 X 线",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [],
       "top": [
         {
@@ -484,13 +523,16 @@
           "score": 0.2787
         }
       ],
-      "verdict": "conflict",
-      "agreement": false,
-      "note": "模型给出高分提示，但该例人工标注为全部未见异常"
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型最高分 0.509 < 0.6，与「全部未见异常」一致"
     },
     {
       "case_id": "CASE-036",
       "title": "气胸（胸片，标注版）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [
         "RLL",
         "RML",
@@ -523,13 +565,16 @@
           "score": 0.5135
         }
       ],
-      "verdict": "consistent",
-      "agreement": true,
-      "note": "模型高分项与人工标注的异常分区指向同一类表现"
+      "verdict": "partial",
+      "agreement": false,
+      "note": "模型有高分提示，但未命中人工标注的异常分区"
     },
     {
       "case_id": "CASE-041",
       "title": "胸大肌影（胸片）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [],
       "top": [
         {
@@ -558,13 +603,16 @@
           "score": 0.4342
         }
       ],
-      "verdict": "conflict",
-      "agreement": false,
-      "note": "模型给出高分提示，但该例人工标注为全部未见异常"
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型最高分 0.597 < 0.6，与「全部未见异常」一致"
     },
     {
       "case_id": "CASE-047",
       "title": "胸部后前位 X 线",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [],
       "top": [
         {
@@ -593,13 +641,16 @@
           "score": 0.1786
         }
       ],
-      "verdict": "conflict",
-      "agreement": false,
-      "note": "模型给出高分提示，但该例人工标注为全部未见异常"
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型最高分 0.564 < 0.6，与「全部未见异常」一致"
     },
     {
       "case_id": "CASE-153",
       "title": "胸部 X 线",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [
         "LLL",
         "MED",
@@ -639,6 +690,9 @@
     {
       "case_id": "CASE-162",
       "title": "胸部 X 线",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [
         "LLL",
         "LML",
@@ -681,6 +735,9 @@
     {
       "case_id": "CASE-202",
       "title": "大叶性肺炎（胸片，红箭头）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [
         "RLL",
         "RML"
@@ -712,13 +769,16 @@
           "score": 0.5054
         }
       ],
-      "verdict": "consistent",
-      "agreement": true,
-      "note": "模型高分项与人工标注的异常分区指向同一类表现"
+      "verdict": "silent",
+      "agreement": false,
+      "note": "人工标注存在异常，但模型最高分 0.527 < 0.6（弱信号/漏检）"
     },
     {
       "case_id": "CASE-203",
       "title": "肺结核（胸片，历史影像）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [
         "LUL",
         "RUL"
@@ -750,13 +810,16 @@
           "score": 0.5207
         }
       ],
-      "verdict": "consistent",
-      "agreement": true,
-      "note": "模型高分项与人工标注的异常分区指向同一类表现"
+      "verdict": "silent",
+      "agreement": false,
+      "note": "人工标注存在异常，但模型最高分 0.593 < 0.6（弱信号/漏检）"
     },
     {
       "case_id": "CASE-204",
       "title": "结节病：双肺结节（胸片）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
       "abnormal_zones": [
         "LLL",
         "LML",
@@ -799,9 +862,45 @@
   ],
   "summary": {
     "cases": 21,
-    "consistent": 13,
-    "conflict": 6,
+    "eligible": 16,
+    "excluded": 5,
+    "consistent": 11,
+    "conflict": 0,
     "partial": 2,
-    "silent": 0
+    "silent": 3,
+    "threshold": 0.6,
+    "strict_rate": 0.6875,
+    "weighted_rate": 0.75,
+    "thresholds": {
+      "0.5": {
+        "consistent": 13,
+        "conflict": 3,
+        "partial": 0,
+        "silent": 0,
+        "strict_rate": 0.8125
+      },
+      "0.6": {
+        "consistent": 11,
+        "conflict": 0,
+        "partial": 2,
+        "silent": 3,
+        "strict_rate": 0.6875
+      },
+      "0.7": {
+        "consistent": 9,
+        "conflict": 0,
+        "partial": 1,
+        "silent": 6,
+        "strict_rate": 0.5625
+      },
+      "0.8": {
+        "consistent": 9,
+        "conflict": 0,
+        "partial": 1,
+        "silent": 6,
+        "strict_rate": 0.5625
+      }
+    },
+    "note": "严格一致率只统计 eligible 病例（排除侧位投照与解剖标注图）；阈值敏感性见 thresholds，单点数字不应单独引用。"
   }
 }

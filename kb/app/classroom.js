@@ -1011,17 +1011,21 @@
       lines.push("");
       lines.push("### 证据锚点");
       lines.push("");
-      ab.forEach((z) => lines.push(`- 影像位置：${c.id} / ${z.name}`));
+      if (ab.length) {
+        ab.forEach((z) => lines.push(`- E1：${c.id} / ${z.name}（${z.id}）`));
+      } else {
+        lines.push(`- E1：${c.id} / 全部教学分区未见明确异常`);
+      }
       const seen = new Set();
       (expected.signs || []).forEach((id) => {
         const s = signById(id);
         (s && s.sources || []).forEach((src) => {
           if (seen.has(src.id)) return;
           seen.add(src.id);
-          lines.push(`- 文献来源：${clean(src.title || src.id)} ${src.url || ""}`);
+          lines.push(`- L1：${clean(src.title || src.id)} ${src.url || ""}`);
         });
       });
-      if (!seen.size) lines.push("- 文献来源：本病例暂无已登记来源；不要补造出处。");
+      if (!seen.size) lines.push("- L1：本病例暂无已登记来源；不要补造出处。");
       lines.push("");
       lines.push("### 题目与答案");
       lines.push("");

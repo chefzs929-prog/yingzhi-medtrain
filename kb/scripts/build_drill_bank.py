@@ -30,17 +30,50 @@ STATE_CN = {"abnormal": "异常", "normal": "未见异常", "unmentioned": "未�
 SEED = 20261124
 
 
+def build_localize_normal(case, rng):
+    """正常例也能出定位题：正确项是「未见明确异常分区」，避免 9/21 例没有定位题。"""
+    zones = case.get("zones") or []
+    if len(zones) < 3:
+        return None
+    pool = list(zones)
+    rng.shuffle(pool)
+    opts = [{"name": "未见明确异常分区", "id": "NONE"}] + pool[:3]
+    rng.shuffle(opts)
+    keys = "ABCD"
+    options = []
+    answer = None
+    for i, z in enumerate(opts):
+        options.append({"key": keys[i], "text": z["name"]})
+        if z["id"] == "NONE":
+            answer = keys[i]
+    topic = case.get("topic_id", "")
+    return {
+        "type": "localize",
+        "case_id": case["id"],
+        "title": case.get("title", ""),
+        "image": case.get("image", ""),
+        "kp": f"KP-LOC-{topic or 'GEN'}",
+        "kp_cn": f"{topic or '通用'} · 分区定位",
+        "stem": "这张片子上，哪一区被标注为异常？",
+        "options": options,
+        "answer": answer,
+        "explain": "本片所有教学分区均标注为未见明确异常，没有异常分区。",
+        "source": f"{case['id']} · 全部分区 · 库内标注",
+    }
+
+
 def build_localize(case, rng):
     ab = [z for z in case["zones"] if z["status"] == "abnormal"]
     if not ab:
-        return None
+        return build_localize_normal(case, rng)
     correct = ab[0]
     pool = [z for z in case["zones"] if z["id"] != correct["id"]]
-    if len(pool) < 3:
-        return None
     # 干扰项优先选「未提及 / 未见异常」，比选另一处异常更有区分度
     pool.sort(key=lambda z: 0 if z["status"] in ("unmentioned", "normal") else 1)
     distractors = pool[:3]
+    # 侧位片只有 3 个分区（ANT/MID/POST），用「未见明确异常分区」补足第 4 个选项。
+    if len(distractors) < 3:
+        distractors = distractors + [{"id": "NONE", "name": "未见明确异常分区"}]
     opts = [correct] + distractors
     rng.shuffle(opts)
     keys = "ABCD"

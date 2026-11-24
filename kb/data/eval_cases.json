@@ -255,6 +255,22 @@
         "unknown"
       ],
       "note": "元问题，不在问答库范围"
+    },
+    {
+      "q": "左侧中段",
+      "accept": [
+        "zone"
+      ],
+      "expect_zone": "LML",
+      "note": "左右侧解析：必须命中左中，不能落到右中"
+    },
+    {
+      "q": "左侧下段",
+      "accept": [
+        "zone"
+      ],
+      "expect_zone": "LLL",
+      "note": "左右侧解析：必须命中左下"
     }
   ],
   "holdout": [

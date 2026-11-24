@@ -9,6 +9,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -68,6 +69,9 @@ def run_js(rows):
 
 
 def main():
+    if not shutil.which("node"):
+        print("SKIP  未找到 node，跳过 JS/Python 交叉验证；安装 Node.js 后重跑本脚本。")
+        return 0
     rows = collect_rows()
     bank = ask_engine.Bank(BANK)
 

@@ -9,6 +9,8 @@
   let suppress = false;
   let timer = null;
   let busy = false;
+  let pending = false;
+  let pendingPull = false;
 
   const $ = (s) => document.querySelector(s);
 
@@ -64,8 +66,65 @@
     el.title = base ? `同步服务：${base}` : "当前只存在本机浏览器";
   }
 
+  // 墓碑：删除的同步凭据。两端合并时先并集墓碑、再剔除对象，最后才追加新增，
+  // 这样“删掉的东西”不会被另一端的旧快照复活。
+  function mergeTombstones(local, remote) {
+    const seen = new Map();
+    [].concat(local.tombstones || [], remote.tombstones || []).forEach((t) => {
+      if (!t || !t.type || !t.id) return;
+      const key = t.type + ":" + t.id;
+      if (!seen.has(key)) {
+        seen.set(key, { type: t.type, id: t.id, classId: t.classId || "", name: t.name || "", at: t.at || "" });
+      }
+    });
+    local.tombstones = Array.from(seen.values());
+  }
+
+  function applyTombstones(db) {
+    const toms = db.tombstones || [];
+    if (!toms.length) return;
+    const matchClass = (c, cid) => !cid || c.id === cid || c.code === cid;
+    toms.forEach((t) => {
+      const oid = t.id;
+      const cid = t.classId || "";
+      const nm = t.name || "";
+      if (t.type === "student") {
+        const gone = new Set();
+        (db.classes || []).forEach((c) => {
+          if (!matchClass(c, cid)) return;
+          c.students = (c.students || []).filter((s) => {
+            const hit = (oid && s.id === oid) || (nm && s.name === nm);
+            if (hit) gone.add(s.id);
+            return !hit;
+          });
+        });
+        db.attempts = (db.attempts || []).filter((a) => !((!cid || a.classId === cid) && gone.has(a.studentId)));
+      } else if (t.type === "assignment") {
+        (db.classes || []).forEach((c) => {
+          if (!matchClass(c, cid)) return;
+          c.assignments = (c.assignments || []).filter((a) => a.id !== oid);
+        });
+        db.attempts = (db.attempts || []).filter((a) => a.assignmentId !== oid);
+      } else if (t.type === "group") {
+        (db.classes || []).forEach((c) => {
+          if (!matchClass(c, cid)) return;
+          const gone = new Set((c.groups || []).filter((g) => (oid && g.id === oid) || (nm && g.name === nm)).map((g) => g.id));
+          c.groups = (c.groups || []).filter((g) => !gone.has(g.id));
+          if (gone.size) db.posts = (db.posts || []).filter((p) => !(p.classId === c.id && gone.has(p.groupId)));
+        });
+      } else if (t.type === "post") {
+        db.posts = (db.posts || []).filter((p) => p.id !== oid);
+      } else if (t.type === "attempt") {
+        db.attempts = (db.attempts || []).filter((a) => a.id !== oid);
+      }
+    });
+  }
+
   function mergeInto(local, remote) {
     if (!local || !remote) return local;
+    mergeTombstones(local, remote);
+    applyTombstones(local);
+    applyTombstones(remote);
     (remote.classes || []).forEach((rc) => {
       let lc = (local.classes || []).find((c) => c.code === rc.code);
       if (!lc) { local.classes.push(rc); return; }
@@ -107,6 +166,8 @@
 
   async function pull() {
     if (!base || !window.RCClass) return false;
+    if (busy) { pendingPull = true; return false; }
+    busy = true;
     status("同步中…", "busy");
     try {
       const r = await fetch(base + "/api/snapshot", { cache: "no-store", headers: syncHeaders() });
@@ -122,11 +183,15 @@
     } catch (e) {
       status("离线 · 本机模式", "offline");
       return false;
+    } finally {
+      busy = false;
+      if (pendingPull) { pendingPull = false; setTimeout(pull, 0); }
     }
   }
 
   async function push() {
-    if (!base || suppress || busy || !window.RCClass) return false;
+    if (!base || suppress || !window.RCClass) return false;
+    if (busy) { pending = true; return false; }
     busy = true;
     status("同步中…", "busy");
     try {
@@ -147,6 +212,7 @@
       return false;
     } finally {
       busy = false;
+      if (pending) { pending = false; setTimeout(push, 0); }
     }
   }
 

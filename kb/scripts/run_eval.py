@@ -54,21 +54,12 @@ ZONE_KEY = {"RUL": "右上", "RML": "右中", "RLL": "右下", "LUL": "左上", 
 
 
 def parse_region(q):
+    """与 ask-core.js / ask_engine.py 保持一致：保留左右侧，别让「左肺中野」退化成「中」。"""
     side = "右" if "右" in q else ("左" if "左" in q else "")
     m = re.search(r"(上|中|下)\s*(野|部|叶|面|头|半|方|肺野|间|段)", q)
     if not m:
         return side
     return side + m.group(1)
-
-
-ZONE_KEY = {"RUL": "右上", "RML": "右中", "RLL": "右下", "LUL": "左上", "LML": "左中", "LLL": "左下"}
-
-
-def parse_region(q):
-    m = re.search(r"([右左])?\s*(上|中|下)\s*(野|部|叶|面|头|半|方|肺野|间|段)", q)
-    if not m:
-        return ""
-    return (m.group(1) or "") + m.group(2)
 
 
 def score_of(q, item):
@@ -132,6 +123,11 @@ def main() -> None:
         for v in rows:
             got, ts, top = classify(v["q"], case_id, items)
             ok = got in v["accept"]
+            # 可选：校验命中的分区，防止「左肺中野」被解析成右中/中。
+            want_zone = v.get("expect_zone")
+            got_zone = ((top or {}).get("region") or {}).get("zone_id")
+            if ok and want_zone and got_zone != want_zone:
+                ok = False
             g = groups[v["accept"][0]]
             g["n"] += 1
             if ok:
@@ -139,6 +135,7 @@ def main() -> None:
             else:
                 fails.append({
                     "q": v["q"], "expect": v["accept"], "got": got,
+                    "expect_zone": want_zone, "got_zone": got_zone,
                     "score": round(ts, 3),
                     "matched": (top or {}).get("question", ""),
                     "matched_kind": (top or {}).get("kind", ""),
@@ -203,19 +200,25 @@ def main() -> None:
     if MODEL.exists():
         mp = json.loads(MODEL.read_text(encoding="utf8"))
         s = mp.get("summary") or {}
-        n = s.get("cases", 0)
+        # 主口径只统计 eligible（排除侧位/解剖标注图）；旧数据没有该字段时回退到全量。
+        n = s.get("eligible") or s.get("cases", 0)
         agree = s.get("consistent", 0)
         partial = s.get("partial", 0)
         model = {
             "available": True,
             "method": mp.get("method", ""),
-            "cases": n,
+            "cases": s.get("cases", 0),
+            "eligible": n,
+            "excluded": s.get("excluded", 0),
             "consistent": agree,
             "conflict": s.get("conflict", 0),
             "partial": partial,
             "silent": s.get("silent", 0),
-            "strict_rate": round(agree / n, 3) if n else None,
-            "weighted_rate": round((agree + 0.5 * partial) / n, 3) if n else None,
+            "strict_rate": s.get("strict_rate") if s.get("strict_rate") is not None else (round(agree / n, 3) if n else None),
+            "weighted_rate": s.get("weighted_rate") if s.get("weighted_rate") is not None else (round((agree + 0.5 * partial) / n, 3) if n else None),
+            "threshold": s.get("threshold"),
+            "thresholds": s.get("thresholds") or {},
+            "note": s.get("note", ""),
         }
 
     report = {

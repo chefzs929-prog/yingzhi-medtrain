@@ -202,20 +202,23 @@ function render(r){
 
   $("rfNote").innerHTML = `<b>说明：</b>${esc(rf.note||"")}<br>拒答阈值比回答阈值低（0.25 vs 0.32），设计取向是<b>宁可多拒，不可误答</b>。`;
 
-  $("mdN").textContent = md.cases ? md.cases + " 例" : "—";
+  $("mdN").textContent = md.available ? `${md.eligible || md.cases} / ${md.cases} 例` : "—";
   if(md.available){
+    const denom = md.eligible || md.cases;
     $("mdRows").innerHTML = [
-      ["一致", md.consistent, md.cases],
-      ["冲突", md.conflict, md.cases],
-      ["部分", md.partial, md.cases],
-      ["漏检", md.silent, md.cases],
+      ["一致", md.consistent, denom],
+      ["冲突", md.conflict, denom],
+      ["部分", md.partial, denom],
+      ["漏检", md.silent, denom],
     ].map(([nm,v,n])=>{
       const a = n ? v/n : 0;
       return `<div class="row"><span class="nm">${nm}</span>
         <span class="bar"><i class="${nm==="冲突"?"low":""}" style="width:${Math.round(a*100)}%"></i></span>
         <span class="vv">${v}/${n}</span></div>`;
     }).join("");
-    $("mdNote").innerHTML = `<b>方法：</b>${esc(md.method)}<br>严格一致率 = 一致 / 总数 = ${pct(md.strict_rate)}；加权一致率把「部分一致」算半分 = ${pct(md.weighted_rate)}。<br><b>为什么不是 100%：</b>模型在公开数据上训练，目标与我们的分区标注本就不完全对齐，冲突恰恰说明它不是复制我们的答案。`;
+    const grid = md.thresholds || {};
+    const thLine = Object.keys(grid).sort().map(k=>`${k}→${pct(grid[k].strict_rate)}`).join(" · ");
+    $("mdNote").innerHTML = `<b>方法：</b>${esc(md.method)}<br>主口径只统计 ${denom} 例可对照病例（排除 ${md.excluded||0} 例侧位/解剖标注图）；严格一致率 = 一致 / ${denom} = ${pct(md.strict_rate)}；加权一致率把「部分一致」算半分 = ${pct(md.weighted_rate)}。<br><b>阈值敏感性：</b>${thLine || "—"}。单点数字不应单独引用。<br><b>为什么不是 100%：</b>模型在公开数据上训练，目标与我们的分区标注本就不完全对齐，冲突恰恰说明它不是复制我们的答案。`;
   } else {
     $("mdRows").innerHTML = `<div class="empty">无模型探针数据</div>`;
     $("mdNote").innerHTML = "";
