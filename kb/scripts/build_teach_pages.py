@@ -87,6 +87,7 @@ def main() -> None:
     shutil.copy2(SRC / "qc.html", OUT / "qc.html")
     shutil.copy2(SRC / "blind.html", OUT / "blind.html")
     shutil.copy2(SRC / "dual.html", OUT / "dual.html")
+    shutil.copy2(SRC / "drill.html", OUT / "drill.html")
     shutil.copy2(SRC / "evidence.html", OUT / "evidence.html")
 
     # 旧四页与 read 入口全部收敛到 clinic
@@ -103,7 +104,7 @@ def main() -> None:
     data = json.loads(chest.read_text(encoding="utf8"))
 
     # 预生成的交叉检验数据（传统算法 + 深度模型），缺失不阻断构建
-    for extra in ("lesion_probe.json", "model_probe.json", "dual_source.json"):
+    for extra in ("lesion_probe.json", "model_probe.json", "dual_source.json", "drill_bank.json"):
         p = ROOT / "kb/data" / extra
         if p.exists():
             shutil.copy2(p, dst.parent / extra)
