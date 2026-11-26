@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>课堂 · 教师与学生 · RadioCheck</title>
+<meta name="theme-color" content="#0b4f55">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon-180.png">
+<link rel="stylesheet" href="base.css?v=11">
+<link rel="stylesheet" href="classroom.css?v=12">
+<!-- rc-agent-base --><script>window.RC_AGENT_BASE='https://function-ultra-disclose-commissioners.trycloudflare.com';</script>
+</head>
+<body class="classroom-body">
+
+<header class="bar" data-page="classroom">
+  <div class="bar-extra">
+    <span class="quest-badge">课堂 · 教师 / 学生</span>
+    <span class="spacer"></span>
+    <span class="sync-chip" id="syncStatus" data-kind="local" title="当前只存在本机浏览器">本机模式</span>
+    <button class="btn sm" id="syncSetup" title="配置可选同步服务">同步设置</button>
+    <a class="btn sm" href="qc.html" title="AI 预标注与专家复核">质控复核</a>
+    <button class="btn sm" id="exportClassroom" title="导出本机课堂数据 JSON">导出数据</button>
+    <button class="btn sm" id="importClassroomBtn" title="导入另一台设备的课堂数据">导入数据</button>
+    <input id="importClassroom" type="file" accept="application/json" hidden>
+    <div class="role-switch" id="roleSwitch" aria-label="角色切换">
+      <button data-role="teacher">教师端</button>
+      <button data-role="student">学生端</button>
+    </div>
+  </div>
+</header>
+
+<div class="global-disclaimer"><b>非诊断用途</b><span>仅供医学影像教学与研究</span></div>
+
+<main class="class-shell">
+  <div class="class-wrap" id="classroomMain">
+    <div class="empty-state"><b>正在载入课堂…</b></div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="common.js?v=11"></script>
+<script src="kb-api.js?v=1"></script>
+<script src="classroom-core.js?v=12"></script>
+<script src="classroom-sync.js?v=1"></script>
+<script src="student-lab.js?v=12"></script>
+<script src="classroom.js?v=13"></script>
+<script src="agent-lite.js?v=2"></script>
+</body>
+</html>

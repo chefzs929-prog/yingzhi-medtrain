@@ -1,0 +1,906 @@
+{
+  "version": "0.2.0",
+  "method": "torchxrayvision DenseNet121 (densenet121-res224-all)",
+  "disclaimer": "整图级多标签概率，不是分区级定位，也不是诊断结论；模型在公开胸片数据上训练，对本库病例仅为独立交叉检验，未经医学审核。",
+  "cases": [
+    {
+      "case_id": "CASE-001",
+      "title": "正常后前位胸片",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [],
+      "top": [
+        {
+          "label": "Infiltration",
+          "label_cn": "浸润",
+          "score": 0.4109
+        },
+        {
+          "label": "Pneumothorax",
+          "label_cn": "气胸",
+          "score": 0.3702
+        },
+        {
+          "label": "Fibrosis",
+          "label_cn": "纤维化",
+          "score": 0.3618
+        },
+        {
+          "label": "Pleural_Thickening",
+          "label_cn": "胸膜增厚",
+          "score": 0.3343
+        },
+        {
+          "label": "Nodule",
+          "label_cn": "结节",
+          "score": 0.2447
+        }
+      ],
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型最高分 0.411 < 0.6，与「全部未见异常」一致"
+    },
+    {
+      "case_id": "CASE-002",
+      "title": "正常侧位胸片",
+      "pose_class": "chest_lat",
+      "eligible": false,
+      "exclude_reason": "侧位投照：模型训练以 PA/AP 为主，不纳入主统计",
+      "abnormal_zones": [],
+      "top": [
+        {
+          "label": "Lung Opacity",
+          "label_cn": "肺野透亮度异常",
+          "score": 0.53
+        },
+        {
+          "label": "Fracture",
+          "label_cn": "骨折",
+          "score": 0.5055
+        },
+        {
+          "label": "Pneumothorax",
+          "label_cn": "气胸",
+          "score": 0.5017
+        },
+        {
+          "label": "Emphysema",
+          "label_cn": "肺气肿",
+          "score": 0.5011
+        },
+        {
+          "label": "Mass",
+          "label_cn": "肿块",
+          "score": 0.5002
+        }
+      ],
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型最高分 0.530 < 0.6，与「全部未见异常」一致"
+    },
+    {
+      "case_id": "CASE-003",
+      "title": "胸片解剖标注（欠吸气、轻度旋转）",
+      "pose_class": "chest_pa",
+      "eligible": false,
+      "exclude_reason": "解剖标注图：不是诊断影像，不纳入主统计",
+      "abnormal_zones": [],
+      "top": [
+        {
+          "label": "Edema",
+          "label_cn": "肺水肿",
+          "score": 0.5154
+        },
+        {
+          "label": "Cardiomegaly",
+          "label_cn": "心影增大",
+          "score": 0.5068
+        },
+        {
+          "label": "Enlarged Cardiomediastinum",
+          "label_cn": "纵隔/心影增大",
+          "score": 0.5067
+        },
+        {
+          "label": "Fracture",
+          "label_cn": "骨折",
+          "score": 0.505
+        },
+        {
+          "label": "Pneumonia",
+          "label_cn": "肺炎",
+          "score": 0.5022
+        }
+      ],
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型最高分 0.515 < 0.6，与「全部未见异常」一致"
+    },
+    {
+      "case_id": "CASE-005",
+      "title": "双肺气腔影伴肺不张（含中心静脉导管）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [
+        "LLL",
+        "LML",
+        "LUL",
+        "RLL",
+        "RML",
+        "RUL"
+      ],
+      "top": [
+        {
+          "label": "Pneumonia",
+          "label_cn": "肺炎",
+          "score": 0.6914
+        },
+        {
+          "label": "Lung Opacity",
+          "label_cn": "肺野透亮度异常",
+          "score": 0.5772
+        },
+        {
+          "label": "Emphysema",
+          "label_cn": "肺气肿",
+          "score": 0.5073
+        },
+        {
+          "label": "Infiltration",
+          "label_cn": "浸润",
+          "score": 0.5005
+        },
+        {
+          "label": "Nodule",
+          "label_cn": "结节",
+          "score": 0.4689
+        }
+      ],
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型高分项与人工标注的异常分区指向同一类表现"
+    },
+    {
+      "case_id": "CASE-006",
+      "title": "大叶性肺炎（箭头标注）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [
+        "RLL",
+        "RML"
+      ],
+      "top": [
+        {
+          "label": "Cardiomegaly",
+          "label_cn": "心影增大",
+          "score": 0.5323
+        },
+        {
+          "label": "Atelectasis",
+          "label_cn": "肺不张",
+          "score": 0.5201
+        },
+        {
+          "label": "Pneumonia",
+          "label_cn": "肺炎",
+          "score": 0.5195
+        },
+        {
+          "label": "Nodule",
+          "label_cn": "结节",
+          "score": 0.5161
+        },
+        {
+          "label": "Fracture",
+          "label_cn": "骨折",
+          "score": 0.5107
+        }
+      ],
+      "verdict": "silent",
+      "agreement": false,
+      "note": "人工标注存在异常，但模型最高分 0.532 < 0.6（弱信号/漏检）"
+    },
+    {
+      "case_id": "CASE-007",
+      "title": "下肺野气腔影（正位）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [
+        "LLL",
+        "RLL"
+      ],
+      "top": [
+        {
+          "label": "Cardiomegaly",
+          "label_cn": "心影增大",
+          "score": 0.8368
+        },
+        {
+          "label": "Infiltration",
+          "label_cn": "浸润",
+          "score": 0.5984
+        },
+        {
+          "label": "Lung Opacity",
+          "label_cn": "肺野透亮度异常",
+          "score": 0.5726
+        },
+        {
+          "label": "Atelectasis",
+          "label_cn": "肺不张",
+          "score": 0.5457
+        },
+        {
+          "label": "Edema",
+          "label_cn": "肺水肿",
+          "score": 0.5414
+        }
+      ],
+      "verdict": "partial",
+      "agreement": false,
+      "note": "模型有高分提示，但未命中人工标注的异常分区"
+    },
+    {
+      "case_id": "CASE-008",
+      "title": "下肺野气腔影（侧位）",
+      "pose_class": "chest_lat",
+      "eligible": false,
+      "exclude_reason": "侧位投照：模型训练以 PA/AP 为主，不纳入主统计",
+      "abnormal_zones": [
+        "POST"
+      ],
+      "top": [
+        {
+          "label": "Lung Opacity",
+          "label_cn": "肺野透亮度异常",
+          "score": 0.736
+        },
+        {
+          "label": "Pneumonia",
+          "label_cn": "肺炎",
+          "score": 0.6874
+        },
+        {
+          "label": "Infiltration",
+          "label_cn": "浸润",
+          "score": 0.5545
+        },
+        {
+          "label": "Consolidation",
+          "label_cn": "实变",
+          "score": 0.5167
+        },
+        {
+          "label": "Emphysema",
+          "label_cn": "肺气肿",
+          "score": 0.5075
+        }
+      ],
+      "verdict": "partial",
+      "agreement": false,
+      "note": "模型有高分提示，但未命中人工标注的异常分区"
+    },
+    {
+      "case_id": "CASE-015",
+      "title": "右中上肺野气腔影（正位）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [
+        "RML",
+        "RUL"
+      ],
+      "top": [
+        {
+          "label": "Lung Opacity",
+          "label_cn": "肺野透亮度异常",
+          "score": 0.9313
+        },
+        {
+          "label": "Pneumonia",
+          "label_cn": "肺炎",
+          "score": 0.8502
+        },
+        {
+          "label": "Consolidation",
+          "label_cn": "实变",
+          "score": 0.7115
+        },
+        {
+          "label": "Infiltration",
+          "label_cn": "浸润",
+          "score": 0.6495
+        },
+        {
+          "label": "Mass",
+          "label_cn": "肿块",
+          "score": 0.5634
+        }
+      ],
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型高分项与人工标注的异常分区指向同一类表现"
+    },
+    {
+      "case_id": "CASE-016",
+      "title": "双肺弥漫粟粒样结节",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [
+        "LLL",
+        "LML",
+        "LUL",
+        "RLL",
+        "RML",
+        "RUL"
+      ],
+      "top": [
+        {
+          "label": "Infiltration",
+          "label_cn": "浸润",
+          "score": 0.864
+        },
+        {
+          "label": "Cardiomegaly",
+          "label_cn": "心影增大",
+          "score": 0.8187
+        },
+        {
+          "label": "Pneumonia",
+          "label_cn": "肺炎",
+          "score": 0.7997
+        },
+        {
+          "label": "Lung Opacity",
+          "label_cn": "肺野透亮度异常",
+          "score": 0.7527
+        },
+        {
+          "label": "Mass",
+          "label_cn": "肿块",
+          "score": 0.5615
+        }
+      ],
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型高分项与人工标注的异常分区指向同一类表现"
+    },
+    {
+      "case_id": "CASE-017",
+      "title": "双侧下肺野模糊伴肋膈角变钝",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [
+        "LLL",
+        "RLL"
+      ],
+      "top": [
+        {
+          "label": "Effusion",
+          "label_cn": "胸腔积液",
+          "score": 0.9277
+        },
+        {
+          "label": "Lung Opacity",
+          "label_cn": "肺野透亮度异常",
+          "score": 0.6989
+        },
+        {
+          "label": "Infiltration",
+          "label_cn": "浸润",
+          "score": 0.6018
+        },
+        {
+          "label": "Atelectasis",
+          "label_cn": "肺不张",
+          "score": 0.5816
+        },
+        {
+          "label": "Cardiomegaly",
+          "label_cn": "心影增大",
+          "score": 0.581
+        }
+      ],
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型高分项与人工标注的异常分区指向同一类表现"
+    },
+    {
+      "case_id": "CASE-018",
+      "title": "侧位胸片：后肋膈角变钝（箭头）",
+      "pose_class": "chest_lat",
+      "eligible": false,
+      "exclude_reason": "侧位投照：模型训练以 PA/AP 为主，不纳入主统计",
+      "abnormal_zones": [
+        "POST"
+      ],
+      "top": [
+        {
+          "label": "Lung Opacity",
+          "label_cn": "肺野透亮度异常",
+          "score": 0.6969
+        },
+        {
+          "label": "Pneumonia",
+          "label_cn": "肺炎",
+          "score": 0.6248
+        },
+        {
+          "label": "Infiltration",
+          "label_cn": "浸润",
+          "score": 0.5495
+        },
+        {
+          "label": "Consolidation",
+          "label_cn": "实变",
+          "score": 0.5123
+        },
+        {
+          "label": "Mass",
+          "label_cn": "肿块",
+          "score": 0.5075
+        }
+      ],
+      "verdict": "partial",
+      "agreement": false,
+      "note": "模型有高分提示，但未命中人工标注的异常分区"
+    },
+    {
+      "case_id": "CASE-033",
+      "title": "胸部正位 X 线（解剖标注版）",
+      "pose_class": "chest_pa",
+      "eligible": false,
+      "exclude_reason": "解剖标注图：不是诊断影像，不纳入主统计",
+      "abnormal_zones": [],
+      "top": [
+        {
+          "label": "Lung Opacity",
+          "label_cn": "肺野透亮度异常",
+          "score": 0.6154
+        },
+        {
+          "label": "Fracture",
+          "label_cn": "骨折",
+          "score": 0.5695
+        },
+        {
+          "label": "Cardiomegaly",
+          "label_cn": "心影增大",
+          "score": 0.5094
+        },
+        {
+          "label": "Emphysema",
+          "label_cn": "肺气肿",
+          "score": 0.5031
+        },
+        {
+          "label": "Pneumothorax",
+          "label_cn": "气胸",
+          "score": 0.5008
+        }
+      ],
+      "verdict": "conflict",
+      "agreement": false,
+      "note": "模型最高分 0.615 ≥ 0.6，但该例人工标注为全部未见异常"
+    },
+    {
+      "case_id": "CASE-034",
+      "title": "胸部正位 X 线",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [],
+      "top": [
+        {
+          "label": "Pleural_Thickening",
+          "label_cn": "胸膜增厚",
+          "score": 0.5089
+        },
+        {
+          "label": "Infiltration",
+          "label_cn": "浸润",
+          "score": 0.4122
+        },
+        {
+          "label": "Nodule",
+          "label_cn": "结节",
+          "score": 0.3995
+        },
+        {
+          "label": "Fibrosis",
+          "label_cn": "纤维化",
+          "score": 0.2846
+        },
+        {
+          "label": "Emphysema",
+          "label_cn": "肺气肿",
+          "score": 0.2787
+        }
+      ],
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型最高分 0.509 < 0.6，与「全部未见异常」一致"
+    },
+    {
+      "case_id": "CASE-036",
+      "title": "气胸（胸片，标注版）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [
+        "RLL",
+        "RML",
+        "RUL"
+      ],
+      "top": [
+        {
+          "label": "Enlarged Cardiomediastinum",
+          "label_cn": "纵隔/心影增大",
+          "score": 0.6001
+        },
+        {
+          "label": "Cardiomegaly",
+          "label_cn": "心影增大",
+          "score": 0.5376
+        },
+        {
+          "label": "Mass",
+          "label_cn": "肿块",
+          "score": 0.5183
+        },
+        {
+          "label": "Fracture",
+          "label_cn": "骨折",
+          "score": 0.5136
+        },
+        {
+          "label": "Nodule",
+          "label_cn": "结节",
+          "score": 0.5135
+        }
+      ],
+      "verdict": "partial",
+      "agreement": false,
+      "note": "模型有高分提示，但未命中人工标注的异常分区"
+    },
+    {
+      "case_id": "CASE-041",
+      "title": "胸大肌影（胸片）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [],
+      "top": [
+        {
+          "label": "Mass",
+          "label_cn": "肿块",
+          "score": 0.5965
+        },
+        {
+          "label": "Infiltration",
+          "label_cn": "浸润",
+          "score": 0.526
+        },
+        {
+          "label": "Fibrosis",
+          "label_cn": "纤维化",
+          "score": 0.512
+        },
+        {
+          "label": "Nodule",
+          "label_cn": "结节",
+          "score": 0.5113
+        },
+        {
+          "label": "Emphysema",
+          "label_cn": "肺气肿",
+          "score": 0.4342
+        }
+      ],
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型最高分 0.597 < 0.6，与「全部未见异常」一致"
+    },
+    {
+      "case_id": "CASE-047",
+      "title": "胸部后前位 X 线",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [],
+      "top": [
+        {
+          "label": "Pleural_Thickening",
+          "label_cn": "胸膜增厚",
+          "score": 0.5636
+        },
+        {
+          "label": "Nodule",
+          "label_cn": "结节",
+          "score": 0.503
+        },
+        {
+          "label": "Fracture",
+          "label_cn": "骨折",
+          "score": 0.218
+        },
+        {
+          "label": "Atelectasis",
+          "label_cn": "肺不张",
+          "score": 0.199
+        },
+        {
+          "label": "Infiltration",
+          "label_cn": "浸润",
+          "score": 0.1786
+        }
+      ],
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型最高分 0.564 < 0.6，与「全部未见异常」一致"
+    },
+    {
+      "case_id": "CASE-153",
+      "title": "胸部 X 线",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [
+        "LLL",
+        "MED",
+        "RLL"
+      ],
+      "top": [
+        {
+          "label": "Infiltration",
+          "label_cn": "浸润",
+          "score": 0.8879
+        },
+        {
+          "label": "Pneumonia",
+          "label_cn": "肺炎",
+          "score": 0.8183
+        },
+        {
+          "label": "Lung Opacity",
+          "label_cn": "肺野透亮度异常",
+          "score": 0.8005
+        },
+        {
+          "label": "Cardiomegaly",
+          "label_cn": "心影增大",
+          "score": 0.5822
+        },
+        {
+          "label": "Fibrosis",
+          "label_cn": "纤维化",
+          "score": 0.5438
+        }
+      ],
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型高分项与人工标注的异常分区指向同一类表现"
+    },
+    {
+      "case_id": "CASE-162",
+      "title": "胸部 X 线",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [
+        "LLL",
+        "LML",
+        "LUL",
+        "RLL",
+        "RML",
+        "RUL"
+      ],
+      "top": [
+        {
+          "label": "Pneumonia",
+          "label_cn": "肺炎",
+          "score": 0.9969
+        },
+        {
+          "label": "Lung Opacity",
+          "label_cn": "肺野透亮度异常",
+          "score": 0.9966
+        },
+        {
+          "label": "Infiltration",
+          "label_cn": "浸润",
+          "score": 0.9805
+        },
+        {
+          "label": "Enlarged Cardiomediastinum",
+          "label_cn": "纵隔/心影增大",
+          "score": 0.7133
+        },
+        {
+          "label": "Consolidation",
+          "label_cn": "实变",
+          "score": 0.6678
+        }
+      ],
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型高分项与人工标注的异常分区指向同一类表现"
+    },
+    {
+      "case_id": "CASE-202",
+      "title": "大叶性肺炎（胸片，红箭头）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [
+        "RLL",
+        "RML"
+      ],
+      "top": [
+        {
+          "label": "Cardiomegaly",
+          "label_cn": "心影增大",
+          "score": 0.5269
+        },
+        {
+          "label": "Nodule",
+          "label_cn": "结节",
+          "score": 0.5221
+        },
+        {
+          "label": "Atelectasis",
+          "label_cn": "肺不张",
+          "score": 0.5134
+        },
+        {
+          "label": "Mass",
+          "label_cn": "肿块",
+          "score": 0.5133
+        },
+        {
+          "label": "Fracture",
+          "label_cn": "骨折",
+          "score": 0.5054
+        }
+      ],
+      "verdict": "silent",
+      "agreement": false,
+      "note": "人工标注存在异常，但模型最高分 0.527 < 0.6（弱信号/漏检）"
+    },
+    {
+      "case_id": "CASE-203",
+      "title": "肺结核（胸片，历史影像）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [
+        "LUL",
+        "RUL"
+      ],
+      "top": [
+        {
+          "label": "Mass",
+          "label_cn": "肿块",
+          "score": 0.5931
+        },
+        {
+          "label": "Atelectasis",
+          "label_cn": "肺不张",
+          "score": 0.544
+        },
+        {
+          "label": "Lung Opacity",
+          "label_cn": "肺野透亮度异常",
+          "score": 0.5325
+        },
+        {
+          "label": "Fibrosis",
+          "label_cn": "纤维化",
+          "score": 0.5295
+        },
+        {
+          "label": "Pleural_Thickening",
+          "label_cn": "胸膜增厚",
+          "score": 0.5207
+        }
+      ],
+      "verdict": "silent",
+      "agreement": false,
+      "note": "人工标注存在异常，但模型最高分 0.593 < 0.6（弱信号/漏检）"
+    },
+    {
+      "case_id": "CASE-204",
+      "title": "结节病：双肺结节（胸片）",
+      "pose_class": "chest_pa",
+      "eligible": true,
+      "exclude_reason": "",
+      "abnormal_zones": [
+        "LLL",
+        "LML",
+        "LUL",
+        "RLL",
+        "RML",
+        "RUL"
+      ],
+      "top": [
+        {
+          "label": "Nodule",
+          "label_cn": "结节",
+          "score": 0.6198
+        },
+        {
+          "label": "Infiltration",
+          "label_cn": "浸润",
+          "score": 0.6047
+        },
+        {
+          "label": "Pneumonia",
+          "label_cn": "肺炎",
+          "score": 0.5854
+        },
+        {
+          "label": "Mass",
+          "label_cn": "肿块",
+          "score": 0.5043
+        },
+        {
+          "label": "Emphysema",
+          "label_cn": "肺气肿",
+          "score": 0.5032
+        }
+      ],
+      "verdict": "consistent",
+      "agreement": true,
+      "note": "模型高分项与人工标注的异常分区指向同一类表现"
+    }
+  ],
+  "summary": {
+    "cases": 21,
+    "eligible": 16,
+    "excluded": 5,
+    "consistent": 11,
+    "conflict": 0,
+    "partial": 2,
+    "silent": 3,
+    "threshold": 0.6,
+    "strict_rate": 0.6875,
+    "weighted_rate": 0.75,
+    "thresholds": {
+      "0.5": {
+        "consistent": 13,
+        "conflict": 3,
+        "partial": 0,
+        "silent": 0,
+        "strict_rate": 0.8125
+      },
+      "0.6": {
+        "consistent": 11,
+        "conflict": 0,
+        "partial": 2,
+        "silent": 3,
+        "strict_rate": 0.6875
+      },
+      "0.7": {
+        "consistent": 9,
+        "conflict": 0,
+        "partial": 1,
+        "silent": 6,
+        "strict_rate": 0.5625
+      },
+      "0.8": {
+        "consistent": 9,
+        "conflict": 0,
+        "partial": 1,
+        "silent": 6,
+        "strict_rate": 0.5625
+      }
+    },
+    "note": "严格一致率只统计 eligible 病例（排除侧位投照与解剖标注图）；阈值敏感性见 thresholds，单点数字不应单独引用。"
+  }
+}

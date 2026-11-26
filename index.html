@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2f7f6">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<title>RadioCheck · 胸片阅片</title>
+<meta name="description" content="一张胸片，一个分区，一条出处。21 例 CR 胸部逐区校正，支持教师建班、学生作答与学情回流；纯静态，非诊断用途。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b4f55'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white' font-family='sans-serif'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+<style>
+:root{
+  --bg:#f2f7f6; --surface:#fff; --surface2:#fbfefd;
+  --ink:#0f2029; --ink2:#2a4350; --muted:#5f7784; --faint:#8ba0ab;
+  --line:#e3eeeb; --brand:#0b4f55; --brand2:#0e7c7b;
+  --ok:#147a5b; --warn:#a9690b; --bad:#b23b3b;
+  --r:14px; --r-lg:20px;
+  --shadow:0 1px 2px rgba(16,35,46,.04),0 16px 40px -32px rgba(11,79,85,.45);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:#e9f1ef}
+body{
+  color:var(--ink);
+  font:15px/1.55 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+
+.app{
+  width:100%; max-width:520px; min-height:100vh; margin:0 auto;
+  background:var(--bg); position:relative; padding-bottom:96px;
+  box-shadow:0 0 0 1px rgba(16,35,46,.04),0 30px 80px -50px rgba(11,79,85,.6);
+}
+@media (min-width:560px){ .app{min-height:calc(100vh - 48px); margin:24px auto; border-radius:28px; overflow:hidden} }
+
+/* 桌面端侧边导航：默认隐藏，宽屏才出现；移动端继续用底部 tabbar */
+.desk-nav{display:none}
+
+.large{padding:22px 20px 0}
+.large .kicker{font-size:11px;letter-spacing:.16em;color:var(--brand2);font-weight:700;margin:0 0 4px}
+.large h1{margin:0;font-size:33px;line-height:1.15;letter-spacing:-.024em;font-weight:750}
+.large .sub{margin:6px 0 0;font-size:13px;color:var(--muted)}
+
+.hero-card{
+  margin:18px 20px 0;background:linear-gradient(150deg,#0b4f55,#0e7c7b 78%);
+  border-radius:var(--r-lg);padding:18px;color:#fff;display:block;
+  box-shadow:0 22px 44px -26px rgba(11,79,85,.85);position:relative;overflow:hidden;
+}
+.hero-card::after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.09)}
+.hero-card .hc-k{font-size:10.5px;letter-spacing:.16em;opacity:.82;font-weight:700}
+.hero-card h2{margin:6px 0 3px;font-size:19px;letter-spacing:-.01em;font-weight:700}
+.hero-card p{margin:0;font-size:12.5px;opacity:.86}
+.hero-card .hc-bar{margin-top:14px;height:5px;border-radius:99px;background:rgba(255,255,255,.24);overflow:hidden}
+.hero-card .hc-bar i{display:block;height:100%;background:#fff;border-radius:99px}
+.hero-card .hc-foot{display:flex;justify-content:space-between;margin-top:7px;font-size:11px;opacity:.8}
+
+.group{margin:22px 20px 0}
+.group-title{font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--faint);margin:0 0 8px 4px}
+.inset{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.inset.quick{margin:10px 20px 0}
+.learn-cols{display:block}
+
+/* ===== 桌面端：左侧导航 + 更宽的内容区，与移动端底部 tabbar 区分 ===== */
+@media (min-width:900px){
+  .app{
+    max-width:1180px; display:grid; grid-template-columns:232px minmax(0,1fr);
+    grid-template-areas:"nav main"; align-items:start; padding-bottom:0; overflow:visible;
+  }
+  .panel{grid-area:main; min-width:0}
+  .app > .tabbar{display:none}
+
+  .desk-nav{
+    display:flex; flex-direction:column; grid-area:nav; position:sticky; top:24px;
+    height:calc(100vh - 48px); padding:26px 16px 22px; background:var(--surface);
+    border-right:1px solid var(--line); border-radius:28px 0 0 28px;
+  }
+  .dn-logo{display:flex; align-items:center; gap:10px; padding:0 8px 20px}
+  .dn-logo .m{width:38px; height:38px; border-radius:11px; display:grid; place-items:center;
+    background:linear-gradient(140deg,#0b4f55,#0e7c7b); color:#fff; font-weight:750; font-size:18px}
+  .dn-logo b{display:block; font-size:14px; letter-spacing:-.01em}
+  .dn-logo i{display:block; font-style:normal; font-size:9.5px; letter-spacing:.14em; color:var(--faint); margin-top:1px}
+  .dn-menu{display:grid; gap:4px}
+  .dn-menu button{display:flex; align-items:center; gap:10px; width:100%; border:0; background:transparent;
+    padding:10px 12px; border-radius:10px; font-size:13.5px; font-weight:600; color:var(--ink2); cursor:pointer; text-align:left}
+  .dn-menu button span{width:22px; text-align:center; color:var(--brand2); font-size:15px}
+  .dn-menu button:hover{background:#f1f8f6}
+  .dn-menu button.on{background:#e6f3f0; color:var(--brand)}
+  .dn-sep{height:1px; background:var(--line); margin:16px 8px}
+  .dn-title{font-size:10.5px; letter-spacing:.12em; color:var(--faint); font-weight:700; padding:0 12px; margin-bottom:6px}
+  .dn-link{display:block; padding:9px 12px; border-radius:9px; font-size:12.5px; color:var(--ink2)}
+  .dn-link:hover{background:#f1f8f6; color:var(--brand)}
+  .dn-foot{margin-top:auto; padding:14px 12px 0; font-size:10.5px; line-height:1.7; color:var(--faint)}
+
+  .large{padding:30px 38px 0}
+  .hero-card{margin:18px 38px 0}
+  .inset.quick{margin:10px 38px 0}
+  .group{margin:22px 38px 0}
+  .note{margin:16px 38px 0}
+  .disclaimer{margin:18px 38px 0}
+
+  .learn-cols{display:block; padding:0 24px}
+  .lc-main .hero-card{margin:18px 14px 0}
+  .lc-main .inset.quick{margin:10px 14px 0}
+  .lc-side .group{margin:18px 14px 0 0}
+}
+
+/* 宽屏再把学习区拆成两栏；900–1100 之间保持单栏，避免右栏被挤扁 */
+@media (min-width:1100px){
+  .learn-cols{display:grid; grid-template-columns:minmax(0,420px) minmax(0,1fr); gap:0 26px; align-items:start}
+}
+@media (min-width:1280px){
+  .learn-cols{grid-template-columns:minmax(0,460px) minmax(0,1fr)}
+}
+.row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line);transition:background .15s}
+.row:last-child{border-bottom:0}
+.row:active{background:#f4faf8}
+.row .ico{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:#e9f4f1;color:var(--brand2);font-size:15px;flex:0 0 auto}
+.row b{font-size:14.5px;font-weight:600}
+.row .val{margin-left:auto;font-size:13px;color:var(--faint)}
+.row .val.pill{color:var(--bad);background:#fdf1f1;border-radius:999px;padding:1px 8px;font-weight:700;font-size:12px}
+.chev{color:#c3d3ce;font-size:17px;margin-left:2px}
+
+.tabbar{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:520px;height:82px;z-index:25;
+  background:rgba(251,254,253,.92);backdrop-filter:saturate(180%) blur(18px);
+  border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);
+  padding:8px 12px 20px;
+}
+@media (min-width:560px){ .tabbar{bottom:24px;border-radius:0 0 28px 28px} }
+.tabbar button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--faint);font-size:10.5px;font-weight:600;cursor:pointer}
+.tabbar button .ti{font-size:19px;line-height:1}
+.tabbar button.on{color:var(--brand2)}
+
+.panel{display:none}
+.panel.on{display:block}
+
+.note{margin:16px 20px 0;background:var(--surface2);border:1px solid var(--line);border-radius:var(--r);padding:13px 15px;font-size:12.5px;color:var(--muted);line-height:1.75}
+.note b{color:var(--ink2)}
+.bound{display:grid;gap:8px;margin-top:10px}
+.bound .b{display:flex;gap:8px;align-items:flex-start}
+.bound .dot{width:7px;height:7px;border-radius:50%;margin-top:7px;flex:0 0 auto}
+.d-ok{background:var(--ok)} .d-warn{background:var(--warn)} .d-grey{background:#8ba0ab} .d-bad{background:var(--bad)}
+.disclaimer{margin:18px 20px 0;padding:12px 14px;border-radius:var(--r);background:#fdf6f6;border:1px solid #f3dcdc;color:var(--bad);font-size:11.5px;line-height:1.7}
+.disclaimer b{display:block;margin-bottom:2px}
+</style>
+<!-- rc-agent-base --><script>window.RC_AGENT_BASE='https://function-ultra-disclose-commissioners.trycloudflare.com';</script>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- 桌面端侧边导航（宽屏显示，移动端隐藏） -->
+  <aside class="desk-nav" aria-label="主导航">
+    <a class="dn-logo" href="index.html">
+      <span class="m">R</span>
+      <div><b>RadioCheck</b><i>REGION · CITATION · TRACE</i></div>
+    </a>
+    <nav class="dn-menu">
+      <button class="on" data-p="learn" onclick="go('learn')"><span>◎</span>学习</button>
+      <button data-p="class" onclick="go('class')"><span>▤</span>课堂</button>
+      <button data-p="me" onclick="go('me')"><span>☺</span>我的</button>
+    </nav>
+    <div class="dn-sep"></div>
+    <div class="dn-title">关于</div>
+    <a class="dn-link" href="read/methods.html">方法与边界</a>
+    <a class="dn-link" href="read/eval.html">软件评测说明</a>
+    <div class="dn-foot">非诊断用途<br>仅供医学影像教学与研究</div>
+  </aside>
+
+  <!-- ========== 学习 ========== -->
+  <section class="panel on" id="p-learn">
+    <div class="large">
+      <p class="kicker">赛道 B · 胸片阅片</p>
+      <h1>学习</h1>
+      <p class="sub">21 例 CR 胸部 · 234 道自测题（课堂内） · 逐区校正 · 非诊断用途</p>
+    </div>
+
+    <div class="learn-cols">
+    <div class="lc-main">
+    <a class="hero-card" href="read/path.html">
+      <div class="hc-k">从这里开始 · 推荐</div>
+      <h2>今日任务</h2>
+      <p>看片 → 看证据 → 对照指南 → 补错题，四步共用同一例</p>
+      <div class="hc-bar"><i style="width:100%"></i></div>
+      <div class="hc-foot"><span>一轮 4 步 · 约 5 分钟</span><span>开始</span></div>
+    </a>
+
+    <div class="inset quick">
+      <a class="row" href="read/ask.html"><span class="ico">✦</span><b>提问</b><span class="val">答案可回溯</span><span class="chev">›</span></a>
+      <a class="row" href="read/clinic.html"><span class="ico">▣</span><b>分区精读工作台</b><span class="val">21 例 · PA 8 区</span><span class="chev">›</span></a>
+      <a class="row" href="read/daily.html"><span class="ico">◷</span><b>今日查房</b><span class="val">按日期生成 · 一天一条</span><span class="chev">›</span></a>
+    </div>
+
+    </div>
+    <div class="lc-side">
+    <div class="group">
+      <div class="group-title">练习</div>
+      <div class="inset">
+        <a class="row" href="read/blind.html"><span class="ico">◐</span><b>盲测模式</b><span class="val">隐藏标注</span><span class="chev">›</span></a>
+        <a class="row" href="read/exam.html"><span class="ico">✓</span><b>病例题</b><span class="val">10 例</span><span class="chev">›</span></a>
+        <a class="row" href="read/compare.html"><span class="ico">⇄</span><b>对比阅片</b><span class="val">8 组</span><span class="chev">›</span></a>
+        <a class="row" href="read/evidence.html"><span class="ico">▥</span><b>证据强度与交叉检验</b><span class="val">21 例</span><span class="chev">›</span></a>
+        <a class="row" href="read/dual.html"><span class="ico">⚖</span><b>报告—指南双源对照</b><span class="val">要素核查</span><span class="chev">›</span></a>
+        <a class="row" href="read/drill.html"><span class="ico">↻</span><b>自适应练习</b><span class="val">按错题出题</span><span class="chev">›</span></a>
+        <a class="row" href="read/classroom.html"><span class="ico">▤</span><b>课堂与作业</b><span class="val">班级码</span><span class="chev">›</span></a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-title">关于这个方法</div>
+      <div class="inset">
+        <a class="row" href="#boundary" onclick="go('me')"><span class="ico">◎</span><b>四种状态怎么读</b><span class="val">异常 / 未见异常 / 未提及 / 受限</span><span class="chev">›</span></a>
+        <a class="row" href="#boundary" onclick="go('me')"><span class="ico">⚖</span><b>能力边界</b><span class="val">看它做不到什么</span><span class="chev">›</span></a>
+        <a class="row" href="read/eval.html"><span class="ico">◇</span><b>软件评测说明</b><span class="val">内部评测 · 非临床性能</span><span class="chev">›</span></a>
+      </div>
+    </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- ========== 课堂 ========== -->
+  <section class="panel" id="p-class">
+    <div class="large">
+      <p class="kicker">教师与学生</p>
+      <h1>课堂</h1>
+      <p class="sub">建班 · 布置 · 作答 · 学情回流</p>
+    </div>
+
+    <div class="group">
+      <div class="group-title">教师</div>
+      <div class="inset">
+        <a class="row" href="read/classroom.html?role=teacher"><span class="ico">＋</span><b>建班并生成班级码</b><span class="chev">›</span></a>
+        <a class="row" href="read/classroom.html?role=teacher"><span class="ico">▤</span><b>布置作业</b><span class="val">从 21 例中选</span><span class="chev">›</span></a>
+        <a class="row" href="read/classroom.html?role=teacher"><span class="ico">▥</span><b>看学情</b><span class="val">提交率 · 均分 · 错题</span><span class="chev">›</span></a>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-title">学生</div>
+      <div class="inset">
+        <a class="row" href="read/classroom.html?role=student"><span class="ico">→</span><b>用班级码加入</b><span class="chev">›</span></a>
+        <a class="row" href="read/classroom.html?role=student"><span class="ico">◎</span><b>考核模式作答</b><span class="val">定位 40 · 判读 30 · 征象 30</span><span class="chev">›</span></a>
+        <a class="row" href="read/classroom.html?role=student"><span class="ico">↺</span><b>错题重练</b><span class="chev">›</span></a>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>数据边界</b>：班级、作业与答题记录默认保存在当前浏览器；课堂页支持在同一浏览器内切换教师端与学生端，便于现场演示。若开启多端同步，以课堂页内的说明为准。
+    </div>
+  </section>
+
+  <!-- ========== 我的 ========== -->
+  <section class="panel" id="p-me">
+    <div class="large">
+      <p class="kicker">能力与边界</p>
+      <h1>我的</h1>
+      <p class="sub">先说清楚它做不到什么</p>
+    </div>
+
+    <div class="group" id="boundary">
+      <div class="group-title">只做这一件事</div>
+      <div class="inset">
+        <div class="row"><span class="ico">◎</span><b>CR 正位 / 侧位胸片</b><span class="val">21 例</span></div>
+        <div class="row"><span class="ico">✕</span><b>CT / MRI / 超声 / 病理</b><span class="val pill">不支持</span></div>
+        <div class="row"><span class="ico">✕</span><b>诊断、治疗、分期</b><span class="val pill">不提供</span></div>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>四种状态，不是两种</b>
+      <div class="bound">
+        <div class="b"><span class="dot d-bad"></span><div><b>异常</b>：该区有明确描述。</div></div>
+        <div class="b"><span class="dot d-ok"></span><div><b>未见异常</b>：来源明确写了正常。</div></div>
+        <div class="b"><span class="dot d-warn"></span><div><b>未提及</b>：来源没写这一区。<b>不等于正常。</b></div></div>
+        <div class="b"><span class="dot d-grey"></span><div><b>判读受限</b>：图像质量或体位不允许判读。</div></div>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>库外影像怎么处理</b>：上传按 SHA-256 精确匹配库内影像。命中则进入逐区文本对照；<b>未命中不会伪装成 AI 定位</b>——只按胸片比例给通用解剖分区，并明确标注"不含该影像的标注、不判断有无异常"。本项目当前未接入视觉检测模型，不做病灶自动定位。
+    </div>
+
+    <div class="disclaimer">
+      <b>非诊断用途</b>
+      本系统仅用于医学影像教学与研究，不构成诊断意见，不提供治疗建议，不做分期。正式教学或对外发布前，逐区文本与题目解析须由医学人员逐条审核签字。
+      <br>
+      <b>内容来源</b>开发者不具备医学专业资质，<b>影像分区未进行人工标注</b>：分区范围按公开解剖分区规范与文献描述确定，逐区文本由文献 + AI 辅助整理，<b>尚未经影像科医师逐例复核</b>。阅片工作台提供「反馈」入口，收集分区与结论异议，作为专家复核输入。
+    </div>
+  </section>
+
+  <!-- ========== Tab Bar ========== -->
+  <nav class="tabbar">
+    <button class="on" data-p="learn" onclick="go('learn')"><span class="ti">◎</span>学习</button>
+    <button data-p="class" onclick="go('class')"><span class="ti">▤</span>课堂</button>
+    <button data-p="me" onclick="go('me')"><span class="ti">☺</span>我的</button>
+  </nav>
+</div>
+
+<script>
+function go(p){
+  ["learn","class","me"].forEach(k=>{
+    document.getElementById("p-"+k).classList.toggle("on", k===p);
+  });
+  document.querySelectorAll("[data-p]").forEach(b=>{
+    b.classList.toggle("on", b.dataset.p===p);
+  });
+  window.scrollTo({top:0, behavior:"instant"});
+}
+/* v7 收缩版不再使用 Service Worker；清掉旧缓存，避免演示时看到旧页面 */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function (rs) {
+    rs.forEach(function (r) { r.unregister(); });
+  }).catch(function () {});
+}
+if (window.caches && caches.keys) {
+  caches.keys().then(function (ks) {
+    ks.forEach(function (k) { caches.delete(k); });
+  }).catch(function () {});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>质控复核 · AI 预标注 · RadioCheck</title>
+<meta name="theme-color" content="#0b4f55">
+<link rel="stylesheet" href="base.css?v=11">
+<link rel="stylesheet" href="classroom.css?v=12">
+<link rel="stylesheet" href="qc.css?v=1">
+<!-- rc-agent-base --><script>window.RC_AGENT_BASE='https://function-ultra-disclose-commissioners.trycloudflare.com';</script>
+</head>
+<body>
+
+<header class="bar" data-page="qc">
+  <div class="bar-extra">
+    <span class="quest-badge">质控 · 专家复核</span>
+    <span class="spacer"></span>
+    <label class="qc-reviewer">复核人
+      <input id="reviewer" maxlength="20" placeholder="姓名/工号">
+    </label>
+    <button class="btn sm" id="exportQc" title="导出专家复核结果 JSON">导出复核结果</button>
+    <a class="btn sm" href="classroom.html">返回课堂</a>
+  </div>
+</header>
+
+<div class="global-disclaimer"><b>非诊断用途</b><span>仅供医学影像教学与研究</span></div>
+
+<main class="qc-shell">
+  <section class="qc-head">
+    <div>
+      <div class="eyebrow">EVIDENCE QC</div>
+      <h1>质控复核台</h1>
+    </div>
+    <div class="qc-stats" id="qcStats"></div>
+  </section>
+
+  <section class="qc-toolbar">
+    <div class="qc-filters" id="qcFilters">
+      <button data-filter="all" class="on">全部</button>
+      <button data-filter="conflict">冲突</button>
+      <button data-filter="unmentioned">第四态抽检</button>
+      <button data-filter="dual_label">双 AI 标注</button>
+      <button data-filter="pending">待复核</button>
+      <button data-filter="reviewed">已复核</button>
+    </div>
+    <div class="qc-legend">
+      <span><i class="dot ok"></i> AI 一致</span>
+      <span><i class="dot warn"></i> AI 冲突</span>
+      <span><i class="dot mute"></i> 已复核</span>
+    </div>
+  </section>
+
+  <section id="qcList" class="qc-list">
+    <div class="empty-state"><b>正在载入复核队列…</b></div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="common.js?v=11"></script>
+<script src="kb-api.js?v=1"></script>
+<script src="qc.js?v=1"></script>
+</body>
+</html>

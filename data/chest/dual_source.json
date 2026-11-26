@@ -1,0 +1,1513 @@
+{
+  "version": "0.1.0",
+  "notice": "本文件为公开指南与共识的要点转述摘要，非逐字引用。每条均标注来源，仅用于教学对照，不构成诊疗依据。正式引用请查阅原文。",
+  "cases": [
+    {
+      "case_id": "CASE-001",
+      "title": "正常后前位胸片",
+      "image": "images/case-001.jpg",
+      "topic_id": "NORMAL",
+      "topic_cn": "正常胸片",
+      "report": {
+        "text": "正常后前位胸片",
+        "zones": []
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "胸部影像学基础（项目自建教学语料）",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-NOR-01",
+            "text": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。"
+          },
+          {
+            "id": "GL-NOR-02",
+            "text": "「未见异常」与「未提及」不是一回事：前者是明确判读，后者是来源没有描述该区。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "肺野",
+          "covered": true,
+          "matched": [
+            "正常"
+          ]
+        },
+        {
+          "label": "心影与纵隔",
+          "covered": true,
+          "matched": [
+            "正常"
+          ]
+        },
+        {
+          "label": "膈肌与肋膈角",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "骨骼与软组织",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "投照质量",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": null,
+      "missing": [],
+      "report_available": false
+    },
+    {
+      "case_id": "CASE-002",
+      "title": "正常侧位胸片",
+      "image": "images/case-002.jpg",
+      "topic_id": "NORMAL",
+      "topic_cn": "正常胸片",
+      "report": {
+        "text": "正常侧位胸片",
+        "zones": []
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "胸部影像学基础（项目自建教学语料）",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-NOR-01",
+            "text": "正常胸片报告应覆盖肺野、心影纵隔、膈肌肋膈角、骨骼软组织与投照质量五个方面。"
+          },
+          {
+            "id": "GL-NOR-02",
+            "text": "「未见异常」与「未提及」不是一回事：前者是明确判读，后者是来源没有描述该区。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "肺野",
+          "covered": true,
+          "matched": [
+            "正常"
+          ]
+        },
+        {
+          "label": "心影与纵隔",
+          "covered": true,
+          "matched": [
+            "正常"
+          ]
+        },
+        {
+          "label": "膈肌与肋膈角",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "骨骼与软组织",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "投照质量",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": null,
+      "missing": [],
+      "report_available": false
+    },
+    {
+      "case_id": "CASE-003",
+      "title": "胸片解剖标注（欠吸气、轻度旋转）",
+      "image": "images/case-003.jpg",
+      "topic_id": "UNMAPPED",
+      "topic_cn": "未覆盖主题",
+      "report": {
+        "text": "胸片解剖标注（欠吸气、轻度旋转）",
+        "zones": []
+      },
+      "guideline": {
+        "sources": [],
+        "key_points": [],
+        "required_count": 0
+      },
+      "elements": [],
+      "coverage": null,
+      "missing": [],
+      "report_available": false
+    },
+    {
+      "case_id": "CASE-005",
+      "title": "双肺气腔影伴肺不张（含中心静脉导管）",
+      "image": "images/case-005.jpg",
+      "topic_id": "PNEUMONIA",
+      "topic_cn": "肺炎 / 肺实变",
+      "report": {
+        "text": "双肺气腔影伴肺不张（含中心静脉导管） 双肺气腔影，伴肺不张；公开说明未逐区定位。 双肺气腔影，伴肺不张；公开说明未逐区定位。 双肺气腔影，伴肺不张；公开说明未逐区定位。 双肺气腔影，伴肺不张；公开说明未逐区定位。 双肺气腔影，伴肺不张；公开说明未逐区定位。 双肺气腔影，伴肺不张；公开说明未逐区定位。",
+        "zones": [
+          {
+            "id": "RUL",
+            "name": "右肺上野",
+            "text": "双肺气腔影，伴肺不张；公开说明未逐区定位。"
+          },
+          {
+            "id": "RML",
+            "name": "右肺中野",
+            "text": "双肺气腔影，伴肺不张；公开说明未逐区定位。"
+          },
+          {
+            "id": "RLL",
+            "name": "右肺下野",
+            "text": "双肺气腔影，伴肺不张；公开说明未逐区定位。"
+          },
+          {
+            "id": "LUL",
+            "name": "左肺上野",
+            "text": "双肺气腔影，伴肺不张；公开说明未逐区定位。"
+          },
+          {
+            "id": "LML",
+            "name": "左肺中野",
+            "text": "双肺气腔影，伴肺不张；公开说明未逐区定位。"
+          },
+          {
+            "id": "LLL",
+            "name": "左肺下野",
+            "text": "双肺气腔影，伴肺不张；公开说明未逐区定位。"
+          }
+        ]
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "中国成人社区获得性肺炎诊断和治疗指南（2016 年版）",
+            "type": "paraphrase"
+          },
+          {
+            "name": "Fleischner Society 胸部影像术语 glossary",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-PNE-01",
+            "text": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。"
+          },
+          {
+            "id": "GL-PNE-02",
+            "text": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。"
+          },
+          {
+            "id": "GL-PNE-03",
+            "text": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "部位与侧别",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "范围",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "密度与形态",
+          "covered": true,
+          "matched": [
+            "气腔"
+          ]
+        },
+        {
+          "label": "伴随征象",
+          "covered": true,
+          "matched": [
+            "不张"
+          ]
+        },
+        {
+          "label": "严重度或随访建议",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": 0.4,
+      "missing": [
+        "部位与侧别",
+        "范围",
+        "严重度或随访建议"
+      ],
+      "report_available": true
+    },
+    {
+      "case_id": "CASE-006",
+      "title": "大叶性肺炎（箭头标注）",
+      "image": "images/case-006.jpg",
+      "topic_id": "PNEUMONIA",
+      "topic_cn": "肺炎 / 肺实变",
+      "report": {
+        "text": "大叶性肺炎（箭头标注） 右肺中野大片实变，红箭头指向病灶边缘。 右肺下野可见实变影向下延伸。",
+        "zones": [
+          {
+            "id": "RML",
+            "name": "右肺中野",
+            "text": "右肺中野大片实变，红箭头指向病灶边缘。"
+          },
+          {
+            "id": "RLL",
+            "name": "右肺下野",
+            "text": "右肺下野可见实变影向下延伸。"
+          }
+        ]
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "中国成人社区获得性肺炎诊断和治疗指南（2016 年版）",
+            "type": "paraphrase"
+          },
+          {
+            "name": "Fleischner Society 胸部影像术语 glossary",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-PNE-01",
+            "text": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。"
+          },
+          {
+            "id": "GL-PNE-02",
+            "text": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。"
+          },
+          {
+            "id": "GL-PNE-03",
+            "text": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "部位与侧别",
+          "covered": true,
+          "matched": [
+            "右",
+            "中野",
+            "下野"
+          ]
+        },
+        {
+          "label": "范围",
+          "covered": true,
+          "matched": [
+            "大片"
+          ]
+        },
+        {
+          "label": "密度与形态",
+          "covered": true,
+          "matched": [
+            "实变"
+          ]
+        },
+        {
+          "label": "伴随征象",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "严重度或随访建议",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": 0.6,
+      "missing": [
+        "伴随征象",
+        "严重度或随访建议"
+      ],
+      "report_available": true
+    },
+    {
+      "case_id": "CASE-007",
+      "title": "下肺野气腔影（正位）",
+      "image": "images/case-007.jpg",
+      "topic_id": "PNEUMONIA",
+      "topic_cn": "肺炎 / 肺实变",
+      "report": {
+        "text": "下肺野气腔影（正位） 双侧下肺野气腔影，密度增高。 双侧下肺野气腔影，密度增高。",
+        "zones": [
+          {
+            "id": "RLL",
+            "name": "右肺下野",
+            "text": "双侧下肺野气腔影，密度增高。"
+          },
+          {
+            "id": "LLL",
+            "name": "左肺下野",
+            "text": "双侧下肺野气腔影，密度增高。"
+          }
+        ]
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "中国成人社区获得性肺炎诊断和治疗指南（2016 年版）",
+            "type": "paraphrase"
+          },
+          {
+            "name": "Fleischner Society 胸部影像术语 glossary",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-PNE-01",
+            "text": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。"
+          },
+          {
+            "id": "GL-PNE-02",
+            "text": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。"
+          },
+          {
+            "id": "GL-PNE-03",
+            "text": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "部位与侧别",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "范围",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "密度与形态",
+          "covered": true,
+          "matched": [
+            "密度增高",
+            "气腔"
+          ]
+        },
+        {
+          "label": "伴随征象",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "严重度或随访建议",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": 0.2,
+      "missing": [
+        "部位与侧别",
+        "范围",
+        "伴随征象",
+        "严重度或随访建议"
+      ],
+      "report_available": true
+    },
+    {
+      "case_id": "CASE-008",
+      "title": "下肺野气腔影（侧位）",
+      "image": "images/case-008.jpg",
+      "topic_id": "PNEUMONIA",
+      "topic_cn": "肺炎 / 肺实变",
+      "report": {
+        "text": "下肺野气腔影（侧位） 侧位片示下肺野/后部气腔影。",
+        "zones": [
+          {
+            "id": "POST",
+            "name": "后肺野与后肋膈角",
+            "text": "侧位片示下肺野/后部气腔影。"
+          }
+        ]
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "中国成人社区获得性肺炎诊断和治疗指南（2016 年版）",
+            "type": "paraphrase"
+          },
+          {
+            "name": "Fleischner Society 胸部影像术语 glossary",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-PNE-01",
+            "text": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。"
+          },
+          {
+            "id": "GL-PNE-02",
+            "text": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。"
+          },
+          {
+            "id": "GL-PNE-03",
+            "text": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "部位与侧别",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "范围",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "密度与形态",
+          "covered": true,
+          "matched": [
+            "气腔"
+          ]
+        },
+        {
+          "label": "伴随征象",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "严重度或随访建议",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": 0.2,
+      "missing": [
+        "部位与侧别",
+        "范围",
+        "伴随征象",
+        "严重度或随访建议"
+      ],
+      "report_available": true
+    },
+    {
+      "case_id": "CASE-015",
+      "title": "右中上肺野气腔影（正位）",
+      "image": "images/case-015.jpg",
+      "topic_id": "PNEUMONIA",
+      "topic_cn": "肺炎 / 肺实变",
+      "report": {
+        "text": "右中上肺野气腔影（正位） 右中上肺野斑片状密度增高。 右中上肺野斑片状密度增高。",
+        "zones": [
+          {
+            "id": "RUL",
+            "name": "右肺上野",
+            "text": "右中上肺野斑片状密度增高。"
+          },
+          {
+            "id": "RML",
+            "name": "右肺中野",
+            "text": "右中上肺野斑片状密度增高。"
+          }
+        ]
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "中国成人社区获得性肺炎诊断和治疗指南（2016 年版）",
+            "type": "paraphrase"
+          },
+          {
+            "name": "Fleischner Society 胸部影像术语 glossary",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-PNE-01",
+            "text": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。"
+          },
+          {
+            "id": "GL-PNE-02",
+            "text": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。"
+          },
+          {
+            "id": "GL-PNE-03",
+            "text": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "部位与侧别",
+          "covered": true,
+          "matched": [
+            "右"
+          ]
+        },
+        {
+          "label": "范围",
+          "covered": true,
+          "matched": [
+            "斑片"
+          ]
+        },
+        {
+          "label": "密度与形态",
+          "covered": true,
+          "matched": [
+            "密度增高",
+            "气腔"
+          ]
+        },
+        {
+          "label": "伴随征象",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "严重度或随访建议",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": 0.6,
+      "missing": [
+        "伴随征象",
+        "严重度或随访建议"
+      ],
+      "report_available": true
+    },
+    {
+      "case_id": "CASE-016",
+      "title": "双肺弥漫粟粒样结节",
+      "image": "images/case-016.jpg",
+      "topic_id": "NODULE",
+      "topic_cn": "肺结节 / 粟粒样结节",
+      "report": {
+        "text": "双肺弥漫粟粒样结节 双肺弥漫粟粒样细小结节。 双肺弥漫粟粒样细小结节。 双肺弥漫粟粒样细小结节。 双肺弥漫粟粒样细小结节。 双肺弥漫粟粒样细小结节。 双肺弥漫粟粒样细小结节。",
+        "zones": [
+          {
+            "id": "RUL",
+            "name": "右肺上野",
+            "text": "双肺弥漫粟粒样细小结节。"
+          },
+          {
+            "id": "RML",
+            "name": "右肺中野",
+            "text": "双肺弥漫粟粒样细小结节。"
+          },
+          {
+            "id": "RLL",
+            "name": "右肺下野",
+            "text": "双肺弥漫粟粒样细小结节。"
+          },
+          {
+            "id": "LUL",
+            "name": "左肺上野",
+            "text": "双肺弥漫粟粒样细小结节。"
+          },
+          {
+            "id": "LML",
+            "name": "左肺中野",
+            "text": "双肺弥漫粟粒样细小结节。"
+          },
+          {
+            "id": "LLL",
+            "name": "左肺下野",
+            "text": "双肺弥漫粟粒样细小结节。"
+          }
+        ]
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "Fleischner Society 2017 肺结节管理指南",
+            "type": "paraphrase"
+          },
+          {
+            "name": "中国肺结节诊治专家共识（2018）",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-NOD-01",
+            "text": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。"
+          },
+          {
+            "id": "GL-NOD-02",
+            "text": "直径 6-8 mm 的实性结节，低危人群通常建议 6-12 个月复查胸部 CT。"
+          },
+          {
+            "id": "GL-NOD-03",
+            "text": "持续存在的纯磨玻璃结节需要按随访策略评估，不能仅凭单次影像判断性质。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "大小",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "密度类型",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "边缘与形态",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "分布",
+          "covered": true,
+          "matched": [
+            "双肺",
+            "弥漫"
+          ]
+        },
+        {
+          "label": "随访建议",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": 0.2,
+      "missing": [
+        "大小",
+        "密度类型",
+        "边缘与形态",
+        "随访建议"
+      ],
+      "report_available": true
+    },
+    {
+      "case_id": "CASE-017",
+      "title": "双侧下肺野模糊伴肋膈角变钝",
+      "image": "images/case-017.jpg",
+      "topic_id": "EFFUSION",
+      "topic_cn": "胸腔积液",
+      "report": {
+        "text": "双侧下肺野模糊伴肋膈角变钝 双侧下肺野密度增高，肋膈角变钝。 双侧下肺野密度增高，肋膈角变钝。",
+        "zones": [
+          {
+            "id": "RLL",
+            "name": "右肺下野",
+            "text": "双侧下肺野密度增高，肋膈角变钝。"
+          },
+          {
+            "id": "LLL",
+            "name": "左肺下野",
+            "text": "双侧下肺野密度增高，肋膈角变钝。"
+          }
+        ]
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "胸部影像学基础（项目自建教学语料）",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-EFF-01",
+            "text": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。"
+          },
+          {
+            "id": "GL-EFF-02",
+            "text": "卧位片因液体铺展，可表现为患侧肺野弥漫性密度增高，容易与实变混淆，报告须交代体位。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "侧别",
+          "covered": true,
+          "matched": [
+            "双侧"
+          ]
+        },
+        {
+          "label": "量的估计",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "体位前提",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "伴随征象",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "建议",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": 0.2,
+      "missing": [
+        "量的估计",
+        "体位前提",
+        "伴随征象",
+        "建议"
+      ],
+      "report_available": true
+    },
+    {
+      "case_id": "CASE-018",
+      "title": "侧位胸片：后肋膈角变钝（箭头）",
+      "image": "images/case-018.png",
+      "topic_id": "EFFUSION",
+      "topic_cn": "胸腔积液",
+      "report": {
+        "text": "侧位胸片：后肋膈角变钝（箭头） 后肋膈角变钝，可见液体分布；箭头为原图标注。",
+        "zones": [
+          {
+            "id": "POST",
+            "name": "后肺野与后肋膈角",
+            "text": "后肋膈角变钝，可见液体分布；箭头为原图标注。"
+          }
+        ]
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "胸部影像学基础（项目自建教学语料）",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-EFF-01",
+            "text": "立位胸片最早出现的征象是肋膈角变钝，随积液增多出现下肺野均匀致密影与半月形上缘。"
+          },
+          {
+            "id": "GL-EFF-02",
+            "text": "卧位片因液体铺展，可表现为患侧肺野弥漫性密度增高，容易与实变混淆，报告须交代体位。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "侧别",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "量的估计",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "体位前提",
+          "covered": true,
+          "matched": [
+            "侧位"
+          ]
+        },
+        {
+          "label": "伴随征象",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "建议",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": 0.2,
+      "missing": [
+        "侧别",
+        "量的估计",
+        "伴随征象",
+        "建议"
+      ],
+      "report_available": true
+    },
+    {
+      "case_id": "CASE-033",
+      "title": "胸部正位 X 线（解剖标注版）",
+      "image": "images/case-033.png",
+      "topic_id": "UNMAPPED",
+      "topic_cn": "未覆盖主题",
+      "report": {
+        "text": "胸部正位 X 线（解剖标注版）",
+        "zones": []
+      },
+      "guideline": {
+        "sources": [],
+        "key_points": [],
+        "required_count": 0
+      },
+      "elements": [],
+      "coverage": null,
+      "missing": [],
+      "report_available": false
+    },
+    {
+      "case_id": "CASE-034",
+      "title": "胸部正位 X 线",
+      "image": "images/case-034.png",
+      "topic_id": "UNMAPPED",
+      "topic_cn": "未覆盖主题",
+      "report": {
+        "text": "胸部正位 X 线",
+        "zones": []
+      },
+      "guideline": {
+        "sources": [],
+        "key_points": [],
+        "required_count": 0
+      },
+      "elements": [],
+      "coverage": null,
+      "missing": [],
+      "report_available": false
+    },
+    {
+      "case_id": "CASE-036",
+      "title": "气胸（胸片，标注版）",
+      "image": "images/case-036.jpg",
+      "topic_id": "PNEUMOTHORAX",
+      "topic_cn": "气胸",
+      "report": {
+        "text": "气胸（胸片，标注版） 右侧胸腔可见气胸，右肺压缩，肺纹理消失（原图标注 Pneumothorax / Collapsed right lung）。 右侧胸腔可见气胸，右肺压缩，肺纹理消失（原图标注 Pneumothorax / Collapsed right lung）。 右侧胸腔可见气胸，右肺压缩，肺纹理消失（原图标注 Pneumothorax / Collapsed right lung）。",
+        "zones": [
+          {
+            "id": "RUL",
+            "name": "右肺上野",
+            "text": "右侧胸腔可见气胸，右肺压缩，肺纹理消失（原图标注 Pneumothorax / Collapsed right lung）。"
+          },
+          {
+            "id": "RML",
+            "name": "右肺中野",
+            "text": "右侧胸腔可见气胸，右肺压缩，肺纹理消失（原图标注 Pneumothorax / Collapsed right lung）。"
+          },
+          {
+            "id": "RLL",
+            "name": "右肺下野",
+            "text": "右侧胸腔可见气胸，右肺压缩，肺纹理消失（原图标注 Pneumothorax / Collapsed right lung）。"
+          }
+        ]
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "胸部影像学基础（项目自建教学语料）",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-PTX-01",
+            "text": "诊断关键征象是脏层胸膜线，胸膜线外侧肺纹理消失。"
+          },
+          {
+            "id": "GL-PTX-02",
+            "text": "张力性气胸伴纵隔移位与膈肌低平属于急症，报告应立即提示临床。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "侧别",
+          "covered": true,
+          "matched": [
+            "右"
+          ]
+        },
+        {
+          "label": "肺压缩程度",
+          "covered": true,
+          "matched": [
+            "压缩"
+          ]
+        },
+        {
+          "label": "张力征象",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "体位与投照",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "建议",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": 0.4,
+      "missing": [
+        "张力征象",
+        "体位与投照",
+        "建议"
+      ],
+      "report_available": true
+    },
+    {
+      "case_id": "CASE-041",
+      "title": "胸大肌影（胸片）",
+      "image": "images/case-041.jpg",
+      "topic_id": "UNMAPPED",
+      "topic_cn": "未覆盖主题",
+      "report": {
+        "text": "胸大肌影（胸片）",
+        "zones": []
+      },
+      "guideline": {
+        "sources": [],
+        "key_points": [],
+        "required_count": 0
+      },
+      "elements": [],
+      "coverage": null,
+      "missing": [],
+      "report_available": false
+    },
+    {
+      "case_id": "CASE-047",
+      "title": "胸部后前位 X 线",
+      "image": "images/case-047.jpg",
+      "topic_id": "UNMAPPED",
+      "topic_cn": "未覆盖主题",
+      "report": {
+        "text": "胸部后前位 X 线",
+        "zones": []
+      },
+      "guideline": {
+        "sources": [],
+        "key_points": [],
+        "required_count": 0
+      },
+      "elements": [],
+      "coverage": null,
+      "missing": [],
+      "report_available": false
+    },
+    {
+      "case_id": "CASE-153",
+      "title": "胸部 X 线",
+      "image": "images/case-153.jpg",
+      "topic_id": "CARDIOMEGALY",
+      "topic_cn": "心影增大",
+      "report": {
+        "text": "胸部 X 线 下肺野可见 Kerley B 线，肺血管影增粗（公开说明）。 下肺野可见 Kerley B 线，肺血管影增粗（公开说明）。 心影增大（公开说明）。",
+        "zones": [
+          {
+            "id": "RLL",
+            "name": "右肺下野",
+            "text": "下肺野可见 Kerley B 线，肺血管影增粗（公开说明）。"
+          },
+          {
+            "id": "LLL",
+            "name": "左肺下野",
+            "text": "下肺野可见 Kerley B 线，肺血管影增粗（公开说明）。"
+          },
+          {
+            "id": "MED",
+            "name": "纵隔与心影",
+            "text": "心影增大（公开说明）。"
+          }
+        ]
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "胸部影像学基础（项目自建教学语料）",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-CMG-01",
+            "text": "正位胸片心胸比超过 0.5 提示心影增大，测量需在吸气充分、体位端正条件下进行。"
+          },
+          {
+            "id": "GL-CMG-02",
+            "text": "床旁前后位片会放大心影，判断增大时需谨慎，必要时建议超声心动图。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "测量值",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "投照条件",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "形态描述",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "伴随征象",
+          "covered": true,
+          "matched": [
+            "血管"
+          ]
+        },
+        {
+          "label": "建议",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": 0.2,
+      "missing": [
+        "测量值",
+        "投照条件",
+        "形态描述",
+        "建议"
+      ],
+      "report_available": true
+    },
+    {
+      "case_id": "CASE-162",
+      "title": "胸部 X 线",
+      "image": "images/case-162.jpg",
+      "topic_id": "NODULE",
+      "topic_cn": "肺结节 / 粟粒样结节",
+      "report": {
+        "text": "胸部 X 线 双肺弥漫网结节影（公开说明）。 双肺弥漫网结节影（公开说明）。 双肺弥漫网结节影（公开说明）。 双肺弥漫网结节影（公开说明）。 双肺弥漫网结节影（公开说明）。 双肺弥漫网结节影（公开说明）。",
+        "zones": [
+          {
+            "id": "RUL",
+            "name": "右肺上野",
+            "text": "双肺弥漫网结节影（公开说明）。"
+          },
+          {
+            "id": "RML",
+            "name": "右肺中野",
+            "text": "双肺弥漫网结节影（公开说明）。"
+          },
+          {
+            "id": "RLL",
+            "name": "右肺下野",
+            "text": "双肺弥漫网结节影（公开说明）。"
+          },
+          {
+            "id": "LUL",
+            "name": "左肺上野",
+            "text": "双肺弥漫网结节影（公开说明）。"
+          },
+          {
+            "id": "LML",
+            "name": "左肺中野",
+            "text": "双肺弥漫网结节影（公开说明）。"
+          },
+          {
+            "id": "LLL",
+            "name": "左肺下野",
+            "text": "双肺弥漫网结节影（公开说明）。"
+          }
+        ]
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "Fleischner Society 2017 肺结节管理指南",
+            "type": "paraphrase"
+          },
+          {
+            "name": "中国肺结节诊治专家共识（2018）",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-NOD-01",
+            "text": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。"
+          },
+          {
+            "id": "GL-NOD-02",
+            "text": "直径 6-8 mm 的实性结节，低危人群通常建议 6-12 个月复查胸部 CT。"
+          },
+          {
+            "id": "GL-NOD-03",
+            "text": "持续存在的纯磨玻璃结节需要按随访策略评估，不能仅凭单次影像判断性质。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "大小",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "密度类型",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "边缘与形态",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "分布",
+          "covered": true,
+          "matched": [
+            "双肺",
+            "弥漫"
+          ]
+        },
+        {
+          "label": "随访建议",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": 0.2,
+      "missing": [
+        "大小",
+        "密度类型",
+        "边缘与形态",
+        "随访建议"
+      ],
+      "report_available": true
+    },
+    {
+      "case_id": "CASE-202",
+      "title": "大叶性肺炎（胸片，红箭头）",
+      "image": "images/case-202.jpg",
+      "topic_id": "PNEUMONIA",
+      "topic_cn": "肺炎 / 肺实变",
+      "report": {
+        "text": "大叶性肺炎（胸片，红箭头） 右肺中野大片实变，红箭头指向病灶边缘。 右肺下野可见实变影向下延伸。",
+        "zones": [
+          {
+            "id": "RML",
+            "name": "右肺中野",
+            "text": "右肺中野大片实变，红箭头指向病灶边缘。"
+          },
+          {
+            "id": "RLL",
+            "name": "右肺下野",
+            "text": "右肺下野可见实变影向下延伸。"
+          }
+        ]
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "中国成人社区获得性肺炎诊断和治疗指南（2016 年版）",
+            "type": "paraphrase"
+          },
+          {
+            "name": "Fleischner Society 胸部影像术语 glossary",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-PNE-01",
+            "text": "影像出现新发实变或浸润影，是社区获得性肺炎的重要支持依据，但需结合临床症状与实验室检查。"
+          },
+          {
+            "id": "GL-PNE-02",
+            "text": "实变内出现支气管充气征，提示病变位于肺泡腔，支持肺泡性实变而非支气管阻塞。"
+          },
+          {
+            "id": "GL-PNE-03",
+            "text": "影像报告应描述病变的部位、范围与伴随征象，以便评估严重程度与疗效随访。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "部位与侧别",
+          "covered": true,
+          "matched": [
+            "右",
+            "中野",
+            "下野"
+          ]
+        },
+        {
+          "label": "范围",
+          "covered": true,
+          "matched": [
+            "大片"
+          ]
+        },
+        {
+          "label": "密度与形态",
+          "covered": true,
+          "matched": [
+            "实变"
+          ]
+        },
+        {
+          "label": "伴随征象",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "严重度或随访建议",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": 0.6,
+      "missing": [
+        "伴随征象",
+        "严重度或随访建议"
+      ],
+      "report_available": true
+    },
+    {
+      "case_id": "CASE-203",
+      "title": "肺结核（胸片，历史影像）",
+      "image": "images/case-203.jpg",
+      "topic_id": "TB",
+      "topic_cn": "肺结核",
+      "report": {
+        "text": "肺结核（胸片，历史影像） 双肺上野斑片状、结节状密度增高（公开说明）。 双肺上野斑片状、结节状密度增高（公开说明）。",
+        "zones": [
+          {
+            "id": "RUL",
+            "name": "右肺上野",
+            "text": "双肺上野斑片状、结节状密度增高（公开说明）。"
+          },
+          {
+            "id": "LUL",
+            "name": "左肺上野",
+            "text": "双肺上野斑片状、结节状密度增高（公开说明）。"
+          }
+        ]
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "肺结核影像诊断与鉴别（公开教学资料整理）",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-TB-01",
+            "text": "继发性肺结核好发于上叶尖后段与下叶背段，常表现为多形态并存。"
+          },
+          {
+            "id": "GL-TB-02",
+            "text": "影像提示活动性病变时，应建议痰涂片与分子检测，并按规范转诊。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "部位",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "形态",
+          "covered": true,
+          "matched": [
+            "斑片",
+            "结节"
+          ]
+        },
+        {
+          "label": "活动性提示",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "伴随征象",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "建议",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": 0.2,
+      "missing": [
+        "部位",
+        "活动性提示",
+        "伴随征象",
+        "建议"
+      ],
+      "report_available": true
+    },
+    {
+      "case_id": "CASE-204",
+      "title": "结节病：双肺结节（胸片）",
+      "image": "images/case-204.jpg",
+      "topic_id": "NODULE",
+      "topic_cn": "肺结节 / 粟粒样结节",
+      "report": {
+        "text": "结节病：双肺结节（胸片） 双肺弥漫小结节影，以中上野为著。 双肺弥漫小结节影，以中上野为著。 双肺弥漫小结节影，以中上野为著。 双肺弥漫小结节影，以中上野为著。 双肺弥漫小结节影，以中上野为著。 双肺弥漫小结节影，以中上野为著。",
+        "zones": [
+          {
+            "id": "RUL",
+            "name": "右肺上野",
+            "text": "双肺弥漫小结节影，以中上野为著。"
+          },
+          {
+            "id": "RML",
+            "name": "右肺中野",
+            "text": "双肺弥漫小结节影，以中上野为著。"
+          },
+          {
+            "id": "RLL",
+            "name": "右肺下野",
+            "text": "双肺弥漫小结节影，以中上野为著。"
+          },
+          {
+            "id": "LUL",
+            "name": "左肺上野",
+            "text": "双肺弥漫小结节影，以中上野为著。"
+          },
+          {
+            "id": "LML",
+            "name": "左肺中野",
+            "text": "双肺弥漫小结节影，以中上野为著。"
+          },
+          {
+            "id": "LLL",
+            "name": "左肺下野",
+            "text": "双肺弥漫小结节影，以中上野为著。"
+          }
+        ]
+      },
+      "guideline": {
+        "sources": [
+          {
+            "name": "Fleischner Society 2017 肺结节管理指南",
+            "type": "paraphrase"
+          },
+          {
+            "name": "中国肺结节诊治专家共识（2018）",
+            "type": "paraphrase"
+          }
+        ],
+        "key_points": [
+          {
+            "id": "GL-NOD-01",
+            "text": "结节报告应至少写明大小、密度类型与边缘特征，这三项直接决定后续随访策略。"
+          },
+          {
+            "id": "GL-NOD-02",
+            "text": "直径 6-8 mm 的实性结节，低危人群通常建议 6-12 个月复查胸部 CT。"
+          },
+          {
+            "id": "GL-NOD-03",
+            "text": "持续存在的纯磨玻璃结节需要按随访策略评估，不能仅凭单次影像判断性质。"
+          }
+        ],
+        "required_count": 5
+      },
+      "elements": [
+        {
+          "label": "大小",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "密度类型",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "边缘与形态",
+          "covered": false,
+          "matched": []
+        },
+        {
+          "label": "分布",
+          "covered": true,
+          "matched": [
+            "双肺",
+            "弥漫"
+          ]
+        },
+        {
+          "label": "随访建议",
+          "covered": false,
+          "matched": []
+        }
+      ],
+      "coverage": 0.2,
+      "missing": [
+        "大小",
+        "密度类型",
+        "边缘与形态",
+        "随访建议"
+      ],
+      "report_available": true
+    }
+  ],
+  "summary": {
+    "cases": 21,
+    "mapped": 16,
+    "unmapped": 5,
+    "coverage_cases": 14,
+    "no_report": [
+      "CASE-001",
+      "CASE-002",
+      "CASE-003",
+      "CASE-033",
+      "CASE-034",
+      "CASE-041",
+      "CASE-047"
+    ],
+    "avg_coverage": 0.314,
+    "coverage_note": "平均覆盖率只统计 14/21 例有逐区描述的病例；7 例没有报告文本，不做要素打分。"
+  }
+}

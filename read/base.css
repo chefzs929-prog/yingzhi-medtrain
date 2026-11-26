@@ -1,0 +1,285 @@
+/* RadioCheck · 阅片四页共享设计层
+ * 一个品牌、一套令牌、一个顶栏。四页只保留各自的工作区布局。
+ * 令牌与 medtrain 主应用一致（亮色青绿），影像画布单独保持深色。
+ */
+:root{
+  /* 品牌与底色 */
+  --bg:#f4f7f8;
+  --surface:#ffffff;
+  --surface-2:#f7fafb;
+  --surface-3:#edf2f5;
+  --ink:#0f2029;
+  --ink-2:#2a4350;
+  --muted:#617987;
+  --faint:#8ba0ab;
+  --line:#e2eaee;
+  --line-2:#cdd9df;
+
+  --brand:#0e7c7b;
+  --brand-deep:#0b4f55;
+  --brand-soft:#e3f3f1;
+  --accent:#0e7c7b;
+  --accent-soft:#e3f3f1;
+
+  --ok:#0f7a5a;
+  --ok-soft:#e6f6ef;
+  --warn:#b45309;
+  --warn-soft:#fdf1e3;
+  --danger:#c2413a;
+  --danger-soft:#fdeceb;
+  --info:#2563eb;
+  --info-soft:#e8efff;
+
+  /* 影像画布（深色，只为看图） */
+  --view-bg:#0b1015;
+  --view-ink:#dfe8ef;
+  --view-line:#22303c;
+
+  --r-sm:9px;
+  --r:13px;
+  --r-lg:20px;
+  --shadow:0 1px 2px rgba(16,35,46,.04), 0 8px 24px -20px rgba(16,35,46,.32);
+  --shadow-lg:0 20px 56px -28px rgba(11,79,85,.34);
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --mono:"SFMono-Regular",ui-monospace,Menlo,Consolas,monospace;
+  --bar-h:60px;
+
+  /* 旧类名兼容：四页原有 CSS 继续用这些变量，值已统一为亮色 */
+  --panel:var(--surface);
+  --panel2:var(--surface-2);
+  --panel3:var(--surface-3);
+  --txt:var(--ink);
+  --dim:var(--muted);
+  --dim2:var(--faint);
+  --accent-dim:var(--brand-soft);
+  --blue:var(--info);
+  --serif:"Songti SC","Noto Serif SC",Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:14px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:none}
+img{display:block;max-width:100%}
+h1,h2,h3,h4,p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.spacer{flex:1}
+::selection{background:#cdeae6}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#c3d4dd;border-radius:5px;border:2px solid transparent;background-clip:content-box}
+::-webkit-scrollbar-thumb:hover{background:#a9c0cc;background-clip:content-box}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ---------------- 统一顶栏 ---------------- */
+.bar{
+  height:var(--bar-h);flex:0 0 var(--bar-h);display:flex;align-items:center;gap:16px;
+  padding:0 20px;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid var(--line);position:relative;z-index:30;
+}
+.logo{display:flex;align-items:center;gap:11px;flex:0 0 auto;color:inherit}
+.logo .m{
+  width:32px;height:32px;border-radius:10px;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--brand-deep),var(--brand));color:#fff;
+  font-size:16px;font-weight:700;flex:none;box-shadow:0 2px 6px -2px rgba(11,79,85,.45);
+}
+.logo div{min-width:max-content}
+.logo b{display:block;font-size:14px;font-weight:650;letter-spacing:.01em;color:var(--ink);white-space:nowrap}
+.logo i{
+  display:block;font-family:var(--mono);font-size:8.5px;font-style:normal;
+  color:var(--faint);letter-spacing:.16em;margin-top:1px;white-space:nowrap;
+}
+
+.switch{display:flex;gap:2px;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:10px;padding:3px;margin-left:6px}
+.switch a{
+  height:30px;padding:0 14px;display:inline-flex;align-items:center;border-radius:8px;
+  font-size:13px;color:var(--muted);white-space:nowrap;transition:.16s;
+}
+.switch a:hover{color:var(--brand);background:#fff}
+.switch a.on{background:var(--brand);color:#fff;font-weight:600;box-shadow:0 1px 3px rgba(11,79,85,.22)}
+
+.bar-extra{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.bar .spacer{flex:1}
+.bar-note{font-size:12px;color:var(--faint);white-space:nowrap}
+.bar-user{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+
+/* 命题标识 */
+.quest-badge{
+  display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 12px;
+  border-radius:999px;background:var(--brand-soft);border:1px solid #c6e3de;
+  color:var(--brand-deep);font-size:12px;font-weight:600;white-space:nowrap;
+}
+.quest-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--brand)}
+
+/* ---------------- 通用控件 ---------------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  height:34px;padding:0 14px;border-radius:var(--r-sm);
+  border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);
+  font-size:13px;transition:.16s;white-space:nowrap;
+}
+.btn:hover{border-color:var(--brand);color:var(--brand);background:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.solid{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+.btn.solid:hover{background:var(--brand-deep);border-color:var(--brand-deep);color:#fff}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}
+.btn.ghost:hover{background:var(--surface-2);color:var(--ink)}
+.btn.wide{width:100%}
+.btn.sm{height:28px;padding:0 10px;font-size:12px}
+
+.pill{
+  display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 10px;
+  border-radius:999px;background:var(--surface-2);border:1px solid var(--line);
+  font-size:11.5px;color:var(--muted);white-space:nowrap;
+}
+.pill.on{background:var(--brand-soft);border-color:#c6e3de;color:var(--brand-deep)}
+.badge{
+  display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:6px;
+  font-size:11px;font-weight:600;letter-spacing:.01em;
+  background:var(--surface-3);color:var(--muted);
+}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.warn{background:var(--warn-soft);color:var(--warn)}
+.badge.bad{background:var(--danger-soft);color:var(--danger)}
+.badge.info{background:var(--info-soft);color:var(--info)}
+
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);
+}
+.card > h2{
+  font-size:13px;font-weight:650;letter-spacing:.02em;color:var(--ink-2);
+  padding:14px 16px 10px;border-bottom:1px solid var(--line-2);
+}
+.card > .card-body{padding:14px 16px}
+.muted{color:var(--muted)}
+.faint{color:var(--faint)}
+.note{font-size:12px;color:var(--muted);line-height:1.7}
+
+/* 空态：统一成「下一步做什么」，不再是一屏红叉 */
+.empty-state{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;text-align:center;padding:30px 22px;color:var(--muted);
+}
+.empty-state .ico{
+  width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
+  background:var(--brand-soft);color:var(--brand);font-size:18px;margin-bottom:2px;
+}
+.empty-state b{color:var(--ink-2);font-size:13.5px}
+.empty-state span{font-size:12.5px;line-height:1.7;max-width:40ch}
+
+/* 三步链路：选片 → 定位 → 溯源 */
+.quest-steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.quest-steps .step{
+  display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 10px 0 7px;
+  border-radius:999px;border:1px solid var(--line);background:var(--surface);
+  font-size:12px;color:var(--muted);transition:.2s;
+}
+.quest-steps .step i{
+  width:17px;height:17px;border-radius:50%;display:grid;place-items:center;
+  background:var(--surface-3);color:var(--faint);font-size:10px;font-style:normal;font-weight:700;
+}
+.quest-steps .step.on{border-color:#bfe0da;background:var(--brand-soft);color:var(--brand-deep);font-weight:600}
+.quest-steps .step.on i{background:var(--brand);color:#fff}
+.quest-steps .sep{width:12px;height:1px;background:var(--line-2)}
+
+/* 面板标签 */
+.tabs{display:flex;gap:3px;padding:7px 8px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.tabs button{
+  height:30px;padding:0 12px;border-radius:8px;font-size:12.5px;color:var(--muted);
+  display:inline-flex;align-items:center;gap:5px;transition:.16s;
+}
+.tabs button:hover{background:#fff;color:var(--ink)}
+.tabs button.on{background:var(--surface);color:var(--brand);font-weight:600;box-shadow:0 1px 3px rgba(16,35,46,.09)}
+.tabs button i{font-style:normal;font-size:10.5px;padding:0 5px;border-radius:999px;background:var(--surface-3);color:var(--muted)}
+.tabs button.on i{background:var(--brand-soft);color:var(--brand)}
+
+/* 提示条 */
+.notice{
+  display:flex;gap:9px;align-items:flex-start;padding:11px 13px;border-radius:var(--r-sm);
+  background:var(--warn-soft);border:1px solid #f0dcc0;color:#7c4a12;font-size:12px;line-height:1.7;
+}
+.notice.info{background:var(--info-soft);border-color:#cfdffd;color:#1e4a9c}
+.notice.ok{background:var(--ok-soft);border-color:#c4e6d7;color:#0c5c45}
+
+/* 通用滚动区 */
+.scroll{overflow:auto;min-height:0}
+
+/* 小屏顶栏：只留品牌图标与必要导航，避免角色/课堂按钮被挤成两行 */
+@media (max-width:760px){
+  .bar{padding:0 12px;gap:8px;overflow:hidden}
+  .logo div{display:none}
+  .bar-extra{gap:6px}
+  .bar-extra .quest-badge{display:none}
+}
+
+/* 病例题 / 对比页：中屏先让出顶栏空间，导航已包含同一入口 */
+@media (max-width:1200px){
+  .exam-body .bar-note, .cmp-body .bar-note{display:none}
+  .exam-body .bar-extra .btn, .cmp-body .bar-extra .btn{display:none}
+}
+@media (max-width:760px){
+  .exam-body .bar-extra, .cmp-body .bar-extra{display:none}
+  .switch{max-width:calc(100vw - 92px);overflow-x:auto;scrollbar-width:none}
+  .switch::-webkit-scrollbar{display:none}
+  .switch a{padding:0 9px;font-size:11.5px}
+}
+
+/* 全站非诊断声明：每个页面常驻，不依赖答案内容 */
+.global-disclaimer{
+  display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;
+  padding:5px 16px;background:#fdf9f1;border-bottom:1px solid #f2e8d8;
+  color:#8a6a3d;font-size:11px;line-height:1.5;text-align:center;letter-spacing:.01em;
+}
+.global-disclaimer b{font-weight:700;color:#7c5a24}
+.global-disclaimer span{color:#96764a}
+.upload-warn{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:#a35a1f}
+
+/* 轻量 Agent 桥：只在本地服务可用时出现 */
+.qa-agent{margin-top:8px}
+.agent-panel{margin-top:8px;border:1px solid var(--line);border-radius:11px;background:#fbfdfd;padding:11px 12px;max-height:380px;overflow:auto}
+.agent-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}
+.agent-head b{font-size:12px;color:var(--brand-deep)}
+.agent-badge{font-size:10.5px;padding:2px 8px;border-radius:999px;background:var(--brand-soft);color:var(--brand-deep)}
+.agent-badge.ok{background:#e8f7f1;color:#0b6b52}
+.agent-badge.warn{background:var(--warn-soft);color:var(--warn)}
+.agent-badge.err{background:#fdecec;color:#a12b2b}
+.agent-text{font-size:12.5px;line-height:1.7;color:var(--ink-2);white-space:pre-wrap}
+.agent-text:empty{display:none}
+.agent-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+.agent-toggle{font:inherit;font-size:11.5px;color:var(--brand);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+.agent-toggle:hover{color:var(--brand-deep)}
+.agent-note{font-size:10.5px;color:var(--faint)}
+.agent-detail{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line)}
+.agent-cites{display:grid;gap:6px}
+.agent-cite{border:1px solid var(--line);border-radius:8px;background:#fff;padding:7px 9px;font-size:11px;line-height:1.55}
+.agent-cite b{color:var(--brand-deep);margin-right:5px}
+.agent-cite span{color:var(--muted)}
+.agent-cite a{color:var(--brand);margin-left:6px}
+.agent-cite.bad{border-color:#e7b4b4;background:#fff7f7}
+.agent-cite em{display:block;color:#a12b2b;font-style:normal;margin-top:2px}
+.agent-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:10.5px;color:var(--faint)}
+.agent-tech{margin-top:6px;font-size:10.5px;color:var(--faint)}
+.agent-tech summary{cursor:pointer;color:var(--brand);list-style:none}
+.agent-tech summary::-webkit-details-marker{display:none}
+.agent-tech summary::before{content:"▸ "}
+.agent-tech[open] summary::before{content:"▾ "}
+.agent-tech p{margin:3px 0;line-height:1.6}
+.agent-tech code{font-size:10px;word-break:break-all}
+.agent-cite-id{font-size:10px;color:var(--faint);background:var(--surface-2);border-radius:4px;padding:1px 5px;margin-left:4px}
+.agent-disclaimer{margin-top:7px;font-size:10.5px;color:var(--faint)}
+.agent-empty{font-size:11px;color:var(--warn)}
+
+@media (max-width:760px){
+  .global-disclaimer{font-size:10px;padding:5px 10px}
+  .global-disclaimer span{display:none}
+}

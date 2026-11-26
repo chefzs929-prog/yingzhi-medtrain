@@ -1,0 +1,1003 @@
+{
+ "version": 1,
+ "title": "执业医师实践技能 · 胸部 X 线病例题",
+ "subtitle": "按公开考试大纲的胸部考点自编，先主诉、后阅片",
+ "scope": "临床执业医师 / 执业助理医师实践技能 · 辅助检查 · X 线平片影像诊断（胸部）",
+ "disclaimer": "本站为医学影像教学演示，题目按公开大纲与公开例题的题型自编，不是官方真题原文，不构成诊断、分期或治疗建议。正式教学前须由医学人员逐条审核。",
+ "question_basis": "题目结构参考公开大纲与公开例题的“病史 + 胸片 → 影像诊断”形式；题干、选项与解析为本站自编，不是官方真题原文，不复制受版权保护的题库原文。",
+ "syllabus": [
+  {
+   "id": "normal",
+   "label": "正常胸片",
+   "group": "肺与胸膜",
+   "case_id": "EX-01"
+  },
+  {
+   "id": "pneumonia",
+   "label": "肺炎",
+   "group": "肺与胸膜",
+   "case_id": "EX-02"
+  },
+  {
+   "id": "tb",
+   "label": "浸润性肺结核",
+   "group": "肺与胸膜",
+   "case_id": "EX-03"
+  },
+  {
+   "id": "cancer",
+   "label": "肺癌",
+   "group": "肺与胸膜",
+   "case_id": "EX-04"
+  },
+  {
+   "id": "pneumothorax",
+   "label": "气胸",
+   "group": "肺与胸膜",
+   "case_id": "EX-05"
+  },
+  {
+   "id": "effusion",
+   "label": "胸腔积液",
+   "group": "肺与胸膜",
+   "case_id": "EX-06"
+  },
+  {
+   "id": "rib_fracture",
+   "label": "肋骨骨折",
+   "group": "骨骼",
+   "case_id": "EX-07"
+  },
+  {
+   "id": "heart_mitral",
+   "label": "心脏增大 · 二尖瓣型",
+   "group": "心脏",
+   "case_id": "EX-08"
+  },
+  {
+   "id": "heart_aortic",
+   "label": "心脏增大 · 主动脉型",
+   "group": "心脏",
+   "case_id": "EX-09"
+  },
+  {
+   "id": "heart_general",
+   "label": "心脏增大 · 普大型",
+   "group": "心脏",
+   "case_id": "EX-10"
+  }
+ ],
+ "sources": [
+  {
+   "id": "SRC-NMEC-2025",
+   "title": "2025 年版医师资格考试指导用书发布",
+   "publisher": "国家医学考试中心",
+   "url": "https://www.nmec.org.cn/Pages/ArticleInfo-13-11850.html",
+   "note": "国家医学考试中心组织编写；实践技能指导用书强调临床思维与辅助检查结果判读。"
+  },
+  {
+   "id": "SRC-SYLLABUS",
+   "title": "临床执业医师技能考试 · 辅助检查考试大纲（X 线平片影像诊断）",
+   "publisher": "医学教育网（公开转载）",
+   "url": "https://m.med66.com/zhiyeyishijineng/dagang/zy2014050718513985098652.shtml",
+   "note": "公开转载列出正常胸片、肺炎、浸润性肺结核、肺癌、心脏增大（二尖瓣型/主动脉型/普大型）、气胸、胸腔积液、肋骨骨折。"
+  },
+  {
+   "id": "SRC-EXAM-2025",
+   "title": "2025 年临床类别实践技能第一考站：检查结果判读",
+   "publisher": "公开考试信息汇总",
+   "url": "http://mp.weixin.qq.com/s?__biz=Mzg4Nzg5MDY0OA==&mid=2247557732&idx=1&sn=dc4d6e6a2b28b9cc784e10b02c58323c",
+   "note": "公开汇总称影像诊断、心电图等整合为“检查结果判读”，更强调结合临床资料综合判断；具体以官方考生指导手册为准。"
+  },
+  {
+   "id": "SRC-COMMONS",
+   "title": "Wikimedia Commons 影像素材",
+   "publisher": "Wikimedia Commons",
+   "url": "https://commons.wikimedia.org/",
+   "note": "每例影像的原始页面、作者与许可见文末“影像署名”；仅使用 CC0 / CC BY / CC BY-SA / 公有领域素材。"
+  },
+  {
+   "id": "SRC-MED66-DEMO",
+   "title": "临床执业医师实践技能（公开课程页）· X 线平片影像诊断例题",
+   "publisher": "医学教育网",
+   "url": "https://www.med66.com/demo/linchuang/c709962",
+   "note": "公开课程页含“病史 + 胸片 → 诊断”的例题与读片顺序；本站只参考题型，不复制题目。"
+  },
+  {
+   "id": "SRC-PUBLIC-QB",
+   "title": "临床医师及助理医师技能考试影像学检查（公开课件）",
+   "publisher": "公开文档平台",
+   "url": "https://wenku.suwen.cn/d-481401.html",
+   "note": "公开课件列出胸部 X 线考试范围与例题；仅提供链接，不转载受版权保护的题目原文。"
+  }
+ ],
+ "cases": [
+  {
+   "id": "EX-01",
+   "topic_id": "normal",
+   "topic": "正常胸片",
+   "diagnosis": "正常胸片",
+   "group": "肺与胸膜",
+   "difficulty": "基础",
+   "image_src": "kb/images/exam_src/normal.jpg",
+   "image_alt": "正常后前位胸片",
+   "pose": "PA",
+   "image_note": "公开来源标注为正常后前位胸片；本页仅用于解剖对照。",
+   "source": {
+    "title": "Normal posteroanterior (PA) chest radiograph",
+    "artist": "Mikael Häggström",
+    "license": "CC0",
+    "url": "https://commons.wikimedia.org/wiki/File:Normal_posteroanterior_(PA)_chest_radiograph_(X-ray).jpg"
+   },
+   "vignette": {
+    "chief": "入职体检，无不适。",
+    "present": "男性，28 岁。单位入职体检，无咳嗽、发热、胸痛、呼吸困难。",
+    "history": "既往体健，无吸烟史，无粉尘接触史。",
+    "exam": "T 36.5℃，双肺呼吸音清，未闻及干湿啰音；心界不大。",
+    "labs": "血常规、CRP 未见异常。"
+   },
+   "question": "结合病史与胸片，最可能的影像诊断是？",
+   "options": [
+    "正常胸片",
+    "大叶性肺炎",
+    "浸润性肺结核",
+    "气胸",
+    "胸腔积液"
+   ],
+   "answer": 0,
+   "explain": "胸廓对称，气管居中；双肺野透亮度均匀，肺纹理走行规则；双侧肺门不大；心影大小形态正常，心胸比小于 0.5；双侧膈面光滑，肋膈角锐利。结合无呼吸道症状与正常查体，符合正常胸片。",
+   "signs": [
+    {
+     "label": "肺野",
+     "detail": "双肺透亮度对称，肺纹理自肺门向外周自然分支，未见局灶性密度增高。"
+    },
+    {
+     "label": "心影",
+     "detail": "心胸比 < 0.5，右心缘与左心缘轮廓正常，主动脉结不宽。"
+    },
+    {
+     "label": "膈与胸膜",
+     "detail": "双侧膈面光滑，肋膈角锐利，无胸腔积液征象。"
+    },
+    {
+     "label": "骨骼与软组织",
+     "detail": "肋骨走行自然，未见骨皮质中断；乳房影、胸大肌影属正常软组织影。"
+    }
+   ],
+   "pitfall": "吸气不足、体位旋转或乳房影/胸大肌影可造成“假性异常”；先看片子质量，再下结论。",
+   "exam_tip": "正常胸片是排除法的基准：肺纹理对称、肋膈角锐利、心胸比 < 0.5。",
+   "compare": [
+    "EX-05",
+    "EX-06"
+   ],
+   "image": "images/exam/ex-01.jpg",
+   "image_width": 960,
+   "image_height": 1098,
+   "sha256": "fd8128917d0a720b9851a9c2be4f86a4fdd5fb41d1f296bc39ea6578ae1b3daa"
+  },
+  {
+   "id": "EX-02",
+   "topic_id": "pneumonia",
+   "topic": "肺炎",
+   "diagnosis": "大叶性肺炎（右肺）",
+   "group": "肺与胸膜",
+   "difficulty": "基础",
+   "image_src": "kb/images/exam_src/pneumonia.jpg",
+   "image_alt": "右肺中下野大片实变，原图红箭头指向病灶边缘",
+   "pose": "PA",
+   "image_note": "原图带红箭头，为公开来源的教学标注，指向右肺病灶边缘；箭头不代表诊断。",
+   "source": {
+    "title": "X-ray of lobar pneumonia",
+    "artist": "Mikael Häggström",
+    "license": "CC0",
+    "url": "https://commons.wikimedia.org/wiki/File:X-ray_of_lobar_pneumonia.jpg"
+   },
+   "vignette": {
+    "chief": "寒战、高热 3 天，咳嗽、咳铁锈色痰。",
+    "present": "男性，32 岁。淋雨后出现寒战、高热，体温最高 39.2℃，伴右侧胸痛、咳嗽，咳铁锈色痰。",
+    "history": "既往体健，无结核病史，无长期吸烟史。",
+    "exam": "T 39.0℃，P 108 次/分，R 24 次/分；右下肺叩诊浊音，可闻及支气管呼吸音及湿啰音。",
+    "labs": "WBC 15.6×10⁹/L，中性粒细胞 86%，CRP 120 mg/L。"
+   },
+   "question": "结合病史与胸片，最可能的影像诊断是？",
+   "options": [
+    "正常胸片",
+    "大叶性肺炎",
+    "浸润性肺结核",
+    "周围型肺癌",
+    "胸腔积液"
+   ],
+   "answer": 1,
+   "explain": "右肺中下野可见大片状密度增高影，边缘模糊，病变按肺叶/肺段分布；结合急性高热、铁锈色痰、右下肺实变体征与炎症指标升高，符合大叶性肺炎。",
+   "signs": [
+    {
+     "label": "部位与形态",
+     "detail": "右肺中下野大片实变，密度较均匀，边界受叶间裂限制。"
+    },
+    {
+     "label": "空气支气管征",
+     "detail": "实变区内如见低密度支气管影，提示肺泡实变而非胸膜病变。"
+    },
+    {
+     "label": "胸膜",
+     "detail": "右侧肋膈角显示欠清；若出现明确变钝或半月征，需考虑肺炎旁积液，必要时结合侧位片或超声。"
+    }
+   ],
+   "pitfall": "只看到“一片白”就选肺炎是常见失分点：结核好发上叶尖后段、多形态；肺癌多为肿块伴毛刺/分叶。",
+   "exam_tip": "急性高热 + 铁锈色痰 + 按肺叶分布的大片实变 = 大叶性肺炎的典型组合。",
+   "compare": [
+    "EX-03",
+    "EX-04",
+    "EX-06"
+   ],
+   "image": "images/exam/ex-02.jpg",
+   "image_width": 960,
+   "image_height": 763,
+   "sha256": "eb6addfd28607e1a08cc10c8a972c7e2fabeb3a3202b8e765e83bcf5d1a3b774"
+  },
+  {
+   "id": "EX-03",
+   "topic_id": "tb",
+   "topic": "浸润性肺结核",
+   "diagnosis": "浸润性肺结核（双上肺）",
+   "group": "肺与胸膜",
+   "difficulty": "进阶",
+   "image_src": "kb/images/exam_src/tb.png",
+   "image_alt": "双肺上中野斑片、结节及索条影，多形态共存",
+   "pose": "PA",
+   "image_note": "公开来源标注为肺结核；影像以双上肺多形态病灶为主。",
+   "source": {
+    "title": "PulmonaryTBCXR",
+    "artist": "James Heilman, MD",
+    "license": "CC BY-SA 4.0",
+    "url": "https://commons.wikimedia.org/wiki/File:PulmonaryTBCXR.png"
+   },
+   "vignette": {
+    "chief": "低热、盗汗 2 个月，咳嗽伴少量咯血 1 周。",
+    "present": "女性，24 岁。近 2 个月午后低热，体温 37.5～38.0℃，夜间盗汗、乏力，体重下降 3 kg；1 周来咳嗽，痰中带血。",
+    "history": "否认结核接触史；无吸烟史。",
+    "exam": "T 37.8℃，消瘦；左上肺呼吸音略低，未闻及明显湿啰音。",
+    "labs": "ESR 48 mm/h，CRP 18 mg/L；PPD 强阳性，痰抗酸杆菌涂片待回报。"
+   },
+   "question": "结合病史与胸片，最可能的影像诊断是？",
+   "options": [
+    "大叶性肺炎",
+    "中央型肺癌",
+    "浸润性肺结核",
+    "正常胸片",
+    "气胸"
+   ],
+   "answer": 2,
+   "explain": "双肺上中野可见斑片、结节及索条状密度增高影，多形态病灶共存，以右上肺为著；结合青年女性、低热盗汗、咯血与 ESR 增快、PPD 强阳性，符合浸润性肺结核。",
+   "signs": [
+    {
+     "label": "好发部位",
+     "detail": "上叶尖后段、下叶背段是继发性肺结核的典型部位。"
+    },
+    {
+     "label": "多形态",
+     "detail": "渗出斑片、结节、纤维索条、钙化可同时存在，常伴卫星灶。"
+    },
+    {
+     "label": "空洞",
+     "detail": "如见薄壁空洞、内壁较光滑、无明显液平，更支持结核；厚壁偏心空洞需警惕肺癌。"
+    }
+   ],
+   "pitfall": "结核与肺炎都可发热咳嗽；结核病程长、好发上叶尖后段、多形态，肺炎多急性高热、按肺叶分布。",
+   "exam_tip": "“上叶尖后段 + 多形态 + 卫星灶”是浸润性肺结核的阅片关键词。",
+   "compare": [
+    "EX-02",
+    "EX-04"
+   ],
+   "image": "images/exam/ex-03.jpg",
+   "image_width": 831,
+   "image_height": 850,
+   "sha256": "f12b6beb83325d641ae606ecbb25635a00e45c1cb7991806db107a661a525cf6"
+  },
+  {
+   "id": "EX-04",
+   "topic_id": "cancer",
+   "topic": "肺癌",
+   "diagnosis": "肺癌（左肺门旁肿块）",
+   "group": "肺与胸膜",
+   "difficulty": "进阶",
+   "image_src": "kb/images/exam_src/cancer.jpg",
+   "image_alt": "左肺门旁不规则团块影，伴左上肺体积缩小",
+   "pose": "PA",
+   "image_note": "公开来源标注为肺癌胸片；肿块位于左肺门旁，伴阻塞性改变。",
+   "source": {
+    "title": "Lung Cancer on Chest X-Ray",
+    "artist": "James Heilman, MD",
+    "license": "CC BY-SA 4.0",
+    "url": "https://commons.wikimedia.org/wiki/File:Lung_Cancer_on_Chest_X-Ray.jpg"
+   },
+   "vignette": {
+    "chief": "刺激性干咳 3 个月，痰中带血 2 周。",
+    "present": "男性，67 岁。吸烟 40 年，每天 20 支。近 3 个月刺激性干咳，近 2 周痰中带血，伴消瘦、乏力，体重下降 5 kg。",
+    "history": "高血压 10 年；否认结核病史。",
+    "exam": "消瘦体型；左上肺呼吸音减低，未闻及明显湿啰音；杵状指可疑。",
+    "labs": "Hb 108 g/L；肿瘤标志物待查；痰细胞学待回报。"
+   },
+   "question": "结合病史与胸片，最可能的影像诊断是？",
+   "options": [
+    "大叶性肺炎",
+    "浸润性肺结核",
+    "胸腔积液",
+    "肺癌",
+    "正常胸片"
+   ],
+   "answer": 3,
+   "explain": "左肺门旁可见不规则团块状密度增高影，边缘毛糙，伴左上肺体积缩小、肺门结构不清；结合老年、长期吸烟、刺激性干咳、痰中带血与消瘦，首先考虑肺癌。",
+   "signs": [
+    {
+     "label": "肿块形态",
+     "detail": "肺门旁不规则肿块，边缘可见分叶、毛刺；周围型肺癌多位于肺野中外带。"
+    },
+    {
+     "label": "阻塞性改变",
+     "detail": "中央型肺癌可致阻塞性肺炎、肺不张；右上肺不张合并肺门肿块可呈横 S 征。"
+    },
+    {
+     "label": "胸膜与纵隔",
+     "detail": "注意胸腔积液、纵隔淋巴结增大及胸膜牵拉；本图左侧肋膈角尚清。"
+    }
+   ],
+   "pitfall": "老年吸烟者痰中带血，不能只满足于“肺炎”；肺炎抗感染后应复查影像，吸收不全必须排除肺癌。",
+   "exam_tip": "年龄 + 吸烟史 + 痰中带血 + 肺门肿块/毛刺分叶，是肺癌题最常用的组合线索。",
+   "compare": [
+    "EX-02",
+    "EX-03"
+   ],
+   "image": "images/exam/ex-04.jpg",
+   "image_width": 968,
+   "image_height": 940,
+   "sha256": "6e73696ff0bd000aa8d1b52f11d1bc2c9b12aec15c2d8afa1963b410436f424e"
+  },
+  {
+   "id": "EX-05",
+   "topic_id": "pneumothorax",
+   "topic": "气胸",
+   "diagnosis": "右侧气胸（大量）",
+   "group": "肺与胸膜",
+   "difficulty": "基础",
+   "image_src": "kb/images/exam_src/pneumothorax.png",
+   "image_alt": "右侧胸廓外带无肺纹理透亮区，可见压缩肺边缘",
+   "pose": "PA",
+   "image_note": "公开来源标注为右侧气胸；图像左侧为患者右侧。",
+   "source": {
+    "title": "Pneumothorax on chest x-ray (right side)",
+    "artist": "Hellerhoff",
+    "license": "CC BY-SA 3.0",
+    "url": "https://commons.wikimedia.org/wiki/File:09-01-Pneumothorax.png"
+   },
+   "vignette": {
+    "chief": "突发右侧胸痛、呼吸困难 2 小时。",
+    "present": "男性，22 岁，瘦高体型。搬重物后突发右侧胸痛，呈针刺样，随后出现呼吸困难，活动后加重。",
+    "history": "既往体健，无肺部疾病史；吸烟 3 年。",
+    "exam": "R 28 次/分，SpO₂ 93%（未吸氧）；右侧胸廓饱满，叩诊鼓音，右肺呼吸音消失，气管向左移位。",
+    "labs": "血气：PaO₂ 68 mmHg，PaCO₂ 34 mmHg。"
+   },
+   "question": "结合病史与胸片，最可能的影像诊断是？",
+   "options": [
+    "正常胸片",
+    "右侧气胸",
+    "右侧胸腔积液",
+    "大叶性肺炎",
+    "肋骨骨折"
+   ],
+   "answer": 1,
+   "explain": "右侧胸廓外带可见大片无肺纹理的透亮区，内侧可见被压缩肺的边缘（肺线），纵隔向左侧（健侧）移位；结合突发胸痛、呼吸困难、患侧呼吸音消失与叩诊鼓音，符合右侧气胸。",
+   "signs": [
+    {
+     "label": "无肺纹理区",
+     "detail": "胸膜腔内气体使患侧外带呈明显透亮区，肺纹理不能到达胸壁。"
+    },
+    {
+     "label": "肺线",
+     "detail": "被压缩肺的边缘呈细线状，是气胸的直接征象；少量气胸重点看肺尖。"
+    },
+    {
+     "label": "纵隔移位",
+     "detail": "张力性气胸可出现纵隔向健侧移位、肋间隙增宽、膈肌下移，属急症。"
+    }
+   ],
+   "pitfall": "与肺大疱鉴别：肺大疱有薄壁、内部无肺纹理但周围仍有肺组织；气胸是胸膜腔积气，肺组织被压缩。",
+   "exam_tip": "“漆黑无纹 + 肺线 + 纵隔向健侧移位”是气胸的三件套。",
+   "compare": [
+    "EX-01",
+    "EX-06"
+   ],
+   "image": "images/exam/ex-05.jpg",
+   "image_width": 952,
+   "image_height": 956,
+   "sha256": "0b21b4b11451bde6a9b1d71cd83ad58855d1a46bae4103b309f2a3ca9470feaf"
+  },
+  {
+   "id": "EX-06",
+   "topic_id": "effusion",
+   "topic": "胸腔积液",
+   "diagnosis": "左侧胸腔积液（大量）",
+   "group": "肺与胸膜",
+   "difficulty": "基础",
+   "image_src": "kb/images/exam_src/effusion.jpg",
+   "image_alt": "左侧中下肺野大片致密影，上缘呈外高内低弧形",
+   "pose": "PA",
+   "image_note": "公开来源标注为左侧大量胸腔积液；本站已去除原图黑色圆圈标注，保留影像本体。",
+   "source": {
+    "title": "A large left sided pleural effusion as seen on an upright chest X-ray",
+    "artist": "James Heilman, MD",
+    "license": "CC BY-SA 3.0",
+    "url": "https://commons.wikimedia.org/wiki/File:Effusionhalf.PNG"
+   },
+   "vignette": {
+    "chief": "左侧胸痛、气短 2 周，加重 3 天。",
+    "present": "女性，58 岁。2 周前出现左侧胸痛，伴活动后气短，近 3 天平卧时加重，需垫高枕头。",
+    "history": "类风湿关节炎 8 年；否认结核病史。",
+    "exam": "T 37.4℃；左下肺叩诊浊音，呼吸音明显减低，语音震颤减弱；气管向右移位。",
+    "labs": "ESR 52 mm/h，CRP 26 mg/L；胸水检查待回报。"
+   },
+   "question": "结合病史与胸片，最可能的影像诊断是？",
+   "options": [
+    "正常胸片",
+    "大叶性肺炎",
+    "气胸",
+    "肺癌",
+    "左侧胸腔积液"
+   ],
+   "answer": 4,
+   "explain": "左侧中下肺野可见大片均匀致密影，上缘呈外高内低的弧形（半月征），左侧肋膈角消失，纵隔向右侧（健侧）移位；结合患侧叩浊、呼吸音减低，符合左侧胸腔积液。",
+   "signs": [
+    {
+     "label": "半月征",
+     "detail": "立位胸片上，积液上缘呈外高内低的弧形，是游离性胸腔积液的典型表现。"
+    },
+    {
+     "label": "肋膈角",
+     "detail": "少量积液最早表现为肋膈角变钝；侧位片后肋膈角更敏感。"
+    },
+    {
+     "label": "纵隔移位",
+     "detail": "中大量积液可将纵隔推向健侧；若纵隔向患侧移位，需考虑肺不张或胸膜固定。"
+    }
+   ],
+   "pitfall": "与下叶肺炎鉴别：肺炎多按肺叶分布、可见空气支气管征、纵隔不移位；积液为均匀致密影、半月征、肋膈角消失。",
+   "exam_tip": "“外高内低弧形 + 肋膈角消失 + 纵隔向健侧”是胸腔积液的阅片关键词。",
+   "compare": [
+    "EX-02",
+    "EX-05"
+   ],
+   "image": "images/exam/ex-06.jpg",
+   "image_width": 1030,
+   "image_height": 871,
+   "sha256": "50e1422b102f99d9215065dd9ed1ff8b25e6dc820445f1279f59a7cfa9c9a713"
+  },
+  {
+   "id": "EX-07",
+   "topic_id": "rib_fracture",
+   "topic": "肋骨骨折",
+   "diagnosis": "左侧第 5、6 肋骨陈旧性骨折",
+   "group": "骨骼",
+   "difficulty": "进阶",
+   "image_src": "kb/images/exam_src/rib.jpg",
+   "image_alt": "左侧第 5、6 肋骨局部骨皮质不连续，原图白线为来源标注",
+   "pose": "PA",
+   "image_note": "公开来源标注为左侧第 5、6 肋骨陈旧性骨折；原图白线为来源自带标注。急性期表现见考点卡。",
+   "source": {
+    "title": "Chest X-ray of a normal lung with old left 5th and 6th ribs fractures",
+    "artist": "Cerevisae",
+    "license": "CC BY-SA 4.0",
+    "url": "https://commons.wikimedia.org/wiki/File:Chest_X-ray_of_a_normal_lung_with_old_left_5th_and_6th_ribs_fractures.jpg"
+   },
+   "vignette": {
+    "chief": "左胸外伤后 3 个月，局部压痛。",
+    "present": "男性，54 岁。3 个月前跌倒撞伤左胸，当时未就诊；近来左侧胸壁仍有局部压痛，深呼吸时明显。",
+    "history": "否认结核、肿瘤病史；无长期激素使用史。",
+    "exam": "左侧第 5、6 肋腋段局部压痛，可触及轻度骨性隆起；双肺呼吸音清。",
+    "labs": "血常规、CRP 未见明显异常。"
+   },
+   "question": "结合病史与胸片，最可能的影像诊断是？",
+   "options": [
+    "正常胸片",
+    "气胸",
+    "左侧第 5、6 肋骨骨折",
+    "胸腔积液",
+    "肺炎"
+   ],
+   "answer": 2,
+   "explain": "左侧第 5、6 肋骨腋段可见骨皮质连续性中断，断端周围有骨痂/硬化，提示陈旧性骨折；双肺未见明确气胸或胸腔积液。结合 3 个月前外伤史与局部压痛，符合左侧第 5、6 肋骨陈旧性骨折。",
+   "signs": [
+    {
+     "label": "骨皮质中断",
+     "detail": "急性期可见骨折线、断端错位；陈旧期可见骨痂形成、断端硬化。"
+    },
+    {
+     "label": "好发部位",
+     "detail": "第 4～7 肋骨腋段最易骨折；腋段在正位片上常需局部放大观察。"
+    },
+    {
+     "label": "合并伤",
+     "detail": "多根多处骨折可出现连枷胸；下胸肋骨骨折需警惕肝、脾损伤；同时注意气胸、血胸。"
+    }
+   ],
+   "pitfall": "肋骨骨折容易漏诊：不要只看肺野，要沿每根肋骨从后肋到前肋连续追踪；腋段、膈下肋骨和边缘区域是漏诊高发区。",
+   "exam_tip": "外伤史 + 局部压痛 + 骨皮质中断/骨痂 = 肋骨骨折；同时必须扫一遍有无气胸、胸腔积液。",
+   "compare": [
+    "EX-01",
+    "EX-05"
+   ],
+   "image": "images/exam/ex-07.jpg",
+   "image_width": 1600,
+   "image_height": 1200,
+   "sha256": "d5ec4ba12899a9dee261b832fc7250f8a431440e63de14b972edcc21f1680ad2"
+  },
+  {
+   "id": "EX-08",
+   "topic_id": "heart_mitral",
+   "topic": "心脏增大 · 二尖瓣型",
+   "diagnosis": "二尖瓣型心（风湿性心脏病可能）",
+   "group": "心脏",
+   "difficulty": "进阶",
+   "image_src": "kb/images/exam_src/mitral.jpg",
+   "image_alt": "心影呈梨形，左心缘中段肺动脉段膨隆，主动脉结较小",
+   "pose": "PA",
+   "image_note": "公开来源标注为二尖瓣瓣膜病；心影增大，肺动脉段突出。",
+   "source": {
+    "title": "Enfermedad Mitral",
+    "artist": "SCiardullo",
+    "license": "CC BY-SA 3.0",
+    "url": "https://commons.wikimedia.org/wiki/File:Enfermedad_Mitral.JPG"
+   },
+   "vignette": {
+    "chief": "劳力性心悸、气短 5 年，加重伴双下肢水肿 1 个月。",
+    "present": "女性，42 岁。近 5 年活动后心悸、气短，休息可缓解；近 1 个月症状加重，夜间不能平卧，双下肢水肿。",
+    "history": "幼年曾患“风湿热”；否认高血压、糖尿病。",
+    "exam": "双颊紫红；心尖区可闻及舒张期隆隆样杂音，第一心音亢进，P2 亢进；双下肢凹陷性水肿。",
+    "labs": "BNP 升高；超声心动图提示二尖瓣狭窄。"
+   },
+   "question": "结合病史与胸片，最符合的心脏形态是？",
+   "options": [
+    "正常心影",
+    "二尖瓣型心",
+    "主动脉型心",
+    "普大型心",
+    "心包积液"
+   ],
+   "answer": 1,
+   "explain": "心影增大，左心缘中段（肺动脉段）膨隆，主动脉结较小，心影呈梨形；结合风湿热史、心尖区舒张期隆隆样杂音与超声提示二尖瓣狭窄，符合二尖瓣型心。",
+   "signs": [
+    {
+     "label": "梨形心",
+     "detail": "肺动脉段膨隆 + 主动脉结较小，心腰部饱满，整体呈梨形。"
+    },
+    {
+     "label": "左心房增大",
+     "detail": "可见双房影、左主支气管抬高；食管钡餐可见食管压迹。"
+    },
+    {
+     "label": "肺循环",
+     "detail": "二尖瓣狭窄常伴肺静脉高压、肺淤血，可见肺纹理增多、Kerley B 线。"
+    }
+   ],
+   "pitfall": "二尖瓣型心不等同于二尖瓣狭窄：房间隔缺损、肺动脉高压等也可表现为肺动脉段突出；必须结合杂音与超声。",
+   "exam_tip": "“梨形心 + 肺动脉段膨隆 + 主动脉结小”是二尖瓣型的形态记忆点。",
+   "compare": [
+    "EX-09",
+    "EX-10"
+   ],
+   "image": "images/exam/ex-08.jpg",
+   "image_width": 1600,
+   "image_height": 1338,
+   "sha256": "fec00a990806a144b36c00a2620b065529c86f34639cf87e03a3591d0c689587"
+  },
+  {
+   "id": "EX-09",
+   "topic_id": "heart_aortic",
+   "topic": "心脏增大 · 主动脉型",
+   "diagnosis": "主动脉型心（高血压性心脏病可能）",
+   "group": "心脏",
+   "difficulty": "进阶",
+   "image_src": "kb/images/exam_src/aortic.jpg",
+   "image_alt": "心影向左下扩大，主动脉结突出，肺动脉段凹陷，呈靴形",
+   "pose": "PA",
+   "image_note": "公开来源标注为主动脉瓣狭窄的主动脉型心；本页用于形态教学。",
+   "source": {
+    "title": "Aortale Herzkonfiguration bei Aortenstenose",
+    "artist": "Hellerhoff",
+    "license": "CC BY-SA 4.0",
+    "url": "https://commons.wikimedia.org/wiki/File:Aortale_Herzkonfiguration_bei_Aortenstenose_75W_-_CR_pa_-_001.jpg"
+   },
+   "vignette": {
+    "chief": "活动后胸闷、气短 3 个月。",
+    "present": "男性，68 岁。高血压 20 年，血压控制不佳；近 3 个月活动后胸闷、气短，偶有头晕。",
+    "history": "吸烟 30 年；否认风湿热史。",
+    "exam": "BP 168/96 mmHg；心尖搏动向左下移位，主动脉瓣区可闻及收缩期喷射样杂音，A2 亢进。",
+    "labs": "超声心动图提示左心室肥厚、主动脉瓣增厚。"
+   },
+   "question": "结合病史与胸片，最符合的心脏形态是？",
+   "options": [
+    "二尖瓣型心",
+    "普大型心",
+    "主动脉型心",
+    "正常心影",
+    "心包积液"
+   ],
+   "answer": 2,
+   "explain": "心影向左下扩大，心尖圆钝下移，主动脉结突出，肺动脉段凹陷，呈靴形；结合长期高血压、左心室肥厚与主动脉瓣区杂音，符合主动脉型心。",
+   "signs": [
+    {
+     "label": "靴形心",
+     "detail": "左心室增大使心尖向左下移位，主动脉结突出，肺动脉段相对凹陷。"
+    },
+    {
+     "label": "主动脉结",
+     "detail": "主动脉结突出、增宽，可见于高血压、主动脉瓣病变或主动脉扩张。"
+    },
+    {
+     "label": "左心室增大",
+     "detail": "心影向左下扩大，心尖圆钝；需结合心电图、超声判断肥厚程度。"
+    }
+   ],
+   "pitfall": "不要只背“靴形心”三个字：主动脉型心可见于高血压心脏病、主动脉瓣狭窄/关闭不全等，必须结合病史与杂音。",
+   "exam_tip": "“靴形心 + 主动脉结突出 + 肺动脉段凹陷”是主动脉型的形态记忆点。",
+   "compare": [
+    "EX-08",
+    "EX-10"
+   ],
+   "image": "images/exam/ex-09.jpg",
+   "image_width": 1487,
+   "image_height": 1531,
+   "sha256": "8c1d39c06f6b649aafe90d36ddd5363ab44125b2ad10408fba9392084120e425"
+  },
+  {
+   "id": "EX-10",
+   "topic_id": "heart_general",
+   "topic": "心脏增大 · 普大型",
+   "diagnosis": "普大型心（扩张型心肌病可能）",
+   "group": "心脏",
+   "difficulty": "进阶",
+   "image_src": "kb/images/exam_src/general.jpg",
+   "image_alt": "心影向两侧明显扩大，呈普大型/球形",
+   "pose": "PA",
+   "image_note": "公开来源标注为心脏明显增大；本页用于普大型心形态教学。",
+   "source": {
+    "title": "Rad 1300124",
+    "artist": "Nevit Dilmen",
+    "license": "CC BY-SA 3.0",
+    "url": "https://commons.wikimedia.org/wiki/File:Rad_1300124.JPG"
+   },
+   "vignette": {
+    "chief": "心悸、气短 2 周，夜间不能平卧。",
+    "present": "男性，55 岁。近 2 周心悸、气短，活动耐量明显下降，夜间需高枕卧位，伴双下肢水肿。",
+    "history": "否认高血压、瓣膜病；近期无发热。",
+    "exam": "BP 102/68 mmHg；心界向两侧扩大，心音低钝，可闻及奔马律；双下肺湿啰音，肝大，双下肢水肿。",
+    "labs": "BNP 明显升高；超声心动图提示全心扩大、射血分数降低。"
+   },
+   "question": "结合病史与胸片，最符合的心脏形态是？",
+   "options": [
+    "普大型心",
+    "二尖瓣型心",
+    "主动脉型心",
+    "正常心影",
+    "气胸"
+   ],
+   "answer": 0,
+   "explain": "心影向两侧明显扩大，心胸比明显大于 0.5，呈普大型/球形；结合心悸气短、夜间不能平卧、心音低钝、奔马律与超声提示全心扩大，符合普大型心。",
+   "signs": [
+    {
+     "label": "向两侧扩大",
+     "detail": "左右心缘均向外膨隆，心胸比明显增大，呈球形或烧瓶状。"
+    },
+    {
+     "label": "肺淤血",
+     "detail": "常伴肺纹理增多、肺门模糊、Kerley B 线，提示左心功能不全。"
+    },
+    {
+     "label": "鉴别心包积液",
+     "detail": "大量心包积液也可呈球形心，但心音遥远、奇脉、低电压；超声可确诊。"
+    }
+   ],
+   "pitfall": "普大型心与心包积液都可呈“球形心”；不要仅凭胸片下结论，必须结合心音、奇脉、心电图与超声。",
+   "exam_tip": "“向两侧扩大 + 心胸比明显增大 + 肺淤血”提示普大型心；球形心要想到心包积液。",
+   "compare": [
+    "EX-08",
+    "EX-09"
+   ],
+   "image": "images/exam/ex-10.jpg",
+   "image_width": 1600,
+   "image_height": 1200,
+   "sha256": "156a72752de70440029653b4e75ede3f15bdb6b8a7ccd717c6f69cb401d9c9c3"
+  }
+ ],
+ "pairs": [
+  {
+   "id": "P-01",
+   "left": "EX-02",
+   "right": "EX-03",
+   "title": "大叶性肺炎 vs 浸润性肺结核",
+   "tag": "最易混 · 斑片/大片影",
+   "same": [
+    "都可出现发热、咳嗽、乏力。",
+    "胸片都可见斑片状或大片状密度增高影。"
+   ],
+   "diff": [
+    {
+     "axis": "好发部位",
+     "left": "按肺叶/肺段分布，下叶多见。",
+     "right": "上叶尖后段、下叶背段。"
+    },
+    {
+     "axis": "病灶形态",
+     "left": "大片较均匀实变，边界受叶间裂限制。",
+     "right": "渗出、结节、索条、钙化、空洞多形态共存。"
+    },
+    {
+     "axis": "病程与全身症状",
+     "left": "急性起病，高热、铁锈色痰。",
+     "right": "慢性病程，低热、盗汗、消瘦、咯血。"
+    },
+    {
+     "axis": "实验室",
+     "left": "WBC、中性粒细胞、CRP 明显升高。",
+     "right": "ESR 增快，PPD/IGRA 阳性，痰抗酸杆菌可阳性。"
+    }
+   ],
+   "trap": "只看到“一片白”就选肺炎，是这道题最常见的失分点；先看部位和病程。",
+   "question": "同样是大片/斑片影，哪三个线索最能把结核从肺炎里分出来？"
+  },
+  {
+   "id": "P-02",
+   "left": "EX-02",
+   "right": "EX-04",
+   "title": "大叶性肺炎 vs 肺癌",
+   "tag": "最易混 · 咳嗽痰血",
+   "same": [
+    "都可表现为咳嗽、痰中带血。",
+    "胸片都可见肺内密度增高影。"
+   ],
+   "diff": [
+    {
+     "axis": "年龄与危险因素",
+     "left": "各年龄均可，急性感染史。",
+     "right": "老年、长期吸烟、职业暴露。"
+    },
+    {
+     "axis": "影像形态",
+     "left": "大片实变，按肺叶/肺段分布。",
+     "right": "肿块/结节，边缘分叶、毛刺，可伴阻塞性改变。"
+    },
+    {
+     "axis": "病程",
+     "left": "急性起病，抗感染后多可吸收。",
+     "right": "慢性进行性，抗感染后吸收不全。"
+    },
+    {
+     "axis": "伴随征象",
+     "left": "空气支气管征、炎症指标升高。",
+     "right": "肺门/纵隔淋巴结增大、胸膜牵拉、消瘦。"
+    }
+   ],
+   "trap": "老年吸烟者痰中带血，不能只满足于“肺炎”；抗感染后必须复查影像。",
+   "question": "如果患者 67 岁、吸烟 40 年、痰中带血，你会先排除哪一个？"
+  },
+  {
+   "id": "P-03",
+   "left": "EX-03",
+   "right": "EX-04",
+   "title": "浸润性肺结核 vs 肺癌",
+   "tag": "最易混 · 上肺阴影",
+   "same": [
+    "都好发于上肺/肺门区。",
+    "都可出现咳嗽、咯血、消瘦。"
+   ],
+   "diff": [
+    {
+     "axis": "病灶组合",
+     "left": "多形态共存，常见卫星灶、钙化。",
+     "right": "多为单发肿块/结节，边缘分叶、毛刺。"
+    },
+    {
+     "axis": "空洞",
+     "left": "薄壁、内壁较光滑，少有液平。",
+     "right": "厚壁、偏心、内壁凹凸不平。"
+    },
+    {
+     "axis": "全身症状",
+     "left": "低热、盗汗、乏力。",
+     "right": "进行性消瘦、吸烟史、刺激性干咳。"
+    },
+    {
+     "axis": "实验室",
+     "left": "ESR 快、PPD/IGRA 阳性。",
+     "right": "肿瘤标志物、病理/细胞学可阳性。"
+    }
+   ],
+   "trap": "上肺阴影不等于结核；老年患者出现单发肿块、毛刺、分叶时，先警惕肺癌。",
+   "question": "上肺阴影 + 空洞时，结核与肺癌的空洞壁有什么不同？"
+  },
+  {
+   "id": "P-04",
+   "left": "EX-05",
+   "right": "EX-01",
+   "title": "气胸 vs 正常胸片",
+   "tag": "最易混 · 透亮度",
+   "same": [
+    "都是立位胸片，肺野都有透亮区。",
+    "都需要先看片子质量与吸气程度。"
+   ],
+   "diff": [
+    {
+     "axis": "肺纹理",
+     "left": "患侧外带无肺纹理，肺纹理不到胸壁。",
+     "right": "肺纹理自肺门向外周自然分支，达胸壁。"
+    },
+    {
+     "axis": "肺边缘",
+     "left": "可见被压缩肺的边缘（肺线）。",
+     "right": "无肺线。"
+    },
+    {
+     "axis": "纵隔",
+     "left": "大量气胸可向健侧移位。",
+     "right": "气管、纵隔居中。"
+    },
+    {
+     "axis": "临床",
+     "left": "突发胸痛、呼吸困难，患侧呼吸音消失、叩诊鼓音。",
+     "right": "无症状，查体正常。"
+    }
+   ],
+   "trap": "不要把肺大疱当气胸：肺大疱有薄壁，周围仍有肺组织；气胸是胸膜腔积气。",
+   "question": "同样是“黑”，气胸和正常肺野的区别在哪一条线上？"
+  },
+  {
+   "id": "P-05",
+   "left": "EX-06",
+   "right": "EX-02",
+   "title": "胸腔积液 vs 下叶肺炎",
+   "tag": "最易混 · 下肺致密影",
+   "same": [
+    "都可出现胸痛、气短；感染相关时可伴发热。",
+    "胸片都可表现为下肺野密度增高。"
+   ],
+   "diff": [
+    {
+     "axis": "上缘形态",
+     "left": "外高内低弧形（半月征）。",
+     "right": "按肺叶/肺段分布，边界不清。"
+    },
+    {
+     "axis": "肋膈角",
+     "left": "消失或变钝。",
+     "right": "多保持锐利。"
+    },
+    {
+     "axis": "纵隔",
+     "left": "中大量积液推向健侧。",
+     "right": "一般居中。"
+    },
+    {
+     "axis": "空气支气管征",
+     "left": "无。",
+     "right": "实变区内可见。"
+    }
+   ],
+   "trap": "下肺“一片白”不一定是肺炎；先看肋膈角和上缘形态。",
+   "question": "下肺致密影，哪两个征象最支持积液而不是肺炎？"
+  },
+  {
+   "id": "P-06",
+   "left": "EX-08",
+   "right": "EX-09",
+   "title": "二尖瓣型心 vs 主动脉型心",
+   "tag": "最易混 · 心影形态",
+   "same": [
+    "都表现为心影增大。",
+    "都可出现活动后心悸、气短。"
+   ],
+   "diff": [
+    {
+     "axis": "整体形态",
+     "left": "梨形心。",
+     "right": "靴形心。"
+    },
+    {
+     "axis": "肺动脉段",
+     "left": "膨隆。",
+     "right": "凹陷。"
+    },
+    {
+     "axis": "主动脉结",
+     "left": "较小。",
+     "right": "突出、增宽。"
+    },
+    {
+     "axis": "心室增大",
+     "left": "右心室/左心房增大为主。",
+     "right": "左心室增大为主，心尖向左下。"
+    }
+   ],
+   "trap": "二尖瓣型 ≠ 二尖瓣狭窄；主动脉型 ≠ 主动脉瓣狭窄。形态只是线索，必须结合杂音与超声。",
+   "question": "只看心影轮廓，梨形与靴形的分界点在哪？"
+  },
+  {
+   "id": "P-07",
+   "left": "EX-09",
+   "right": "EX-10",
+   "title": "主动脉型心 vs 普大型心",
+   "tag": "最易混 · 心影增大",
+   "same": [
+    "都表现为心影增大。",
+    "都可伴心功能不全、肺淤血。"
+   ],
+   "diff": [
+    {
+     "axis": "扩大方向",
+     "left": "向左下扩大。",
+     "right": "向两侧扩大。"
+    },
+    {
+     "axis": "心尖",
+     "left": "心尖圆钝、下移。",
+     "right": "心影呈球形，心尖不明显。"
+    },
+    {
+     "axis": "常见病因",
+     "left": "高血压、主动脉瓣病变。",
+     "right": "扩张型心肌病、多瓣膜病、心包积液。"
+    },
+    {
+     "axis": "鉴别",
+     "left": "主动脉结突出、肺动脉段凹陷。",
+     "right": "心音低钝、奔马律；心包积液见奇脉、低电压。"
+    }
+   ],
+   "trap": "普大型心与大量心包积液都可呈球形心；胸片不能单独确诊，必须结合超声。",
+   "question": "“向两侧扩大”与“向左下扩大”分别指向哪一型？"
+  },
+  {
+   "id": "P-08",
+   "left": "EX-07",
+   "right": "EX-01",
+   "title": "肋骨骨折 vs 正常胸片",
+   "tag": "最易漏 · 骨皮质",
+   "same": [
+    "双肺野都可清晰。",
+    "都需要沿肋骨连续追踪。"
+   ],
+   "diff": [
+    {
+     "axis": "骨皮质",
+     "left": "局部连续性中断、断端错位或骨痂形成。",
+     "right": "骨皮质连续、走行自然。"
+    },
+    {
+     "axis": "局部软组织",
+     "left": "可有肿胀、皮下气肿。",
+     "right": "正常。"
+    },
+    {
+     "axis": "合并伤",
+     "left": "注意气胸、血胸、连枷胸。",
+     "right": "无。"
+    },
+    {
+     "axis": "体位",
+     "left": "腋段、膈下肋骨易漏，需局部放大。",
+     "right": "正常解剖变异如颈肋、叉状肋。"
+    }
+   ],
+   "trap": "只看肺野不看肋骨，是肋骨骨折漏诊的主要原因；腋段要逐根放大。",
+   "question": "为什么肋骨骨折最容易在腋段漏诊？"
+  }
+ ],
+ "counts": {
+  "cases": 10,
+  "syllabus": 10,
+  "pairs": 8,
+  "groups": [
+   "心脏",
+   "肺与胸膜",
+   "骨骼"
+  ]
+ }
+}

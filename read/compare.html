@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>对比阅片 · 相似表征 · RadioCheck</title>
+<meta name="theme-color" content="#0b4f55">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon-180.png">
+<link rel="stylesheet" href="base.css?v=11">
+<link rel="stylesheet" href="compare.css?v=3">
+<!-- rc-agent-base --><script>window.RC_AGENT_BASE='https://function-ultra-disclose-commissioners.trycloudflare.com';</script>
+</head>
+<body class="cmp-body">
+
+<header class="bar" data-page="compare">
+  <div class="bar-extra">
+    <span class="quest-badge">对比阅片 · 拖动到两侧</span>
+    <span class="spacer"></span>
+    <a class="btn sm" href="exam.html">病例题</a>
+    <a class="btn sm" href="clinic.html">逐区阅片</a>
+  </div>
+</header>
+
+<div class="global-disclaimer"><b>非诊断用途</b><span>仅供医学影像教学与研究</span></div>
+
+<div class="cmp-shell">
+  <div class="cmp-toolbar">
+    <div class="seg" role="group" aria-label="对比方式">
+      <button data-mode="side" class="on">并排</button>
+      <button data-mode="overlay">叠加擦除</button>
+    </div>
+    <span class="tb-sep"></span>
+    <button class="btn sm on" id="alignBtn" title="两侧同高对齐，缩放与平移同步">同高对齐</button>
+    <button class="btn sm" id="swapBtn" title="交换左右">交换左右</button>
+    <button class="btn sm" id="revealBtn">隐藏诊断</button>
+    <button class="btn sm" id="fitBtn">复位视图</button>
+    <span class="spacer"></span>
+    <span class="tb-hint" id="tbHint"></span>
+    <button class="btn sm" id="randomBtn">随机一对</button>
+  </div>
+
+  <div class="cmp-stage" id="stage" data-mode="side">
+    <section class="cmp-pane left" data-side="left" id="paneLeft">
+      <div class="pane-head">
+        <div class="ph-l">
+          <span class="ph-side">左侧</span>
+          <b class="ph-topic" id="leftTopic">拖入一张影像</b>
+        </div>
+        <div class="ph-r">
+          <span class="ph-id" id="leftId">—</span>
+          <button class="ph-clear" data-clear="left" title="移除">×</button>
+        </div>
+      </div>
+      <div class="pane-canvas" data-side="left">
+        <img class="pane-img" id="leftImg" alt="" draggable="false">
+        <div class="pane-empty" id="leftEmpty">
+          <div class="pe-ico">＋</div>
+          <b>拖一张影像到这里</b>
+        </div>
+        <div class="pane-diag" id="leftDiag" hidden></div>
+      </div>
+      <div class="pane-foot" id="leftFoot">—</div>
+    </section>
+
+    <div class="cmp-split" id="split" role="separator" aria-label="拖动分隔条" tabindex="0">
+      <span class="split-grip"><i></i><i></i><i></i></span>
+      <em id="splitPct">50%</em>
+    </div>
+
+    <section class="cmp-pane right" data-side="right" id="paneRight">
+      <div class="pane-head">
+        <div class="ph-l">
+          <span class="ph-side">右侧</span>
+          <b class="ph-topic" id="rightTopic">拖入一张影像</b>
+        </div>
+        <div class="ph-r">
+          <span class="ph-id" id="rightId">—</span>
+          <button class="ph-clear" data-clear="right" title="移除">×</button>
+        </div>
+      </div>
+      <div class="pane-canvas" data-side="right">
+        <img class="pane-img" id="rightImg" alt="" draggable="false">
+        <div class="pane-empty" id="rightEmpty">
+          <div class="pe-ico">＋</div>
+          <b>拖一张影像到这里</b>
+        </div>
+        <div class="pane-diag" id="rightDiag" hidden></div>
+      </div>
+      <div class="pane-foot" id="rightFoot">—</div>
+    </section>
+  </div>
+
+  <div class="cmp-hsplit" id="hsplit" role="separator" aria-orientation="horizontal"
+       aria-label="拖动调整底部区域高度（双击复位）" tabindex="0" title="拖动调整底部高度 · 双击复位">
+    <span class="hs-grip"><i></i><i></i><i></i></span>
+  </div>
+
+  <div class="cmp-bottom" id="cmpBottom">
+    <section class="film card" aria-label="影像胶片条">
+      <div class="film-head">
+        <div>
+          <b>影像胶片条</b>
+        </div>
+        <div class="assign">
+          <button class="btn sm on" data-active="left">分配到左侧</button>
+          <button class="btn sm" data-active="right">分配到右侧</button>
+        </div>
+      </div>
+      <div class="film-strip" id="filmStrip"></div>
+      <div class="pair-row" id="pairRow"></div>
+    </section>
+
+    <div class="cmp-vsplit" id="vsplit" role="separator" aria-orientation="vertical"
+         aria-label="拖动调整鉴别区宽度（双击复位）" tabindex="0" title="拖动调整鉴别区宽度 · 双击复位">
+      <span class="vs-grip"><i></i><i></i><i></i></span>
+    </div>
+
+    <aside class="diff card" id="diff">
+      <div class="diff-head">
+        <div>
+          <b id="diffTitle">选一对，开始对比</b>
+          <span id="diffTag">相同点 / 鉴别点 / 一句话记忆</span>
+        </div>
+        <button class="btn sm" id="diffWideBtn" title="加宽或还原右侧鉴别区">加宽 ⤢</button>
+        <button class="btn sm" id="openCase" hidden>打开病例题 →</button>
+      </div>
+      <div class="diff-body" id="diffBody">
+        <div class="empty-state">
+          <div class="ico">⇄</div>
+          <b>把两张影像放到两侧</b>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div id="yzToast" role="status" aria-live="polite"></div>
+
+<script src="common.js?v=11"></script>
+<script src="kb-api.js?v=1"></script>
+<script src="compare.js?v=3"></script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ef">
+<title>软件评测说明 · RadioCheck</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b4f55'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white' font-family='sans-serif'%3ER%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f6f4ef; --surface:#fff; --ink:#111a20; --ink2:#2b3a44;
+  --muted:#5d6f7a; --faint:#93a3ab; --line:#e7e3da;
+  --brand:#0b4f55; --brand2:#0e7c7b;
+  --ok:#147a5b; --warn:#a9690b; --bad:#a33b2b;
+  --r:16px; --shadow:0 1px 2px rgba(16,35,46,.05),0 16px 40px -34px rgba(11,79,85,.55);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#eae7e0;color:var(--ink);
+  font:15px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.app{max-width:600px;margin:0 auto;min-height:100vh;background:var(--bg);padding:16px 16px 40px}
+@media(min-width:640px){.app{min-height:calc(100vh - 40px);margin:20px auto;border-radius:28px;box-shadow:0 34px 90px -60px rgba(11,79,85,.7)}}
+
+.top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.back{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid var(--line);display:grid;place-items:center;font-size:17px;color:var(--brand)}
+.top .t{font-size:16px;font-weight:700}
+.top .s{font-size:11.5px;color:var(--faint)}
+
+.hero{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 10px;text-align:center;box-shadow:var(--shadow)}
+.stat .v{font-size:22px;font-weight:750;letter-spacing:-.02em;color:var(--brand);line-height:1.2}
+.stat .v small{font-size:11px;font-weight:600;color:var(--faint)}
+.stat .l{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.4}
+.stat.ok .v{color:var(--ok)}
+.stat.warn .v{color:var(--warn)}
+
+.sec{background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:15px;margin-bottom:14px}
+.sec-h{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;margin-bottom:4px}
+.sec-h .n{font-size:10px;font-weight:700;color:var(--brand2);background:#e9f4f1;padding:2px 7px;border-radius:99px}
+.sec-p{font-size:11.5px;color:var(--muted);line-height:1.75;margin:0 0 12px}
+
+.rows{display:grid;gap:7px}
+.row{display:flex;align-items:center;gap:9px;font-size:12.5px}
+.row .nm{width:74px;color:var(--ink2);flex:0 0 auto;font-size:11.5px}
+.row .bar{flex:1;height:7px;border-radius:99px;background:#f0ede5;overflow:hidden}
+.row .bar i{display:block;height:100%;border-radius:99px;background:var(--ok)}
+.row .bar i.low{background:var(--bad)}
+.row .vv{width:58px;text-align:right;color:var(--muted);font-size:11px;flex:0 0 auto}
+
+table.t{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px}
+table.t th{text-align:left;font-weight:600;color:var(--faint);font-size:10.5px;padding:5px 4px;border-bottom:1px solid var(--line)}
+table.t td{padding:7px 4px;border-bottom:1px solid #f4f1ea;color:var(--ink2)}
+table.t tr:last-child td{border-bottom:0}
+table.t .num{text-align:right;font-variant-numeric:tabular-nums}
+table.t .good{color:var(--ok);font-weight:650}
+table.t .bad{color:var(--bad);font-weight:650}
+
+.cm{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.cm .cell{border:1px solid var(--line);border-radius:11px;padding:11px 12px;background:#fbfaf7}
+.cm .cell .k{font-size:10.5px;color:var(--faint)}
+.cm .cell .v{font-size:19px;font-weight:750;margin-top:2px}
+.cm .cell .d{font-size:10.5px;color:var(--muted);margin-top:1px}
+.cm .cell.good{background:#f0faf6;border-color:#cfe9df}
+.cm .cell.good .v{color:var(--ok)}
+.cm .cell.bad{background:#fdf3f0;border-color:#f2d8cf}
+.cm .cell.bad .v{color:var(--bad)}
+
+.note{font-size:11.5px;color:var(--muted);line-height:1.8;background:#fbfaf7;border:1px dashed var(--line);border-radius:11px;padding:10px 12px;margin-top:11px}
+.note b{color:var(--ink2)}
+
+.limit{background:#fdf6f6;border:1px solid #f2d8cf;border-radius:var(--r);padding:14px 15px;margin-bottom:14px}
+.limit h3{font-size:12px;font-weight:700;color:var(--bad);margin:0 0 8px;letter-spacing:.03em}
+.limit ul{margin:0;padding-left:16px}
+.limit li{font-size:12px;color:#7a3a2c;line-height:1.9;margin-bottom:3px}
+
+.foot{display:flex;gap:8px;margin-top:18px}
+.foot a{flex:1;text-align:center;height:40px;line-height:40px;border-radius:11px;background:#fff;border:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.dis{margin-top:16px;font-size:11px;color:var(--bad);background:#fdf6f6;border:1px solid #f2d8cf;border-radius:10px;padding:9px 11px;line-height:1.7}
+.empty{padding:24px 0;text-align:center;color:var(--faint);font-size:12.5px}
+</style>
+<!-- rc-agent-base --><script>window.RC_AGENT_BASE='https://function-ultra-disclose-commissioners.trycloudflare.com';</script>
+</head>
+<body>
+<div class="app">
+
+  <div class="top">
+    <a class="back" href="../index.html">‹</a>
+    <div><div class="t">软件评测说明</div><div class="s">可复现的数字，不是口号</div></div>
+  </div>
+
+  <div class="note" style="margin:0 0 14px">
+    <b>这是软件说明，不是学习功能。</b>本页记录检索、拒答与模型一致率的内部评测口径，用于说明能力边界；全部指标均为内部评测，不构成临床性能承诺。
+  </div>
+
+  <div class="hero" id="hero">
+    <div class="stat"><div class="v">—</div><div class="l">检索准确率</div></div>
+    <div class="stat"><div class="v">—</div><div class="l">拒答召回</div></div>
+    <div class="stat"><div class="v">—</div><div class="l">模型一致率</div></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">检索准确率 <span class="n" id="rtN">—</span></div>
+    <p class="sec-p">用与库内标准问法<b>不同措辞</b>的口语化问法，检验能否对到正确的问答类型。dev 集用于调参，holdout 查看过，final 未参与调参。</p>
+    <table class="t" id="rtTable"><tr><td class="empty">加载中…</td></tr></table>
+    <div class="rows" id="rtByGroup" style="margin-top:11px"></div>
+    <div class="note" id="rtNote"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">拒答混淆矩阵 <span class="n" id="rfN">—</span></div>
+    <p class="sec-p">正样本 = 该拒的问题（拒答清单 28 条 + 变体问法）；负样本 = 库内标准问法。关键指标是<b>漏拒率</b>：该拒却答了，最危险。</p>
+    <div class="cm" id="cm"></div>
+    <div class="rows" id="rfRows" style="margin-top:12px"></div>
+    <div class="note" id="rfNote"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h">模型交叉检验 <span class="n" id="mdN">—</span></div>
+    <p class="sec-p">用 torchxrayvision DenseNet121 对同一批病例做整图级多标签预测，与库内逐区文本比对。这是<b>独立第三方视角</b>，不是分区级定位。<br><b>可复现性：</b>结果来自一次离线推理（需 `torch` + `torchxrayvision`）；当前演示机未安装 `torch`，本页只读已有结果，不能现场重跑。</p>
+    <div class="rows" id="mdRows"></div>
+    <div class="note" id="mdNote"></div>
+  </div>
+
+  <div class="limit">
+    <h3>这份评测的局限（必须一起看）</h3>
+    <ul id="limits"></ul>
+  </div>
+
+  <div class="dis">非诊断用途 · 所有指标都是内部评测，用于说明能力边界，不构成任何临床性能承诺</div>
+
+  <div class="foot">
+    <a href="ask.html">去提问</a>
+    <a href="evidence.html">看证据</a>
+    <a href="path.html">今日任务</a>
+  </div>
+</div>
+
+<script>
+const URL_REPORT = "../data/chest/eval_report.json";
+const GROUP_CN = { zone:"分区问", topic:"主题问", overview:"整体问", refusal:"拒答", unknown:"应当无匹配" };
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
+function pct(v){ return v==null ? "—" : Math.round(v*100) + "%"; }
+
+function render(r){
+  const rt = r.retrieval || {};
+  const dev = rt.dev || {}, ho = rt.holdout || {}, fi = rt.final || {};
+  const rf = r.refusal || {};
+  const md = r.model || {};
+
+  const totalN = (dev.n||0) + (ho.n||0) + (fi.n||0);
+  const totalOk = (dev.ok||0) + (ho.ok||0) + (fi.ok||0);
+  // 首屏只算 holdout + final：dev 是调参集，不能和留出集混在一起报一个更好看的数。
+  const evalN = (ho.n||0) + (fi.n||0);
+  const evalOk = (ho.ok||0) + (fi.ok||0);
+  const shownN = evalN || totalN;
+  const shownOk = evalN ? evalOk : totalOk;
+  const rtAcc = shownN ? shownOk/shownN : null;
+
+  $("hero").innerHTML = `
+    <div class="stat ok"><div class="v">${rtAcc==null?"—":Math.round(rtAcc*100)}<small>%</small></div><div class="l">检索准确率<br><span style="color:var(--faint)">${shownOk}/${shownN}${evalN?" · holdout+final":""}</span></div></div>
+    <div class="stat ok"><div class="v">${pct(rf.recall)}</div><div class="l">拒答召回<br><span style="color:var(--faint)">漏拒 ${pct(rf.miss_rate)}</span></div></div>
+    <div class="stat ${(md.strict_rate||0)>=0.6?"warn":""}"><div class="v">${pct(md.strict_rate)}</div><div class="l">模型严格一致<br><span style="color:var(--faint)">加权 ${pct(md.weighted_rate)}</span></div></div>`;
+
+  $("rtN").textContent = `${shownOk} / ${shownN}` + (evalN ? `（holdout+final；全部 ${totalOk}/${totalN}）` : "");
+
+  const sets = [["dev","调参集",dev],["holdout","泛化集",ho],["final","留出集",fi]];
+  $("rtTable").innerHTML = `
+    <tr><th>数据集</th><th class="num">通过</th><th class="num">占比</th><th>说明</th></tr>
+    ${sets.map(([k,label,b])=>{
+      if(!b || !b.n) return "";
+      const good = b.accuracy >= 0.9;
+      const note = k === "dev" ? "调参集，不计入首屏" : "计入首屏";
+      return `<tr><td>${label}</td><td class="num ${good?"good":"bad"}">${b.ok}/${b.n}</td><td class="num">${pct(b.accuracy)}</td><td style="font-size:11px;color:var(--faint)">${k} · ${note}</td></tr>`;
+    }).join("")}`;
+
+  const agg = {};
+  sets.forEach(([, , b])=>{
+    Object.entries(b.by_group||{}).forEach(([g,v])=>{
+      agg[g] = agg[g] || {n:0, ok:0};
+      agg[g].n += v.n; agg[g].ok += v.ok;
+    });
+  });
+  $("rtByGroup").innerHTML = Object.keys(agg).sort().map(g=>{
+    const v = agg[g], a = v.n ? v.ok/v.n : 0;
+    return `<div class="row"><span class="nm">${GROUP_CN[g]||g}</span>
+      <span class="bar"><i class="${a<0.9?"low":""}" style="width:${Math.round(a*100)}%"></i></span>
+      <span class="vv">${v.ok}/${v.n}</span></div>`;
+  }).join("");
+
+  $("rtNote").innerHTML = `<b>注意：</b>首屏只算 holdout + final；dev 是调参集，单独列在表里，不与留出集合并。三批共 ${totalN} 条问法全部由团队自建，且都在调参过程中查看过，因此百分比是<b>「在已查看用例上的表现」</b>，不等于真实用户泛化能力。真正的泛化需要外部提问日志或第三方标注集。`;
+
+  $("rfN").textContent = "正 " + rf.positives + " · 负 " + rf.negatives;
+  $("cm").innerHTML = `
+    <div class="cell good"><div class="k">正确拒答 TP</div><div class="v">${rf.tp}</div><div class="d">该拒的，拒了</div></div>
+    <div class="cell bad"><div class="k">漏拒 FN</div><div class="v">${rf.fn}</div><div class="d">该拒的，却答了 — 最危险</div></div>
+    <div class="cell bad"><div class="k">误拒 FP</div><div class="v">${rf.fp}</div><div class="d">能答的，却拒了</div></div>
+    <div class="cell good"><div class="k">正确作答 TN</div><div class="v">${rf.tn}</div><div class="d">能答的，答了</div></div>`;
+
+  $("rfRows").innerHTML = [
+    ["拒答召回率", rf.recall, "该拒的里面，拒掉的比例"],
+    ["漏拒率", rf.miss_rate, "该拒却没拒，越低越好"],
+    ["误拒率", rf.false_refusal_rate, "能答却拒，影响体验"],
+  ].map(([nm,v,d])=>{
+    const a = v==null?0:v;
+    const bad = nm === "漏拒率" || nm === "误拒率";
+    return `<div class="row"><span class="nm">${nm}</span>
+      <span class="bar"><i class="${bad && a>0.1 ? "low":""}" style="width:${Math.round(a*100)}%"></i></span>
+      <span class="vv">${pct(v)}</span></div>`;
+  }).join("");
+
+  $("rfNote").innerHTML = `<b>说明：</b>${esc(rf.note||"")}<br>拒答阈值比回答阈值低（0.25 vs 0.32），设计取向是<b>宁可多拒，不可误答</b>。`;
+
+  $("mdN").textContent = md.available ? `${md.eligible || md.cases} / ${md.cases} 例` : "—";
+  if(md.available){
+    const denom = md.eligible || md.cases;
+    $("mdRows").innerHTML = [
+      ["一致", md.consistent, denom],
+      ["冲突", md.conflict, denom],
+      ["部分", md.partial, denom],
+      ["漏检", md.silent, denom],
+    ].map(([nm,v,n])=>{
+      const a = n ? v/n : 0;
+      return `<div class="row"><span class="nm">${nm}</span>
+        <span class="bar"><i class="${nm==="冲突"?"low":""}" style="width:${Math.round(a*100)}%"></i></span>
+        <span class="vv">${v}/${n}</span></div>`;
+    }).join("");
+    const grid = md.thresholds || {};
+    const thLine = Object.keys(grid).sort().map(k=>`${k}→${pct(grid[k].strict_rate)}`).join(" · ");
+    $("mdNote").innerHTML = `<b>方法：</b>${esc(md.method)}<br>主口径只统计 ${denom} 例可对照病例（排除 ${md.excluded||0} 例侧位/解剖标注图）；严格一致率 = 一致 / ${denom} = ${pct(md.strict_rate)}；加权一致率把「部分一致」算半分 = ${pct(md.weighted_rate)}。<br><b>阈值敏感性：</b>${thLine || "—"}。单点数字不应单独引用。<br><b>为什么不是 100%：</b>模型在公开数据上训练，目标与我们的分区标注本就不完全对齐，冲突恰恰说明它不是复制我们的答案。`;
+  } else {
+    $("mdRows").innerHTML = `<div class="empty">无模型探针数据</div>`;
+    $("mdNote").innerHTML = "";
+  }
+
+  $("limits").innerHTML = [
+    "检索评测的问法由团队自己编写，且都在调参时看过，数字偏乐观。",
+    "负样本用的是库内标准问法，不是口语化问法，因此误拒率偏保守（偏低）。",
+    "模型结果是整图级多标签概率，<b>不是</b>分区级定位，也不是诊断结论。",
+    "库内只有 21 例可用病例，样本量不足以支撑任何统计显著性结论。",
+    "以上全部为内部评测，没有经过独立医院或第三方复核。",
+  ].map(t=>`<li>${t}</li>`).join("");
+}
+
+fetch(URL_REPORT, {cache:"no-cache"})
+  .then(r=>{ if(!r.ok) throw new Error(r.status); return r.json(); })
+  .then(render)
+  .catch(e=>{
+    $("hero").innerHTML = `<div class="stat" style="grid-column:1/-1"><div class="v">—</div><div class="l">评测报告未加载</div></div>`;
+    console.error(e);
+  });
+</script>
+</body>
+</html>

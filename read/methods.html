@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>方法与边界 · RadioCheck</title>
+<meta name="theme-color" content="#0b4f55">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="base.css?v=10">
+<style>
+  .m-wrap{max-width:860px;margin:0 auto;padding:28px 20px 80px}
+  .m-wrap h1{font-size:26px;margin:6px 0 6px;color:#0b4f55}
+  .m-wrap .lead{color:#5b6b6e;margin:0 0 22px}
+  .m-card{background:#fff;border:1px solid #dfe8e6;border-radius:14px;padding:18px 20px;margin:0 0 14px}
+  .m-card h2{font-size:17px;margin:0 0 8px;color:#123}
+  .m-card p,.m-card li{font-size:14px;line-height:1.75;color:#2b3a3d}
+  .m-card ul{margin:6px 0 0;padding-left:20px}
+  .m-tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;background:#e6f2f0;color:#0b4f55;margin-left:8px;vertical-align:2px}
+  .m-warn{border-color:#f0d9c8;background:#fff8f2}
+  .m-warn h2{color:#8a4b1f}
+  .m-foot{color:#7b8a8d;font-size:12px;margin-top:18px}
+  a{color:#0b6b6f}
+</style>
+<!-- rc-agent-base --><script>window.RC_AGENT_BASE='https://function-ultra-disclose-commissioners.trycloudflare.com';</script>
+</head>
+<body>
+<header class="bar" data-page="home"></header>
+<div class="global-disclaimer"><b>非诊断用途</b><span>仅供医学影像教学与研究</span></div>
+
+<main class="m-wrap">
+  <h1>方法与边界</h1>
+  <p class="lead">RadioCheck 是一个胸片（CR 胸片，正位 / 侧位）阅片教学网站。它把「影像上的位置」和「文献里的原文」并排给你看，但不做诊断。</p>
+
+  <section class="m-card">
+    <h2>一、只做胸片专项<span class="m-tag">范围</span></h2>
+    <p>产品当前只覆盖 <b>CR 胸片正位 / 侧位</b>，<b>不做</b>胸部 CT、乳腺 MG、腰椎 MRI、超声等其他影像。原因很直接：分区模板、逐区文本、征象词条和指南条款都要逐条对照公开文献核对，只有胸片这一条线做到了「每个分区都能指到出处」。</p>
+    <p>不是胸片的影像，我们不会硬套胸片分区。比如乳腺 MG、腰椎 MRI、头颅 CT，套上胸片或头颅模板会得到看似专业、实际错误的分区结论，这比直接说「不支持」更糟。</p>
+  </section>
+
+  <section class="m-card">
+    <h2>二、双引用规则</h2>
+    <ul>
+      <li><b>影像侧</b>：分区 id + bbox + 该分区的来源（文献与 AI 辅助整理 / 模板推断）。</li>
+      <li><b>文献侧</b>：指南条款或征象词条的原文段落 + 出处链接。</li>
+      <li>两侧缺一，就不输出结论；宁可拒答，也不拼一个只有一半出处的答案。</li>
+    </ul>
+  </section>
+
+  <section class="m-card">
+    <h2>三、上传影像怎么处理</h2>
+    <ul>
+      <li>图片只在当前浏览器内存里显示，不上传服务器、不落盘；请勿上传真实患者影像。</li>
+      <li>先做文件指纹匹配：命中库内病例，直接打开库内整理版本。</li>
+      <li>未命中时，先请用户<b>确认影像类型</b>；确认为胸片后，才走「胸片模板定位 → 双引用」，给出模板分区和该区候选征象词条，并明确标注<b>模板推断、非人工标注</b>。</li>
+      <li>没有视觉模型时，<b>不自动套用任何模板</b>；用户点「这是胸片」后才按 CR / 胸部 / PA 模板定位，并提示「如果这张不是胸片，请勿使用该分区结果」。</li>
+    </ul>
+  </section>
+
+  <section class="m-card m-warn">
+    <h2>四、其他影像：我们为什么不做，以及未来怎么做</h2>
+    <p><b>反思。</b>早期版本曾把乳腺 MG、腰椎 MRI 也套进分区模板，出现过「乳腺片显示四个胸片分区」「腰椎 MRI 套头颅分区」的错配。根因不是模型不够强，而是模板匹配缺少「检查类型 / 部位 / 投照位」的硬门控，且没有把「不支持」当成一个正式状态。</p>
+    <p><b>现在。</b>上传影像先识别检查类型与部位；不是胸片就明确返回「本产品是胸片专项，暂不支持」，并保留手动分区作为解剖定位的降级手段，不生成征象结论。</p>
+    <p><b>未来拓展方向。</b></p>
+    <ul>
+      <li><b>多部位模板库</b>：按 modality + body_part + view 建立独立模板，每个模板单独验收，不复用胸片几何。</li>
+      <li><b>标注成本前置</b>：先确认每个部位能拿到足量公开、可授权的教学影像，再决定是否开这条线。</li>
+      <li><b>质控与拒答</b>：新部位上线前，必须通过「模态错配拒答集」，确保非目标影像不会被硬套模板。</li>
+      <li><b>能力边界外显</b>：健康检查与页面都如实标注当前支持的检查类型，不用「多模态」这类模糊说法掩盖覆盖不足。</li>
+    </ul>
+  </section>
+
+  <section class="m-card m-warn">
+    <h2>五、分区是谁整理的、审到什么程度<span class="m-tag">必须说清</span></h2>
+    <p><b>开发者不具备医学专业资质，也没有对影像做人工标注。</b>页面上的分区框与逐区文本，是按公开的胸片解剖分区规范与文献描述确定分区范围，再由 AI 辅助生成与一致性核查得到的；核对的是「分区名称、解剖范围、文本与出处是否对得上」，<b>不是</b>医学判读结论。</p>
+    <p>因此必须区分三件事：</p>
+    <ul>
+      <li><b>分区框</b>是教学用的解剖区域示意，<b>不是病灶分割</b>，也不代表开发者逐张看过片子画出来的。</li>
+      <li><b>逐区文本</b>是对公开文献描述的整理，<b>不是</b>本片的人工阅片报告。</li>
+      <li><b>专家复核</b>：截至本版本，影像与分区<b>尚未经过影像科医师逐例复核签字</b>，这一项已列入未来优化方向；页面提供「反馈」入口，收集到的意见会作为专家复核的输入。</li>
+    </ul>
+    <p>所以本站内容只能用于<b>教学与研究演示</b>；正式教学或对外发布前，须由具备资质的医学人员逐条复核。</p>
+  </section>
+
+  <section class="m-card">
+    <h2>六、数据与声明</h2>
+    <ul>
+      <li>影像来自公开教学数据集，逐例标注许可与作者；不收录真实患者隐私影像。</li>
+      <li>文献侧引用指南条款与征象词条原文，保留出处链接与段落定位。</li>
+      <li>本产品不提供诊断、分期、治疗或预后建议，不替代临床决策。</li>
+    </ul>
+  </section>
+
+  <p class="m-foot">详细版见仓库 docs/反思与未来拓展方向.md 与 docs/影像区域定位与双引用设计.md。</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ef">
+<title>提问 · RadioCheck</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b4f55'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white' font-family='sans-serif'%3ER%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f6f4ef; --surface:#fff; --ink:#111a20; --ink2:#2b3a44;
+  --muted:#5d6f7a; --faint:#93a3ab; --line:#e7e3da;
+  --brand:#0b4f55; --brand2:#0e7c7b;
+  --ok:#147a5b; --okbg:#f0faf6; --okln:#cfe9df;
+  --no:#a33b2b; --nobg:#fdf3f0; --nolnn:#f2d8cf;
+  --r:16px; --shadow:0 1px 2px rgba(16,35,46,.05),0 16px 40px -34px rgba(11,79,85,.55);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#eae7e0;color:var(--ink);
+  font:15px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input{font-family:inherit}
+.app{max-width:600px;margin:0 auto;min-height:100vh;background:var(--bg);padding:16px 16px 40px}
+@media(min-width:640px){.app{min-height:calc(100vh - 40px);margin:20px auto;border-radius:28px;box-shadow:0 34px 90px -60px rgba(11,79,85,.7)}}
+
+.top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.back{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid var(--line);display:grid;place-items:center;font-size:17px;color:var(--brand)}
+.top .t{font-size:16px;font-weight:700;letter-spacing:-.01em}
+.top .s{font-size:11.5px;color:var(--faint)}
+
+.casebar{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 12px;margin-bottom:12px}
+.casebar .cid{font-size:10.5px;font-weight:700;color:var(--brand2);background:#e9f4f1;padding:2px 7px;border-radius:6px;flex:0 0 auto}
+.casebar .ct{font-size:12.5px;color:var(--ink2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.casebar button{border:1px solid var(--line);background:#faf9f6;color:var(--muted);font-size:11.5px;padding:4px 10px;border-radius:99px;cursor:pointer;flex:0 0 auto}
+
+.askbox{display:flex;gap:8px;margin-bottom:10px}
+.askbox input{flex:1;height:46px;border-radius:13px;border:1px solid var(--line);background:#fff;padding:0 14px;font-size:14px;color:var(--ink);outline:none;box-shadow:var(--shadow)}
+.askbox input:focus{border-color:#b9d7d0}
+.askbox button{width:60px;height:46px;border-radius:13px;border:0;background:var(--brand);color:#fff;font-size:14px;font-weight:650;cursor:pointer}
+.askbox button:disabled{opacity:.5}
+
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.chip{border:1px solid var(--line);background:#fff;color:var(--ink2);font-size:11.5px;padding:6px 11px;border-radius:99px;cursor:pointer;line-height:1.3}
+.chip:hover{border-color:#b9d7d0;background:#f7fdfb}
+
+.ans{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:16px;border:1px solid var(--line);animation:pop .22s ease}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.ans.ok{border-color:var(--okln)}
+.ans.no{border-color:var(--nolnn)}
+.ans.soft{border-color:#f0e2c4}
+.tag.soft{background:#fdf6e8;color:#94620b}
+.ans-h{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.tag{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:99px}
+.tag.ok{background:var(--okbg);color:var(--ok)}
+.tag.no{background:var(--nobg);color:var(--no)}
+.conf{font-size:11px;color:var(--faint)}
+.concl{font-size:15.5px;line-height:1.75;font-weight:600;color:var(--ink);margin:0 0 4px}
+.reason{font-size:13px;line-height:1.8;color:var(--ink2);margin:8px 0 0}
+
+.sec{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.sec-h{font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--faint);margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.sec-h .mini{font-weight:500;letter-spacing:0;color:var(--brand2);background:#eef7f5;padding:1px 7px;border-radius:99px;font-size:10px}
+
+.film{position:relative;border-radius:11px;overflow:hidden;background:#0b0f16;line-height:0}
+.film img{display:block;width:100%;height:auto}
+.film .box{position:absolute;border:2px solid #ff5a4f;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.35),inset 0 0 0 1px rgba(255,255,255,.5);pointer-events:none}
+.film .box::after{content:attr(data-l);position:absolute;left:0;top:-19px;font-size:10px;font-weight:700;color:#fff;background:#ff5a4f;padding:1px 6px;border-radius:3px;white-space:nowrap;line-height:1.5}
+.cap{font-size:11.5px;color:var(--muted);margin-top:8px}
+.cap b{color:var(--ink2)}
+
+.cite{border:1px solid var(--line);border-radius:11px;background:#fbfaf7;padding:11px 12px;cursor:pointer}
+.cite .q{font-size:13px;line-height:1.8;color:var(--ink2);margin:0;font-style:normal}
+.cite .q mark{background:#fff3c4;padding:0 2px;border-radius:2px}
+.cite .meta{font-size:10.5px;color:var(--faint);margin-top:7px;line-height:1.6}
+.cite .meta code{background:#eee9df;padding:0 4px;border-radius:3px}
+.cite .full{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.cite.open .full{display:block}
+.cite .full pre{margin:0;font-size:11.5px;line-height:1.9;color:var(--muted);white-space:pre-wrap;word-break:break-all;font-family:inherit}
+.cite .full pre mark{background:#fff3c4;color:var(--ink);padding:0 1px}
+
+.sug{margin-top:14px;background:#f6fbf9;border:1px solid #dcece7;border-radius:11px;padding:10px 12px;font-size:12.5px;color:#0f5c45;line-height:1.8}
+.sug .sg-h{font-size:10.5px;font-weight:700;letter-spacing:.05em;color:#5d8d7c;margin-bottom:3px}
+.sug .sg-item{display:block;margin-top:4px;color:var(--brand2);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+
+.src{margin-top:12px;font-size:11px;color:var(--faint);line-height:1.7}
+.empty{background:#fff;border:1px dashed var(--line);border-radius:var(--r);padding:22px 16px;text-align:center;color:var(--faint);font-size:12.5px;line-height:1.8}
+
+.limits{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.lim-toggle{width:100%;display:flex;align-items:center;gap:8px;padding:13px 14px;background:none;border:0;cursor:pointer;font-size:13px;font-weight:650;color:var(--ink2);text-align:left}
+.lim-n{margin-left:auto;font-size:11px;color:var(--brand2);background:#eef7f5;padding:2px 8px;border-radius:99px;font-weight:600;white-space:nowrap}
+.lim-chev{color:var(--faint);transition:.2s;flex:0 0 auto}
+.limits.open .lim-chev{transform:rotate(90deg)}
+.lim-body{padding:0 14px 14px;border-top:1px solid var(--line)}
+.lim-cols{display:grid;gap:12px;padding-top:12px}
+@media(min-width:520px){.lim-cols{grid-template-columns:1fr 1fr}}
+.lim-h{font-size:10.5px;font-weight:700;letter-spacing:.05em;margin-bottom:6px}
+.lim-h.ok{color:var(--ok)}
+.lim-h.no{color:var(--no)}
+.lim-li{font-size:12px;color:var(--ink2);line-height:1.9;padding-left:10px;position:relative}
+.lim-li::before{content:"·";position:absolute;left:0;color:var(--faint)}
+.lim-foot{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);font-size:11px;color:var(--faint);line-height:1.8}
+
+.dis{margin-top:18px;font-size:11px;color:var(--no);background:var(--nobg);border:1px solid var(--nolnn);border-radius:10px;padding:9px 11px;line-height:1.7}
+.scopenote{display:flex;gap:8px;align-items:flex-start;background:#fdf6e8;border:1px solid #f0e2c4;border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:12px;line-height:1.65;color:#7a5310}
+.scopenote b{flex:0 0 auto;font-size:10.5px;padding:2px 8px;border-radius:99px;background:#f3e3bd;color:#94620b}
+
+.foot{display:flex;gap:8px;margin-top:16px}
+.foot a{flex:1;text-align:center;height:40px;line-height:40px;border-radius:11px;background:#fff;border:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+</style>
+<!-- rc-agent-base --><script>window.RC_AGENT_BASE='https://function-ultra-disclose-commissioners.trycloudflare.com';</script>
+</head>
+<body>
+<div class="app">
+
+  <div class="top">
+    <a class="back" href="../index.html">‹</a>
+    <div><div class="t">提问</div><div class="s">答案可回溯到影像区域与原文</div></div>
+  </div>
+
+  <div class="casebar">
+    <span class="cid" id="cid">—</span>
+    <span class="ct" id="ct">加载中…</span>
+    <button id="shuffle">换一例</button>
+  </div>
+
+  <div class="askbox">
+    <input id="q" placeholder="例如：右肺中野有什么问题？" autocomplete="off">
+    <button id="ask">问</button>
+  </div>
+
+  <div class="chips" id="chips"></div>
+
+  <div id="result"><div class="empty">先选一个问题，或直接输入。<br>能答的会给出影像区域与原文；不能答的会说明为什么。</div></div>
+
+  <div class="limits" id="limits">
+    <button class="lim-toggle" id="limToggle">
+      <span>能力边界：能答什么，不能答什么</span>
+      <span class="lim-n" id="limN">—</span>
+      <span class="lim-chev">›</span>
+    </button>
+    <div class="lim-body" id="limBody" hidden>
+      <div class="lim-cols">
+        <div class="lim-col">
+          <div class="lim-h ok">能答</div>
+          <div class="lim-li">分区异常：某区有什么问题</div>
+          <div class="lim-li">主题有无：有没有肺炎 / 结节 / 积液</div>
+          <div class="lim-li">整体概括：主要异常是什么</div>
+          <div class="lim-li">报告要素：这份报告缺什么</div>
+        </div>
+        <div class="lim-col">
+          <div class="lim-h no">不能答</div>
+          <div class="lim-li">诊断 / 分期 / 病因 / 良恶性</div>
+          <div class="lim-li">治疗 / 用药 / 手术 / 住院</div>
+          <div class="lim-li">预后 / 生存期</div>
+          <div class="lim-li">代写报告 / 签字</div>
+          <div class="lim-li">非胸片 / 非 X 线（CT、MRI、超声）</div>
+          <div class="lim-li">精确测量（毫米、毫升）</div>
+          <div class="lim-li">患者身份信息</div>
+          <div class="lim-li">通用医学知识 / 其他任务</div>
+        </div>
+      </div>
+      <div class="lim-foot" id="limFoot"></div>
+    </div>
+  </div>
+
+  <div class="dis">非诊断用途 · 答案来自库内逐区文本（文献 + AI 辅助整理，未人工标注、未经医学专家逐例复核）· 指南为公开资料要点转述（非逐字引用）· 不提供诊断、分期、治疗与预后建议</div>
+
+  <div class="foot">
+    <a href="path.html">今日任务</a>
+    <a href="evidence.html">看证据</a>
+    <a href="drill.html">去练习</a>
+  </div>
+</div>
+
+<script src="ask-core.js"></script>
+<script src="qa-core.js"></script>
+<script>
+const URL_BANK = "../data/chest/ask_bank.json";
+const URL_LAB = "../data/lab/student_lab.json";
+let BANK = null, ITEMS = [], CORPUS = "", CASES = [], cur = null, LAB = null;
+// 分区标注覆盖肺野与膈下；问到骨骼/软组织/胸壁结构时，先说明范围，避免把“肺野正常”读成“没有骨折”。
+const NON_LUNG = /骨折|骨裂|肋骨|骨质|骨骼|软组织|胸壁|皮下|乳腺|甲状腺/;
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
+
+function pool(){
+  return ITEMS.filter(it=> it.case_id === null || it.case_id === cur);
+}
+
+function renderChips(){
+  const p = pool();
+  const pick = (kind)=>{
+    const c = p.filter(i=> i.kind === kind && i.answerable);
+    return c.length ? c[0] : null;
+  };
+  const zone = p.filter(i=> i.kind === "zone")[0] || null;
+  const topic = pick("topic");
+  const ov = pick("overview");
+  const ref = ITEMS.find(i=> !i.answerable);
+  const list = [zone, topic, ov, ref].filter(Boolean).slice(0,4);
+  $("chips").innerHTML = list.map(i=>`<button class="chip" data-q="${esc(i.question)}">${esc(i.question)}</button>`).join("");
+  $("chips").querySelectorAll(".chip").forEach(b=> b.onclick = ()=> ask(b.dataset.q));
+}
+
+function renderAnswer(item){
+  const region = item.region;
+  let filmHtml = "";
+  if(region && region.image && region.coords){
+    const [l,t,w,h] = region.coords;
+    filmHtml = `
+      <div class="sec">
+        <div class="sec-h">影像区域 <span class="mini">点击图片可切换病例</span></div>
+        <div class="film">
+          <img src="../${esc(region.image)}" alt="" onerror="this.parentNode.innerHTML='<div style='padding:18px;color:#8ba0ab;font-size:12px'>影像未加载</div>'">
+          <div class="box" style="left:${l*100}%;top:${t*100}%;width:${w*100}%;height:${h*100}%" data-l="${esc(region.label)}"></div>
+        </div>
+        <div class="cap"><b>${esc(region.label)}</b> · ${esc(region.zone_id)} · ${esc(region.case_id)}　${esc(region.case_title||"")}</div>
+      </div>`;
+  }
+
+  let citeHtml = "";
+  if(item.citation && item.citation.source === "claim"){
+    const c = item.citation;
+    citeHtml = `
+      <div class="sec">
+        <div class="sec-h">依据原文 <span class="mini">库内逐区标注</span></div>
+        <div class="cite">
+          <p class="q"><mark>${esc(c.quote)}</mark></p>
+          <div class="meta">${esc(c.case_id)} · ${esc(c.zone_name || "")}（<code>${esc(c.zone_id || "")}</code>） · 库内逐区标注，无指南锚点</div>
+        </div>
+      </div>`;
+  } else if(item.citation){
+    const c = item.citation;
+    const off = c.offset || 0;
+    const quote = c.quote || "";
+    const from = Math.max(0, off - 50);
+    const to = Math.min(CORPUS.length, off + quote.length + 50);
+    const ctx = CORPUS.slice(from, to);
+    const pre = CORPUS.slice(from, off);
+    const post = CORPUS.slice(off + quote.length, to);
+    citeHtml = `
+      <div class="sec">
+        <div class="sec-h">依据原文 <span class="mini">点开看上下文</span></div>
+        <div class="cite" data-open="0">
+          <p class="q"><mark>${esc(quote)}</mark></p>
+          <div class="meta">${esc(c.topic_cn)} · <code>${esc(c.kp_id)}</code> · 第 <b>${off}</b> 字起 · 校验 <code>${esc(c.sha1.slice(0,8))}</code></div>
+          <div class="full"><pre>${esc(pre)}<mark>${esc(quote)}</mark>${esc(post)}</pre>
+            <div class="meta">指南语料 ${CORPUS.length} 字 · 全文校验 ${esc(BANK.corpus_sha1.slice(0,12))} · 仅要点转述，非逐字引用</div>
+          </div>
+        </div>
+      </div>`;
+  } else if(item.kind === "zone"){
+    // 这 5 例只有分区标注、没有可回溯的指南原文；明确说出来，不静默省略，也不补造出处。
+    citeHtml = `
+      <div class="sec">
+        <div class="sec-h">依据原文 <span class="mini">本条无原文锚点</span></div>
+        <div class="cite"><p class="q">该病例只有库内分区标注，没有可回溯的指南原文。请以影像区域（E1）为准，不要据此补造文献出处。</p></div>
+      </div>`;
+  }
+
+  const conf = item.confidence === "high" ? "高" : (item.confidence === "low" ? "低（来源未描述）" : "中");
+  return `
+    <div class="ans ok">
+      <div class="ans-h"><span class="tag ok">可以回答</span><span class="conf">置信度 ${conf}</span></div>
+      <p class="concl">${esc(item.answer)}</p>
+      ${filmHtml}
+      ${citeHtml}
+      <div class="src">出处：${esc(item.basis || "库内逐区文本")}　·　问题 ${esc(item.qid)}</div>
+    </div>`;
+}
+
+function renderRefusal(item){
+  const r = item.refusal;
+  const soft = r.level === "soft";
+  const p = pool();
+  const sugItem = p.filter(i=> i.answerable && i.kind !== "refusal")[0];
+  const cls = soft ? "soft" : "no";
+  const tagText = soft ? "不给结论 · 但可给依据" : "不能回答";
+  const title = soft ? "这个我不下结论。" : "这个我不能答。";
+  return `
+    <div class="ans ${cls}">
+      <div class="ans-h"><span class="tag ${cls}">${tagText}</span><span class="conf">${esc(r.type_cn)}</span></div>
+      <p class="concl">${title}</p>
+      <p class="reason">${esc(r.reason)}</p>
+      <div class="sug">
+        <div class="sg-h">你可以问</div>
+        <div>${esc(r.suggestion || (sugItem ? sugItem.question : "换一种问法"))}</div>
+      </div>
+    </div>`;
+}
+
+function renderUnknown(query){
+  const p = pool().filter(i=> i.answerable).slice(0,3);
+  const kb = ["磨玻璃影是什么", "气胸在胸片上怎么找", "气胸和胸腔积液怎么区分"];
+  return `
+    <div class="ans no">
+      <div class="ans-h"><span class="tag no">没匹配到</span><span class="conf">当前病例库内无对应问答</span></div>
+      <p class="concl">我没理解这个问题。</p>
+      <p class="reason">我只会回答与当前病例相关、且库内有据可依的问题。与其编一个答案，不如直接说没对上。</p>
+      <div class="sug">
+        <div class="sg-h">换个问法试试</div>
+        ${p.map(i=>`<span class="sg-item" data-q="${esc(i.question)}">${esc(i.question)}</span>`).join("")}
+        ${kb.map(q=>`<span class="sg-item" data-q="${esc(q)}">${esc(q)}</span>`).join("")}
+      </div>
+    </div>`;
+}
+
+// 骨骼与关节判断直接拒答，和课堂实验室的“骨骼与关节系统”口径保持一致。
+const BONE_JUDGE = /骨折|骨裂|骨破坏|骨质疏松|骨质增生|退变/;
+function boneRefusalHtml(q){
+  return `
+    <div class="ans no">
+      <div class="ans-h"><span class="tag no">不能回答</span><span class="conf">骨骼与关节系统</span></div>
+      <p class="concl">这个我不能答。</p>
+      <p class="reason">本工具的分区标注只覆盖肺野、心影与纵隔轮廓、膈面与肋膈角、膈下（胃泡与肝影上部），骨骼与关节系统不在范围内，不能判断“${esc(q)}”。</p>
+      <div class="sug"><div class="sg-h">你可以问</div><div>该区肺野、胸膜、纵隔或膈下有什么表现</div></div>
+    </div>`;
+}
+
+function scopeNoteHtml(q){
+  if(!NON_LUNG.test(q)) return "";
+  return `<div class="scopenote"><b>范围提示</b><span>分区标注覆盖肺野、心影与纵隔轮廓、膈面与肋膈角、膈下（胃泡与肝影上部）；骨骼、软组织与胸壁结构不在标注范围内。下面的内容只是该区标注所见，不能用来判断骨折或软组织异常。</span></div>`;
+}
+
+const SCOPE_REASON_TEXT = {
+  "治疗 / 预后 / 操作建议": "治疗、用药、手术、引流、住院与预后判断需要结合临床、实验室与患者整体情况；本工具只转述影像教学标注，不提供这类建议。",
+  "非胸部部位": "本工具只做胸部 X 线（CR/DR）教学，不跨部位回答；其他部位的分区与征象不在库内。",
+  "问句过于宽泛": "问句里没有具体的征象、疾病或分区；请给出具体对象，才能回到库内证据。",
+  "诊断结论": "仅凭胸片分区描述不能下诊断或良恶性结论；需要病理、增强 CT 或多学科会诊。",
+  "分期判断": "分期需要病理与系统影像资料，单张胸片不足以判断。",
+  "病因判断": "病原学判断需要实验室、痰检与培养，影像只能描述表现。",
+  "检查方式（本工具只判胸片）": "本工具的数据与标注全部是胸部 X 线正侧位片，不包含 CT、MRI、超声或核医学影像。",
+  "患者隐私": "不提供患者身份信息，也不推断拍摄医院。",
+  "准确性保证": "不能保证 100% 准确；库内是教学标注，不是临床性能承诺。",
+  "非医学任务": "本工具只回答胸部 X 线的教学问题，不处理代码、翻译或文书任务。",
+  "就诊指引": "就诊科室与挂号指引需要结合临床，本工具不提供。",
+  "特殊人群与放射防护": "儿童、孕妇的检查选择与辐射防护属于临床决策，本工具不提供。",
+  "骨骼与关节系统": "分区标注只覆盖肺野、心影与纵隔轮廓、膈面与肋膈角、膈下；骨骼与关节不在范围内。",
+};
+
+function renderScopeRefusal(label){
+  const sug = (window.AskCore && AskCore.SCOPE_SUGGESTIONS) || [];
+  return `
+    <div class="ans no">
+      <div class="ans-h"><span class="tag no">不能回答</span><span class="conf">${esc(label)}</span></div>
+      <p class="concl">这个我不能答。</p>
+      <p class="reason">${esc(SCOPE_REASON_TEXT[label] || "该问题超出本工具的能力范围。")}</p>
+      <div class="sug">
+        <div class="sg-h">你可以问</div>
+        ${sug.map(i=>`<span class="sg-item" data-q="${esc(i)}">${esc(i)}</span>`).join(" ")}
+      </div>
+    </div>`;
+}
+
+const KB_KIND = { sign: "征象解释", concept: "疾病解释", compare: "对比", guideline: "指南条款" };
+
+function kbEntityHtml(a){
+  if(a.kind === "compare"){
+    return `<div class="sec"><div class="sec-h">并列对比</div>` + (a.entities || []).map(v=>`
+      <div class="cite"><p class="q"><b>${esc(v.name)}</b>：${esc(v.appearance)}</p>
+        <div class="meta">易错点：${esc((v.pitfalls || []).join("；") || "暂未列出")}${v.modality && v.modality.length ? ` · 模态 ${esc(v.modality.join(" / "))}` : ""}</div></div>`).join("") + `</div>`;
+  }
+  const v = (a.entities || [])[0];
+  if(!v) return "";
+  return `<div class="sec"><div class="sec-h">词条</div>
+    <div class="cite"><p class="q"><b>${esc(v.name)}</b>：${esc(v.appearance)}</p>
+      <div class="meta">易错点：${esc((v.pitfalls || []).join("；") || "暂未列出")}${v.modality && v.modality.length ? ` · 模态 ${esc(v.modality.join(" / "))}` : ""}</div></div></div>`;
+}
+
+function kbSourcesHtml(a){
+  const list = a.sources || [];
+  if(!list.length) return "";
+  return `<div class="sec"><div class="sec-h">文献来源 <span class="mini">链接引用，不转载</span></div>` +
+    list.map(s=>`<div class="cite"><p class="q">${esc(s.title)}</p><div class="meta">${esc(s.publisher || "")}${s.year ? ` · ${esc(s.year)}` : ""}${s.url ? ` · <a href="${esc(s.url)}" target="_blank" rel="noopener">打开来源</a>` : ""}${s.license_note ? ` · ${esc(s.license_note)}` : ""}</div></div>`).join("") + `</div>`;
+}
+
+function kbGuideHtml(a){
+  const list = a.guidelines || [];
+  if(!list.length) return "";
+  return `<div class="sec"><div class="sec-h">指南条款 <span class="mini">要点转述</span></div>` +
+    list.map(g=>`<div class="cite"><p class="q">${esc(g.statement)}</p><div class="meta">${esc(g.standard_name || "")} · ${esc(g.category || "")}${g.conditions && g.conditions.length ? ` · 适用条件：${esc(g.conditions.join("；"))}` : ""}</div></div>`).join("") + `</div>`;
+}
+
+function kbCasesHtml(a){
+  const list = (a.cases || []).filter(e=> e.case);
+  if(!list.length) return "";
+  return `<div class="sec"><div class="sec-h">库内示例 <span class="mini">不是对当前片子的判断</span></div>` +
+    list.slice(0,6).map(e=>{
+      const z = e.zone;
+      return `<div class="cite"><p class="q">${esc(e.case.id)} · ${esc(e.case.title || "")}${z ? ` · ${esc(z.name)}（${esc(z.status_label || z.status || "")}）` : ""}</p>
+        ${z && z.text ? `<div class="meta">${esc(z.text)}</div>` : ""}
+        ${z ? `<div class="meta"><code>${esc(z.id)}</code>${z.coords ? ` · 位置框 [${z.coords.map(n=>Number(n).toFixed(2)).join(", ")}]` : ""}</div>` : ""}</div>`;
+    }).join("") + `</div>`;
+}
+
+function kbFilmHtml(a){
+  const ex = (a.cases || []).find(e=> e.zone && e.zone.coords && e.case && e.case.image);
+  if(!ex) return "";
+  const [l,t,w,h] = ex.zone.coords;
+  return `<div class="sec"><div class="sec-h">示例影像 <span class="mini">${esc(ex.case.id)} · ${esc(ex.zone.name)}</span></div>
+    <div class="film"><img src="../${esc(ex.case.image)}" alt="">
+      <div class="box" style="left:${l*100}%;top:${t*100}%;width:${w*100}%;height:${h*100}%" data-l="${esc(ex.zone.name)}"></div></div>
+    <div class="cap"><b>${esc(ex.zone.name)}</b> · ${esc(ex.zone.id)} · ${esc(ex.case.id)}　${esc(ex.case.title||"")}</div></div>`;
+}
+
+function kbMissingHtml(a){
+  const list = a.missing || [];
+  if(!list.length) return "";
+  return `<div class="sec"><div class="sec-h">边界说明</div><div class="cite"><p class="q">${list.map(esc).join("<br>")}</p></div></div>`;
+}
+
+function renderKnowledge(a){
+  return `
+    <div class="ans ok">
+      <div class="ans-h"><span class="tag ok">可以回答</span><span class="conf">${esc(KB_KIND[a.kind] || "知识库")}</span></div>
+      <p class="concl">${esc(a.conclusion)}</p>
+      <div class="src">这是库内词条解释，不是对当前片子的判断；要看当前片子，请直接问某个分区或“有没有 X”。</div>
+      ${kbFilmHtml(a)}
+      ${kbEntityHtml(a)}
+      ${kbCasesHtml(a)}
+      ${kbSourcesHtml(a)}
+      ${kbGuideHtml(a)}
+      ${kbMissingHtml(a)}
+    </div>`;
+}
+
+function ask(query){
+  const q = String(query || "").trim();
+  if(!q) return;
+  $("q").value = q;
+  const scope = cur ? `<div style="font-size:12px;color:#8a94a6;margin:0 0 8px">检索范围：当前病例 ${cur}（答案只针对这张片子；换一例后答案会变）</div>` : "";
+  if(BONE_JUDGE.test(q)){
+    $("result").innerHTML = scope + boneRefusalHtml(q);
+    bindResult();
+    return;
+  }
+  // 范围门先于一切检索：治疗/诊断/非胸部/过宽问句不进知识库，也不进问答库。
+  const scopeLabel = AskCore.scopeReason(q) || AskCore.nonChestReason(q) || AskCore.tooBroadReason(q);
+  if(scopeLabel){
+    $("result").innerHTML = scope + renderScopeRefusal(scopeLabel);
+    bindResult();
+    return;
+  }
+  // “X 是什么 / 怎么找 / A 和 B 怎么区分”走知识库词条，而不是“本片有没有 X”。
+  const kb = (window.QACore && LAB) ? QACore.intentAnswer(LAB, q) : null;
+  if(kb){
+    $("result").innerHTML = renderKnowledge(kb);
+    bindResult();
+    return;
+  }
+  const res = AskCore.classify(q, cur, ITEMS);
+  if(res.kind === "unknown"){
+    $("result").innerHTML = scope + renderUnknown(q);
+  } else if(res.kind === "refusal"){
+    $("result").innerHTML = scope + (res.scope ? renderScopeRefusal(res.scope) : renderRefusal(res.item));
+  } else {
+    $("result").innerHTML = scope + scopeNoteHtml(q) + renderAnswer(res.item);
+  }
+  bindResult();
+}
+
+function bindResult(){
+  document.querySelectorAll(".cite").forEach(c=>{
+    c.onclick = ()=> c.classList.toggle("open");
+  });
+  document.querySelectorAll(".sg-item").forEach(e=>{
+    e.onclick = ()=> ask(e.dataset.q);
+  });
+}
+
+function pickCase(id){
+  const cs = CASES;
+  if(!cs.length) return null;
+  if(id){ const f = cs.find(c=> c.id === id); if(f) return f; }
+  // 默认固定：优先第一张有病变的片子，否则第一例。
+  // 同一问句重复问必须得到同一答案，所以这里不能用随机。
+  const abn = cs.find(c => ITEMS.some(it => it.case_id === c.id && (it.region || {}).status === "abnormal"));
+  return abn || cs[0];
+}
+
+function shuffleCase(){
+  const cs = CASES;
+  if(!cs.length) return null;
+  return cs[Math.floor(Math.random()*cs.length)];
+}
+
+function selectCase(c){
+  cur = c ? c.id : null;
+  $("cid").textContent = c ? c.id : "—";
+  $("ct").textContent = c ? c.title : "—";
+  renderChips();
+}
+
+function boot(){
+  Promise.all([
+    fetch(URL_BANK, {cache:"no-cache"}).then(r=> r.json()),
+    fetch(URL_LAB, {cache:"no-cache"}).then(r=> r.json()).catch(()=> null),
+  ])
+    .then(([d, lab])=>{
+      BANK = d;
+      LAB = lab;
+      ITEMS = d.items || [];
+      CORPUS = d.corpus || "";
+      if(!ITEMS.length) throw new Error("empty");
+      const map = {};
+      ITEMS.forEach(it=>{
+        if(!it.case_id) return;
+        if(!map[it.case_id]) map[it.case_id] = { id: it.case_id, title: "", n: 0 };
+        map[it.case_id].n++;
+        if(!map[it.case_id].title && it.region) map[it.case_id].title = it.region.case_title || "";
+      });
+      CASES = Object.values(map);
+      const want = new URLSearchParams(location.search).get("case");
+      selectCase(pickCase(want));
+      renderLimits();
+    })
+    .catch(e=>{
+      $("result").innerHTML = `<div class="empty">问答库未加载：请通过构建后的站点访问 read/ask.html</div>`;
+      console.error(e);
+    });
+}
+
+function renderLimits(){
+  const refs = ITEMS.filter(i=> !i.answerable);
+  const hard = refs.filter(i=> i.refusal && i.refusal.level !== "soft").length;
+  const soft = refs.length - hard;
+  $("limN").textContent = refs.length + " 条拒答样例";
+  $("limFoot").innerHTML = `共 ${refs.length} 条拒答样例：硬拒绝 <b>${hard}</b> 条（完全不能答），软拒绝 <b>${soft}</b> 条（不给结论，但给依据）。<br>阈值：拒答匹配门槛 0.25，低于回答门槛 0.32 —— 宁可多拒答，不可误答。`;
+}
+
+$("limToggle").onclick = ()=>{
+  const box = $("limits");
+  box.classList.toggle("open");
+  $("limBody").hidden = !box.classList.contains("open");
+};
+
+$("ask").onclick = ()=> ask($("q").value);
+$("q").addEventListener("keydown", e=>{ if(e.key === "Enter") ask($("q").value); });
+$("shuffle").onclick = ()=>{
+  let next = shuffleCase();
+  if(CASES.length > 1){ while(next && cur && next.id === cur.id) next = shuffleCase(); }
+  selectCase(next);
+  $("result").innerHTML = `<div class="empty">已换一例。现在可以问这张片子。</div>`;
+};
+boot();
+</script>
+</body>
+</html>

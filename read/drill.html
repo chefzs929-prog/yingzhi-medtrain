@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2f7f6">
+<title>自适应练习 · RadioCheck</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b4f55'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='white' font-family='sans-serif'%3ER%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f2f7f6; --surface:#fff; --ink:#0f2029; --ink2:#2a4350;
+  --muted:#5f7784; --faint:#8ba0ab; --line:#e3eeeb;
+  --brand:#0b4f55; --brand2:#0e7c7b;
+  --ok:#147a5b; --warn:#a9690b; --bad:#b23b3b; --grey:#7c8f99;
+  --r:14px; --shadow:0 1px 2px rgba(16,35,46,.05),0 14px 36px -30px rgba(11,79,85,.5);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#e9f1ef;color:var(--ink);
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.app{max-width:560px;margin:0 auto;min-height:100vh;background:var(--bg);padding:18px 16px 120px;position:relative}
+@media(min-width:600px){.app{min-height:calc(100vh - 40px);margin:20px auto;border-radius:26px;overflow:hidden;box-shadow:0 30px 80px -50px rgba(11,79,85,.6)}}
+
+.top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.back{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid var(--line);display:grid;place-items:center;font-size:17px;color:var(--brand)}
+.top .t{font-size:15px;font-weight:700}
+.top .s{font-size:11.5px;color:var(--faint)}
+.count{margin-left:auto;font-size:12px;color:var(--brand);background:#e9f4f1;padding:3px 10px;border-radius:99px;font-weight:700}
+
+.pbar{height:5px;border-radius:99px;background:#e5efec;overflow:hidden;margin-bottom:14px}
+.pbar i{display:block;height:100%;background:linear-gradient(90deg,#0e7c7b,#4fbf8b);border-radius:99px;transition:width .3s}
+
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:15px}
+.qtop{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.type{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:#e9f4f1;color:var(--brand2)}
+.kp{font-size:10.5px;color:var(--faint);border:1px solid var(--line);padding:1px 7px;border-radius:6px}
+.film{border-radius:10px;overflow:hidden;background:#0b0f16;margin-bottom:12px;max-height:260px;display:flex;align-items:center;justify-content:center}
+.film img{display:block;width:100%;height:auto;max-height:260px;object-fit:contain}
+.film.none{display:none}
+h2.stem{font-size:16px;line-height:1.6;margin:0 0 14px;font-weight:650}
+
+.opts{display:grid;gap:8px}
+.opt{
+  display:flex;align-items:center;gap:10px;width:100%;text-align:left;
+  border:1px solid var(--line);background:#fafdfc;border-radius:11px;padding:11px 13px;
+  font-size:14px;color:var(--ink2);cursor:pointer;transition:.14s;font-family:inherit;
+}
+.opt:hover{border-color:#bfd9d3}
+.opt .k{width:24px;height:24px;border-radius:7px;background:#eef4f2;color:var(--muted);display:grid;place-items:center;font-size:12px;font-weight:700;flex:0 0 auto}
+.opt.sel{border-color:var(--brand);background:#eef8f6}
+.opt.sel .k{background:var(--brand);color:#fff}
+.opt.right{border-color:#9ddfc5;background:#f0faf6}
+.opt.right .k{background:var(--ok);color:#fff}
+.opt.wrong{border-color:#f0bcbc;background:#fdf3f3}
+.opt.wrong .k{background:var(--bad);color:#fff}
+.opt[disabled]{cursor:default}
+
+.fb{margin-top:12px;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.8;border:1px solid}
+.fb.ok{background:#f0faf6;border-color:#cfe9df;color:#0f5c45}
+.fb.no{background:#fdf6f6;border-color:#f3dcdc;color:#8f3030}
+.fb .h{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.7}
+.fb .h b{color:var(--ink2)}
+.fb .h code{background:#fff;padding:0 4px;border-radius:4px;font-size:11px}
+
+.actions{display:flex;gap:8px;margin-top:14px}
+.actions button{flex:1;height:44px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--ink2);font-size:14px;font-weight:650;cursor:pointer}
+.actions button.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.actions button:disabled{opacity:.45;cursor:not-allowed}
+
+.weak{margin-top:22px}
+.weak h3{font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--faint);margin:0 0 8px 4px}
+.inset{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.wrow{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line);font-size:12.5px}
+.wrow:last-child{border-bottom:0}
+.wrow .nm{font-weight:600;color:var(--ink2)}
+.wrow .sub{font-size:10.5px;color:var(--faint);margin-top:1px}
+.wrow .bar{flex:1;height:5px;border-radius:99px;background:#eef3f1;overflow:hidden;min-width:40px}
+.wrow .bar i{display:block;height:100%;background:var(--ok)}
+.wrow .bar.low i{background:var(--bad)}
+.wrow .go{border:1px solid var(--line);background:#fafdfc;color:var(--brand2);font-size:11px;padding:4px 10px;border-radius:99px;cursor:pointer;font-family:inherit}
+.empty{padding:16px 14px;font-size:12.5px;color:var(--muted);line-height:1.8}
+
+.bottom{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:560px;
+  padding:10px 16px 18px;background:linear-gradient(180deg,rgba(242,247,246,0),rgba(242,247,246,.96) 40%);
+}
+@media(min-width:600px){.bottom{bottom:20px;border-radius:0 0 26px 26px}}
+.bottom .reset{width:100%;height:38px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.9);color:var(--muted);font-size:12px;cursor:pointer}
+.dis{margin-top:14px;font-size:11px;color:var(--bad);background:#fdf6f6;border:1px solid #f3dcdc;border-radius:10px;padding:9px 11px;line-height:1.7}
+</style>
+<!-- rc-agent-base --><script>window.RC_AGENT_BASE='https://function-ultra-disclose-commissioners.trycloudflare.com';</script>
+</head>
+<body>
+<div class="app">
+
+  <div class="top">
+    <a class="back" href="clinic.html">‹</a>
+    <div><div class="t">自适应练习</div><div class="s" id="sub">答错的点会多出题</div></div>
+    <div class="count" id="count">0 / 10</div>
+  </div>
+
+  <div class="pbar"><i id="pbar" style="width:0"></i></div>
+
+  <div class="card" id="qcard">
+    <div class="qtop"><span class="type" id="qtype">—</span><span class="kp" id="qkp">—</span></div>
+    <div class="film none" id="film"><img alt="" id="qimg"></div>
+    <h2 class="stem" id="qstem">加载中…</h2>
+    <div class="opts" id="opts"></div>
+  </div>
+
+  <div id="fb"></div>
+
+  <div class="actions">
+    <button id="skip">跳过</button>
+    <button class="primary" id="submit" disabled>提交答案</button>
+  </div>
+
+  <section class="weak">
+    <h3>我的薄弱点</h3>
+    <div class="inset" id="weak"><div class="empty">还没有答题记录。先做几道，系统会按你的错题调整出题。</div></div>
+  </section>
+
+  <div class="dis">非诊断用途 · 题目由库内逐区文本自动生成，答案可追溯到具体病例与分区</div>
+
+  <div class="bottom"><button class="reset" id="reset">清空本机答题记录</button></div>
+</div>
+
+<script>
+const URL_BANK = "../data/chest/drill_bank.json";
+const KEY = "rc_drill_v1";
+const TYPE_CN = { localize: "分区定位", state: "状态判读", report: "报告要素" };
+const GOAL = 10;
+
+let BANK = [], KPS = [];
+let cur = null, picked = null, answered = false;
+let state = load();
+let focusKp = "";
+let round = 0;
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
+
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY) || "null");
+    if(s && s.kp) return s;
+  }catch(e){}
+  return { kp:{}, seen:{}, answered:0 };
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+function writePath(n){
+  const K = "rc_path_v1";
+  let s = {};
+  try{ s = JSON.parse(localStorage.getItem(K) || "null") || {}; }catch(e){}
+  s.steps = s.steps || {};
+  s.steps[n] = true;
+  s.started = true;
+  try{ localStorage.setItem(K, JSON.stringify(s)); }catch(e){}
+}
+
+function kpStat(kp){
+  return state.kp[kp] || { n:0, right:0, wrong:0 };
+}
+
+/* 加权选题：错得多的权重大，已掌握与做过的降权 */
+function pickQuestion(){
+  let pool = BANK;
+  if(focusKp) pool = BANK.filter(q=>q.kp===focusKp);
+  if(!pool.length) pool = BANK;
+
+  const items = pool.map(q=>{
+    const s = kpStat(q.kp);
+    let w = 1 + s.wrong*3 - s.right*0.6;
+    const seen = state.seen[q.qid] || 0;
+    if(seen) w *= Math.pow(0.3, Math.min(seen,3));
+    if(s.right >= 2) w *= 0.35;
+    return { q, w: Math.max(0.12, w) };
+  });
+
+  const total = items.reduce((a,b)=>a+b.w,0);
+  let r = Math.random()*total;
+  for(const it of items){ r -= it.w; if(r <= 0) return it.q; }
+  return items[0].q;
+}
+
+function renderQuestion(){
+  cur = pickQuestion();
+  picked = null; answered = false;
+  $("qtype").textContent = TYPE_CN[cur.type] || cur.type;
+  $("qkp").textContent = cur.kp_cn || cur.kp;
+  $("qstem").textContent = cur.stem;
+
+  const film = $("film");
+  if(cur.image){
+    film.classList.remove("none");
+    $("qimg").src = "../" + cur.image;
+  } else {
+    film.classList.add("none");
+  }
+
+  $("opts").innerHTML = cur.options.map(o=>
+    `<button class="opt" data-k="${o.key}"><span class="k">${o.key}</span><span>${esc(o.text)}</span></button>`
+  ).join("");
+  $("opts").querySelectorAll(".opt").forEach(b=>{
+    b.onclick = ()=>{
+      if(answered) return;
+      picked = b.dataset.k;
+      $("opts").querySelectorAll(".opt").forEach(x=>x.classList.toggle("sel", x===b));
+      $("submit").disabled = false;
+    };
+  });
+
+  $("fb").innerHTML = "";
+  $("submit").textContent = "提交答案";
+  $("submit").disabled = true;
+  $("submit").onclick = submit;
+  updateProgress();
+}
+
+function submit(){
+  if(answered || !picked) return;
+  answered = true;
+
+  const ok = picked === cur.answer;
+  const s = kpStat(cur.kp);
+  s.n += 1;
+  if(ok) s.right += 1; else s.wrong += 1;
+  state.kp[cur.kp] = s;
+  state.seen[cur.qid] = (state.seen[cur.qid] || 0) + 1;
+  state.answered = (state.answered || 0) + 1;
+  state.round = (state.round || 0) + 1;
+  save();
+  if(state.round >= 3) writePath(4);
+
+  $("opts").querySelectorAll(".opt").forEach(b=>{
+    b.disabled = true;
+    if(b.dataset.k === cur.answer) b.classList.add("right");
+    else if(b.dataset.k === picked) b.classList.add("wrong");
+  });
+
+  $("fb").innerHTML = `<div class="fb ${ok?"ok":"no"}">
+    <b>${ok ? "答对了" : "答错了"}</b>　正确答案 ${esc(cur.answer)}
+    <div class="h">${esc(cur.explain)}</div>
+    <div class="h"><b>出处：</b><code>${esc(cur.source)}</code></div>
+    <div class="h"><b>知识点：</b>${esc(cur.kp_cn)}</div>
+  </div>`;
+
+  $("submit").textContent = "下一题";
+  $("submit").disabled = false;
+  $("submit").onclick = ()=>{ round += 1; if(round >= GOAL){ focusKp = ""; round = 0; } renderQuestion(); };
+  updateProgress();
+  renderWeak();
+}
+
+function updateProgress(){
+  $("count").textContent = `${Math.min(round, GOAL)} / ${GOAL}`;
+  $("pbar").style.width = Math.min(100, round/GOAL*100) + "%";
+}
+
+/* 薄弱点：错得多、正确率低的排前面 */
+function renderWeak(){
+  const rows = KPS.map(k=>{
+    const s = kpStat(k.kp);
+    const acc = s.n ? s.right / s.n : 0;
+    return { ...k, n:s.n, right:s.right, wrong:s.wrong, acc };
+  }).filter(k=>k.n > 0)
+    .sort((a,b)=> (b.wrong - a.wrong) || (a.acc - b.acc));
+
+  if(!rows.length){
+    $("weak").innerHTML = `<div class="empty">还没有答题记录。先做几道，系统会按你的错题调整出题。</div>`;
+    return;
+  }
+  $("weak").innerHTML = rows.slice(0,6).map(k=>`
+    <div class="wrow">
+      <div>
+        <div class="nm">${esc(k.kp_cn)}</div>
+        <div class="sub">做 ${k.n} 次 · 错 ${k.wrong} 次 · 正确率 ${Math.round(k.acc*100)}%</div>
+      </div>
+      <div class="bar ${k.acc < 0.6 ? "low" : ""}"><i style="width:${Math.round(k.acc*100)}%"></i></div>
+      <button class="go" data-kp="${esc(k.kp)}">去练</button>
+    </div>`).join("");
+
+  $("weak").querySelectorAll(".go").forEach(b=>{
+    b.onclick = ()=>{
+      focusKp = b.dataset.kp;
+      round = 0;
+      renderQuestion();
+      $("sub").textContent = "定向练习：" + (KPS.find(k=>k.kp===focusKp)||{}).kp_cn;
+      window.scrollTo({top:0, behavior:"smooth"});
+    };
+  });
+}
+
+function boot(){
+  fetch(URL_BANK, {cache:"no-cache"})
+    .then(r=>r.json())
+    .then(d=>{
+      BANK = d.questions || [];
+      KPS = d.kps || [];
+      if(!BANK.length) throw new Error("empty bank");
+      renderQuestion();
+      renderWeak();
+    })
+    .catch(e=>{
+      $("qstem").textContent = "题库未加载：请通过构建后的站点访问 read/drill.html";
+      console.error(e);
+    });
+}
+
+$("skip").onclick = ()=>{ round += 1; renderQuestion(); };
+$("reset").onclick = ()=>{
+  if(!confirm("清空本机的答题记录与掌握度？")) return;
+  state = { kp:{}, seen:{}, answered:0 };
+  save(); round = 0; focusKp = "";
+  $("sub").textContent = "答错的点会多出题";
+  renderQuestion(); renderWeak();
+};
+boot();
+</script>
+</body>
+</html>

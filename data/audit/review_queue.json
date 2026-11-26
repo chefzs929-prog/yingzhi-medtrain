@@ -1,0 +1,1548 @@
+{
+ "generated_at": "2026-11-26",
+ "policy": {
+  "role": "AI 预标注，不是人工金标准；专家结论优先于 AI。",
+  "ai_a": "报告视角：只读病例级公开描述，判断来源是否覆盖该分区。",
+  "ai_b": "结构化视角：只读 claim.sign_ids / zone.status / claim.text。",
+  "unmentioned_definition": "“来源未逐区提及”，不是“来源完全没提”；病例级泛化描述若覆盖该区，不算未提及。"
+ },
+ "summary": {
+  "unmentioned_total": 58,
+  "unmentioned_sample": 20,
+  "dual_label_total": 30,
+  "dual_agree": 24,
+  "dual_kappa": 0.5263,
+  "unmentioned_agree": 11,
+  "unmentioned_kappa": -0.0976,
+  "ai_a_distribution": {
+   "not_mentioned": 33,
+   "mentioned_abnormal": 10,
+   "mentioned_normal": 6,
+   "mentioned_other": 1
+  },
+  "conflicts": 15,
+  "claim_missing": 18,
+  "status_text_conflict": 8,
+  "status_signs_conflict": 14
+ },
+ "items": [
+  {
+   "id": "UM-01",
+   "kind": "unmentioned",
+   "case_id": "CASE-017",
+   "case_title": "双侧下肺野模糊伴肋膈角变钝",
+   "zone_id": "RUL",
+   "zone_name": "右肺上野",
+   "status": "unmentioned",
+   "claim_id": "CLM-017-RUL",
+   "claim_text": "双侧下肺野模糊伴肋膈角变钝 · 右肺上野：来源公开说明为胸腔积液相关胸片，双侧下肺野密度增高。",
+   "description": "来源公开说明为胸腔积液相关胸片，双侧下肺野密度增高。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "出现层级泛化词，但不覆盖该分区层级；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "not_supported",
+    "reason": "有征象 id，但分区状态不是 abnormal"
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-02",
+   "kind": "unmentioned",
+   "case_id": "CASE-036",
+   "case_title": "气胸（胸片，标注版）",
+   "zone_id": "MED",
+   "zone_name": "纵隔与心影",
+   "status": "unmentioned",
+   "claim_id": "CLM-036-MED",
+   "claim_text": "气胸（胸片，标注版） · 纵隔与心影：The chest  X-ray  photo of a 30-years-old healthy man.",
+   "description": "原图标注为右侧气胸（Pneumothorax / Collapsed right lung）；来源页文字描述为健康男性，二者冲突。本页以图注与影像标注为准，建议人工复核。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "not_supported",
+    "reason": "有征象 id，但分区状态不是 abnormal"
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-03",
+   "kind": "unmentioned",
+   "case_id": "CASE-005",
+   "case_title": "双肺气腔影伴肺不张（含中心静脉导管）",
+   "zone_id": "SUB",
+   "zone_name": "膈下",
+   "status": "unmentioned",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "来源公开说明为双肺气腔影伴肺不张，并可见右锁骨下静脉导管尖端；原图左上角已做遮挡处理。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "“双肺/双侧”不覆盖纵隔/膈下；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 unmentioned",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-04",
+   "kind": "unmentioned",
+   "case_id": "CASE-202",
+   "case_title": "大叶性肺炎（胸片，红箭头）",
+   "zone_id": "SUB",
+   "zone_name": "膈下",
+   "status": "unmentioned",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "公开说明称“右肺上叶大片实变”；图中红箭头与密度增高区位于右肺中野，二者不一致。本页以图为准，建议人工复核。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 unmentioned",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-05",
+   "kind": "unmentioned",
+   "case_id": "CASE-016",
+   "case_title": "双肺弥漫粟粒样结节",
+   "zone_id": "MED",
+   "zone_name": "纵隔与心影",
+   "status": "unmentioned",
+   "claim_id": "CLM-016-MED",
+   "claim_text": "双肺弥漫粟粒样结节 · 纵隔与心影：来源公开说明为粟粒性结核胸片，双肺弥漫细小结节。",
+   "description": "来源公开说明为粟粒性结核胸片，双肺弥漫细小结节。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "“双肺/双侧”不覆盖纵隔/膈下；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "not_supported",
+    "reason": "有征象 id，但分区状态不是 abnormal"
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-06",
+   "kind": "unmentioned",
+   "case_id": "CASE-008",
+   "case_title": "下肺野气腔影（侧位）",
+   "zone_id": "ANT",
+   "zone_name": "胸骨后间隙",
+   "status": "unmentioned",
+   "claim_id": "CLM-008-ANT",
+   "claim_text": "下肺野气腔影（侧位） · 前胸部：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "来源公开说明为同一检查的侧位片。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-07",
+   "kind": "unmentioned",
+   "case_id": "CASE-015",
+   "case_title": "右中上肺野气腔影（正位）",
+   "zone_id": "LML",
+   "zone_name": "左肺中野",
+   "status": "unmentioned",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "来源公开说明为肺炎相关正位胸片，可见斑片状密度增高。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 unmentioned",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-08",
+   "kind": "unmentioned",
+   "case_id": "CASE-006",
+   "case_title": "大叶性肺炎（箭头标注）",
+   "zone_id": "LML",
+   "zone_name": "左肺中野",
+   "status": "unmentioned",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "来源公开说明为大叶性肺炎，图中红色箭头指向病变区域。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 unmentioned",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-09",
+   "kind": "unmentioned",
+   "case_id": "CASE-204",
+   "case_title": "结节病：双肺结节（胸片）",
+   "zone_id": "SUB",
+   "zone_name": "膈下",
+   "status": "unmentioned",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "双肺弥漫小结节影，以中上野为著。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "“双肺/双侧”不覆盖纵隔/膈下；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 unmentioned",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-10",
+   "kind": "unmentioned",
+   "case_id": "CASE-007",
+   "case_title": "下肺野气腔影（正位）",
+   "zone_id": "SUB",
+   "zone_name": "膈下",
+   "status": "unmentioned",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "来源公开说明为下肺野气腔影，病原学信息见来源页。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "出现层级泛化词，但不覆盖该分区层级；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 unmentioned",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-11",
+   "kind": "unmentioned",
+   "case_id": "CASE-018",
+   "case_title": "侧位胸片：后肋膈角变钝（箭头）",
+   "zone_id": "MID",
+   "zone_name": "肺门与中区",
+   "status": "unmentioned",
+   "claim_id": "CLM-018-MID",
+   "claim_text": "侧位胸片：后肋膈角变钝（箭头） · 肺野中部：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "来源公开说明为大量胸腔积液侧位片，箭头为原图标注。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-12",
+   "kind": "unmentioned",
+   "case_id": "CASE-162",
+   "case_title": "胸部 X 线",
+   "zone_id": "MED",
+   "zone_name": "纵隔与心影",
+   "status": "unmentioned",
+   "claim_id": "CLM-162-MED",
+   "claim_text": "胸部 X 线 · 纵隔与心影：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "Chest radiograph of miliary tuberculosis, 22 days after onset of fever, chills, and general malaise in a 82-year-old female. it shows extensive bilateral reticulo-nodular infiltrates\nFrom the same case (edit):\n\n\n\t\t\n\t\t\t\n\t\t\tX-ray, 13 days after onset, showing bilateral interstitial infiltrates.\n\t\t\n\t\t\n",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "“双肺/双侧”不覆盖纵隔/膈下；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-13",
+   "kind": "unmentioned",
+   "case_id": "CASE-153",
+   "case_title": "胸部 X 线",
+   "zone_id": "RUL",
+   "zone_name": "右肺上野",
+   "status": "unmentioned",
+   "claim_id": "CLM-153-RUL",
+   "claim_text": "胸部 X 线 · 右肺上野：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "edit\nChest radiograph of an 83 year old man with previous coronary artery bypass surgery and multiple percutaneous coronary interventions, now presenting with labored breathing. It shows distinct Kerley B lines, as well as an enlarged heart, somewhat dilated pulmonary blood vessels and minor pleural",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-14",
+   "kind": "unmentioned",
+   "case_id": "CASE-203",
+   "case_title": "肺结核（胸片，历史影像）",
+   "zone_id": "LML",
+   "zone_name": "左肺中野",
+   "status": "unmentioned",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "双肺上野斑片状、结节状密度增高，符合继发性肺结核分布。",
+   "ai_a": {
+    "label": "mentioned_abnormal",
+    "supported": "not_supported",
+    "reason": "出现“双肺/双侧”泛化词，覆盖双侧肺野，且出现异常词"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 unmentioned",
+    "fallback": true
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-15",
+   "kind": "unmentioned",
+   "case_id": "CASE-005",
+   "case_title": "双肺气腔影伴肺不张（含中心静脉导管）",
+   "zone_id": "MED",
+   "zone_name": "纵隔与心影",
+   "status": "unmentioned",
+   "claim_id": "CLM-005-MED",
+   "claim_text": "双肺气腔影伴肺不张（含中心静脉导管） · 纵隔与心影：来源公开说明为双肺气腔影伴肺不张，并可见右锁骨下静脉导管尖端；原图左上角已做遮挡处理。",
+   "description": "来源公开说明为双肺气腔影伴肺不张，并可见右锁骨下静脉导管尖端；原图左上角已做遮挡处理。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "“双肺/双侧”不覆盖纵隔/膈下；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "not_supported",
+    "reason": "有征象 id，但分区状态不是 abnormal"
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-16",
+   "kind": "unmentioned",
+   "case_id": "CASE-006",
+   "case_title": "大叶性肺炎（箭头标注）",
+   "zone_id": "RUL",
+   "zone_name": "右肺上野",
+   "status": "unmentioned",
+   "claim_id": "CLM-006-RUL",
+   "claim_text": "大叶性肺炎（箭头标注） · 右肺上野：来源公开说明为大叶性肺炎，图中红色箭头指向病变区域。",
+   "description": "来源公开说明为大叶性肺炎，图中红色箭头指向病变区域。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "not_supported",
+    "reason": "有征象 id，但分区状态不是 abnormal"
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-17",
+   "kind": "unmentioned",
+   "case_id": "CASE-006",
+   "case_title": "大叶性肺炎（箭头标注）",
+   "zone_id": "LUL",
+   "zone_name": "左肺上野",
+   "status": "unmentioned",
+   "claim_id": "CLM-006-LUL",
+   "claim_text": "大叶性肺炎（箭头标注） · 左肺上野：来源公开说明为大叶性肺炎，图中红色箭头指向病变区域。",
+   "description": "来源公开说明为大叶性肺炎，图中红色箭头指向病变区域。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "not_supported",
+    "reason": "有征象 id，但分区状态不是 abnormal"
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-18",
+   "kind": "unmentioned",
+   "case_id": "CASE-006",
+   "case_title": "大叶性肺炎（箭头标注）",
+   "zone_id": "LLL",
+   "zone_name": "左肺下野",
+   "status": "unmentioned",
+   "claim_id": "CLM-006-LLL",
+   "claim_text": "大叶性肺炎（箭头标注） · 左肺下野：来源公开说明为大叶性肺炎，图中红色箭头指向病变区域。",
+   "description": "来源公开说明为大叶性肺炎，图中红色箭头指向病变区域。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "not_supported",
+    "reason": "有征象 id，但分区状态不是 abnormal"
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-19",
+   "kind": "unmentioned",
+   "case_id": "CASE-006",
+   "case_title": "大叶性肺炎（箭头标注）",
+   "zone_id": "MED",
+   "zone_name": "纵隔与心影",
+   "status": "unmentioned",
+   "claim_id": "CLM-006-MED",
+   "claim_text": "大叶性肺炎（箭头标注） · 纵隔与心影：来源公开说明为大叶性肺炎，图中红色箭头指向病变区域。",
+   "description": "来源公开说明为大叶性肺炎，图中红色箭头指向病变区域。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "not_supported",
+    "reason": "有征象 id，但分区状态不是 abnormal"
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "UM-20",
+   "kind": "unmentioned",
+   "case_id": "CASE-006",
+   "case_title": "大叶性肺炎（箭头标注）",
+   "zone_id": "SUB",
+   "zone_name": "膈下",
+   "status": "unmentioned",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "来源公开说明为大叶性肺炎，图中红色箭头指向病变区域。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 unmentioned",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-01",
+   "kind": "dual_label",
+   "case_id": "CASE-005",
+   "case_title": "双肺气腔影伴肺不张（含中心静脉导管）",
+   "zone_id": "RLL",
+   "zone_name": "右肺下野",
+   "status": "abnormal",
+   "claim_id": "CLM-005-RLL",
+   "claim_text": "双肺气腔影伴肺不张（含中心静脉导管） · 右肺下野：来源公开说明为双肺气腔影伴肺不张，并可见右锁骨下静脉导管尖端；原图左上角已做遮挡处理。",
+   "description": "来源公开说明为双肺气腔影伴肺不张，并可见右锁骨下静脉导管尖端；原图左上角已做遮挡处理。",
+   "ai_a": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "出现“双肺/双侧”泛化词，覆盖双侧肺野，且出现异常词"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "有 1 个征象 id，且分区状态为 abnormal"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-02",
+   "kind": "dual_label",
+   "case_id": "CASE-016",
+   "case_title": "双肺弥漫粟粒样结节",
+   "zone_id": "RUL",
+   "zone_name": "右肺上野",
+   "status": "abnormal",
+   "claim_id": "CLM-016-RUL",
+   "claim_text": "双肺弥漫粟粒样结节 · 右肺上野：来源公开说明为粟粒性结核胸片，双肺弥漫细小结节。",
+   "description": "来源公开说明为粟粒性结核胸片，双肺弥漫细小结节。",
+   "ai_a": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "出现“双肺/双侧”泛化词，覆盖双侧肺野，且出现异常词"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "有 1 个征象 id，且分区状态为 abnormal"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-03",
+   "kind": "dual_label",
+   "case_id": "CASE-016",
+   "case_title": "双肺弥漫粟粒样结节",
+   "zone_id": "LLL",
+   "zone_name": "左肺下野",
+   "status": "abnormal",
+   "claim_id": "CLM-016-LLL",
+   "claim_text": "双肺弥漫粟粒样结节 · 左肺下野：来源公开说明为粟粒性结核胸片，双肺弥漫细小结节。",
+   "description": "来源公开说明为粟粒性结核胸片，双肺弥漫细小结节。",
+   "ai_a": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "出现“双肺/双侧”泛化词，覆盖双侧肺野，且出现异常词"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "有 1 个征象 id，且分区状态为 abnormal"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-04",
+   "kind": "dual_label",
+   "case_id": "CASE-204",
+   "case_title": "结节病：双肺结节（胸片）",
+   "zone_id": "LLL",
+   "zone_name": "左肺下野",
+   "status": "abnormal",
+   "claim_id": "CLM-204-LLL",
+   "claim_text": "结节病：双肺结节（胸片） · 左肺下野：双肺弥漫小结节影，以中上野为著。",
+   "description": "双肺弥漫小结节影，以中上野为著。",
+   "ai_a": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "出现“双肺/双侧”泛化词，覆盖双侧肺野，且出现异常词"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "有 1 个征象 id，且分区状态为 abnormal"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-05",
+   "kind": "dual_label",
+   "case_id": "CASE-015",
+   "case_title": "右中上肺野气腔影（正位）",
+   "zone_id": "RUL",
+   "zone_name": "右肺上野",
+   "status": "abnormal",
+   "claim_id": "CLM-015-RUL",
+   "claim_text": "右中上肺野气腔影（正位） · 右肺上野：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "来源公开说明为肺炎相关正位胸片，可见斑片状密度增高。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "not_supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "not_supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-06",
+   "kind": "dual_label",
+   "case_id": "CASE-017",
+   "case_title": "双侧下肺野模糊伴肋膈角变钝",
+   "zone_id": "RLL",
+   "zone_name": "右肺下野",
+   "status": "abnormal",
+   "claim_id": "CLM-017-RLL",
+   "claim_text": "双侧下肺野模糊伴肋膈角变钝 · 右肺下野：来源公开说明为胸腔积液相关胸片，双侧下肺野密度增高。",
+   "description": "来源公开说明为胸腔积液相关胸片，双侧下肺野密度增高。",
+   "ai_a": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "出现“下肺野”泛化词，且出现异常词"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "有 1 个征象 id，且分区状态为 abnormal"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-07",
+   "kind": "dual_label",
+   "case_id": "CASE-005",
+   "case_title": "双肺气腔影伴肺不张（含中心静脉导管）",
+   "zone_id": "LLL",
+   "zone_name": "左肺下野",
+   "status": "abnormal",
+   "claim_id": "CLM-005-LLL",
+   "claim_text": "双肺气腔影伴肺不张（含中心静脉导管） · 左肺下野：来源公开说明为双肺气腔影伴肺不张，并可见右锁骨下静脉导管尖端；原图左上角已做遮挡处理。",
+   "description": "来源公开说明为双肺气腔影伴肺不张，并可见右锁骨下静脉导管尖端；原图左上角已做遮挡处理。",
+   "ai_a": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "出现“双肺/双侧”泛化词，覆盖双侧肺野，且出现异常词"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "有 1 个征象 id，且分区状态为 abnormal"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-08",
+   "kind": "dual_label",
+   "case_id": "CASE-016",
+   "case_title": "双肺弥漫粟粒样结节",
+   "zone_id": "RML",
+   "zone_name": "右肺中野",
+   "status": "abnormal",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "来源公开说明为粟粒性结核胸片，双肺弥漫细小结节。",
+   "ai_a": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "出现“双肺/双侧”泛化词，覆盖双侧肺野，且出现异常词"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 abnormal",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-09",
+   "kind": "dual_label",
+   "case_id": "CASE-018",
+   "case_title": "侧位胸片：后肋膈角变钝（箭头）",
+   "zone_id": "POST",
+   "zone_name": "后肺野与后肋膈角",
+   "status": "abnormal",
+   "claim_id": "CLM-018-POST",
+   "claim_text": "侧位胸片：后肋膈角变钝（箭头） · 后部与后肋膈角：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "来源公开说明为大量胸腔积液侧位片，箭头为原图标注。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "not_supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "not_supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-10",
+   "kind": "dual_label",
+   "case_id": "CASE-162",
+   "case_title": "胸部 X 线",
+   "zone_id": "RML",
+   "zone_name": "右肺中野",
+   "status": "abnormal",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "Chest radiograph of miliary tuberculosis, 22 days after onset of fever, chills, and general malaise in a 82-year-old female. it shows extensive bilateral reticulo-nodular infiltrates\nFrom the same case (edit):\n\n\n\t\t\n\t\t\t\n\t\t\tX-ray, 13 days after onset, showing bilateral interstitial infiltrates.\n\t\t\n\t\t\n",
+   "ai_a": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "出现“双肺/双侧”泛化词，覆盖双侧肺野，且出现异常词"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 abnormal",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-11",
+   "kind": "dual_label",
+   "case_id": "CASE-047",
+   "case_title": "胸部后前位 X 线",
+   "zone_id": "MED",
+   "zone_name": "纵隔与心影",
+   "status": "normal",
+   "claim_id": "CLM-047-MED",
+   "claim_text": "胸部后前位 X 线 · 纵隔与心影：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "Chest x-ray – posteroanterior view. Mild diaphragmatic flattening may be indicative of chronic obstructive pulmonary disease. Lungs clear. No pneumothorax or effusion. Heart and pulmonary vasculature ",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "not_supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "not_supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-12",
+   "kind": "dual_label",
+   "case_id": "CASE-034",
+   "case_title": "胸部正位 X 线",
+   "zone_id": "LLL",
+   "zone_name": "左肺下野",
+   "status": "normal",
+   "claim_id": "CLM-034-LLL",
+   "claim_text": "胸部正位 X 线 · 左肺下野：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "An X-ray photo of my chest. A sample of normal heart and lung. Screenshot of DICOM image.",
+   "ai_a": {
+    "label": "mentioned_normal",
+    "supported": "supported",
+    "reason": "病例级正常描述，覆盖全片"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "not_supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-13",
+   "kind": "dual_label",
+   "case_id": "CASE-003",
+   "case_title": "胸片解剖标注（欠吸气、轻度旋转）",
+   "zone_id": "SUB",
+   "zone_name": "膈下",
+   "status": "normal",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "来源公开说明为欠吸气且轻度旋转的胸片，图中标注了棘突、锁骨内侧端、主动脉结与右侧第 5 前肋。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "not_supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "mentioned_normal",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 normal",
+    "fallback": true
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-14",
+   "kind": "dual_label",
+   "case_id": "CASE-001",
+   "case_title": "正常后前位胸片",
+   "zone_id": "LLL",
+   "zone_name": "左肺下野",
+   "status": "normal",
+   "claim_id": "CLM-001-LLL",
+   "claim_text": "正常后前位胸片 · 左肺下野：未见明显异常，作为正常对照。",
+   "description": "来源公开说明为正常后前位胸片。",
+   "ai_a": {
+    "label": "mentioned_normal",
+    "supported": "supported",
+    "reason": "病例级正常描述，覆盖全片"
+   },
+   "ai_b": {
+    "label": "mentioned_normal",
+    "supported": "supported",
+    "reason": "无征象 id，且分区状态为 normal"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-15",
+   "kind": "dual_label",
+   "case_id": "CASE-001",
+   "case_title": "正常后前位胸片",
+   "zone_id": "LML",
+   "zone_name": "左肺中野",
+   "status": "normal",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "来源公开说明为正常后前位胸片。",
+   "ai_a": {
+    "label": "mentioned_normal",
+    "supported": "supported",
+    "reason": "病例级正常描述，覆盖全片"
+   },
+   "ai_b": {
+    "label": "mentioned_normal",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 normal",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-16",
+   "kind": "dual_label",
+   "case_id": "CASE-041",
+   "case_title": "胸大肌影（胸片）",
+   "zone_id": "RLL",
+   "zone_name": "右肺下野",
+   "status": "normal",
+   "claim_id": "CLM-041-RLL",
+   "claim_text": "胸大肌影（胸片） · 右肺下野：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "Bilateral pectoralis major muscle shadows as seen on AP view of chest X-ray.",
+   "ai_a": {
+    "label": "mentioned_other",
+    "supported": "uncertain",
+    "reason": "出现“双肺/双侧”泛化词，覆盖双侧肺野，但无法从描述判断异常/正常"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "not_supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-17",
+   "kind": "dual_label",
+   "case_id": "CASE-034",
+   "case_title": "胸部正位 X 线",
+   "zone_id": "LUL",
+   "zone_name": "左肺上野",
+   "status": "normal",
+   "claim_id": "CLM-034-LUL",
+   "claim_text": "胸部正位 X 线 · 左肺上野：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "An X-ray photo of my chest. A sample of normal heart and lung. Screenshot of DICOM image.",
+   "ai_a": {
+    "label": "mentioned_normal",
+    "supported": "supported",
+    "reason": "病例级正常描述，覆盖全片"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "not_supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-18",
+   "kind": "dual_label",
+   "case_id": "CASE-003",
+   "case_title": "胸片解剖标注（欠吸气、轻度旋转）",
+   "zone_id": "LUL",
+   "zone_name": "左肺上野",
+   "status": "normal",
+   "claim_id": "CLM-003-LUL",
+   "claim_text": "胸片解剖标注（欠吸气、轻度旋转） · 左肺上野：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "来源公开说明为欠吸气且轻度旋转的胸片，图中标注了棘突、锁骨内侧端、主动脉结与右侧第 5 前肋。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "not_supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "not_supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-19",
+   "kind": "dual_label",
+   "case_id": "CASE-034",
+   "case_title": "胸部正位 X 线",
+   "zone_id": "LML",
+   "zone_name": "左肺中野",
+   "status": "normal",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "An X-ray photo of my chest. A sample of normal heart and lung. Screenshot of DICOM image.",
+   "ai_a": {
+    "label": "mentioned_normal",
+    "supported": "supported",
+    "reason": "病例级正常描述，覆盖全片"
+   },
+   "ai_b": {
+    "label": "mentioned_normal",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 normal",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-20",
+   "kind": "dual_label",
+   "case_id": "CASE-034",
+   "case_title": "胸部正位 X 线",
+   "zone_id": "MED",
+   "zone_name": "纵隔与心影",
+   "status": "normal",
+   "claim_id": "CLM-034-MED",
+   "claim_text": "胸部正位 X 线 · 纵隔与心影：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "An X-ray photo of my chest. A sample of normal heart and lung. Screenshot of DICOM image.",
+   "ai_a": {
+    "label": "mentioned_normal",
+    "supported": "supported",
+    "reason": "病例级正常描述，覆盖全片"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "not_supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-21",
+   "kind": "dual_label",
+   "case_id": "CASE-153",
+   "case_title": "胸部 X 线",
+   "zone_id": "SUB",
+   "zone_name": "膈下",
+   "status": "unmentioned",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "edit\nChest radiograph of an 83 year old man with previous coronary artery bypass surgery and multiple percutaneous coronary interventions, now presenting with labored breathing. It shows distinct Kerley B lines, as well as an enlarged heart, somewhat dilated pulmonary blood vessels and minor pleural",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 unmentioned",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-22",
+   "kind": "dual_label",
+   "case_id": "CASE-006",
+   "case_title": "大叶性肺炎（箭头标注）",
+   "zone_id": "LML",
+   "zone_name": "左肺中野",
+   "status": "unmentioned",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "来源公开说明为大叶性肺炎，图中红色箭头指向病变区域。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 unmentioned",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-23",
+   "kind": "dual_label",
+   "case_id": "CASE-162",
+   "case_title": "胸部 X 线",
+   "zone_id": "MED",
+   "zone_name": "纵隔与心影",
+   "status": "unmentioned",
+   "claim_id": "CLM-162-MED",
+   "claim_text": "胸部 X 线 · 纵隔与心影：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "Chest radiograph of miliary tuberculosis, 22 days after onset of fever, chills, and general malaise in a 82-year-old female. it shows extensive bilateral reticulo-nodular infiltrates\nFrom the same case (edit):\n\n\n\t\t\n\t\t\t\n\t\t\tX-ray, 13 days after onset, showing bilateral interstitial infiltrates.\n\t\t\n\t\t\n",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "“双肺/双侧”不覆盖纵隔/膈下；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-24",
+   "kind": "dual_label",
+   "case_id": "CASE-202",
+   "case_title": "大叶性肺炎（胸片，红箭头）",
+   "zone_id": "MED",
+   "zone_name": "纵隔与心影",
+   "status": "unmentioned",
+   "claim_id": "CLM-202-MED",
+   "claim_text": "大叶性肺炎（胸片，红箭头） · 纵隔与心影：右肺上叶大片实变，红箭头指向病灶边缘。",
+   "description": "公开说明称“右肺上叶大片实变”；图中红箭头与密度增高区位于右肺中野，二者不一致。本页以图为准，建议人工复核。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "not_supported",
+    "reason": "有征象 id，但分区状态不是 abnormal"
+   },
+   "agree": false,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-25",
+   "kind": "dual_label",
+   "case_id": "CASE-202",
+   "case_title": "大叶性肺炎（胸片，红箭头）",
+   "zone_id": "RUL",
+   "zone_name": "右肺上野",
+   "status": "unmentioned",
+   "claim_id": "CLM-202-RUL",
+   "claim_text": "大叶性肺炎（胸片，红箭头） · 右肺上野：右肺上叶大片实变，红箭头指向病灶边缘。",
+   "description": "公开说明称“右肺上叶大片实变”；图中红箭头与密度增高区位于右肺中野，二者不一致。本页以图为准，建议人工复核。",
+   "ai_a": {
+    "label": "mentioned_abnormal",
+    "supported": "not_supported",
+    "reason": "出现分区词“右肺上叶”，且出现异常词"
+   },
+   "ai_b": {
+    "label": "mentioned_abnormal",
+    "supported": "not_supported",
+    "reason": "有征象 id，但分区状态不是 abnormal"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-26",
+   "kind": "dual_label",
+   "case_id": "CASE-008",
+   "case_title": "下肺野气腔影（侧位）",
+   "zone_id": "ANT",
+   "zone_name": "胸骨后间隙",
+   "status": "unmentioned",
+   "claim_id": "CLM-008-ANT",
+   "claim_text": "下肺野气腔影（侧位） · 前胸部：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "来源公开说明为同一检查的侧位片。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-27",
+   "kind": "dual_label",
+   "case_id": "CASE-204",
+   "case_title": "结节病：双肺结节（胸片）",
+   "zone_id": "SUB",
+   "zone_name": "膈下",
+   "status": "unmentioned",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "双肺弥漫小结节影，以中上野为著。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "“双肺/双侧”不覆盖纵隔/膈下；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 unmentioned",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-28",
+   "kind": "dual_label",
+   "case_id": "CASE-017",
+   "case_title": "双侧下肺野模糊伴肋膈角变钝",
+   "zone_id": "RML",
+   "zone_name": "右肺中野",
+   "status": "unmentioned",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "来源公开说明为胸腔积液相关胸片，双侧下肺野密度增高。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "出现层级泛化词，但不覆盖该分区层级；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 unmentioned",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-29",
+   "kind": "dual_label",
+   "case_id": "CASE-007",
+   "case_title": "下肺野气腔影（正位）",
+   "zone_id": "LML",
+   "zone_name": "左肺中野",
+   "status": "unmentioned",
+   "claim_id": "",
+   "claim_text": "",
+   "description": "来源公开说明为下肺野气腔影，病原学信息见来源页。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "出现层级泛化词，但不覆盖该分区层级；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 缺失，回退到分区状态 unmentioned",
+    "fallback": true
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  },
+  {
+   "id": "DL-30",
+   "kind": "dual_label",
+   "case_id": "CASE-015",
+   "case_title": "右中上肺野气腔影（正位）",
+   "zone_id": "LUL",
+   "zone_name": "左肺上野",
+   "status": "unmentioned",
+   "claim_id": "CLM-015-LUL",
+   "claim_text": "右中上肺野气腔影（正位） · 左肺上野：本分区未逐区标注（该病例非正常对照），不单独给出阴性或阳性结论。",
+   "description": "来源公开说明为肺炎相关正位胸片，可见斑片状密度增高。",
+   "ai_a": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "未出现该分区词或可覆盖的泛化词；按第四态规则判为“来源未逐区提及”"
+   },
+   "ai_b": {
+    "label": "not_mentioned",
+    "supported": "supported",
+    "reason": "claim 文本明确写“未逐区标注/未提及”"
+   },
+   "agree": true,
+   "expert": {
+    "status": "pending",
+    "label": "",
+    "reviewer": "",
+    "note": "",
+    "at": ""
+   }
+  }
+ ]
+}
