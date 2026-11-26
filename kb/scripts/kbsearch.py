@@ -147,7 +147,7 @@ def build():
         "docs": docs,
     }
     INDEX.parent.mkdir(exist_ok=True)
-    INDEX.write_text(json.dumps(index, ensure_ascii=False), encoding="utf8")
+    INDEX.write_text(json.dumps(index, ensure_ascii=False, sort_keys=True), encoding="utf8")
     (INDEX.parent / "built_at.txt").write_text(stamp, encoding="utf8")
     return index
 
