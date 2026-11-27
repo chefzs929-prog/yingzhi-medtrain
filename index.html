@@ -147,6 +147,26 @@ button{font-family:inherit}
 .d-ok{background:var(--ok)} .d-warn{background:var(--warn)} .d-grey{background:#8ba0ab} .d-bad{background:var(--bad)}
 .disclaimer{margin:18px 20px 0;padding:12px 14px;border-radius:var(--r);background:#fdf6f6;border:1px solid #f3dcdc;color:var(--bad);font-size:11.5px;line-height:1.7}
 .disclaimer b{display:block;margin-bottom:2px}
+
+.xbrain{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  margin:14px 0 4px;padding:16px 18px;border-radius:16px;text-decoration:none;
+  background:linear-gradient(110deg,#0b1a22,#0b4f55 58%,#0e7c7b);
+  color:#eaf7f4;box-shadow:0 18px 44px -28px rgba(11,79,85,.75);
+  border:1px solid rgba(255,255,255,.08);position:relative;overflow:hidden}
+.xbrain:after{content:"";position:absolute;top:-60%;right:-6%;width:280px;height:280px;
+  background:radial-gradient(circle,rgba(255,255,255,.16),transparent 65%);pointer-events:none}
+.xb-left{display:flex;gap:14px;align-items:center;position:relative;z-index:1}
+.xb-orbs{position:relative;width:38px;height:38px;flex:none}
+.xb-orbs i{position:absolute;width:22px;height:22px;border-radius:50%;display:block}
+.xb-orbs .o1{left:0;top:0;background:#4aa8ff;box-shadow:0 0 16px rgba(74,168,255,.7)}
+.xb-orbs .o2{right:0;bottom:0;background:#f5c451;box-shadow:0 0 16px rgba(245,196,81,.6)}
+.xb-k{font:10.5px/1 ui-monospace,monospace;letter-spacing:1.2px;color:#9fe6d8;text-transform:uppercase}
+.xb-t{font-weight:700;font-size:15.5px;margin-top:5px}
+.xb-s{font-size:12.5px;color:#b9d9d5;margin-top:3px}
+.xb-pill{position:relative;z-index:1;white-space:nowrap;font-size:12.5px;font-weight:600;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);
+  padding:8px 13px;border-radius:999px}
+@media(max-width:640px){.xbrain{align-items:flex-start}.xb-pill{display:none}}
 </style>
 <!-- rc-agent-base --><script>window.RC_AGENT_BASE='https://function-ultra-disclose-commissioners.trycloudflare.com';</script>
 </head>
@@ -179,6 +199,18 @@ button{font-family:inherit}
       <h1>学习</h1>
       <p class="sub">21 例 CR 胸部 · 234 道自测题（课堂内） · 逐区校正 · 非诊断用途</p>
     </div>
+
+    <a class="xbrain" href="compare.html">
+      <div class="xb-left">
+        <div class="xb-orbs"><i class="o1"></i><i class="o2"></i></div>
+        <div>
+          <div class="xb-k">新 · 双脑对照</div>
+          <div class="xb-t">主脑答题，审稿脑守门</div>
+          <div class="xb-s">两边不一致，系统就弃权 —— 看看它什么时候闭嘴</div>
+        </div>
+      </div>
+      <span class="xb-pill">进入 →</span>
+    </a>
 
     <div class="learn-cols">
     <div class="lc-main">
