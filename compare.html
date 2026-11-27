@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>双脑对照 · 分歧裁决</title>
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#121922; --line:#1f2b38; --ink:#e6edf3;
+    --dim:#8b9bad; --green:#39d98a; --red:#ff6b6b; --amber:#f5c451; --blue:#4aa8ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#14202e 0%,var(--bg) 55%);
+       color:var(--ink);font:15px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+       min-height:100vh}
+  .wrap{max-width:1180px;margin:0 auto;padding:34px 22px 60px}
+  header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;
+         border-bottom:1px solid var(--line);padding-bottom:16px}
+  h1{margin:0;font-size:21px;letter-spacing:.5px;font-weight:650}
+  h1 span{color:var(--blue)}
+  .tag{font:11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--dim);
+       border:1px solid var(--line);border-radius:999px;padding:7px 11px;letter-spacing:.6px}
+  .sub{color:var(--dim);font-size:13px;margin-top:6px}
+  .ask{display:flex;gap:10px;margin:22px 0 10px}
+  .ask input{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;
+             color:var(--ink);padding:13px 15px;font-size:15px;outline:none}
+  .ask input:focus{border-color:#2f4a66;box-shadow:0 0 0 3px rgba(74,168,255,.12)}
+  .ask button{background:linear-gradient(180deg,#2f7fe0,#2568bd);border:0;color:#fff;border-radius:10px;
+              padding:0 22px;font-size:15px;font-weight:600;cursor:pointer}
+  .ask button:disabled{opacity:.45;cursor:default}
+  .presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .policybar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:22px;font-size:12.5px;color:var(--dim)}
+  .pol{background:#0f1720;border:1px solid var(--line);color:#93a4b8;border-radius:8px;padding:6px 11px;
+       font-size:12.5px;cursor:pointer}
+  .pol.on{border-color:#2f6ea8;color:#cfe6ff;background:#0d1c2b}
+  .chip{background:#0f1720;border:1px solid var(--line);color:#b9c7d6;border-radius:999px;
+        padding:7px 13px;font-size:13px;cursor:pointer}
+  .chip:hover{border-color:#33506e;color:#fff}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr}}
+  .card{background:linear-gradient(180deg,#121a24,#0f151d);border:1px solid var(--line);
+        border-radius:14px;padding:16px 17px;min-height:230px;display:flex;flex-direction:column}
+  .card.main{border-top:2px solid var(--blue)}
+  .card.rev{border-top:2px solid var(--amber)}
+  .chead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+  .who{font-weight:650;font-size:14.5px}
+  .who small{display:block;color:var(--dim);font-weight:400;font-size:11.5px;margin-top:2px}
+  .badge{font:11px/1 ui-monospace,monospace;color:var(--dim);border:1px solid var(--line);
+         border-radius:6px;padding:5px 7px;white-space:nowrap}
+  .body{white-space:pre-wrap;word-break:break-word;font-size:14.5px;flex:1}
+  .body.thinking{color:var(--dim);font-family:ui-monospace,monospace;font-size:13px}
+  .cites{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px dashed #1d2836}
+  .cite{font:11.5px/1 ui-monospace,monospace;color:#9fd0ff;background:#0e2235;border:1px solid #1c4062;
+        border-radius:6px;padding:5px 7px}
+  .verdict{margin-top:16px;border-radius:14px;border:1px solid var(--line);background:#0f151d;
+           padding:15px 17px;display:flex;gap:14px;align-items:flex-start}
+  .vdot{width:11px;height:11px;border-radius:50%;margin-top:6px;flex:none;background:var(--dim)}
+  .vtitle{font-weight:700;font-size:14.5px;letter-spacing:.4px}
+  .vreason{color:var(--dim);font-size:13.5px;margin-top:3px}
+  .meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font:11.5px/1.6 ui-monospace,monospace;color:#7e8fa3}
+  .s-abstain .vdot{background:var(--red);box-shadow:0 0 14px rgba(255,107,107,.55)}
+  .s-abstain .vtitle{color:var(--red)}
+  .s-consensus .vdot{background:var(--green);box-shadow:0 0 14px rgba(57,217,138,.5)}
+  .s-consensus .vtitle{color:var(--green)}
+  .s-refuse .vdot,.s-diverge .vdot{background:var(--amber);box-shadow:0 0 12px rgba(245,196,81,.45)}
+  .s-refuse .vtitle,.s-diverge .vtitle{color:var(--amber)}
+  footer{margin-top:26px;color:#5d6d80;font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>双脑对照 · <span>分歧裁决</span></h1>
+      <div class="sub">同一个问题，主脑负责答，审稿脑负责说“这题不该答”。两边不一致时，系统弃权。</div>
+    </div>
+    <div class="tag" id="apiTag">CHECKING…</div>
+  </header>
+
+  <div class="ask">
+    <input id="q" placeholder="输入一个影像教学问题，例如：GGO 是啥？" autocomplete="off">
+    <button id="go">对照</button>
+  </div>
+  <div class="presets" id="presets"></div>
+  <div class="policybar">
+    <span>裁决策略</span>
+    <button class="pol on" data-p="balanced">宽松 · 表述差异不影响采纳</button>
+    <button class="pol" data-p="strict">严格 · 差异超阈值即弃权</button>
+  </div>
+
+  <div class="grid">
+    <div class="card main">
+      <div class="chead">
+        <div class="who">主脑 · 答题者<small>dth/Auto + 知识库检索</small></div>
+        <div class="badge" id="bL">待运行</div>
+      </div>
+      <div class="body" id="L">左侧为主脑输出。</div>
+      <div class="cites" id="cL"></div>
+    </div>
+    <div class="card rev">
+      <div class="chead">
+        <div class="who">审稿脑 · 守门员<small>Qwen3-4B LoRA（本地）</small></div>
+        <div class="badge" id="bR">待运行</div>
+      </div>
+      <div class="body" id="R">右侧为审稿脑输出。</div>
+      <div class="cites" id="cR"></div>
+    </div>
+  </div>
+
+  <div class="verdict" id="v">
+    <div class="vdot"></div>
+    <div style="flex:1">
+      <div class="vtitle" id="vt">等待裁决</div>
+      <div class="vreason" id="vr">提交问题后，这里显示两侧是否一致、以及最终采纳谁。</div>
+      <div class="meta" id="vm"></div>
+    </div>
+  </div>
+
+  <footer>
+    <span>裁决策略：一拒一答 → 弃权；都答且相似 → 采纳主脑；都答但不同 → 保留主脑并标注分歧。</span>
+    <span>检索层提供引用，模型不生成 ID。</span>
+  </footer>
+</div>
+
+<script src="demo_data.js"></script>
+<script>
+const PRESETS = ["GGO 是啥？", "这张片子是不是肺癌？", "气胸的影像表现是什么？"];
+const $ = s => document.querySelector(s);
+const API = (new URLSearchParams(location.search).get("api") || "").replace(/\/$/, "");
+const DEMO = window.DEMO_DATA || {};
+let MODE = "live";
+let POLICY = "balanced";
+
+$("#presets").innerHTML = PRESETS.map(p => `<span class="chip">${p}</span>`).join("");
+$("#presets").addEventListener("click", e => {
+  if (!e.target.classList.contains("chip")) return;
+  $("#q").value = e.target.textContent;
+  run();
+});
+$("#go").addEventListener("click", run);
+$("#q").addEventListener("keydown", e => { if (e.key === "Enter") run(); });
+
+document.querySelectorAll(".pol").forEach(b => b.addEventListener("click", () => {
+  POLICY = b.dataset.p;
+  document.querySelectorAll(".pol").forEach(x => x.classList.toggle("on", x === b));
+}));
+
+async function probe() {
+  $("#apiTag").textContent = "CHECKING…";
+  try {
+    const r = await fetch(API + "/api/kb/health", {signal: AbortSignal.timeout(2500)});
+    if (!r.ok) throw new Error("no api");
+    MODE = "live";
+    $("#apiTag").textContent = "LIVE · 实时双脑";
+  } catch (e) {
+    MODE = "demo";
+    $("#apiTag").textContent = "STATIC REPLAY · 预录 " + Object.keys(DEMO).length + " 场景";
+    $("#vr").textContent = "当前为静态回放页：线上没有推理后端，下面展示的是本地真实跑出的结果。";
+  }
+}
+probe();
+
+const DEC = {
+  abstain:          ["s-abstain",  "ABSTAIN · 弃权"],
+  consensus:        ["s-consensus","CONSENSUS · 双脑一致"],
+  consensus_refuse: ["s-refuse",   "CONSENSUS REFUSE · 一致拒答"],
+  diverge:          ["s-diverge",  "DIVERGE · 表述分歧"],
+  error:            ["",           "ERROR · 未取到结果"]
+};
+
+let timer = null;
+function tick(t0) {
+  const s = ((performance.now() - t0) / 1000).toFixed(1);
+  $("#bL").textContent = "检索中 " + s + "s";
+  $("#bR").textContent = "生成中 " + s + "s";
+}
+
+function render(d) {
+  side($("#L"), $("#bL"), $("#cL"), d.left, "主脑");
+  side($("#R"), $("#bR"), $("#cR"), d.right, "审稿");
+  const [cls, title] = DEC[d.verdict.decision] || ["", d.verdict.decision];
+  $("#v").className = "verdict " + cls;
+  $("#vt").textContent = title;
+  $("#vr").textContent = d.verdict.reason || "";
+  const ev = d.evidence || {};
+  const ids = (o) => (o && o.length ? o.join(", ") : "—");
+  $("#vm").innerHTML =
+    `策略=${POLICY} · 相似度 ${ev.similarity ?? "—"} · 拒答判定 主脑=${ev.refuse?.agent} / 审稿=${ev.refuse?.llm}` +
+    ` · 引用 主脑=[${ids(ev.cite_ids?.agent)}] 审稿=[${ids(ev.cite_ids?.llm)}]`;
+}
+
+function side(el, badge, cites, s, label) {
+  el.className = "body";
+  el.textContent = (s && s.text) || "（无输出）";
+  badge.textContent = (s && s.served_by ? s.served_by : "?") + " · " + ((s && s.ms) || 0) + "ms";
+  cites.innerHTML = ((s && s.cites) || []).slice(0, 8).map(c => {
+    const id = c.id || c.sign_id || "";
+    return `<span class="cite">${label} ${id || "引用"}</span>`;
+  }).join("");
+}
+
+function runDemo(q) {
+  const d = DEMO[q + "|" + POLICY];
+  $("#bL").textContent = "replay"; $("#bR").textContent = "replay";
+  if (!d) {
+    $("#vt").textContent = "STATIC REPLAY";
+    $("#vr").textContent = "预录页只有下面 " + PRESETS.length + " 个场景；实时模型只在本地运行时可用。";
+    $("#vm").textContent = "";
+    return;
+  }
+  render(d);
+}
+
+async function run() {
+  const q = ($("#q").value || "").trim();
+  if (!q) return;
+  if (MODE === "demo") { runDemo(q); return; }
+
+  $("#go").disabled = true;
+  $("#L").className = "body thinking"; $("#L").textContent = "主脑：检索 → 组织答案 → 审计 …（约 15–45s）";
+  $("#R").className = "body thinking"; $("#R").textContent = "审稿脑：本地 4B 推理 …（约 1–3s）";
+  $("#cL").innerHTML = ""; $("#cR").innerHTML = "";
+  $("#v").className = "verdict";
+  $("#vt").textContent = "裁决中"; $("#vr").textContent = "两侧并行运行，互不阻塞。";
+  $("#vm").textContent = "";
+  const t0 = performance.now(); tick(t0);
+  timer = setInterval(() => tick(t0), 200);
+  let done = false;
+  const slow = setTimeout(() => {
+    if (done) return;
+    $("#L").className = "body thinking";
+    $("#L").textContent = "主脑仍在检索（通常 15–45s）…右侧结果可以先看";
+  }, 10000);
+  const ctrl = new AbortController();
+  const hard = setTimeout(() => ctrl.abort(), 150000);
+
+  try {
+    const r = await fetch(API + "/api/ask/compare", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({query: q, policy: POLICY}),
+      signal: ctrl.signal
+    });
+    const d = await r.json();
+    done = true;
+    clearInterval(timer); clearTimeout(slow); clearTimeout(hard);
+    render(d);
+  } catch (err) {
+    done = true;
+    clearInterval(timer); clearTimeout(slow); clearTimeout(hard);
+    const aborted = String(err).toLowerCase().includes("abort");
+    $("#vt").textContent = aborted ? "TIMEOUT · 主脑超时" : "ERROR · 请求失败";
+    $("#vr").textContent = aborted
+      ? "主脑 150 秒未返回，可重试；右侧 LoRA 结果不受影响。"
+      : String(err);
+  } finally {
+    $("#go").disabled = false;
+  }
+}
+</script>
+</body>
+</html>
